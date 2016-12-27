@@ -1,0 +1,256 @@
+<?xml version="1.0"?>
+<conversacions>
+
+	<conversacion id="saludoGeneral">
+		<tipo>saludo</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>¡Hola!, soy tu asesora del Banco Atlántida.</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="queBusca">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>I have a lot of houses for sale. What are you looking for?.</curioso>
+			<curioso>How can i help you?.</curioso>
+			<curioso>There are some houses for sale. What are you looking for?.</curioso>
+			<impertinente>I didn't understand you, could you repeat again. What are you looking for?.</impertinente>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">want_house</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="saludar">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Hi!. I hope that you are ok.</frase>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">greetings</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="quiereUnaBroma">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>I have a temporary mortgage. What do you mean temporary? Until they foreclose.</frase>
+			<frase>The sellers told me their house was near the water. It was in the basement.</frase>
+			<frase>How much are they asking for your rent now? Oh, about twice a day.</frase>
+			<frase>I listed a maintenance free house. In the last 25 years there hasn't been any maintenance.</frase>
+			<frase>The best part of a real estate bargain is the neighbor.</frase>
+			<frase>They have an all electric home. Everything in it is charged.</frase>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">joke</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="fueraDeContexto">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Right now, i can't answer that. I only could offer you some houses for sale.</frase>
+			<frase>In this moment, i couldn't answer that. I only have some houses for sale.</frase>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">off_topics</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="quireVerCasasYa">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Ok, i understand that. I have these houses for you.</frase>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">results_now</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="describirCostaRica">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Costa Rica has an amazing biodiversity and breathtaking views to the beach and mountains.</frase>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="quiereCostaRica">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Are you looking for a house in Costa Rica?</curioso>
+			<impertinente>Excuse me, would you like to have a house in Costa Rica?</impertinente>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="noQuiereCostaRica">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Which country are you looking for buying?</curioso>
+			<impertinente>Excuse me, i want to be sure. Which country are you looking for buying?</impertinente>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="entidad">affirmations@No</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="vieneSoloOConLaFamilia">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Are you coming to $pais alone, or with your family?</curioso>
+			<curioso>I can help you find your dream house, I have many options available. Are you coming to $pais alone, or with your family?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="describaLaFamilia">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Tell me a bit about your family</curioso>
+			<curioso>Ok, what do you like to do in your spare time with your family?</curioso>
+			<curioso>How would you describe your family?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="determinarLaLocalizacion">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Where would you like to stay in this country, at the beach or would you prefer the mountains or city instead?</curioso>
+			<curioso>Do you like the beach or do you prefer the mountains or city?</curioso>
+			<curioso>Where would you like your house? Mountain, City or Beach?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="quierePiscina">
+		<tipo>pregunta</tipo>
+		<mandatoria>false</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Would you like to have a pool in your new house?</curioso>
+			<curioso>I have several houses available at the beach. I'm guessing you would like to have a pool, right?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="describirPatio">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Remember that if you're not planning to stay long periods in $pais, you'll need to have someone take care of the backyard.</frase>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="quierePatio">
+		<tipo>pregunta</tipo>
+		<mandatoria>false</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>How about a backyard or garden?. Would that be something that you'd like?.</curioso>
+			<curioso>Would you love to have a garden in your house?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="quiereEnCondominio">
+		<tipo>pregunta</tipo>
+		<mandatoria>false</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>Do you agree to live in a Condo?</curioso>
+			<curioso>Would you like to live in a Condo?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="mostrarResultados">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso>I have found these houses for you. Do you need anything else?</curioso>
+			<curioso>I think that these houses are for you. Are you looking for anything else?</curioso>
+		</frases>
+		<vineta></vineta>
+	</conversacion>
+	
+	<conversacion id="agotoTemarioDeQuireCasa">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<curioso></curioso>
+			<curioso></curioso>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">repeat_interview</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="despedida">
+		<tipo>despedida</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>Bye!. It was a pleasure to have helped you find your dream house.</frase>
+			<frase>See you soon</frase>
+		</frases>
+		<vineta></vineta>
+		<when>
+			<condition operador="and" tipo="intencion">goodbyes</condition>
+		</when>
+	</conversacion>
+	
+	<conjunciones>
+		<conjuncion id="conjuncion1">I'm sorry, i didn't undertand.</conjuncion>
+		<conjuncion id="conjuncion2">I didn't catch that.</conjuncion>
+	</conjunciones>
+	
+	<variablesDeAmbiente>
+		<variable nombre="nombreCliente" tipo="string"></variable>
+		<variable nombre="hora" tipo="hora"></variable>
+		<variable nombre="estaLogueado" tipo="boolean">false</variable>
+	</variablesDeAmbiente>
+	
+	<workspaces user="bb9bd2e7-d63f-490c-b5d6-32f026a4c646" pass="Tvm3ZJzX2vab">
+		<workspace tipo="general" idIBM="d0d0e2bd-931a-4bca-ba05-e8bd8b7f1ac0" intencionesParaSeReferenciado="">deam_house_universe</workspace>
+		<workspace tipo="especifico" idIBM="8af4d07d-d2b5-4a32-804c-6a0e2749ffed" intencionesParaSeReferenciado="want_house">want_house</workspace>
+	</workspaces>
+	
+</conversacions>
