@@ -39,12 +39,12 @@ public class Evaluador {
 	public static void main(String[] args) throws Exception
     {
 		Evaluador evaluador = new Evaluador();
-		/*evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
-		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());*/
-		//System.out.println(evaluador.ejecutaComando("show f.getDia();"));
+		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
+		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
+		System.out.println(evaluador.ejecutaComando("show f.getDia();"));
 		
-		evaluador.crearContexto("leGustaLosHoteles = 0.0;");
-		System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
+		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
+		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
 		
     }
 }

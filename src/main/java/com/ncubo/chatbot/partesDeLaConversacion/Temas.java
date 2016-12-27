@@ -5,7 +5,7 @@ import java.util.Iterator;
 
 public class Temas extends ArrayList<Tema>
 {
-	public Tema buscarTemaEnMisTemas(String idTema){
+	public Tema buscarUnTemaEspecifico(String idTema){
 		Iterator<Tema> misFrases = this.iterator();
 	    Tema resultado = null;
 		while(misFrases.hasNext()) {

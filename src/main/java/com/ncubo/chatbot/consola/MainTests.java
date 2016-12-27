@@ -5,11 +5,18 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.ncubo.realestate.Coversaciones;
+import com.ncubo.BA.Conversacion;
+import com.ncubo.BA.TemarioDelBancoAtlantida;
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
+import com.ncubo.chatbot.partesDeLaConversacion.Temario;
+import com.ncubo.chatbot.participantes.Cliente;
+import com.ncubo.db.ConsultaDao;
 
 public class MainTests {
 
+	private static Temario temarioDelBancoAtlantida;
+	
 	public MainTests(){}
 	
 	private void imprimirSalidas(ArrayList<Salida> salidas){
@@ -24,7 +31,11 @@ public class MainTests {
 		
 		System.out.println("");
 		for(Salida salida: salidas){
-			System.out.println("- "+salida.getMiTexto());
+			String audio = "";
+			if( ! salida.getMiSonido().url().equals(""))
+				audio = " ("+salida.getMiSonido().url()+")";
+			
+			System.out.println("- "+salida.getMiTexto()+audio);
 		}
 	}
 	
@@ -40,21 +51,24 @@ public class MainTests {
 		return input;
 	}
 	
-	public static void main(String argv[]) {
+	public static void main(String argv[]) throws Exception {
 		MainTests main = new MainTests();
 		
-		Coversaciones misConversaciones = new Coversaciones();
-		misConversaciones.agregarUnNuevoCliente("Ricky", "123456");
+		temarioDelBancoAtlantida = new TemarioDelBancoAtlantida(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
+		ConsultaDao consultaDao = new ConsultaDao();
+		
+		Cliente cliente = new Cliente("Ricky", "123456");
+		Conversacion miconversacion = new Conversacion(temarioDelBancoAtlantida, cliente, consultaDao);
 		
 		String respuesta = "";
 		
-		ArrayList<Salida> salidasParaElCliente = misConversaciones.inicializarConversacionConElAgente("123456");
+		ArrayList<Salida> salidasParaElCliente = miconversacion.inicializarLaConversacion();
 		main.imprimirSalidas(salidasParaElCliente);
 		
 		while(true){
 			respuesta = main.leerTexto();
 			
-			salidasParaElCliente = misConversaciones.converzarConElAgente("123456", respuesta);
+			salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(respuesta);
 			main.imprimirSalidas(salidasParaElCliente);
 		}
 	}

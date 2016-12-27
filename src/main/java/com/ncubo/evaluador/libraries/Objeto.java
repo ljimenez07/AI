@@ -1,19 +1,11 @@
 package com.ncubo.evaluador.libraries;
 
-import java.util.ArrayList;
-
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
 
 public abstract class Objeto 
 {
 	private Hilera nombreDeVariable;
-	
-	
-	
-	
-	 
-	
-	
+
 	public final void setNombreDeVariable(String nombreDeVariable)
 	{
 		this.nombreDeVariable = new Hilera(nombreDeVariable);

@@ -1,10 +1,11 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.util.ArrayList;
 
 public class Afirmacion extends Frase 
 {
-	protected Afirmacion(String idFrase, String[] textosDeLaFrase, String[] vinetasDeLaFrase, String[] textosDeLaFraseMeRindo, CaracteristicaDeLaFrase[] caracteristicas)
+	protected Afirmacion(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, CaracteristicaDeLaFrase[] caracteristicas)
 	{
-		super (idFrase, textosDeLaFrase, null, vinetasDeLaFrase, textosDeLaFraseMeRindo, caracteristicas);
+		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, caracteristicas);
 	}
 }

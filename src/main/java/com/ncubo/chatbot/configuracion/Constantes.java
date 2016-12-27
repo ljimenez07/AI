@@ -64,10 +64,16 @@ public class Constantes {
 	// Intenciones
 	public static String INTENCION_FUERA_DE_CONTEXTO = "out_of_scope";
 	public static String INTENCION_NO_ENTIENDO = "noEntendi";
-	public static String INTENCION_NO_ENTIENDO_ESPECIFICO = "noEntendiConocerte";
 	public static String INTENCION_DESPEDIDA = "despedidas";
 	public static String INTENCION_SALUDAR = "saludos";
 	public static String INTENCION_DESPISTADOR = "despistar";
 	public static String INTENCION_QUE_PUEDEN_PREGUNTAR = "que_pueden_preguntar";
+	
+	// Frase
+	public static String CONDICION_POR_DEFECTO = "enCualquierMomento";
+	public static String TIPO_FRASE_GERERAL = "frase";
+	public static String TIPO_FRASE_IMPERTINENTE = "impertinente";
+	public static String TIPO_FRASE_ME_RINDO = "meRindo";
+	public static String TIPO_FRASE_CONJUNCION = "conjuncion";
 	
 }

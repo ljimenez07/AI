@@ -134,7 +134,8 @@ public abstract class Punto extends Expresion
 				throw e;
 			}
 		}
-		return (Objeto) object;
+		//return (Objeto) object;
+		return (Objeto)(new com.ncubo.evaluador.libraries.Numero(((java.lang.Integer) object).intValue()));
 	}
 	
 	protected Method obtenerElMetodoDelObjetoSiExiste(Class<?> classDelObjeto) throws Exception

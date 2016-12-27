@@ -1,10 +1,10 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
@@ -12,40 +12,36 @@ public abstract class Frase
 {
 	private final String idFrase;
 	
-	private String[] textosDeLaFrase;
+	private final ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
+	
+	/*private String[] textosDeLaFrase;
 	private ArrayList<Sonido> sonidosDeLosTextosDeLaFrase = new ArrayList<Sonido>();
 	
 	private String[] textosDeLaFraseMeRindo;
 	private ArrayList<Sonido> sonidosDeLosTextosDeLaFraseMeRindo = new ArrayList<Sonido>();
 	
-	private ArrayList<Vineta> vinetasDeLosTextosDeLaFrase = new ArrayList<Vineta>();
-	
 	private String[] textosImpertinetesDeLaFrase;
-	private ArrayList<Sonido> sonidosDeLosTextosImpertinentesDeLaFrase = new ArrayList<Sonido>();
+	private ArrayList<Sonido> sonidosDeLosTextosImpertinentesDeLaFrase = new ArrayList<Sonido>();*/
+	
+	private ArrayList<Vineta> vinetasDeLosTextosDeLaFrase = new ArrayList<Vineta>();
 	
 	private final CaracteristicaDeLaFrase[] caracteristicas;
 	//private Intencion intencion;
 	private boolean esEstatica = true;
-	//private final Contenido contenido;
 	
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
 	
-	protected Frase (String idFrase, String[] textosDeLaFrase, String[] textosImpertinetesDeLaFrase, String[] vinetasDeLaFrase, String[] textosDeLaFraseMeRindo,
+	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
-		//this.contenido = contenido;
 		this.caracteristicas = caracteristicas;
 		this.idFrase = idFrase;
-		this.textosDeLaFrase = textosDeLaFrase;
-		this.textosImpertinetesDeLaFrase = textosImpertinetesDeLaFrase;
-		this.textosDeLaFraseMeRindo = textosDeLaFraseMeRindo;
+		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		cargarLaFrase();
 		cargarVinetas(vinetasDeLaFrase);
 		if(esEstatica()){
 			System.out.println("Es estaticaaaaaaaa");
-			// verificar el archivo de audio exite o devolver un ChatException
-			// Asignar la url del archivo dependiendo del textos
 		}
 		if(esDinamica()){
 			System.out.println("Es dinamicaaaaa");
@@ -63,109 +59,121 @@ public abstract class Frase
 		}
 	}
 	
-	public void agregarSonido(int index, Sonido sonido){
-		sonidosDeLosTextosDeLaFrase.add(index, sonido);
-	}
-	
-	public void agregarSonidoImpertinente(int index, Sonido sonido){
-		sonidosDeLosTextosImpertinentesDeLaFrase.add(index, sonido);
-	}
-	
 	private void verSiLaFraseTienePlaceHolders(){
 		boolean tieneUnoOVariosPlaceHolders = false;
-		for (String texto: textosDeLaFrase){
-			//tieneUnoOVariosPlaceHolders = tieneUnoOVariosPlaceHolders || texto.indexOf("%s")  == -1;
-			tieneUnoOVariosPlaceHolders = ! (texto.indexOf("$") == -1);
+
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
 		}
+		
 		esEstatica = ! tieneUnoOVariosPlaceHolders;
+	}
+	
+	private ArrayList<ComponentesDeLaFrase> buscarFrasesSinonimoPorTipo(String tipoFrase){
+		ArrayList<ComponentesDeLaFrase> resultado = new ArrayList<ComponentesDeLaFrase>();
+		
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.getTipoDeFrase().equals(tipoFrase))
+				resultado.add(miFrase);
+		}
+		
+		return resultado;
+	}
+	
+	private ArrayList<ComponentesDeLaFrase> buscarFrasesGenerales(){
+		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_GERERAL);
+	}
+	
+	private ArrayList<ComponentesDeLaFrase> buscarFrasesImpertinentes(){
+		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_IMPERTINENTE);
+	}
+	
+	private ArrayList<ComponentesDeLaFrase> buscarFrasesMeRindo(){
+		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_ME_RINDO);
 	}
 	
 	public String getIdFrase() {
 		return idFrase;
 	}
 	
-	public List<String> texto(){
-		List<String> resultado = null;
-		
-		if(textosDeLaFrase.length > 0){
-			resultado = new ArrayList<>();
-			int unIndiceAlAzar = (int)Math.floor(Math.random()*textosDeLaFrase.length);
-			resultado.add(unIndiceAlAzar+"");
-			resultado.add(textosDeLaFrase[unIndiceAlAzar]);
+	public ComponentesDeLaFrase texto(){
+		ComponentesDeLaFrase resultado = null;
+		if(misSinonimosDeLaFrase.size() > 0){
+			int unIndiceAlAzar = (int) Math.floor(Math.random() * misSinonimosDeLaFrase.size());
+			resultado = misSinonimosDeLaFrase.get(unIndiceAlAzar);
 		}
-		
 		return resultado;
 	}
 	
-	public Sonido obtenerSonidoAUsar(int idDelSonidoAUsar){
+	/*public Sonido obtenerSonidoAUsar(int idDelSonidoAUsar){
 		Sonido resultado = null;
-		if(esEstatica() && sonidosDeLosTextosDeLaFrase.size() > 0){
+		if(esEstatica() && misSinonimosDeLaFrase.size() > 0){
 			if (idDelSonidoAUsar == -1){
-				idDelSonidoAUsar = (int)Math.floor(Math.random()*sonidosDeLosTextosDeLaFrase.size());
+				idDelSonidoAUsar = (int)Math.floor(Math.random()*misSinonimosDeLaFrase.size());
 			}
-			resultado = sonidosDeLosTextosDeLaFrase.get(idDelSonidoAUsar);
+			resultado = misSinonimosDeLaFrase.get(idDelSonidoAUsar).getAudio();
 		}
 		return resultado;
-	}
+	}*/
 	
-	public List<String> textoImpertinente(){
-		List<String> resultado = new ArrayList<>();
-		if(textosImpertinetesDeLaFrase.length > 0){
-			int unIndiceAlAzar = (int)Math.floor(Math.random()*textosImpertinetesDeLaFrase.length);
-			resultado.add(unIndiceAlAzar+"");
-			resultado.add(textosImpertinetesDeLaFrase[unIndiceAlAzar]);
+	public ComponentesDeLaFrase textoImpertinente(){
+		ComponentesDeLaFrase resultado = null;
+		ArrayList<ComponentesDeLaFrase> textosImpertinetesDeLaFrase = buscarFrasesImpertinentes();
+		if(textosImpertinetesDeLaFrase.size() > 0){
+			int unIndiceAlAzar = (int)Math.floor(Math.random()*textosImpertinetesDeLaFrase.size());
+			resultado = textosImpertinetesDeLaFrase.get(unIndiceAlAzar);
 			return resultado;
 		}else{
 			return texto();
 		}
 	}
 	
-	public Sonido obtenerSonidoImpertinenteAUsar(int idDelSonidoImpertinenteAUsar){
+	/*public Sonido obtenerSonidoImpertinenteAUsar(int idDelSonidoImpertinenteAUsar){
 		Sonido resultado = null;
+		ArrayList<ComponentesDeLaFrase> sonidosDeLosTextosImpertinentesDeLaFrase = buscarFrasesImpertinentes();
 		if(hayTextosImpertinetes() && sonidosDeLosTextosImpertinentesDeLaFrase.size() > 0){
 			if (idDelSonidoImpertinenteAUsar == -1){
 				idDelSonidoImpertinenteAUsar = (int)Math.floor(Math.random()*sonidosDeLosTextosImpertinentesDeLaFrase.size());
-			}resultado = sonidosDeLosTextosImpertinentesDeLaFrase.get(idDelSonidoImpertinenteAUsar);
+			}resultado = sonidosDeLosTextosImpertinentesDeLaFrase.get(idDelSonidoImpertinenteAUsar).getAudio();
 		}
 		return resultado;
-	}
+	}*/
 	
 	public boolean hayTextosImpertinetes(){
 		try{
-			return (textosImpertinetesDeLaFrase.length > 0);
+			return (buscarFrasesImpertinentes().size() > 0);
 		}catch(Exception e){
 			return false;
 		}
 	}
 	
-	public List<String> textoMeRindo(){
-		List<String> resultado = null;
-		
-		if(textosDeLaFraseMeRindo.length > 0){
-			resultado = new ArrayList<>();
-			int unIndiceAlAzar = (int)Math.floor(Math.random()*textosDeLaFraseMeRindo.length);
-			resultado.add(unIndiceAlAzar+"");
-			resultado.add(textosDeLaFraseMeRindo[unIndiceAlAzar]);
+	public ComponentesDeLaFrase textoMeRindo(){
+		ComponentesDeLaFrase resultado = null;
+		ArrayList<ComponentesDeLaFrase> textosDeLaFraseMeRindo = buscarFrasesMeRindo();
+		if(textosDeLaFraseMeRindo.size() > 0){
+			int unIndiceAlAzar = (int)Math.floor(Math.random()*textosDeLaFraseMeRindo.size());
+			resultado = textosDeLaFraseMeRindo.get(unIndiceAlAzar);
 		}
 		
 		return resultado;
 	}
 	
-	public Sonido obtenerSonidoMeRindoAUsar(int idDelSonidoMeRindoAUsar){
+	/*public Sonido obtenerSonidoMeRindoAUsar(int idDelSonidoMeRindoAUsar){
 		Sonido resultado = null;
+		ArrayList<ComponentesDeLaFrase> sonidosDeLosTextosDeLaFraseMeRindo = buscarFrasesMeRindo();
 		if(hayTextosMeRindo() && sonidosDeLosTextosDeLaFraseMeRindo.size() > 0){
 			if (idDelSonidoMeRindoAUsar == -1){
 				idDelSonidoMeRindoAUsar = (int)Math.floor(Math.random()*sonidosDeLosTextosDeLaFraseMeRindo.size());
-			}resultado = sonidosDeLosTextosDeLaFraseMeRindo.get(idDelSonidoMeRindoAUsar);
+			}resultado = sonidosDeLosTextosDeLaFraseMeRindo.get(idDelSonidoMeRindoAUsar).getAudio();
 		}
 		return resultado;
-	}
+	}*/
 	
 	public boolean hayTextosMeRindo(){
 		try{
-			return (textosDeLaFraseMeRindo.length > 0);
+			return (buscarFrasesMeRindo().size() > 0);
 		}catch(Exception e){
 			return false;
 		}
@@ -219,11 +227,26 @@ public abstract class Frase
 	public void generarAudiosEstaticos(String pathAGuardar, String ipPublica){
 		this.pathAGuardarLosAudiosTTS = pathAGuardar;
 		this.ipPublicaAMostrarLosAudioTTS = ipPublica;
-		sonidosDeLosTextosDeLaFrase.clear();
+		//sonidosDeLosTextosDeLaFrase.clear();
 		
 		if (sePuedeDecirEnVozAlta()){
 			if(esEstatica()){
-				for(int index = 0; index < textosDeLaFrase.length; index ++){
+				int contadorDeSinonimos = 0;
+				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+					String testoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+					String nombreDelArchivo = "";
+					if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, testoParaAudio, contadorDeSinonimos)){
+						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(testoParaAudio, false);
+					}else{
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, contadorDeSinonimos);
+						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
+					}
+					String miIp = ipPublica+nombreDelArchivo;
+					miFrase.setAudio(new Sonido(miIp));
+					contadorDeSinonimos ++;
+				}
+				
+				/*for(int index = 0; index < textosDeLaFrase.length; index ++){
 					String texto = textosDeLaFrase[index];
 					String textoParaReproducir = texto;
 					String textoTag = ""; 
@@ -249,13 +272,13 @@ public abstract class Frase
 					
 					String path = pathAGuardar+File.separator+nombreDelArchivo;
 					String miIp = ipPublica+nombreDelArchivo;
-					sonidosDeLosTextosDeLaFrase.add(new Sonido(miIp, path));
+					sonidosDeLosTextosDeLaFrase.add(new Sonido(miIp));
 					textosDeLaFrase[index] = texto;
 				}
 			}
 			
 			if(hayTextosImpertinetes()){
-				sonidosDeLosTextosImpertinentesDeLaFrase.clear();
+				//sonidosDeLosTextosImpertinentesDeLaFrase.clear();
 				
 				for(int index = 0; index < textosImpertinetesDeLaFrase.length; index ++){
 					String texto = textosImpertinetesDeLaFrase[index];
@@ -321,7 +344,7 @@ public abstract class Frase
 					String miIp = ipPublica+nombreDelArchivo;
 					sonidosDeLosTextosDeLaFraseMeRindo.add(new Sonido(miIp, path));
 					textosDeLaFraseMeRindo[index] = texto;
-				}
+				}*/
 				
 			}
 		}
@@ -355,7 +378,7 @@ public abstract class Frase
 		return buscarCaracteristica(CaracteristicaDeLaFrase.sePuedeDecirEnVozAlta);
 	}
 	
-	public String[] getTextosDeLaFrase() {
+	/*public String[] getTextosDeLaFrase() {
 		return textosDeLaFrase;
 	}
 
@@ -365,19 +388,10 @@ public abstract class Frase
 	
 	public String[] getTextosMeRindoDeLaFrase() {
 		return textosDeLaFraseMeRindo;
-	}
+	}*/
 	
-	public List<String> conjuncionParaRepreguntar(){
-		/*String muletillas[] = new String[]{"I'm sorry, i didn't undertand.", "I didn't catch that."};
-		
-		int unIndiceAlAzar = (int)Math.floor(Math.random()*muletillas.length);
-		return muletillas[unIndiceAlAzar];*/
-		
+	public ComponentesDeLaFrase conjuncionParaRepreguntar(){
 		return Conjunciones.getInstance().obtenerUnaConjuncion().texto();
-	}
-	
-	public void setTextosDeLaFrase(String[] textosDeLaFrase) {
-		this.textosDeLaFrase = textosDeLaFrase;
 	}
 	
 	public String getPathAGuardarLosAudiosTTS() {
@@ -387,21 +401,16 @@ public abstract class Frase
 	public String getIpPublicaAMostrarLosAudioTTS() {
 		return ipPublicaAMostrarLosAudioTTS;
 	}
-	
-	/*public String muletilla(){
-		// Podrian vernir de un archivo gigante, que no depende del real state
-		
-		// Las muletillas podrian estar 
-		String muletillas[] = new String[]{"Well", "now"};
-		
-		int unIndiceAlAzar = (int)Math.floor(Math.random()*muletillas.length);
-		return muletillas[unIndiceAlAzar];
-	}*/
-	
+
 	public String obtenerLaInformacionDeLaFrase(){
 		String resultado = "";
 		
-		if(textosDeLaFrase.length > 0){
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			resultado += "Frases: \n";
+			resultado += "     - "+miFrase.getTextoDeLaFrase()+"\n";
+		}
+		
+		/*if(textosDeLaFrase.length > 0){
 			resultado += "Frases: \n";
 			for (int index = 0; index < textosDeLaFrase.length; index ++){
 				resultado += "     - "+textosDeLaFrase[index]+"\n";
@@ -420,20 +429,18 @@ public abstract class Frase
 			for (int index = 0; index < textosDeLaFraseMeRindo.length; index ++){
 				resultado += "     - "+textosDeLaFraseMeRindo[index]+"\n";
 			}
-		}
+		}*/
 		
 		return resultado;
 	}
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(int index, String nombreDelArchivo, String pathAGuardar, String ipPublica){
-		String path = pathAGuardar+File.separator+nombreDelArchivo;
 		String miIp = ipPublica+nombreDelArchivo;
-		this.sonidosDeLosTextosDeLaFrase.add(index, new Sonido(miIp, path));
+		this.misSinonimosDeLaFrase.get(index).setAudio(new Sonido(miIp));
 	}
 	
-	public void cargarElNombreDeUnSonidoImpertinenteEstaticoEnMemoria(int index, String nombreDelArchivo, String pathAGuardar, String ipPublica){
-		String path = pathAGuardar+File.separator+nombreDelArchivo;
-		String miIp = ipPublica+nombreDelArchivo;
-		this.sonidosDeLosTextosImpertinentesDeLaFrase.add(index, new Sonido(miIp, path));
+	public ArrayList<ComponentesDeLaFrase> obtenerMisSinonimosDeLaFrase(){
+		return misSinonimosDeLaFrase;
 	}
+	
 }

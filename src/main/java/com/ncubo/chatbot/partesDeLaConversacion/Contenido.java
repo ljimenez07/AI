@@ -53,7 +53,7 @@ public abstract class Contenido
 		);
 	}
 	
-	public void generarAudioEstatico(){
+	/*public void generarAudioEstatico(){
 		System.out.println("Cargar audios estaticos ...");
 		// Para cada frase en el xml 
 		for (Frase frase: frases){
@@ -64,7 +64,7 @@ public abstract class Contenido
 				}
 			}
 		}
-	}
+	}*/
 	
 	private Contenido agregarFrase(Frase unaFrase){
 		System.out.println("Agregando frase: " +unaFrase.getIdFrase());
@@ -154,10 +154,10 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					String id = eElement.getAttribute("id");
 					String frase = nNode.getTextContent();
-					String[] frases = new String[1];
-					frases[0] = frase;
 					System.out.println("Conjuncion: "+frase);
-					Conjunciones.getInstance().agregarConjuncion(new Conjuncion(id, frases));
+					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
+					misSinonimosDeLasConjunciones.add(new ComponentesDeLaFrase(Constantes.TIPO_FRASE_CONJUNCION, frase, "", "", ""));
+					Conjunciones.getInstance().agregarConjuncion(new Conjuncion(id, misSinonimosDeLasConjunciones));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando las conjunciones "+e.getMessage());
@@ -221,31 +221,31 @@ public abstract class Contenido
 					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
 					
-					String tipoDeFraseACargar = "frase";
+					/*String tipoDeFraseACargar = "frase";
 					if(elTipoEs.equals("pregunta")){
 						tipoDeFraseACargar = "curioso";
-					}
-					
-					String[] textosDeLaFrase = obtenerFrasesPorTipo(frases, tipoDeFraseACargar);
+					}*/
 					
 					Element vinetas = (Element) eElement.getElementsByTagName("vinetas").item(0);
 					String[] vinetasDeLaFrase = obtenerFrasesPorTipo(vinetas, "vineta");
 					
+					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
+					obtenerFrasesPorTipo(misSinonimosDeLasConjunciones, frases);
+					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, textosDeLaFrase, vinetasDeLaFrase, caracteristicasDeLaFrase);
+						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
-						miFrase = new Pregunta(idDeLaFrase, textosDeLaFrase, obtenerFrasesPorTipo(frases, "impertinente"), vinetasDeLaFrase, obtenerFrasesPorTipo(frases, "meRindo"),
-								caracteristicasDeLaFrase, 
+						miFrase = new Pregunta(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
 								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)));
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, textosDeLaFrase, vinetasDeLaFrase, obtenerFrasesPorTipo(frases, "meRindo"), caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, textosDeLaFrase, vinetasDeLaFrase, caracteristicasDeLaFrase);
+						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}
@@ -337,6 +337,58 @@ public abstract class Contenido
 		return textosDeLaFrase;
 	}
 	
+	private void obtenerFrasesPorTipo(ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones, Element frases){
+		
+		NodeList misFrase = frases.getChildNodes();
+		// NodeList misFrase = frases.getElementsByTagName("*");
+		
+		for (int index = 0; index < misFrase.getLength(); index++) {
+			NodeList misComponentesDeLaFrase = misFrase.item(index).getChildNodes();
+			String tipo = misFrase.item(index).getNodeName();
+			
+			if(tipo.contains(Constantes.TIPO_FRASE_GERERAL)){
+				System.out.println(Constantes.TIPO_FRASE_GERERAL);
+				crearComponentesDeLaFrase(misSinonimosDeLasConjunciones, Constantes.TIPO_FRASE_GERERAL, misComponentesDeLaFrase);
+			}else if (tipo.contains(Constantes.TIPO_FRASE_IMPERTINENTE)){
+				System.out.println(Constantes.TIPO_FRASE_IMPERTINENTE);
+				crearComponentesDeLaFrase(misSinonimosDeLasConjunciones, Constantes.TIPO_FRASE_IMPERTINENTE, misComponentesDeLaFrase);
+			}else if (tipo.contains(Constantes.TIPO_FRASE_ME_RINDO)){
+				System.out.println(Constantes.TIPO_FRASE_ME_RINDO);
+				crearComponentesDeLaFrase(misSinonimosDeLasConjunciones, Constantes.TIPO_FRASE_ME_RINDO, misComponentesDeLaFrase);
+			}
+		}
+	}
+	
+	private void crearComponentesDeLaFrase(ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones, String tipoFrase, NodeList misComponentesDeLaFrase){
+		
+		String textoDeLaFrase = "";
+		String textoAUsarParaGenerarElAudio = "";
+		String vineta = "";
+		String condicion = "";
+		
+		for (int index = 0; index < misComponentesDeLaFrase.getLength(); index++) {
+
+			String tipo = misComponentesDeLaFrase.item(index).getNodeName();
+			String frase = misComponentesDeLaFrase.item(index).getTextContent();
+			frase = frase.replace("@@", "<").replace("##", ">").replace("@@!", "&nbsp;");
+			
+			if(! frase.isEmpty() && ! tipo.contains("#text")){
+				if(tipo.contains("texto")){
+					textoDeLaFrase = frase;
+				}else if (tipo.contains("sonido")){
+					textoAUsarParaGenerarElAudio = frase;
+				}else if (tipo.contains("vineta")){
+					vineta = frase;
+				}else if (tipo.contains("condicion")){
+					condicion = frase;
+				}
+				System.out.println("Frase: "+frase);
+			}
+		}
+		
+		misSinonimosDeLasConjunciones.add(new ComponentesDeLaFrase(tipoFrase, textoDeLaFrase, textoAUsarParaGenerarElAudio, vineta, condicion));
+	}
+	
 	public ArrayList<WorkSpace> getMiWorkSpaces() {
 		return miWorkSpaces;
 	}
@@ -353,6 +405,6 @@ public abstract class Contenido
 			return new File(path);
 			//return new File(Constantes.PATH_ARCHIVO_DE_CONFIGURACION);
 		}};
-		contenido.generarAudioEstatico();
+		//contenido.generarAudioEstatico();
 	}
 }

@@ -4,7 +4,7 @@
 
   <groupId>com.ncubo</groupId>
   <artifactId>LogicaDeConversaciones</artifactId>
-  <version>0.0.1</version>
+  <version>1.0.1</version>
   <packaging>jar</packaging>
 
   <name>LogicaDeConversaciones</name>
@@ -67,6 +67,12 @@
 	    <groupId>mysql</groupId>
 	    <artifactId>mysql-connector-java</artifactId>
 	    <version>5.1.6</version>
+	</dependency>
+	<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+		<version>6.8.7</version>
+		<scope>test</scope>
 	</dependency>
   </dependencies>
   

@@ -1,9 +1,11 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.util.ArrayList;
+
 public class Despedida extends Frase 
 {
-	protected Despedida(String idFrase, String[] textosDeLaFrase, String[] vinetasDeLaFrase, CaracteristicaDeLaFrase[] caracteristicas)
+	protected Despedida(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, CaracteristicaDeLaFrase[] caracteristicas)
 	{
-		super (idFrase, textosDeLaFrase, null, vinetasDeLaFrase, null, caracteristicas);
+		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, caracteristicas);
 	}
 }

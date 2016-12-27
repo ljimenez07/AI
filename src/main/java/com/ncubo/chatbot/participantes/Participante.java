@@ -12,6 +12,7 @@ import java.util.Hashtable;
 import java.util.List;
 
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 
@@ -59,26 +60,25 @@ public class Participante{
 	
 	public Salida decir(Frase frase, Respuesta respuesta, Tema tema){
 		Salida salida = new Salida();
-		int idDelSonidoAUsar = -1;
+		ComponentesDeLaFrase fraseADecir = null;
 		
 		if (formaDeManifestarseEscrita.esEnFormaEscrita()){
-			List<String> texto = frase.texto();
-			if (texto != null){
-				idDelSonidoAUsar = Integer.valueOf(texto.get(0));
-				salida.escribir(texto.get(1), respuesta, tema, frase);
+			fraseADecir = frase.texto();
+			if (fraseADecir != null){
+				salida.escribir(fraseADecir.getTextoDeLaFrase().toString(), respuesta, tema, frase);
 			}
 		}
 		
 		if (formaDeManifestarseOral.esEnFormaOral()){
-			Sonido sonido = frase.obtenerSonidoAUsar(idDelSonidoAUsar);
+			Sonido sonido = fraseADecir.getAudio();
 			if (sonido != null)
 				salida.escribir(sonido, respuesta, tema, frase);
 		}
 		
 		if (formaDeManifestarseVisual.esFormaVisual()){
-			List<String> vineta = frase.vineta();
+			Vineta vineta = fraseADecir.getVineta();
 			if(vineta != null)
-				salida.escribir(vineta.get(1), respuesta, tema, frase);
+				salida.escribir(vineta.url(), respuesta, tema, frase);
 		}
 		
 		try{
@@ -95,10 +95,11 @@ public class Participante{
 	public Salida decirUnaFraseDinamica(Frase frase, Respuesta respuesta, Tema tema, String datoAActualizar){
 		Salida salida = new Salida();
 		String texto = "";
+		ComponentesDeLaFrase fraseADecir = null;
 		
 		if (formaDeManifestarseEscrita.esEnFormaEscrita()){
-			List<String> resultado = frase.texto();
-			texto = resultado.get(1).replace("$", datoAActualizar);
+			fraseADecir = frase.texto();
+			texto = fraseADecir.getTextoDeLaFrase().replace("$", datoAActualizar);
 			salida.escribir(texto, respuesta, tema, frase);
 		}
 		
@@ -106,9 +107,8 @@ public class Participante{
 			Sonido sonido = null;
 			
 			String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false);
-			String path = frase.getPathAGuardarLosAudiosTTS()+File.separator+nombreDelArchivo;
 			String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
-			sonido = new Sonido(miIp, path);
+			sonido = new Sonido(miIp);
 			
 			if (sonido != null)
 				salida.escribir(sonido, respuesta, tema, frase);
@@ -137,22 +137,19 @@ public class Participante{
 	public Salida volverAPreguntarConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo){
 		
 		Salida salida = new Salida();
-		List<String> resultado = null;
+		ComponentesDeLaFrase resultado = null;
 		String texto = "";
-		int idDelSonidoImpertineteAUsar = -1;
 		if (formaDeManifestarseEscrita.esEnFormaEscrita()){
 			if(meRindo && pregunta.hayTextosMeRindo()){
 				resultado = pregunta.textoMeRindo();
-				texto = resultado.get(1);
-				idDelSonidoImpertineteAUsar = Integer.valueOf(resultado.get(0));
+				texto = resultado.getTextoDeLaFrase();
 			}else{
 				if(pregunta.hayTextosImpertinetes()){
 					resultado = pregunta.textoImpertinente();
-					texto = resultado.get(1);
-					idDelSonidoImpertineteAUsar = Integer.valueOf(resultado.get(0));
+					texto = resultado.getTextoDeLaFrase();
 				}else{
 					resultado = pregunta.texto();
-					texto = pregunta.conjuncionParaRepreguntar().get(1)+" "+resultado.get(1);
+					texto = pregunta.conjuncionParaRepreguntar().getTextoDeLaFrase()+" "+resultado.getTextoDeLaFrase();
 				}
 			}		
 			salida.escribir(texto, respuesta, tema, pregunta);
@@ -161,10 +158,10 @@ public class Participante{
 		if (formaDeManifestarseOral.esEnFormaOral()){
 			Sonido sonido = null;
 			if(meRindo && pregunta.hayTextosMeRindo()){
-				sonido = pregunta.obtenerSonidoMeRindoAUsar(idDelSonidoImpertineteAUsar);
+				sonido = resultado.getAudio();
 			}else{
 				if(pregunta.hayTextosImpertinetes()){
-					sonido = pregunta.obtenerSonidoImpertinenteAUsar(idDelSonidoImpertineteAUsar);
+					sonido = resultado.getAudio();
 				}else{
 					if(! texto.equals("")){
 						try{
@@ -174,9 +171,8 @@ public class Participante{
 							textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
 							
 							String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
-							String path = pregunta.getPathAGuardarLosAudiosTTS()+File.separator+nombreDelArchivo;
 							String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
-							sonido = new Sonido(miIp, path);
+							sonido = new Sonido(miIp);
 						}catch(Exception e){
 							System.out.println("Error al generar el audio dinamico de: "+texto);
 						}

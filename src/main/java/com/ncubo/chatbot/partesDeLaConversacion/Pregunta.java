@@ -1,5 +1,6 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 
 import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
@@ -11,10 +12,10 @@ public class Pregunta extends Frase
 	private Entidades misEntidades;
 	private Intenciones misIntenciones;
 	
-	protected Pregunta(String idFrase, String[] textosDeLaFrase, String[] textosImpertinetesDeLaFrase, String[] vinetasDeLaFrase, String[] textosDeLaFraseMeRindo,
+	protected Pregunta(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase,
 			CaracteristicaDeLaFrase[] caracteristicas, Entidades entidades, Intenciones intenciones)
 	{
-		super (idFrase, textosDeLaFrase, textosImpertinetesDeLaFrase, vinetasDeLaFrase, textosDeLaFraseMeRindo, caracteristicas);
+		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, caracteristicas);
 		this.misEntidades = entidades;
 		this.misIntenciones = intenciones;
 	}
