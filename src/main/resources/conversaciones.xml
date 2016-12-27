@@ -1,30 +1,31 @@
 <?xml version="1.0"?>
+<!DOCTYPE xml>
 <conversacions>
-
 	<conversacion id="saludoGeneral">
 		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<frase>¡Hola!, soy tu asesora del Banco Atlántida.</frase>
+			<frase>
+				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
+			</frase>
 		</frases>
 		<vinetas></vinetas>
 	</conversacion>
 	
-	<conversacion id="queBusca">
-		<tipo>pregunta</tipo>
+	<conversacion id="saludoBuenosDias">
+		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<curioso>I have a lot of houses for sale. What are you looking for?.</curioso>
-			<curioso>How can i help you?.</curioso>
-			<curioso>There are some houses for sale. What are you looking for?.</curioso>
-			<impertinente>I didn't understand you, could you repeat again. What are you looking for?.</impertinente>
+			<frase>
+				<texto>¡Buenos días!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
 		</frases>
-		<vineta></vineta>
-		<when>
-			<condition operador="and" tipo="intencion">want_house</condition>
-		</when>
+		<vinetas></vinetas>
 	</conversacion>
 	
 	<conversacion id="saludar">
@@ -32,195 +33,68 @@
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<frase>Hi!. I hope that you are ok.</frase>
+			<frase>
+				<texto>¡Hola!</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
 		</frases>
-		<vineta></vineta>
+		<vinetas></vinetas>
 		<when>
-			<condition operador="and" tipo="intencion">greetings</condition>
+			<condition operador="and" tipo="intencion">saludos</condition>
 		</when>
 	</conversacion>
 	
-	<conversacion id="quiereUnaBroma">
+	<conversacion id="saludarConNombre">
 		<tipo>afirmativa</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<frase>I have a temporary mortgage. What do you mean temporary? Until they foreclose.</frase>
-			<frase>The sellers told me their house was near the water. It was in the basement.</frase>
-			<frase>How much are they asking for your rent now? Oh, about twice a day.</frase>
-			<frase>I listed a maintenance free house. In the last 25 years there hasn't been any maintenance.</frase>
-			<frase>The best part of a real estate bargain is the neighbor.</frase>
-			<frase>They have an all electric home. Everything in it is charged.</frase>
+			<frase>
+				<texto>¡Hola $!</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Hola $!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
 		</frases>
-		<vineta></vineta>
+		<vinetas></vinetas>
 		<when>
-			<condition operador="and" tipo="intencion">joke</condition>
+			<condition operador="and" tipo="intencion">saludos</condition>
 		</when>
 	</conversacion>
 	
-	<conversacion id="fueraDeContexto">
-		<tipo>afirmativa</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>Right now, i can't answer that. I only could offer you some houses for sale.</frase>
-			<frase>In this moment, i couldn't answer that. I only have some houses for sale.</frase>
-		</frases>
-		<vineta></vineta>
-		<when>
-			<condition operador="and" tipo="intencion">off_topics</condition>
-		</when>
-	</conversacion>
-	
-	<conversacion id="quireVerCasasYa">
-		<tipo>afirmativa</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>Ok, i understand that. I have these houses for you.</frase>
-		</frases>
-		<vineta></vineta>
-		<when>
-			<condition operador="and" tipo="intencion">results_now</condition>
-		</when>
-	</conversacion>
-	
-	<conversacion id="describirCostaRica">
-		<tipo>afirmativa</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>Costa Rica has an amazing biodiversity and breathtaking views to the beach and mountains.</frase>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="quiereCostaRica">
+	<conversacion id="saludoPreguntar">
 		<tipo>pregunta</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<curioso>Are you looking for a house in Costa Rica?</curioso>
-			<impertinente>Excuse me, would you like to have a house in Costa Rica?</impertinente>
+			<frase>
+				<texto>¿Cómo te puedo ayudar hoy?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿En qué puedo ayudarte?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
 		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="noQuiereCostaRica">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Which country are you looking for buying?</curioso>
-			<impertinente>Excuse me, i want to be sure. Which country are you looking for buying?</impertinente>
-		</frases>
-		<vineta></vineta>
-		<when>
-			<condition operador="and" tipo="entidad">affirmations@No</condition>
-		</when>
-	</conversacion>
-	
-	<conversacion id="vieneSoloOConLaFamilia">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Are you coming to $pais alone, or with your family?</curioso>
-			<curioso>I can help you find your dream house, I have many options available. Are you coming to $pais alone, or with your family?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="describaLaFamilia">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Tell me a bit about your family</curioso>
-			<curioso>Ok, what do you like to do in your spare time with your family?</curioso>
-			<curioso>How would you describe your family?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="determinarLaLocalizacion">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Where would you like to stay in this country, at the beach or would you prefer the mountains or city instead?</curioso>
-			<curioso>Do you like the beach or do you prefer the mountains or city?</curioso>
-			<curioso>Where would you like your house? Mountain, City or Beach?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="quierePiscina">
-		<tipo>pregunta</tipo>
-		<mandatoria>false</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Would you like to have a pool in your new house?</curioso>
-			<curioso>I have several houses available at the beach. I'm guessing you would like to have a pool, right?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="describirPatio">
-		<tipo>afirmativa</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>Remember that if you're not planning to stay long periods in $pais, you'll need to have someone take care of the backyard.</frase>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="quierePatio">
-		<tipo>pregunta</tipo>
-		<mandatoria>false</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>How about a backyard or garden?. Would that be something that you'd like?.</curioso>
-			<curioso>Would you love to have a garden in your house?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="quiereEnCondominio">
-		<tipo>pregunta</tipo>
-		<mandatoria>false</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>Do you agree to live in a Condo?</curioso>
-			<curioso>Would you like to live in a Condo?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="mostrarResultados">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso>I have found these houses for you. Do you need anything else?</curioso>
-			<curioso>I think that these houses are for you. Are you looking for anything else?</curioso>
-		</frases>
-		<vineta></vineta>
-	</conversacion>
-	
-	<conversacion id="agotoTemarioDeQuireCasa">
-		<tipo>pregunta</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<curioso></curioso>
-			<curioso></curioso>
-		</frases>
-		<vineta></vineta>
-		<when>
-			<condition operador="and" tipo="intencion">repeat_interview</condition>
-		</when>
+		<vinetas></vinetas>
 	</conversacion>
 	
 	<conversacion id="despedida">
@@ -228,29 +102,149 @@
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
 		<frases>
-			<frase>Bye!. It was a pleasure to have helped you find your dream house.</frase>
-			<frase>See you soon</frase>
+			<frase>
+				<texto>Fue un placer ayudarte, ¡que pases un feliz día! @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un placer ayudarte, ¡que pases un feliz día! Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Es un placer servirle y recuerde que le atendemos las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Es un placer servirle y recuerde que le atendemos las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Hasta luego, fue un gusto atenderte. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Hasta luego, fue un gusto atenderte. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
 		</frases>
-		<vineta></vineta>
+		<vinetas></vinetas>
 		<when>
-			<condition operador="and" tipo="intencion">goodbyes</condition>
+			<condition operador="and" tipo="intencion">despedidas</condition>
 		</when>
 	</conversacion>
 	
+	<conversacion id="fueraDeContextoGeneral">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: @@br/## @@br/## 1. Cuentas de ahorro. @@br/## 2. Cuentas de cheques. @@br/## 3. Préstamos. @@br/## 4. Tarjetas de débito y crédito. @@br/## 5. Mensajitos. @@br/## 6. Atlántida Online. @@br/## @@br/## También puedo proporcionarte información sobre costos de citas para: @@br/## @@br/## 1. Licencia para conducir. @@br/## 2. Pasaporte. @@br/## 3. Embajada Americana (USA). @@br/## @@br/## Adicionalmente, te puedo ayudar con: @@br/## @@br/## 1. Costos de la hoja de antecedentes penales. @@br/## 2. Números telefónicos de nuestras agencias. @@br/## 3. Cómo reportar extravío o robo de tarjeta. @@br/## 4. Tipo de cambio. @@br/## @@br/## Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</texto>
+				<sonido>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: 1. Cuentas de ahorro. 2. Cuentas de cheques. 3. Préstamos. 4. Tarjetas de débito y crédito. 5. Mensajitos. 6. Atlántida Online. También puedo proporcionarte información sobre costos de citas para: 1. Licencia para conducir. 2. Pasaporte. 3. Embajada Americana (USA). Adicionalmente, te puedo ayudar con: 1. Costos de la hoja de antecedentes penales. 2. Números telefónicos de nuestras agencias. 3. Cómo reportar extravío o robo de tarjeta. 4. Tipo de cambio. Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">out_of_scope</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="responderAgradecimiento">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Es un placer ayudarte.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Es un placer servirte.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noEntendi">		
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>Lo siento, no entendí. ¿En qué te puedo ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Creo que no entendí. ¿En que te gustaría que te ayude?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="errorDeComunicacionConWatson">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>				
+			<frase>
+				<texto>Disculpame, pero en este momento no puedo responderte, por favor intentalo más tarde.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="despistar">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>	
+			<frase>
+				<texto>Entiendo, ¿En que más te puedo ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
 	<conjunciones>
-		<conjuncion id="conjuncion1">I'm sorry, i didn't undertand.</conjuncion>
-		<conjuncion id="conjuncion2">I didn't catch that.</conjuncion>
+		<conjuncion id="conjuncion1">Disculpame, pero no te entiendo.</conjuncion>
+		<conjuncion id="conjuncion2">No logro comprenderte.</conjuncion>
 	</conjunciones>
 	
 	<variablesDeAmbiente>
+		<variable nombre="tieneTarjetaCredito" tipo="boolean">false</variable>
+		<variable nombre="tieneCuentaAhorros" tipo="boolean">false</variable>
 		<variable nombre="nombreCliente" tipo="string"></variable>
 		<variable nombre="hora" tipo="hora"></variable>
 		<variable nombre="estaLogueado" tipo="boolean">false</variable>
 	</variablesDeAmbiente>
 	
-	<workspaces user="bb9bd2e7-d63f-490c-b5d6-32f026a4c646" pass="Tvm3ZJzX2vab">
-		<workspace tipo="general" idIBM="d0d0e2bd-931a-4bca-ba05-e8bd8b7f1ac0" intencionesParaSeReferenciado="">deam_house_universe</workspace>
-		<workspace tipo="especifico" idIBM="8af4d07d-d2b5-4a32-804c-6a0e2749ffed" intencionesParaSeReferenciado="want_house">want_house</workspace>
+	<workspaces user="37db1761-b00b-422e-a912-bca0e93d87d4" pass="enZ5tpEeGWUH">
+		<workspace tipo="general" idIBM="b9c3bb12-9003-4b7e-bf4c-b279534742c5" intencionesParaSeReferenciado="">DMuniIntents</workspace>
+		<workspace tipo="especifico" idIBM="3ce87107-ffe7-4509-86ac-47ecc30e64fe" intencionesParaSeReferenciado="">DMuniEspecifico</workspace>
 	</workspaces>
 	
 </conversacions>

@@ -36,6 +36,7 @@ public class Agente extends Participante{
 	private int numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico;
 	private boolean cambiarDeTema = false;
 	private boolean cambiarDeTemaWSEspecifico = true;
+	private boolean abordarElTemaPorNOLoEntendiEspecifico = false;
 	private boolean abordarElTemaPorNOLoEntendi = false;
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
 	
@@ -232,7 +233,13 @@ public class Agente extends Participante{
 			if(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico == MAXIMO_DE_INTENTOS_OPCIONALES){
 				// Abordar el tema
 				cambiarDeTemaWSEspecifico = true;
+				miContextos.put(nombreWorkSpace, respuesta.getMiContexto());
+				
+				noEntendiLaUltimaRespuesta = true;
+				// TODO decir frase me rindo
+				abordarElTemaPorNOLoEntendiEspecifico = true;
 			}else{
+				abordarElTemaPorNOLoEntendiEspecifico = false;
 				// Actualizar contexto
 				miContextos.put(nombreWorkSpace, respuesta.getMiContexto());
 				
@@ -512,5 +519,13 @@ public class Agente extends Participante{
 	
 	public void yaNoSeTieneQueAbordarElTema(){
 		abordarElTemaPorNOLoEntendi = false;
+	}
+	
+	public boolean seTieneQueAbordarElTemaEspecifico(){
+		return abordarElTemaPorNOLoEntendiEspecifico;
+	}
+	
+	public void yaNoSeTieneQueAbordarElTemaEspecifico(){
+		abordarElTemaPorNOLoEntendiEspecifico = false;
 	}
 }

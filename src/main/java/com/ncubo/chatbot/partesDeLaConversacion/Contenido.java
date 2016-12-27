@@ -398,7 +398,7 @@ public abstract class Contenido
 	}
 	
 	public static void main(String argv[]) {
-		Contenido contenido = new Contenido(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA){
+		Contenido contenido = new Contenido(Constantes.PATH_ARCHIVO_DE_CONFIGURACION){
 		@Override
 		protected File archivoDeConfiguracion(String path) {
 			// TODO Auto-generated method stub
