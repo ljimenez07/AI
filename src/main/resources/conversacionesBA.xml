@@ -1,0 +1,1962 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<conversacions>
+	<conversacion id="saludoGeneral">
+		<tipo>saludo</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saludoBuenosDias">
+		<tipo>saludo</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¡Buenos días!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saludar">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¡Hola!</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">saludos</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="saludarConNombre">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¡Hola $!</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Hola $!, soy tu asesora de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">saludos</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="saludoPreguntar">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Cómo te puedo ayudar hoy?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿En qué puedo ayudarte?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="necesitaLogin">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Disculpa, no puedo mostrarte esa información a menos que inicies una sesión.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+
+	<conversacion id="quiereSaldoTarjetaCredito">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Quieres el saldo de tu tarjeta de crédito?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>Necesito saber si te refieres a la cuenta de ahorros o tarjeta de crédito.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereSaldoCuentaAhorros">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>		
+			<frase>
+				<texto>¿Quieres el saldo de tu cuenta de ahorros?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoCredito">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>false</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El saldo de tu tarjeta de crédito $%ntc es de $%stc $%nmm.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Tu saldo en $%nmm es de %stc en la tarjeta de crédito $%ntc.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoCuentaAhorros">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>false</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Tu saldo es de $%cc $%nmm en la cuenta de ahorros $%ncc.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Tu cuenta de ahorros $%ncc tiene un saldo de $%cc $%nmm.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noTengoSaldo">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Por ahora solo puedo proporcionar el saldo de tu tarjeta de crédito y de tu cuenta de ahorros. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Por ahora solo puedo proporcionar el saldo de tu tarjeta de crédito y de tu cuenta de ahorros. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereDisponibleTarjetaCredito">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Quieres el disponible de tu tarjeta de crédito?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>Necesito saber, ¿si te refieres a la cuenta de ahorros o tarjeta de crédito?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereDisponibleCuentaAhorros">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Quieres el disponible de tu cuenta de ahorros?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="disponibleCredito">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>false</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El disponible de tu tarjeta de crédito $%ntc es de $%stc $%nmm.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Tu disponible en $%nmm es de %stc en la tarjeta de crédito $%ntc.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="disponibleCuentaAhorros">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>false</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Tu disponible es de $%cc $%nmm en la cuenta de ahorros $%ncc.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Tu cuenta de ahorros $%ncc tiene un disponible de $%cc $%nmm.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noTengoDisponible">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Por ahora solo puedo proporcionar el disponible de tu tarjeta de crédito y de tu cuenta de ahorros. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 - 80 - 10 - 10 @@br/## San Pedro Sula: 25 - 80 - 10 - 10 @@br/## La Ceiba: 24 - 80 - 10 - 10</texto>
+				<sonido>Por ahora solo puedo proporcionar el disponible de tu tarjeta de crédito y de tu cuenta de ahorros. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 - 80 - 10 - 10 @@br/## San Pedro Sula: 25 - 80 - 10 - 10 La Ceiba: 24 - 80 - 10 - 10</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="tasaDolar">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El día de hoy el dólar está a $%dc la compra y $%dv la venta.</texto>
+			</frase>
+			<frase>
+				<texto>El tipo de cambio del dólar para hoy es $%dc la compra, y $%dv la venta.</texto>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="tasaEuro">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El tipo de cambio del euro para hoy es $%ec la compra, y $%ev la venta.</texto>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="tasaCambio">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Te gustaría saber la tasa de cambio del euro también?</texto>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="tasaOtras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Lamento decirte que solo tengo la tasa de cambio del dólar y el euro.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereMovimiento">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Te refieres a tu tarjeta de crédito o tu cuenta de ahorro?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="movimientosTarjeta">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Estos son los últimos movimientos registrados en tu tarjeta de crédito: $</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="movimientosCuenta">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Estos son los últimos movimientos registrados en tu cuenta de ahorro: $</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="ayudaLogin">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En la parte superior derecha, se encuentra la leyenda "Iniciar Sesión", al presionar sobre ella te aparecerán los campos para que digites tu usuario y contraseña de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="preguntarPorOtraConsulta">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Hay algo más con lo que te pueda ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿Tienes otra consulta?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿Necesitas algo más?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿Te gustaría que te ayude en algo más?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereHacerOtraConsulta">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Muy bien, ¿qué información necesitas?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Claro, dime ¿cómo te puedo ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noQuiereHacerOtraConsulta">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Fue un placer ayudarte, ¡que pases un feliz día! @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un placer ayudarte, ¡que pases un feliz día! Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="despedida">
+		<tipo>despedida</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Fue un placer ayudarte, ¡que pases un feliz día! @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un placer ayudarte, ¡que pases un feliz día! Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Es un placer servirle y recuerde que le atendemos las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Es un placer servirle y recuerde que le atendemos las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Hasta luego, fue un gusto atenderte. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Hasta luego, fue un gusto atenderte. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">despedidas</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="cualTelefono">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Cuáles son los números telefónicos que necesitas, de Call Center o de alguna de nuestras agencias?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿Necesitas los números de teléfono de Call Center o de alguna de nuestras agencias?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="numerosCallCenter">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Nuestros números telefónicos son los siguientes: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>Nuestros números telefónicos son los siguientes: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="numerosAgencias">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo los números telefónicos de nuestras agencias. @@br/## Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo los números telefónicos de nuestras agencias. Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="horariosAgencias">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo los horarios de atención de nuestras agencias. @@br/## Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo los horarios de atención de nuestras agencias. Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="ubicacionAgencias">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo la ubicación de nuestras agencias. @@br/## Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo la ubicación de nuestras agencias. Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="horariosAutoBanco">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo los horarios disponibles. @@br/## Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo los horarios disponibles. Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="ubicacionAutoBanco">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo información sobre ubicaciones disponible. @@br/## Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo información sobre ubicaciones disponible. Si deseas puedes llamar a los siguientes números telefónicos y consultar esa información: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="fueraDeContextoGeneral">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: @@br/## @@br/## 1. Cuentas de ahorro. @@br/## 2. Cuentas de cheques. @@br/## 3. Préstamos. @@br/## 4. Tarjetas de débito y crédito. @@br/## 5. Mensajitos. @@br/## 6. Atlántida Online. @@br/## @@br/## También puedo proporcionarte información sobre costos de citas para: @@br/## @@br/## 1. Licencia para conducir. @@br/## 2. Pasaporte. @@br/## 3. Embajada Americana (USA). @@br/## @@br/## Adicionalmente, te puedo ayudar con: @@br/## @@br/## 1. Costos de la hoja de antecedentes penales. @@br/## 2. Números telefónicos de nuestras agencias. @@br/## 3. Cómo reportar extravío o robo de tarjeta. @@br/## 4. Tipo de cambio. @@br/## @@br/## Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</texto>
+				<sonido>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: 1. Cuentas de ahorro. 2. Cuentas de cheques. 3. Préstamos. 4. Tarjetas de débito y crédito. 5. Mensajitos. 6. Atlántida Online. También puedo proporcionarte información sobre costos de citas para: 1. Licencia para conducir. 2. Pasaporte. 3. Embajada Americana (USA). Adicionalmente, te puedo ayudar con: 1. Costos de la hoja de antecedentes penales. 2. Números telefónicos de nuestras agencias. 3. Cómo reportar extravío o robo de tarjeta. 4. Tipo de cambio. Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">out_of_scope</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="fueraDeContextoBanco">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En estos momentos no tengo esa información disponible. @@br/## Si deseas puedes consultar a los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
+				<sonido>En estos momentos no tengo esa información disponible. Si deseas puedes consultar a los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+		<when>
+			<condition operador="and" tipo="intencion">out_of_scope_bank</condition>
+		</when>
+	</conversacion>
+	
+	<conversacion id="responderAgradecimiento">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Es un placer ayudarte.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Es un placer servirte.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualProducto">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Podrías repetirme sobre cuál de nuestros productos necesitas información?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿En cuál de nuestros productos estás interesado?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¿Sobre cuál producto te puedo dar información?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualProductoAhorro">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Tenemos a tu disposición estos tipos de cuenta de ahorros: @@br/## @@br/## 1)@@!Ahorro Atlántida. @@br/## 2)@@!Ahorro Atlántida Kids. @@br/## 3)@@!Ahorro Atlántida "U". @@br/## 4)@@!Ahorro Remesas. @@br/## 5)@@!Ahorro Virtual Remesas.@@br/## @@br/## ¿Sobre cuál de estos productos necesitas información?</texto>
+				<sonido>Tenemos a tu disposición estos tipos de cuenta de ahorros: 1)Ahorro Atlántida. 2)Ahorro Atlántida Kids. 3)Ahorro Atlántida "U". 4)Ahorro Remesas. 5)Ahorro Virtual Remesas. ¿Sobre cuál de estos productos necesitas información?</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualMonedaAhorros">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Esta cuenta está disponible en Lempiras, Dólares y Euros. ¿Cuál es la que necesitas?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualMonedaAhorrosKids">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Podrías indicar la moneda en la que quieres la cuenta de ahorros Atlántida Kids? Hay en Lempiras y Dólares.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualMonedaAhorrosRemesas">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>¿Podrías indicar la moneda en la que quieres la cuenta de ahorro Remesas? Hay en Lempiras y Dólares.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros es de 500 Lempiras.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros es de 100 Dólares.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosEuros">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros es de 500 Euros.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosKidsLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros Kids es de 100 Lempiras.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosKidsDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros Kids es de 30 Dólares.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosRemesasLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros Remesas es de 100 Lempiras.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto inicial de una cuenta de ahorros Remesas es de 50 Dólares.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="montoInicialCuentaAhorrosVirtualRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto de apertura es de 120 Dólares de los cuales 20 Dólares se destinan para el envío y recibo de documentos.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros es de 500 Lempiras, y no olvides que hay un cargo por 30 Lempiras en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros es de 100 Dólares, y no olvides que hay un cargo por 1 Dólar en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosEuros">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros es de 500 Euros, y no olvides que hay un cargo por 1 Euro en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosKidsLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 100 Lempiras, en esta cuenta el cargo por saldo menor al mínimo no aplica.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosKidsDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 30 Dólares, en esta cuenta el cargo por saldo menor al mínimo no aplica.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+
+	<conversacion id="saldoMinimoCuentaAhorrosRemesasLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros Remesas es de 100 Lempiras, y no olvides que hay un cargo por 15 Lempiras en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorros Remesas es de 50 Dólares, y no olvides que hay un cargo por 1 Dólar en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoMinimoCuentaAhorrosVirtualRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Te cuento que el saldo mínimo para cuenta de ahorro Virtual Remesas es de 100 Dólares, y no olvides que hay un cargo por 1 Dólar en caso que no se cumpla ese mínimo.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro debes: @@br/## @@br/## 1)@@!Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. @@br/##2)@@!Completar la solicitud. @@br/##3)@@!Realizar el depósito inicial de 500 Lempiras. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorros es de 500 Lempiras, y no olvides que hay un cargo por 30 Lempiras en caso que no se cumpla ese mínimo.</texto>
+				<sonido>Para abrir una cuenta de ahorro debes: 1)Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. 2)Completar la solicitud. 3)Realizar el depósito inicial de 500 Lempiras. Recuerda que el saldo mínimo para cuenta de ahorros es de 500 Lempiras, y no olvides que hay un cargo por 30 Lempiras en caso que no se cumpla ese mínimo.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosEuros">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro debes: @@br/## @@br/## 1)@@!Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. @@br/##2)@@!Completar la solicitud. @@br/##3)@@!Realizar el depósito inicial de 500 Euros. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorros es de 500 Euros, y no olvides que hay un cargo por 1 Euro en caso que no se cumpla ese mínimo.</texto>
+				<sonido>Para abrir una cuenta de ahorro debes: 1)Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. 2)Completar la solicitud. 3)Realizar el depósito inicial de 500 Euros. Recuerda que el saldo mínimo para cuenta de ahorros es de 500 Euros, y no olvides que hay un cargo por 1 Euro en caso que no se cumpla ese mínimo.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro debes: @@br/## @@br/## 1)@@!Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. @@br/##2)@@!Completar la solicitud. @@br/##3)@@!Realizar el depósito inicial de 100 Dólares. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorros es de 100 Dólares, y no olvides que hay un cargo por 1 Dólar en caso que no se cumpla ese mínimo.</texto>
+				<sonido>Para abrir una cuenta de ahorro debes: 1)Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. 2)Completar la solicitud. 3)Realizar el depósito inicial de 100 Dólares. Recuerda que el saldo mínimo para cuenta de ahorros es de 100 Dólares, y no olvides que hay un cargo por 1 Dólar en caso que no se cumpla ese mínimo.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosKidsLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro Kids debes:  @@br/## @@br/## 1)@@!Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. @@br/## 2)@@!Partida de nacimiento del niño. @@br/## 3)@@!Completar la solicitud. @@br/## 4)@@!Realizar el depósito inicial de 100 Lempiras. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 100 Lempiras, en esta cuenta el cargo por saldo menor al mínimo no aplica.</texto>
+				<sonido>Para abrir una cuenta de ahorro Kids debes: 1)Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. 2)@@!Partida de nacimiento del niño. 3)Completar la solicitud. 4)Realizar el depósito inicial de 100 Lempiras. Recuerda que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 100 Lempiras, en esta cuenta el cargo por saldo menor al mínimo no aplica.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosKidsDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro Kids debes: @@br/## @@br/## 1)@@!Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. @@br/## 2)@@!Partida de nacimiento del niño. @@br/## 3)@@!Completar la solicitud. @@br/## 4)@@!Realizar el depósito inicial 30 Dólares. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 30 Dólares, en esta cuenta el cargo por saldo menor al mínimo no aplica.</texto>
+				<sonido>Para abrir una cuenta de ahorro Kids debes: 1)Presentar original y fotocopia de tarjeta de Identidad o carnet de residencia o pasaporte. 2)Partida de nacimiento del niño. 3)Completar la solicitud. 4)Realizar el depósito inicial 30 Dólares. Recuerda que el saldo mínimo para cuenta de ahorros Atlántida Kids es de 30 Dólares, en esta cuenta el cargo por saldo menor al mínimo no aplica.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosRemesasLempiras">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro Remesas debes:  @@br/## @@br/## 1)@@!Completar la solicitud.  @@br/## 2)@@!Contrato de autorización para crédito automático a cuenta, en caso que desees optar por este servicio.  @@br/## 3)@@!Copia de un recibo de cobro reciente de Remesas Familiares (Máximo 6 meses). @@br/## 4)@@!Monto de apertura de cuenta por 100 Lempiras. @@br/## @@br/## Para Hondureños:  @@br/## @@br/## 1)@@!Original y fotocopia de tarjeta de identidad.  @@br/##  @@br/## Para Extranjeros: @@br/## @@br/## 1)@@!Original y fotocopia de carnet de residencia o pasaporte. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorro Remesas es de 100 Lempiras, en esta cuenta el cargo por saldo menor al mínimo es de 15 Lempiras.</texto>
+				<sonido>Para abrir una cuenta de ahorro Remesas debes: 1)Completar la solicitud. 2)Contrato de autorización para crédito automático a cuenta, en caso que desees optar por este servicio. 3)Copia de un recibo de cobro reciente de Remesas Familiares (Máximo 6 meses). 4)Monto de apertura de cuenta por 100 Lempiras. Para Hondureños: 1)Original y fotocopia de tarjeta de identidad. Para Extranjeros: 1)Original y fotocopia de carnet de residencia o pasaporte. Recuerda que el saldo mínimo para cuenta de ahorro Remesas es de 100 Lempiras, en esta cuenta el cargo por saldo menor al mínimo es de 15 Lempiras.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro Remesas debes:  @@br/## @@br/## 1)@@!Completar la solicitud.  @@br/## 2)@@!Contrato de autorización para crédito automático a cuenta, en caso que desees optar por este servicio.  @@br/## 3)@@!Copia de un recibo de cobro reciente de Remesas Familiares (Máximo 6 meses). @@br/## 4)@@!Monto de apertura de cuenta por 50 Dólares. @@br/## @@br/## Para Hondureños:  @@br/## @@br/## 1)@@!Original y fotocopia de tarjeta de identidad.  @@br/##  @@br/## Para Extranjeros:  @@br/## @@br/## 1)@@!Original y fotocopia de carnet de residencia o pasaporte. @@br/## @@br/## Recuerda que el saldo mínimo para cuenta de ahorro Remesas es de 50 Dólares, en esta cuenta el cargo por saldo menor al mínimo es de 1 Dólar.</texto>
+				<sonido>Para abrir una cuenta de ahorro Remesas debes: 1)Completar la solicitud. 2)Contrato de autorización para crédito automático a cuenta, en caso que desees optar por este servicio. 3)Copia de un recibo de cobro reciente de Remesas Familiares (Máximo 6 meses). 4)Monto de apertura de cuenta por 50 Dólares. Para Hondureños: 1)Original y fotocopia de tarjeta de identidad. Para Extranjeros: 1)Original y fotocopia de carnet de residencia o pasaporte. Recuerda que el saldo mínimo para cuenta de ahorro Remesas es de 50 Dólares, en esta cuenta el cargo por saldo menor al mínimo es de 1 Dólar.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosCuentaAhorrosVirtualRemesasDolares">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para abrir una cuenta de ahorro Virtual Remesas debes tener las siguientes consideraciones:  @@br/## @@br/## 1)@@!Sólo para hondureños residentes en EUA. @@br/## 2)@@!Presentar tu tarjeta de identidad hondureña o pasaporte junto con la contraseña. @@br/## 3)@@!Se abre a través de una llamada a nuestro Call Center 1-877-898-8863.  @@br/## 4)@@!Debes enviar una remesa como depósito inicial a través de los Agentes Atlántida USA, ubicados en las ciudades de Miami, Houston y Fort Lauderdale. @@br/## 5)@@!No tiene libreta solo Tarjeta de débito en dólares. @@br/## 6)@@!El monto de apertura es de 120 Dólares, de los cuales 20 Dólares se destinan para el envío y recibo de documentos. @@br/## 7)@@!Los depósitos a la cuenta se hacen a través de envío de remesas con crédito a cuenta a través de los Agentes Atlántida USA y cuyo beneficiario es el dueño de la cuenta. @@br/## 8)@@!La cuenta de ahorros y tarjeta de débito se activa una vez que se han recibido los documentos firmados por el cliente en Banco Atlántida.   @@br/## Recuerda que el saldo mínimo para cuenta de ahorro Virtual Remesas es de 100 Dólares, en esta cuenta el cargo por saldo menor al mínimo es de 1 Dólar.</texto>
+				<sonido>Para abrir una cuenta de ahorro Virtual Remesas debes tener las siguientes consideraciones: 1)Sólo para hondureños residentes en EUA. 2)Presentar tu tarjeta de identidad hondureña o pasaporte junto con la contraseña. 3)Se abre a través de una llamada a nuestro Call Center 1-877-898-8863. 4)Debes enviar una remesa como depósito inicial a través de los Agentes Atlántida USA, ubicados en las ciudades de Miami, Houston y Fort Lauderdale. 5)No tiene libreta solo Tarjeta de débito en dólares. 6)El monto de apertura es de 120 Dólares, de los cuales 20 Dólares se destinan para el envío y recibo de documentos. @@br/## 7)@@!Los depósitos a la cuenta se hacen a través de envío de remesas con crédito a cuenta a través de los Agentes Atlántida USA y cuyo beneficiario es el dueño de la cuenta. 8)La cuenta de ahorros y tarjeta de débito se activa una vez que se han recibido los documentos firmados por el cliente en Banco Atlántida. Recuerda que el saldo mínimo para cuenta de ahorro Virtual Remesas es de 100 Dólares, en esta cuenta el cargo por saldo menor al mínimo es de 1 Dólar.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosAOL">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para solicitar Atlántida Online debes: @@br/## @@br/##  1)@@!Ser uno de nuestros clientes. @@br/## 2)@@!Tener correo electrónico. @@br/## 3)@@!Completar la solicitud. @@br/## 4)@@!Firmar el contrato de la banca personal por Internet. @@br/## 5)@@!Presentar fotocopia de tarjeta de identidad (para hondureños), carné de residencia o pasaporte (para extranjeros).</texto>
+				<sonido>Para solicitar Atlántida Online debes: 1)Ser uno de nuestros clientes. 2)Tener correo electrónico. 3)Completar la solicitud. 4)Firmar el contrato de la banca personal por Internet. 5)Presentar fotocopia de tarjeta de identidad (para hondureños), carné de residencia o pasaporte (para extranjeros).</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosPrestamoPersonal">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para solicitar un préstamo personal debes presentar: @@br/## @@br/## 1)@@!Original y copia de tarjeta de identidad. @@br/## 2)@@!Fotocopia de último recibo público ya sea agua, luz o teléfono. @@br/## 3)@@!Copia de RTN numérico. @@br/## 4)@@!Constancia  de trabajo donde indique cargo, sueldo y antigüedad. @@br/## @@br/## Además debes cumplir con las siguientes condiciones: @@br/## @@br/## 1)@@!Un año de laborar en empresa privada y dos en sector público. @@br/## 2)@@!Ingreso mínimo mensual sea de 12 500 Lempiras (tega, Sps y la Ceiba) y 9 500 Lempiras (el resto del país). @@br/## 3)@@!Ser mayor de 21 años. @@br/## 4)@@!En el caso de ser comerciante individual presentar los estados financieros de los dos últimos años autenticados por un perito, estados de cuenta bancario de los dos últimos meses y el permiso de operación del negocio.</texto>
+				<sonido>Para solicitar un préstamo personal debes presentar: 1)Original y copia de tarjeta de identidad. 2)Fotocopia de último recibo público ya sea agua, luz o teléfono. 3)Copia de RTN numérico. 4)Constancia  de trabajo donde indique cargo, sueldo y antigüedad. Además debes cumplir con las siguientes condiciones: 1)Un año de laborar en empresa privada y dos en sector público. 2)Ingreso mínimo mensual sea de 12 500 Lempiras (tega, Sps y la Ceiba) y 9 500 Lempiras (el resto del país). 3)Ser mayor de 21 años. 4)En el caso de ser comerciante individual presentar los estados financieros de los dos últimos años autenticados por un perito, estados de cuenta bancario de los dos últimos meses y el permiso de operación del negocio.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosPrestamoVehiculo">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para solicitar un préstamo de vehículo en el caso que seas asalariado debes presentar: @@br/## @@br/## 1)@@!Factura Proforma. @@br/## 2)@@!Fotocopia de tarjeta de Identidad. @@br/## 3)@@!Fotocopia de RTN. @@br/## 4)@@!Fotocopia de último recibo de servicios públicos. @@br/## 5)@@!Constancia de trabajo con deducciones y detalle de antigüedad (1 año de laborar en empresa privada y 2 en sector público) exceptuando empleados bajo convenio. @@br/## @@br/## Si eres comerciante individual debes presentar lo siguiente: @@br/## @@br/## 1)@@!Factura Proforma. @@br/## 2) Fotocopia de Tarjeta de Identidad. @@br/## 3) Estados Financieros de los 2 últimos años. @@br/## 4)@@!Escritura de Comerciante Individual. @@br/## 5)@@!Permiso de Operación Vigente o Carnet de Colegiación o Permiso de Explotación.</texto>
+				<sonido>Para solicitar un préstamo de vehículo en el caso que seas asalariado debes presentar: 1)Factura Proforma. 2)Fotocopia de tarjeta de Identidad. 3)otocopia de RTN. 4)Fotocopia de último recibo de servicios públicos. 5)Constancia de trabajo con deducciones y detalle de antigüedad (1 año de laborar en empresa privada y 2 en sector público) exceptuando empleados bajo convenio. Si eres comerciante individual debes presentar lo siguiente: 1)Factura Proforma. 2)Fotocopia de Tarjeta de Identidad. 3)Estados Financieros de los 2 últimos años. 4)Escritura de Comerciante Individual. 5)Permiso de Operación Vigente o Carnet de Colegiación o Permiso de Explotación.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosPrestamoVivienda">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para solicitar un préstamo de vivienda en el caso que seas asalariado debes presentar: @@br/## @@br/## 1)@@!Fotocopia de tarjeta de Identidad. @@br/## 2)@@!Fotocopia de RTN. @@br/## 3)@@!Constancia de Trabajo con Deducciones y Detalle de Antigüedad (1 año de laborar en empresa privada y 2 en sector público) exceptuando empleados bajo convenio. @@br/## 4)@@!Escritura del Inmueble que otorgará en garantía más Promesa de venta. @@br/## 5)@@!Documentos del vendedor (Fotocopia de Id y RTN). @@br/## 6)@@!Constancia de no poseer Bienes Inmuebles (Fondos Banhprovi). @@br/## 7)@@!Si es construcción o mejoras presentar presupuesto de construcción y el plano de construcción. @@br/## @@br/## Si eres comerciante individual debes presentar: @@br/## @@br/## 1)@@!Fotocopia de Tarjeta de Identidad. @@br/## 2)@@!Estados Financieros de los 2 últimos años. @@br/## 3)@@!Escritura de comerciante individual. @@br/## 4)@@!Permiso de operación vigente o carnet de colegiación o permiso de explotación. @@br/## 5)@@!Escritura del inmueble que otorgará en garantía. @@br/## 6)@@!Promesa de venta. @@br/## 7)@@!Documentos del vendedor (Fotocopia de Id y RTN). @@br/## 8)@@!Constancia de no poseer Bienes Inmuebles (Fondos Banhprovi). @@br/## 9)@@!Si es construcción o mejoras presentar presupuesto de construcción y el plano de construcción.</texto>
+				<sonido>Para solicitar un préstamo de vivienda en el caso que seas asalariado debes presentar: 1)Fotocopia de tarjeta de Identidad. 2)Fotocopia de RTN. 3)Constancia de Trabajo con Deducciones y Detalle de Antigüedad (1 año de laborar en empresa privada y 2 en sector público) exceptuando empleados bajo convenio. 4)Escritura del Inmueble que otorgará en garantía más Promesa de venta. 5)Documentos del vendedor (Fotocopia de Id y RTN). 6)Constancia de no poseer Bienes Inmuebles (Fondos Banhprovi). 7)Si es construcción o mejoras presentar presupuesto de construcción y el plano de construcción. Si eres comerciante individual debes presentar: 1)Fotocopia de Tarjeta de Identidad. 2)Estados Financieros de los 2 últimos años. 3)Escritura de comerciante individual. 4)Permiso de operación vigente o carnet de colegiación o permiso de explotación. 5)Escritura del inmueble que otorgará en garantía. 6)Promesa de venta. 7)Documentos del vendedor (Fotocopia de Id y RTN). 8)Constancia de no poseer Bienes Inmuebles (Fondos Banhprovi). 9)Si es construcción o mejoras presentar presupuesto de construcción y el plano de construcción.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualProductoPrestamo">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>					
+			<frase>
+				<texto>¿Quieres un préstamo personal, de vehículo o de vivienda?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="cualAntecedentes">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>¿Quieres los antecedentes penales o policiales?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="cualTipoAntecedentesPenales">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>
+			<frase>
+				<texto>¿Quieres la constancia de antecedentes penales para fines de trabajo, contraer matrimonio, para estudio o asuntos varios?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="precioAntecendentesPenalesTrabajo">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Si eres menor de 25 años no tiene ningún costo. Sino debes cancelar 150 Lempiras. @@br/## @@br/## Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</texto>
+				<sonido>Si eres menor de 25 años no tiene ningún costo. Sino debes cancelar 150 Lempiras. Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioAntecendentesPenalesMatrimonio">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El costo es de 150 Lempiras. @@br/## @@br/## Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</texto>
+				<sonido>El costo es de 150 Lempiras. Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioAntecendentesPenalesEstudio">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El costo es de 50 Lempiras. @@br/## @@br/## Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</texto>
+				<sonido>El costo es de 50 Lempiras. Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioAntecendentesPenalesVarios">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El costo es de 50 Lempiras. @@br/## @@br/## Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.El costo es de 200 Lempiras. @@br/## @@br/## Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</texto>
+				<sonido>El costo es de 50 Lempiras. Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.El costo es de 200 Lempiras. Recuerda que luego de hacer el pago debes acudir a la oficina de Antecedentes Penales de tu localidad, no olvides llevar tu tarjeta de identidad.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+
+	<conversacion id="precioAntecendentesPoliciales">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El costo es de 250 Lempiras. @@br/## @@br/## Antes de hacer el pago debes ir a las oficinas de la policía  nacional por el formulario Recibo de Ingresos del Estado TGR-1, la cual debes traerla llena. No olvides llevar tu tarjeta de identidad.</texto>
+				<sonido>El costo es de 250 Lempiras. Antes de hacer el pago debes ir a las oficinas de la policía  nacional por el formulario Recibo de Ingresos del Estado TGR-1, la cual debes traerla llena. No olvides llevar tu tarjeta de identidad.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioAOL">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El servicio es completamente gratuito para la Banca Personal, sin embargo la Banca Empresarial y PYME tiene un costo el cual es informado cuando se presenta la oferta de servicio por el Ejecutivo de Cuenta.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioMensajitos">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El servicio es gratis, pero el costo del mensajito lo determina la empresa de celular.  @@br/## Puedes solicitarlo en cualquier agencia del país.</texto>
+				<sonido>El servicio es gratis, pero el costo del mensajito lo determina la empresa de celular. Puedes solicitarlo en cualquier agencia del país.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="reportarExtravio">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Lamento lo sucedido, si necesitas reportar el extravío de tus tarjetas de crédito y débito puedes llamar a los siguientes números telefónicos: @@br/##  @@br/## En Honduras: @@br/## 22 80 10 10. @@br/## 25 80 10 10. @@br/## 24 80 10 10. @@br/## @@br/## En el Extranjero:  @@br/## @@br/## VISA: @@br/## USA y Canadá: 1 (800) 847 29 11. @@br/## En otros países: (410) 581 01 20. @@br/## @@br/## MASTERCARD: @@br/## USA y Canadá: 1 (800) 307 73 09. @@br/## En otros países: 1 (636) 722 72 11. @@br/## @@br/## Recuerda que este servicio está disponible las 24 horas, los 7 días de la semana.</texto>
+				<sonido>Lamento lo sucedido, si necesitas reportar el extravío de tus tarjetas de crédito y débito puedes llamar a los siguientes números telefónicos: En Honduras: 22 80 10 10. 25 80 10 10. 24 80 10 10. En el Extranjero: VISA: USA y Canadá: 1 (800) 847 29 11. En otros países: (410) 581 01 20. MASTERCARD: USA y Canadá: 1 (800) 307 73 09. En otros países: 1 (636) 722 72 11. Recuerda que este servicio está disponible las 24 horas, los 7 días de la semana.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosMensajitos">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para disfrutar del servicio Mensajitos Atlántida debes: @@br/## @@br/## 1)@@!Poseer algún producto con el banco (cuentas de ahorro, cheques, tarjeta de crédito, etc) o recibir remesas.  @@br/## 2)@@!Llenar contrato de afiliación para clientes de Mensajitos Atlántida.  @@br/## 3)@@!Fotocopia de la tarjeta de identidad para hondureños, carné de residente o pasaporte para extranjeros.  @@br/## 4)@@!Poseer un teléfono celular de TIGO, Claro.  @@br/## @@br/## El servicio es gratis, pero el costo del mensajito lo determina la empresa de celular.  @@br/## Puedes solicitarlo en cualquier agencia del país.</texto>
+				<sonido>Para disfrutar del servicio Mensajitos Atlántida debes: 1)Poseer algún producto con el banco (cuentas de ahorro, cheques, tarjeta de crédito, etc) o recibir remesas. 2)Llenar contrato de afiliación para clientes de Mensajitos Atlántida. 3)Fotocopia de la tarjeta de identidad para hondureños, carné de residente o pasaporte para extranjeros. 4)Poseer un teléfono celular de TIGO, Claro. El servicio es gratis, pero el costo del mensajito lo determina la empresa de celular. Puedes solicitarlo en cualquier agencia del país.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosTarjetaDebito">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para obtener una tarjeta de débito debes: @@br/## @@br/## 1)@@!Poseer una cuenta de ahorros o cheques en lempiras con el Banco. @@br/## 2)@@!Ser mayor de 18 años. @@br/## 3)@@!Llenar la solicitud.</texto>
+				<sonido>Para obtener una tarjeta de débito debes: 1)Poseer una cuenta de ahorros o cheques en lempiras con el Banco. 2)Ser mayor de 18 años. 3)Llenar la solicitud.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosTarjetaCredito">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para adquirir una de nuestras tarjetas de crédito debes: @@br/## @@br/## Para asalariados:  @@br/## @@br/## 1)@@!Llenar la solicitud. @@br/## 2)@@!Presentar constancia de trabajo (sueldo, antigüedad y cargo). @@br/## 3)@@!Fotocopia de la tarjeta de identidad. @@br/## 4)@@!Tiempo de laborar: en empresa privada 1 año y empresa pública 2 años. @@br/## 5)@@!Fotocopia del último recibo de un servicio público. @@br/## 6)@@!RTN. @@br/## 7)@@!Ingresos desde 10 000 Lempiras. @@br/##@@br/## Para comerciantes Individuales: @@br/## @@br/## 1)@@!Llenar la solicitud. @@br/## 2)@@!Fotocopia de la tarjeta de identidad. @@br/## 3)@@!Estados financieros recientes. @@br/## 4)@@!Fotocopia del permiso de operación del negocio. @@br/## 5)@@!Fotocopia del último recibo de un servicio público. @@br/## 6)@@!RTN.</texto>
+				<sonido>Para adquirir una de nuestras tarjetas de crédito debes: Para asalariados: 1)Llenar la solicitud. 2)Presentar constancia de trabajo (sueldo, antigüedad y cargo). 3)Fotocopia de la tarjeta de identidad. 4)Tiempo de laborar: en empresa privada 1 año y empresa pública 2 años. 5)Fotocopia del último recibo de un servicio público. 6)RTN. 7)Ingresos desde 10 000 Lempiras. Para comerciantes Individuales: 1)Llenar la solicitud. 2)Fotocopia de la tarjeta de identidad. 3)Estados financieros recientes. 4)Fotocopia del permiso de operación del negocio. 5)Fotocopia del último recibo de un servicio público. 6)RTN.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualTarjeta">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>¿Quieres información sobre tarjeta de débito o tarjeta de crédito?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="requisitosChequesPersona">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Para adquirir una cuenta de cheques debes presentar: @@br/## @@br/## 1)@@!Original y copia de tarjeta de identidad. @@br/## 2)@@!Original y copia de carnet de residencia o pasaporte (para extranjeros). @@br/## 3)@@!Completar la solicitud única de productos. @@br/## 4)@@!Dos referencias bancarias, comerciales o personales (por escrito). @@br/## 5)@@!Se apertura con 2 500 Lempiras o 1 000 Dólares. @@br/## 6)@@!Copia de RTN.</texto>
+				<sonido>Para adquirir una cuenta de cheques debes presentar: 1)Original y copia de tarjeta de identidad. 2)Original y copia de carnet de residencia o pasaporte (para extranjeros). 3)Completar la solicitud única de productos. 4)Dos referencias bancarias, comerciales o personales (por escrito). 5)Se apertura con 2 500 Lempiras o 1 000 Dólares.6)Copia de RTN.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualCheques">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>			
+			<frase>
+				<texto>¿Quieres información sobre cuentas de cheques para Persona Natural, Empresas, Instituciones Gubernamentales o Instituciones No Gubernamentales?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="cualCuenta">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>¿Quieres información sobre cuenta de ahorros o cuenta de cheques?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>	
+	
+	<conversacion id="requisitosEmbajada">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Los pasos que debes seguir para pagar la tasa consular o cita de la Embajada Americana (USA) son los siguientes: @@br/## @@br/## 1)@@!Debes ingresar a la página web:  www.ustraveldocs.com/hn  y definir un perfil para poder completar el formulario de la hoja de depósito. @@br/## 2)@@!Es importante que en opciones de pago hayas seleccionado Banco Atlántida.  @@br/## 3)@@!Cuando imprimas la Boleta de Depósito de Banco Atlántida, contiene el número de referencia CGI, puedes presentarla en cualquier punto de servicio para realizar el pago de la Tasa Consular. @@br/## 4)@@!Para realizar el pago le brindamos las opciones de Ventanilla, Atlántida Online, Kioscos y Agentes. @@br/## 5)@@!El monto a cancelar dependerá de la hoja de depósito y la tasa de cambio que estableció el CGI. @@br/## 6)@@!Luego de realizado el pago recibirás un comprobante con el número de recibo, el cual le servirá para continuar el proceso en la página www.ustraveldocs.com/hn  y poder agendar la cita.</texto>
+				<sonido>Los pasos que debes seguir para pagar la tasa consular o cita de la Embajada Americana (USA) son los siguientes: 1)Debes ingresar a la página web:  www.ustraveldocs.com/hn  y definir un perfil para poder completar el formulario de la hoja de depósito. 2)Es importante que en opciones de pago hayas seleccionado Banco Atlántida. 3)Cuando imprimas la Boleta de Depósito de Banco Atlántida, contiene el número de referencia CGI, puedes presentarla en cualquier punto de servicio para realizar el pago de la Tasa Consular. 4)Para realizar el pago le brindamos las opciones de Ventanilla, Atlántida Online, Kioscos y Agentes. 5)El monto a cancelar dependerá de la hoja de depósito y la tasa de cambio que estableció el CGI. 6)Luego de realizado el pago recibirás un comprobante con el número de recibo, el cual le servirá para continuar el proceso en la página www.ustraveldocs.com/hn  y poder agendar la cita.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="precioEmbajada">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El monto a cancelar dependerá de la hoja de depósito y la tasa de cambio que estableció el CGI.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosPasaporte">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En Banco Atlántida te recibimos el pago de la cita para solicitar la emisión del pasaporte electrónico en las oficinas de migración a nivel nacional.  @@br/## El costo va a depender del tiempo de vigencia, por ejemplo, por 5 años el costo es de 35 dólares, pero por 10 años el costo es de 50 dólares. Cuando eres menor de edad el pasaporte sólo se autoriza por 5 años.  @@br/## Si deseas el pasaporte el mismo día debes cancelar 20 dólares adicionales al monto que pagas por la vigencia, pero antes de ir al banco tiene que presentarse a las oficinas de pasaporte ubicadas  en Tegucigalpa, San Pedro Sula o La Ceiba y solicitar una cita express.  @@br/##  @@br/## Recuerda que: @@br/## @@br/## 1)@@!Si es la primera vez que solicitas pasaporte o el que tienes ya está vencido debes presentar la tarjeta de identidad original. Pero si tu pasaporte está vigente entonces debes presentar ese documento.  @@br/## 2)@@!Si eres mayor de 21 años, debes presentar en el Banco la tarjeta de identidad. Pero si tu edad está entre 18 y 21 entonces uno de tus padres, el tutor, representante o apoderado legal, debidamente identificado, debe presentar tu tarjeta de identidad.  En caso que seas menor de 18 años esa persona deberá presentar tu partida de nacimiento.  @@br/## @@br/## Información adicional y detallada está disponible en el sitio: http://inm.gob.hn/pasaporte</texto>
+				<sonido>En Banco Atlántida te recibimos el pago de la cita para solicitar la emisión del pasaporte electrónico en las oficinas de migración a nivel nacional. El costo va a depender del tiempo de vigencia, por ejemplo, por 5 años el costo es de 35 dólares, pero por 10 años el costo es de 50 dólares. Cuando eres menor de edad el pasaporte sólo se autoriza por 5 años. Si deseas el pasaporte el mismo día debes cancelar 20 dólares adicionales al monto que pagas por la vigencia, pero antes de ir al banco tiene que presentarse a las oficinas de pasaporte ubicadas  en Tegucigalpa, San Pedro Sula o La Ceiba y solicitar una cita express. Recuerda que: 1)Si es la primera vez que solicitas pasaporte o el que tienes ya está vencido debes presentar la tarjeta de identidad original. Pero si tu pasaporte está vigente entonces debes presentar ese documento. 2)Si eres mayor de 21 años, debes presentar en el Banco la tarjeta de identidad. Pero si tu edad está entre 18 y 21 entonces uno de tus padres, el tutor, representante o apoderado legal, debidamente identificado, debe presentar tu tarjeta de identidad.  En caso que seas menor de 18 años esa persona deberá presentar tu partida de nacimiento. Información adicional y detallada está disponible en el sitio: http://inm.gob.hn/pasaporte</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+		
+	<conversacion id="precioPasaporte">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>En Banco Atlántida te recibimos el pago de la cita para solicitar la emisión del pasaporte electrónico en las oficinas de migración a nivel nacional.  @@br/## El costo va a depender del tiempo de vigencia, por ejemplo, por 5 años el costo es de 35 dólares, pero por 10 años el costo es de 50 dólares. Cuando eres menor de edad el pasaporte sólo se autoriza por 5 años.  @@br/## Si deseas el pasaporte el mismo día debes cancelar 20 dólares adicionales al monto que pagas por la vigencia, pero antes de ir al banco tiene que presentarse a las oficinas de pasaporte ubicadas  en Tegucigalpa, San Pedro Sula o La Ceiba y solicitar una cita express.  @@br/## @@br/## Información adicional y detallada está disponible en el sitio: http://inm.gob.hn/pasaporte</texto>
+				<sonido>En Banco Atlántida te recibimos el pago de la cita para solicitar la emisión del pasaporte electrónico en las oficinas de migración a nivel nacional. El costo va a depender del tiempo de vigencia, por ejemplo, por 5 años el costo es de 35 dólares, pero por 10 años el costo es de 50 dólares. Cuando eres menor de edad el pasaporte sólo se autoriza por 5 años. Si deseas el pasaporte el mismo día debes cancelar 20 dólares adicionales al monto que pagas por la vigencia, pero antes de ir al banco tiene que presentarse a las oficinas de pasaporte ubicadas  en Tegucigalpa, San Pedro Sula o La Ceiba y solicitar una cita express. Información adicional y detallada está disponible en el sitio: http://inm.gob.hn/pasaporte</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="requisitosLicencia">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>Si eres ciudadano hondureño o residente legal podemos recibir tu pago para que solicites licencia de conducir.  @@br/## @@br/## 1)@@!Ten en cuenta que el precio de la licencia depende de dos factores: a) el tipo de Licencia, y b) la vigencia (1, 2 o 5 años). Por ejemplo, la Liviana Nacional tiene un precio de 150 lempiras por 1 año, 250 lempiras por 2 años y 600 lempiras la de 5 años. @@br/## 2)@@!Cuando pagas te damos un recibo con tus datos personales, fecha, hora y centro de atención al cual debes presentarte para solicitar la licencia. @@br/## 3)@@!Entre los centros de atención que puedes escoger para hacer el trámite de tu licencia están: @@br/## @@br/## a) Tegucigalpa. @@br/## b) San Pedro Sula. @@br/## c) Juticalpa. @@br/## d) El Progreso, Yoro. @@br/## e) La Ceiba. @@br/## f) Santa Rosa de Copán. @@br/## g) Danlí, El Paraíso. @@br/## h) Choluteca. @@br/## i) Puerto Cortés. @@br/## @@br/## IMPORTANTE: @@br/## @@br/## A) Una vez que sales de la agencia con el recibo impreso no se pueden hacer devoluciones de dinero ni reversar la cita. @@br/## B) Los recibos de citas tendrán vigencia de un año a partir de su emisión. @@br/## C) Si pierdes la cita puedes reprogramarla yendo a la agencia con su recibo y pagando 12 lempiras. @@br/## D) Si pierdes el recibo y la cita aún no ha vencido puedes acudir a una agencia y reponerlo, pagando 12 lempiras.</texto>
+				<sonido>Si eres ciudadano hondureño o residente legal podemos recibir tu pago para que solicites licencia de conducir. 1)Ten en cuenta que el precio de la licencia depende de dos factores: a) el tipo de Licencia, y b) la vigencia (1, 2 o 5 años). Por ejemplo, la Liviana Nacional tiene un precio de 150 lempiras por 1 año, 250 lempiras por 2 años y 600 lempiras la de 5 años. 2)Cuando pagas te damos un recibo con tus datos personales, fecha, hora y centro de atención al cual debes presentarte para solicitar la licencia. 3)Entre los centros de atención que puedes escoger para hacer el trámite de tu licencia están: a) Tegucigalpa. b) San Pedro Sula. c) Juticalpa. d) El Progreso, Yoro. e) La Ceiba. f) Santa Rosa de Copán. g) Danlí, El Paraíso. h) Choluteca. i) Puerto Cortés. IMPORTANTE: A) Una vez que sales de la agencia con el recibo impreso no se pueden hacer devoluciones de dinero ni reversar la cita. B) Los recibos de citas tendrán vigencia de un año a partir de su emisión. C) Si pierdes la cita puedes reprogramarla yendo a la agencia con su recibo y pagando 12 lempiras. D) Si pierdes el recibo y la cita aún no ha vencido puedes acudir a una agencia y reponerlo, pagando 12 lempiras.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+		
+	<conversacion id="precioLicencia">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<frases>
+			<frase>
+				<texto>El precio de la licencia depende de dos factores:  @@br/## a) El tipo de Licencia.  @@br/## b) La vigencia (1, 2 o 5 años).  @@br/##  @@br/## Por ejemplo, la Liviana Nacional tiene un precio de 150 lempiras por 1 año, 250 lempiras por 2 años y 600 lempiras la de 5 años.</texto>
+				<sonido>El precio de la licencia depende de dos factores: a) El tipo de Licencia. b) La vigencia (1, 2 o 5 años). Por ejemplo, la Liviana Nacional tiene un precio de 150 lempiras por 1 año, 250 lempiras por 2 años y 600 lempiras la de 5 años.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>	
+	
+	<conversacion id="saludarConocerte">		
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>				
+			<frase>
+				<texto>¡Hola! Para poder conocer lo que más te gusta, te haré algunas preguntas.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Me alegro que hayas aceptado responder algunas preguntas!, tus respuestas me ayudarán a conocer tus preferencias, y así recomendarte sólo las ofertas y beneficios que son de tu interés.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Buenas! Te haré algunas preguntas para poder conocer lo que te gusta y así recomendarte promociones y beneficios especiales que sean de tu interés.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+		<when>		
+			<condition operador="and" tipo="intencion">saludos</condition>		
+		</when>		
+	</conversacion>   
+   
+	<conversacion id="preguntarPorRestaurantes">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>				
+			<frase>
+				<texto>¡Sabes! A mí me encanta todo tipo de comidas y regularmente salgo a cenar a restaurantes. Si tuvieras la oportunidad, ¿te gustaría salir a cenar o prefieres quedarte en casa?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Durante un fin de semana qué prefieres, ¿quedarte en casa y cocinar; o salir a cenar a un restaurante?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>No entendí tu respuesta. ¿Te gusta ir a restaurantes o quedarte en casa?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="preguntarPorRestaurantesSiNo">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>				
+			<frase>
+				<texto>Muy bien, te cuento que para mí es muy cansado tener que pensar qué hacer para la cena, ir de compras y llegar a casa a prepararla. ¿Verdad que es preferible salir a cenar a un restaurante?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>No entendí tu respuesta. ¿Te gusta ir a restaurantes o no?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="preguntarPorHospedaje">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>Personalmente creo que lo más importante es compartir mi tiempo libre con familiares y amigos, por eso cuando tengo la oportunidad me escapo a vacacionar a algún nuevo hotel. Cuéntame, ¿cuándo vas de vacaciones te hospedas en un hotel o prefieres acampar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>A mí me gusta vacacionar y por eso busco hoteles que me brinden alojamiento junto con muchas comodidades y tipos de esparcimiento.  En tu caso, cuando vas de vacaciones, ¿prefieres un hotel o prefieres acampar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>Necesito estar seguro, ¿utilizas los hoteles o prefieres acampar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="preguntarPorHospedajeSiNo">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>¡Sabes! Yo trabajo mucho y me gusta ir a los hoteles porque no tengo que cocinar y descanso bastante.  Me imagino que por estas razones y, otras más, también te gustaría alojarte en hoteles, ¿Verdad que sí?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>Perdona pero no entendí tu respuesta. ¿Te gusta ir a hoteles, o no?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="preguntarPorBelleza">		
+		<tipo>pregunta</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>Te cuento que cuando voy a un hotel me encanta ir a relajarme al spa y contratar un buen masaje. ¡Creo que es una experiencia súper relajante! En tu caso, si tuvieras la oportunidad, cuando estás muy estresado o cansado, ¿harías lo mismo?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡La sociedad y los gustos han cambiado mucho! La tendencia actual es que tanto hombres como mujeres cuiden más de su apariencia y, por eso, acostumbro visitar salones de belleza para verme y sentirme mejor. Cuéntame, ¿también vas a esos lugares para que te consientan y lucir mucho mejor?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Para mí es súper gratificante recibir un masaje y que además me hagan una limpieza facial porque luego te sientes como nuevo y además luzco muy bien. Cuéntame, ¿te gustaría darte este tipo de gustos?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<impertinente>
+				<texto>Perdona pero no comprendí lo que me respondiste. ¿Vas a salones de belleza, spas o lugares de relajación?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</impertinente>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="fueraContextoConocerteDelBanco">		
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>					
+			<frase>
+				<texto>Disculpa, pero esas preguntas no las puede responder en este chat de conocerte. Debes pasarse al chat general de consultas.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="fueraContextoConocerteGeneral">		
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>Actualmente no estoy entrenado para responder ese tipo de preguntas.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="despedidaConocerte">		
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>			
+			<frase>
+				<texto>¡Genial!, gracias por compartirme tus respuestas, las usaremos para informarte de los beneficios que puedes aprovechar por ser cliente de Banco Atlántida.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Gracias por tus respuestas, te estaremos enviando información relevante para ti acerca de promociones y beneficios.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>¡Muy bien!, al iniciar sesión encontrarás información de promociones y beneficios que podrás aprovechar.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="noEntendi">		
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>		
+			<frase>
+				<texto>Lo siento, no entendí. ¿En qué te puedo ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Creo que no entendí. ¿En que te gustaría que te ayude?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</meRindo>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="noEntendiCallCenter">		
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>		
+		<enVozAlta>true</enVozAlta>		
+		<frases>
+			<frase>
+				<texto>Perdón, no entiendo. @@br/## @@br/## Si gustas puedes llamar a para mayor ayuda: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10. @@br/## @@br/## ¿Hay algo más con lo que te pueda ayudar?</texto>
+				<sonido>Perdón, no entiendo. Si gustas puedes llamar a para mayor ayuda: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10. ¿Hay algo más con lo que te pueda ayudar?</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto>Creo que no entendí. @@br/## @@br/## Si necesitas más información puedes llamar a los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10. @@br/## @@br/## ¿Te gustaría que te ayude en algo más?</texto>
+				<sonido>Creo que no entendí. Si necesitas más información puedes llamar a los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10. ¿Te gustaría que te ayude en algo más?</sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>		
+		<vinetas></vinetas>		
+	</conversacion>
+	
+	<conversacion id="errorDeComunicacionConWatson">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>				
+			<frase>
+				<texto>Disculpame, pero en este momento no puedo responderte, por favor intentalo más tarde.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="despistar">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>	
+			<frase>
+				<texto>Entiendo, ¿En que más te puedo ayudar?</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="despedidaCerrarSesion">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>	
+			<frase>
+				<texto>Hemos terminado la sesión y espero volver a servirte pronto. ¡Hasta luego!</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="noTieneNada">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>				
+			<frase>
+				<texto>Según nuestro sistema no tienes ni tarjetas de crédito ni cuentas de ahorro con nosotros.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="noTieneTarjetas">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>				
+			<frase>
+				<texto>Según nuestro sistema no tienes tarjetas de crédito con nosotros.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="noTieneCuentas">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>				
+		<frases>				
+			<frase>
+				<texto>Según nuestro sistema no tienes cuentas de ahorro con nosotros.</texto>
+				<sonido></sonido>
+				<vineta></vineta>
+				<condicion></condicion>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conjunciones>
+		<conjuncion id="conjuncion1">Disculpame, pero no te entiendo.</conjuncion>
+		<conjuncion id="conjuncion2">No logro comprenderte.</conjuncion>
+	</conjunciones>
+	
+	<variablesDeAmbiente>
+		<variable nombre="tieneTarjetaCredito" tipo="boolean">false</variable>
+		<variable nombre="tieneCuentaAhorros" tipo="boolean">false</variable>
+		<variable nombre="nombreCliente" tipo="string"></variable>
+		<variable nombre="hora" tipo="hora"></variable>
+		<variable nombre="estaLogueado" tipo="boolean">false</variable>
+		<variable nombre="leGustaLosHoteles" tipo="double">0</variable>
+		<variable nombre="leGustaComerAfuera" tipo="double">0</variable>
+		<variable nombre="sePreocupaPorLaSalud" tipo="double">0</variable>
+	</variablesDeAmbiente>
+	
+	<workspaces user="189548d8-2956-41a2-9f88-6c40e9a93c8e" pass="XW6rPcUzIFQl">
+		<workspace tipo="general" idIBM="99007e3b-a55c-49ab-9658-101f20a17bee" intencionesParaSeReferenciado="">BAIntents</workspace>
+		<workspace tipo="especifico" idIBM="fdba23dc-2ece-425c-85e3-e43b4fcac8ef" intencionesParaSeReferenciado="saldo,tasa_cambio,movimientos,disponible">BATemas</workspace>
+		<workspace tipo="especifico" idIBM="f4577484-51f1-432b-bcad-a17b2b0a98e9" intencionesParaSeReferenciado="">ConocerteGeneral</workspace>
+		<workspace tipo="especifico" idIBM="6b8ed933-5592-42c9-a070-e70b30fce858" intencionesParaSeReferenciado="saldo_minimo,abrir_cuenta,precio,requisitos,reportar_extravio,ayuda_como,agradecimiento,saber_numeros,saber_horarios,saber_ubicacion,out_of_scope_bank">BAFAQ</workspace>
+	</workspaces>
+
+</conversacions>

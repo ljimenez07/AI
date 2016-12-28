@@ -49,8 +49,6 @@ public abstract class Punto extends Expresion
 			return invocarElMetodo();
 		}
 		
-		
-		
 		throw new LanguageException("Metodo desconocido: "+metodo);
 	}
 	

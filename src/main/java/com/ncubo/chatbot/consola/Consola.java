@@ -5,19 +5,17 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 
-import com.ncubo.BA.Conversacion;
-import com.ncubo.BA.TemarioDelBancoAtlantida;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.db.ConsultaDao;
 
-public class MainTests {
+public class Consola {
 
 	private static Temario temarioDelBancoAtlantida;
 	
-	public MainTests(){}
+	public Consola(){}
 	
 	private void imprimirSalidas(ArrayList<Salida> salidas){
 		
@@ -52,9 +50,9 @@ public class MainTests {
 	}
 	
 	public static void main(String argv[]) throws Exception {
-		MainTests main = new MainTests();
+		Consola main = new Consola();
 		
-		temarioDelBancoAtlantida = new TemarioDelBancoAtlantida(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
+		temarioDelBancoAtlantida = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = new Cliente("Ricky", "123456");

@@ -1,10 +1,12 @@
 package com.ncubo.evaluador.main;
 
 import java.io.PrintStream;
+
 import com.ncubo.evaluador.db.TablaDeSimbolos;
 import com.ncubo.evaluador.interprete.Parser;
 import com.ncubo.evaluador.interprete.Salida;
 import com.ncubo.evaluador.interprete.libraries.Programa;
+import com.ncubo.evaluador.libraries.Sistema;
 
 public class Evaluador {
 
@@ -40,8 +42,10 @@ public class Evaluador {
     {
 		Evaluador evaluador = new Evaluador();
 		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
+		evaluador.crearContexto("sistema = Sistema();");
 		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
-		System.out.println(evaluador.ejecutaComando("show f.getDia();"));
+		System.out.println(evaluador.ejecutaComando("show sistema;"));
+		//System.out.println(evaluador.ejecutaComando("show f.getDia();"));
 		
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
