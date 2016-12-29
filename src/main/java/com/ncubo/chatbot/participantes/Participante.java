@@ -77,8 +77,16 @@ public class Participante{
 		
 		if (formaDeManifestarseVisual.esFormaVisual()){
 			Vineta vineta = fraseADecir.getVineta();
-			if(vineta != null)
-				salida.escribir(vineta.url(), respuesta, tema, frase);
+			if(vineta != null){
+				String miTexto = salida.getMiTexto();
+				if(miTexto.isEmpty())
+					salida.setMiTexto(vineta.url());
+				else
+					salida.setMiTexto(salida.getMiTexto() + " <br/> "+vineta.url());
+			}
+			Vineta vinetaSeleccion = frase.vineta();
+			if(vinetaSeleccion != null)
+				salida.escribir(vinetaSeleccion.url(), respuesta, tema, frase);
 		}
 		
 		try{
@@ -115,8 +123,17 @@ public class Participante{
 		}
 		
 		if (formaDeManifestarseVisual.esFormaVisual()){
-			//Vineta vineta = frase.vineta();
-			//salida.escribir(vineta, respuesta, tema, frase);
+			Vineta vineta = fraseADecir.getVineta();
+			if(vineta != null){
+				String miTexto = salida.getMiTexto();
+				if(miTexto.isEmpty())
+					salida.setMiTexto(vineta.url());
+				else
+					salida.setMiTexto(salida.getMiTexto() + " <br/> "+vineta.url());
+			}
+			Vineta vinetaSeleccion = frase.vineta();
+			if(vinetaSeleccion != null)
+				salida.escribir(vinetaSeleccion.url(), respuesta, tema, frase);
 		}
 		
 		try{
@@ -185,8 +202,17 @@ public class Participante{
 		}
 		
 		if (formaDeManifestarseVisual.esFormaVisual()){
-			//Vineta vineta = pregunta.vineta();
-			//salida.escribir(vineta, respuesta, tema, pregunta);
+			Vineta vineta = resultado.getVineta();
+			if(vineta != null){
+				String miTexto = salida.getMiTexto();
+				if(miTexto.isEmpty())
+					salida.setMiTexto(vineta.url());
+				else
+					salida.setMiTexto(salida.getMiTexto() + " <br/> "+vineta.url());
+			}
+			Vineta vinetaSeleccion = pregunta.vineta();
+			if(vinetaSeleccion != null)
+				salida.escribir(vinetaSeleccion.url(), respuesta, tema, pregunta);
 		}
 		
 		return salida;

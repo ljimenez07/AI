@@ -22,7 +22,7 @@ public class AdministradorDeVariablesDeContexto {
 		while(keys.hasMoreElements()){
 			String key = keys.nextElement();
 			Variable variable = variables.get(key);
-			if( ! variable.getValorDeLaVariable().equals("") && ! variable.getTipoValor().equals("hora")){
+			if( ! variable.getValorDeLaVariable().equals("")){
 				agregarVariableDeContexto(variable.getNombre(), variable.getValorDeLaVariable());
 			}else if(variable.getValorDeLaVariable().equals("")){
 				agregarVariableDeContexto(variable.getNombre(), "\"vacio\"");

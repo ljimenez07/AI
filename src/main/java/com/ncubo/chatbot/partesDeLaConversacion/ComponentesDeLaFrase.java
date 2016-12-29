@@ -1,14 +1,12 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
-import com.ncubo.chatbot.configuracion.Constantes;
-
 public class ComponentesDeLaFrase {
 
 	private String tipoDeFrase;
 	private String textoDeLaFrase;
 	private String textoAUsarParaGenerarElAudio;
-	private Sonido audio;
-	private Vineta vineta;
+	private Sonido audio = null;
+	private Vineta vineta = null;
 	private String condicion;
 	
 	public ComponentesDeLaFrase(String tipoDeFrase, String textoDeLaFrase, String textoAUsarParaGenerarElAudio, String vineta, String condicion){
@@ -21,9 +19,6 @@ public class ComponentesDeLaFrase {
 		if(! vineta.isEmpty())
 			this.vineta = new Vineta(vineta);
 		this.condicion = condicion;
-		if(this.condicion.isEmpty()){
-			this.condicion = Constantes.CONDICION_POR_DEFECTO;
-		}
 	}
 	
 	public String getTextoDeLaFrase() {
@@ -52,5 +47,9 @@ public class ComponentesDeLaFrase {
 
 	public String getCondicion() {
 		return condicion;
+	}
+	
+	public boolean tieneUnaCondicion(){
+		return ! condicion.isEmpty();
 	}
 }

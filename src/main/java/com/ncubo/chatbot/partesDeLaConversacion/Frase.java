@@ -63,12 +63,30 @@ public abstract class Frase
 		boolean tieneUnoOVariosPlaceHolders = false;
 
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
 			tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
 		}
 		
 		esEstatica = ! tieneUnoOVariosPlaceHolders;
+	}
+	
+	public boolean hayFrasesConCondicion(){
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.tieneUnaCondicion())
+				return true;
+		}
+		return false;
+	}
+	
+	public ArrayList<ComponentesDeLaFrase> extraerFrasesConCondicion(){
+		ArrayList<ComponentesDeLaFrase> resultado = new ArrayList<>();
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.tieneUnaCondicion())
+				resultado.add(miFrase);
+		}
+		return resultado;
 	}
 	
 	private ArrayList<ComponentesDeLaFrase> buscarFrasesSinonimoPorTipo(String tipoFrase){
@@ -103,6 +121,8 @@ public abstract class Frase
 		if(misSinonimosDeLaFrase.size() > 0){
 			int unIndiceAlAzar = (int) Math.floor(Math.random() * misSinonimosDeLaFrase.size());
 			resultado = misSinonimosDeLaFrase.get(unIndiceAlAzar);
+			if(resultado.tieneUnaCondicion())
+				return texto();
 		}
 		return resultado;
 	}
@@ -183,14 +203,12 @@ public abstract class Frase
 		return esEstatica;
 	}
 	
-	public List<String> vineta(){
-		List<String> resultado = null;
+	public Vineta vineta(){
+		Vineta resultado = null;
 		
 		if(vinetasDeLosTextosDeLaFrase.size() > 0){
-			resultado = new ArrayList<>();
 			int unIndiceAlAzar = (int)Math.floor(Math.random()*vinetasDeLosTextosDeLaFrase.size());
-			resultado.add(unIndiceAlAzar+"");
-			resultado.add(vinetasDeLosTextosDeLaFrase.get(unIndiceAlAzar).url());
+			resultado = vinetasDeLosTextosDeLaFrase.get(unIndiceAlAzar);
 		}
 		
 		return resultado;

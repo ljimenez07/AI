@@ -64,6 +64,10 @@ public class Salida {
 		return miTexto;
 	}
 
+	public void setMiTexto(String texto) {
+		miTexto = texto;
+	}
+	
 	public Sonido getMiSonido() {
 		if(miSonido == null){
 			return new Sonido("");

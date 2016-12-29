@@ -2,22 +2,24 @@ package com.ncubo.chatbot.contexto;
 
 public class Variable {
 
-	private String nombre;
+	private final String nombre;
 	private String valorDeLaVariable;
-	private String tipoValor;
-	
-	public Variable(String nombre, String valorPorDefecto, String tipoValor){
+	private final String tipoValor;
+	private final String tipoVariable;
+
+	public Variable(String nombre, String valorPorDefecto, String tipoValor, String tipoVariable){
 		this.nombre = nombre;
 		this.valorDeLaVariable = valorPorDefecto;
 		this.tipoValor = tipoValor;
+		this.tipoVariable = tipoVariable;
+	}
+	
+	public String getTipoVariable() {
+		return tipoVariable;
 	}
 	
 	public String getNombre() {
 		return nombre;
-	}
-
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
 	}
 
 	public String getValorDeLaVariable() {
@@ -32,7 +34,4 @@ public class Variable {
 		return tipoValor;
 	}
 
-	public void setTipoValor(String tipoValor) {
-		this.tipoValor = tipoValor;
-	}
 }

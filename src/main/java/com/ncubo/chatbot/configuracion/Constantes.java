@@ -77,4 +77,8 @@ public class Constantes {
 	public static String TIPO_FRASE_ME_RINDO = "meRindo";
 	public static String TIPO_FRASE_CONJUNCION = "conjuncion";
 	
+	// Variables
+	public static String VARIABLE_TIPO_CONTEXTO = "Contexto";
+	public static String VARIABLE_TIPO_USUARIO = "Usuario";
+	public static String VARIABLE_TIPO_NEGOCIO = "Negocio";
 }
