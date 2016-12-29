@@ -41,7 +41,7 @@ public abstract class Punto extends Expresion
 	}
 	
 	@Override
-	public Objeto ejecutar() throws Exception
+	public Objeto ejecutar()
 	{
 		boolean esUnMetodoYNoUnaPropiedad = metodo != null;
 		if( esUnMetodoYNoUnaPropiedad )
@@ -53,7 +53,7 @@ public abstract class Punto extends Expresion
 	}
 	
 	@SuppressWarnings("unchecked")
-	protected Class<? extends Objeto> calcularElTipoDeUnCallExpresion(Class<?> classDeLaInstancia) throws Exception
+	protected Class<? extends Objeto> calcularElTipoDeUnCallExpresion(Class<?> classDeLaInstancia)
 	{
 		Method methodABuscar = null;
 		
@@ -83,7 +83,7 @@ public abstract class Punto extends Expresion
 		return null;
 	}
 	
-	private Class<?>[] obtenerFirmaDeArgumentos() throws Exception
+	private Class<?>[] obtenerFirmaDeArgumentos()
 	{
 		Class<?>[] firmas = new Class<?>[argumentos.length];
 		for(int i = 0; i < argumentos.length; i++)
@@ -94,7 +94,7 @@ public abstract class Punto extends Expresion
 		return firmas;
 	}
 
-	protected Objeto invocarElMetodo() throws Exception
+	protected Objeto invocarElMetodo()
 	{
 		Object object = obtenerElObjeto();
 		Method methodABuscar = obtenerElMetodoDelObjetoSiExiste(object.getClass());		
@@ -129,14 +129,13 @@ public abstract class Punto extends Expresion
 			}
 			else
 			{
-				throw e;
+				throw new RuntimeException(e.getMessage());
 			}
 		}
-		//return (Objeto) object;
-		return (Objeto)(new com.ncubo.evaluador.libraries.Numero(((java.lang.Integer) object).intValue()));
+		return (Objeto) object;
 	}
 	
-	protected Method obtenerElMetodoDelObjetoSiExiste(Class<?> classDelObjeto) throws Exception
+	protected Method obtenerElMetodoDelObjetoSiExiste(Class<?> classDelObjeto)
 	{
 		Method metodoEncontrado = null;
 		String metodoUnsensitivo = metodo.toUpperCase();
@@ -168,7 +167,7 @@ public abstract class Punto extends Expresion
 	}
 	
 	@SuppressWarnings("unchecked")
-	private Object[] obtenerFirmaDeValoresBasadosEnElMetodo(Method metodo) throws Exception
+	private Object[] obtenerFirmaDeValoresBasadosEnElMetodo(Method metodo)
 	{
 		Class<?>[] firmaDelValoresDelMetodo = metodo.getParameterTypes();
 		Object[] resultado = new Object[argumentos.length];
@@ -208,7 +207,7 @@ public abstract class Punto extends Expresion
 		return resultado;
 	}
 	
-	private boolean validarLaIntegridadDeLosArgumentosDelMetodo(Class<?>[] variables) throws Exception
+	private boolean validarLaIntegridadDeLosArgumentosDelMetodo(Class<?>[] variables)
 	{
 		boolean sonCompatibles = argumentos.length == variables.length;
 		for(int i = 0; /*===>>>*/ sonCompatibles /*<<<===*/ && i < variables.length; i++)
@@ -266,6 +265,6 @@ public abstract class Punto extends Expresion
 		return sonCompatibles;
 	}
 
-	protected abstract Object obtenerElObjeto() throws Exception;
+	protected abstract Object obtenerElObjeto();
 	
 }

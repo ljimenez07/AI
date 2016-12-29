@@ -1,8 +1,8 @@
 package com.ncubo.evaluador.libraries;
 
-import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Denominacion extends Moneda 
+public class Denominacion extends Moneda implements Primitiva
 {
 	
 	public Denominacion(Decimal monto,Monedas tipoDeMoneda) 

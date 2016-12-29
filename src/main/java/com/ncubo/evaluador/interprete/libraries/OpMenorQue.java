@@ -20,7 +20,7 @@ public class OpMenorQue extends Expresion
 
 	
 	@Override
-	public Objeto ejecutar() throws Exception
+	public Objeto ejecutar() 
 	{ 
 		Objeto objeto1 = e1.ejecutar();
 		Objeto objeto2 = e2.ejecutar();

@@ -17,7 +17,7 @@ public class OpRestar extends Expresion {
 	}
 	
 	@Override
-	Class<? extends Objeto> calcularTipo() throws Exception
+	Class<? extends Objeto> calcularTipo()
 	{
 		if (e1.calcularTipo().equals(Numero.class) && e2.calcularTipo().equals(Numero.class))
 		{
@@ -43,7 +43,7 @@ public class OpRestar extends Expresion {
 	}
 	
 	@Override
-	void validarEstaticamente() throws Exception
+	void validarEstaticamente()
 	{
 		if (calcularTipo().equals(Objeto.class))
 		{
@@ -54,7 +54,7 @@ public class OpRestar extends Expresion {
 	}
 	
 	@Override
-	public Objeto ejecutar() throws Exception
+	public Objeto ejecutar() 
 	{
 		Objeto objeto1 = e1.ejecutar();
 		Objeto objeto2 = e2.ejecutar();

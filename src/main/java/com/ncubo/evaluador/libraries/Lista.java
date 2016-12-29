@@ -3,8 +3,9 @@ package com.ncubo.evaluador.libraries;
 import java.util.ArrayList;
 
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Lista extends Objeto
+public class Lista extends Objeto implements Primitiva
 {
 	private ArrayList<Objeto> lista;
 

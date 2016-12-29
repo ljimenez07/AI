@@ -15,7 +15,7 @@ public class OpMenos extends Expresion {
 	}
 
 	@Override
-	Class<? extends Objeto> calcularTipo() throws Exception
+	Class<? extends Objeto> calcularTipo() 
 	{
 		if (e.calcularTipo().equals(Decimal.class) || e.calcularTipo().equals(Numero.class) || e.calcularTipo().isAssignableFrom(Moneda.class))
 		{
@@ -25,7 +25,7 @@ public class OpMenos extends Expresion {
 	}
 
 	@Override
-	public Objeto ejecutar() throws Exception
+	public Objeto ejecutar() 
 	{
 		Objeto objeto1 = e.ejecutar();
 		if(objeto1 instanceof Numero)

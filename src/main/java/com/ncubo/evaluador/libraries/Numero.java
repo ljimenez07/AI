@@ -1,8 +1,9 @@
 package com.ncubo.evaluador.libraries;
 
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Numero extends Objeto implements Comparable<Numero>
+public class Numero extends Objeto implements Comparable<Numero>, Primitiva
 {
 	public int valor;
 

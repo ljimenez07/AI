@@ -1,6 +1,8 @@
 package com.ncubo.evaluador.libraries;
 
-public final class Nulo extends Objeto
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
+
+public final class Nulo extends Objeto implements Primitiva
 {
 	public final static Nulo NULO = new Nulo();
 

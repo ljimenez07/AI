@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
+
+import com.ncubo.evaluador.db.TablaDeSimbolos;
 import com.ncubo.evaluador.libraries.Objeto;
 
 public class NuevaInstancia extends Expresion
@@ -17,33 +19,35 @@ public class NuevaInstancia extends Expresion
 	private String clase;
 	private Expresion[] argumentos;
 	private Objeto instancia;
+	private final TablaDeSimbolos tablaDeSimbolos;
 	
-	private final static String BIBLIOTECA = "com.ncubo.evaluador.libraries";
+	private final static String BIBLIOTECA = "com.ncubo.chatbot.variablesDeAmbiente";
 	private final static ClassFinder finder = new ClassFinder(BIBLIOTECA);
 	private final static Class<?>[] libraries = finder.find();
 	
-	public NuevaInstancia (Id clase)
+	public NuevaInstancia (TablaDeSimbolos tablaDeSimbolos, Id clase, Expresion[] argumentos)
 	{
+		this.tablaDeSimbolos = tablaDeSimbolos;
 		this.clase = clase.getValor();
-		this.argumentos = new Expresion[]{};
+		this.argumentos = argumentos;
 	}
 		
 	@Override
-	Class<? extends Objeto> calcularTipo() throws Exception
+	Class<? extends Objeto> calcularTipo()
 	{
 		if (instancia == null) instancia = instanciarElObjeto();
 		return instancia.getClass();
 	}
 
 	@Override
-	public  Objeto ejecutar() throws Exception
+	public  Objeto ejecutar()
 	{	
 		if (instancia == null) instancia = instanciarElObjeto();
-		return instancia;
+		return instancia; 
 	}
 	
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private Object[] obtenerFirmaDeValoresBasadosEnElConstructor(Constructor<?> constructor) throws Exception
+	private Object[] obtenerFirmaDeValoresBasadosEnElConstructor(Constructor<?> constructor)
 	{
 		Class<?>[] firmaDelConstructor = constructor.getParameterTypes();
 		Object[] resultado = new Object[argumentos.length];
@@ -77,13 +81,32 @@ public class NuevaInstancia extends Expresion
 			}
 			else
 			{
-				resultado[i] = argumentos[i].ejecutar();
+				String nombreDeClaseAlaQuePerteneceElArgumento = firmaDelConstructor[i].getName();
+				Objeto argumentoEvaluado = argumentos[i].ejecutar();
+				switch(nombreDeClaseAlaQuePerteneceElArgumento)
+				{
+					case "boolean": 
+							resultado[i] = ((com.ncubo.evaluador.libraries.Boolean) argumentoEvaluado).getValor();
+						break; 
+					case "int":	
+							resultado[i] = ((com.ncubo.evaluador.libraries.Numero) argumentoEvaluado).getValor();
+						break;
+					case "double":	
+							resultado[i] = ((com.ncubo.evaluador.libraries.Decimal) argumentoEvaluado).getValor();
+						break;
+					case "java.lang.String": 
+							resultado[i] = ((com.ncubo.evaluador.libraries.Hilera) argumentoEvaluado).getValor();
+						break;
+					default: 
+							resultado[i] = argumentoEvaluado;
+						break;
+				}
 			}
 		}
 		return resultado;
 	}
 
-	private Objeto instanciarElObjeto() throws Exception
+	private Objeto instanciarElObjeto()
 	{
 		Constructor<?> constructor = obtenerConstructorDeLaClase();
 		Object[] firmaValoresConstructor = obtenerFirmaDeValoresBasadosEnElConstructor(constructor);
@@ -91,11 +114,11 @@ public class NuevaInstancia extends Expresion
 		try
 		{
 			return  (Objeto) constructor.newInstance(firmaValoresConstructor);
-		}   
+		}
 		catch (InstantiationException e) 
-        {
-            throw new LanguageException("" + e.getMessage());
-        }
+		{
+			throw new LanguageException("" + e.getMessage());
+		}
 		catch (IllegalAccessException e)
 		{
 			throw new LanguageException("" + e.getMessage());
@@ -116,24 +139,22 @@ public class NuevaInstancia extends Expresion
 		}
 	}
 	
-
-	public static Class<?>[] tiposPrimitivos()
+	public static ArrayList<Class<?>> tiposPrimitivos()
 	{
 		ArrayList<Class<?>> primitivos = new ArrayList<Class<?>>();
 		for (Class<?> unaClase : libraries)
 		{
-			if ( Objeto.class.isAssignableFrom(unaClase))
+			if ( Primitiva.class.isAssignableFrom(unaClase))
 			{
 				primitivos.add((Class<?>) unaClase);
-			} 
+			}
 		}
-		Class<?>[] primitivosArr = new Class<?>[primitivos.size()];
-		primitivosArr = primitivos.toArray(primitivosArr);
-		return primitivosArr;
+		
+		return primitivos;
 	}
 	
 	@SuppressWarnings({ "rawtypes" })
-	private Constructor<?> obtenerConstructorDeLaClase () throws Exception
+	private Constructor<?> obtenerConstructorDeLaClase ()
 	{
 		String claseUnsensitive = clase.toLowerCase();
 		for (int index = 0; index < libraries.length; index++)
@@ -185,7 +206,20 @@ public class NuevaInstancia extends Expresion
 								else
 								{
 									Class<?> tipoDelArgumento = argumentos[i].calcularTipo();
-									sonCompatibles = tipoDelArgumento.isAssignableFrom(tipoDelParametro);
+									String nombreDeClaseAlaQuePerteneceElArgumento = tipoDelParametro.getName();
+									switch(nombreDeClaseAlaQuePerteneceElArgumento)
+									{
+										case "boolean": sonCompatibles =com.ncubo.evaluador.libraries.Boolean.class.isAssignableFrom(tipoDelArgumento);
+											break; 
+										case "int":	sonCompatibles = com.ncubo.evaluador.libraries.Numero.class.isAssignableFrom(tipoDelArgumento);
+											break;
+										case "double":sonCompatibles = com.ncubo.evaluador.libraries.Decimal.class.isAssignableFrom(tipoDelArgumento);
+											break;
+										case "java.lang.String":sonCompatibles = com.ncubo.evaluador.libraries.Hilera.class.isAssignableFrom(tipoDelArgumento);
+											break;
+										default: sonCompatibles = tipoDelArgumento.isAssignableFrom(tipoDelParametro);
+											break;
+									}
 								}
 							}
 							if (sonCompatibles)
@@ -197,15 +231,16 @@ public class NuevaInstancia extends Expresion
 								}
 								return constructor;
 							}
-						}	
+						}
+						
 					}
 				}
 			}
 		}
-		throw new LanguageException(obtieneErrorEnElConstructorDeLaClase());			
+		throw new LanguageException(obtieneErrorEnElConstructorDeLaClase());
 	}
 
-	private String obtieneErrorEnElConstructorDeLaClase() throws Exception
+	private String obtieneErrorEnElConstructorDeLaClase()
 	{
 		String mensajeDeError = "";
 		ClassFinder finder = new ClassFinder(BIBLIOTECA);
@@ -222,6 +257,7 @@ public class NuevaInstancia extends Expresion
 					{
 						boolean tieneElMismoNumeroDeArgumentos = constructor.getGenericParameterTypes().length == argumentos.length;
 						Class<?>[] firmaDelConstructor = constructor.getParameterTypes();
+						
 						if (tieneElMismoNumeroDeArgumentos )
 						{
 							boolean sonCompatibles = true;
@@ -265,7 +301,7 @@ public class NuevaInstancia extends Expresion
 									}
 								}
 							}
-						}	
+						}
 					}
 				}
 			}

@@ -3,8 +3,9 @@ package com.ncubo.evaluador.libraries;
 import java.util.GregorianCalendar;
 
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Mes extends Objeto implements Comparable<Mes>
+public class Mes extends Objeto implements Comparable<Mes>, Primitiva
 {
 	private Meses mes;
 	private int ano;

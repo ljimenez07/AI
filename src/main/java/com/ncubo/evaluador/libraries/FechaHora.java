@@ -5,8 +5,9 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Hashtable;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class FechaHora extends Objeto implements Comparable<FechaHora>
+public class FechaHora extends Objeto implements Comparable<FechaHora>, Primitiva
 {
 	private int dia;
 	private int mes;

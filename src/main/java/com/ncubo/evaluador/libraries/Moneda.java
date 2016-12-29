@@ -3,8 +3,9 @@ package com.ncubo.evaluador.libraries;
 import java.text.DecimalFormat;
 import java.util.Locale;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public abstract class Moneda extends Objeto
+public abstract class Moneda extends Objeto implements Primitiva
 {
 	protected Decimal monto;
 	protected Numero montoEntero;

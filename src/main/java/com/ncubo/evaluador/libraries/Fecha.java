@@ -4,8 +4,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Fecha  extends Objeto implements Comparable<Fecha>
+public class Fecha  extends Objeto implements Comparable<Fecha>, Primitiva
 {
 	private int dia;
 	private int mes;

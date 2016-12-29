@@ -1,8 +1,9 @@
 package com.ncubo.evaluador.libraries;
 
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Decimal extends Objeto
+public class Decimal extends Objeto implements Primitiva
 {
 	private double valor;
 

@@ -1,7 +1,8 @@
 package com.ncubo.evaluador.libraries;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Hilera extends Objeto
+public class Hilera extends Objeto implements Primitiva
 {
 	private String valor;
 

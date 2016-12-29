@@ -7,11 +7,33 @@ public class IdConPunto extends Punto
 {
 	private String instancia;
 	private final TablaDeSimbolos tablaDeSimbolos;
+	private NuevaInstancia nuevaInstancia;
+	
+	public IdConPunto (TablaDeSimbolos tablaDeSimbolos, Id instancia, String metodo, Expresion[] argumentos)
+	{
+		super(metodo, argumentos);
+		this.instancia = instancia.getValor();
+		this.tablaDeSimbolos = tablaDeSimbolos;
+	}
+	
+	public IdConPunto (TablaDeSimbolos tablaDeSimbolos, NuevaInstancia nuevaInstancia, String metodo, Expresion[] argumentos)
+	{
+		super(metodo, argumentos);
+		this.nuevaInstancia = nuevaInstancia;
+		this.tablaDeSimbolos = tablaDeSimbolos;
+	}
 	
 	public IdConPunto (TablaDeSimbolos tablaDeSimbolos, Id instancia, String propiedad)
 	{
 		super(propiedad);
-		this.instancia = instancia.getValor();//.toLowerCase();
+		this.instancia = instancia.getValor();
+		this.tablaDeSimbolos = tablaDeSimbolos;
+	}
+	
+	public IdConPunto(TablaDeSimbolos tablaDeSimbolos,	NuevaInstancia nuevaInstancia, String propiedad) 
+	{
+		super(propiedad);
+		this.nuevaInstancia = nuevaInstancia;
 		this.tablaDeSimbolos = tablaDeSimbolos;
 	}
 	
@@ -32,15 +54,19 @@ public class IdConPunto extends Punto
 	}
 	
 	@Override
-	Class<? extends Objeto> calcularTipo() throws Exception
+	Class<? extends Objeto> calcularTipo()
 	{
-		Class<? extends Objeto> resultado = calcularElTipoDeUnCallExpresion( obtenerElObjeto().getClass() );
+		Class<? extends Objeto> resultado = calcularElTipoDeUnCallExpresion( nuevaInstancia != null ? nuevaInstancia.calcularTipo() : obtenerElObjeto().getClass() );
 		return resultado;
 	}
 	
 	@Override
 	protected Object obtenerElObjeto()
 	{
+		if (nuevaInstancia != null) 
+		{
+			return nuevaInstancia.ejecutar();
+		}
 		if ( ! tablaDeSimbolos.existeLaVariable(instancia) )
 		{
 			throw new LanguageException("La variable '" + instancia + "' es desconocida");
@@ -53,7 +79,14 @@ public class IdConPunto extends Punto
 	@Override
 	void write(StringBuilder resultado) 
 	{
-		resultado.append(instancia);
+		if (nuevaInstancia != null) 
+		{
+			nuevaInstancia.write(resultado);
+		}
+		else
+		{
+			resultado.append(instancia);
+		}
 		resultado.append('.');
 		
 		if(propiedad() != null)

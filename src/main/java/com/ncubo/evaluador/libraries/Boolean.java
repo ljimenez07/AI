@@ -2,8 +2,9 @@
 package com.ncubo.evaluador.libraries;
 
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
+import com.ncubo.evaluador.interprete.libraries.Primitiva;
 
-public class Boolean extends Objeto
+public class Boolean extends Objeto implements Primitiva
 {
 	boolean valor;
 

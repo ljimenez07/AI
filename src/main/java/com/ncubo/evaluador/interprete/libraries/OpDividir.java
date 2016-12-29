@@ -17,7 +17,7 @@ public class OpDividir extends Expresion {
 	}
 	
 	@Override
-	Class<? extends Objeto> calcularTipo() throws Exception
+	Class<? extends Objeto> calcularTipo()
 	{
 		Class<? extends Objeto> tipoE1 = e1.calcularTipo();
 		Class<? extends Objeto> tipoE2 = e2.calcularTipo();
@@ -44,7 +44,7 @@ public class OpDividir extends Expresion {
 	}
 	
 	@Override
-	void validarEstaticamente() throws Exception
+	void validarEstaticamente()
 	{
 		if (calcularTipo().equals(Objeto.class))
 		{
@@ -55,7 +55,7 @@ public class OpDividir extends Expresion {
 	}
 	
 	@Override
-	public Objeto ejecutar() throws Exception
+	public Objeto ejecutar()
 	{
 		Objeto objeto1 = e1.ejecutar();
 		Objeto objeto2 = e2.ejecutar();
