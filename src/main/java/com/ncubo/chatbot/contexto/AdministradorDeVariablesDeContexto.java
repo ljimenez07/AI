@@ -47,9 +47,9 @@ public class AdministradorDeVariablesDeContexto {
 		return resultado;
 	}
 
-	public void ejecutar(String comando) throws Exception {
+	public String ejecutar(String comando) throws Exception {
 		System.out.println("Ejecutando el comando: "+comando);
-		miEvaluador.ejecutaComando(comando);
+		return miEvaluador.ejecutaComando(comando);
 	}
 	
 	public String obtenerVariable(String nombreDeLaVariable) throws Exception{

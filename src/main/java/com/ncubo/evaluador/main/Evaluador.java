@@ -42,10 +42,9 @@ public class Evaluador {
     {
 		Evaluador evaluador = new Evaluador();
 		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
-		evaluador.crearContexto("sistema = Sistema();");
+		evaluador.crearContexto("hora = Sistema();");
 		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
-		System.out.println(evaluador.ejecutaComando("show sistema;"));
-		System.out.println(evaluador.ejecutaComando("show sistema.horaActual(0);").trim());
+		System.out.println(evaluador.ejecutaComando("show hora.horaActual() < 12;").trim());
 		System.out.println(evaluador.ejecutaComando("show f;"));
 		
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");

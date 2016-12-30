@@ -51,10 +51,10 @@ public class Salida {
 		this.fraseActual = frase;
 	}
 	
-	public void escribir(String texto, Sonido sonido, Vineta vineta, Respuesta respuesta, Tema tema, Frase frase){
-		this.miTexto = texto;
-		this.miSonido = sonido;
-		this.miVineta = vineta;
+	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase){
+		this.miTexto = miFrase.getTextoDeLaFrase();
+		this.miSonido = miFrase.getAudio();
+		this.miVineta = miFrase.getVineta();
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;

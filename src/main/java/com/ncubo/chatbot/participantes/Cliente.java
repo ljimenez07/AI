@@ -55,5 +55,9 @@ public class Cliente extends Participante{
 	public boolean contieneElIdSesion(String idSesion){
 		return misIdsDeSesiones.contains(idSesion);
 	}
+	
+	public String ejecutarComando(String comando) throws Exception{
+		return administradorDeVariablesDeContexto.ejecutar(comando);
+	}
 }
 
