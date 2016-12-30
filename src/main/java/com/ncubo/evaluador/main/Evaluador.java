@@ -45,7 +45,9 @@ public class Evaluador {
 		evaluador.crearContexto("hora = Sistema();");
 		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
 		System.out.println(evaluador.ejecutaComando("show hora.horaActual() < 12;").trim());
-		System.out.println(evaluador.ejecutaComando("show f;"));
+		System.out.println(evaluador.ejecutaComando("show hora.annoActual();").trim());
+		System.out.println(evaluador.ejecutaComando("show hora.mesActual();").trim());
+		System.out.println(evaluador.ejecutaComando("show hora.diaActual();").trim());
 		
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());

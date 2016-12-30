@@ -15,15 +15,34 @@ public class Sistema extends Objeto{
 	
 	public Sistema(){}
 	
+	public Numero annoActual(){
+		fechaActual = new Date();
+		String hora[] = formato.format(fechaActual).split("/");
+		return new Numero(Integer.parseInt(hora[0]));
+	}
+	
+	public Numero mesActual(){
+		fechaActual = new Date();
+		String hora[] = formato.format(fechaActual).split("/");
+		return new Numero(Integer.parseInt(hora[1]));
+	}
+	
+	public Numero diaActual(){
+		fechaActual = new Date();
+		String hora[] = formato.format(fechaActual).split("/");
+		return new Numero(Integer.parseInt(hora[2]));
+	}
+	
 	public Numero horaActual(){
 		fechaActual = new Date();
 		String hora[] = formatoDeHora.format(fechaActual).split(":");
 		return new Numero(Integer.parseInt(hora[0]));
 	}
 	
-	public String show(){
-		String result = toString();
-		return result;
+	public Numero minutoActual(){
+		fechaActual = new Date();
+		String hora[] = formatoDeHora.format(fechaActual).split(":");
+		return new Numero(Integer.parseInt(hora[1]));
 	}
 	
 	public static void main(String argv[]) throws Exception {

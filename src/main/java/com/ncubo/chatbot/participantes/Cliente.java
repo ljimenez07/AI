@@ -56,7 +56,7 @@ public class Cliente extends Participante{
 		return misIdsDeSesiones.contains(idSesion);
 	}
 	
-	public String ejecutarComando(String comando) throws Exception{
+	public String evaluarCondicion(String comando) throws Exception{
 		return administradorDeVariablesDeContexto.ejecutar(comando);
 	}
 }
