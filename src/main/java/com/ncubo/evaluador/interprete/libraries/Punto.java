@@ -132,7 +132,33 @@ public abstract class Punto extends Expresion
 				throw new RuntimeException(e.getMessage());
 			}
 		}
-		return (Objeto) object;
+		Objeto resultadoDeInvocarElMetodo = null;
+		  if(object instanceof java.lang.Integer)
+		  {
+		   int nuevoInt = ((java.lang.Integer) object).intValue();
+		   resultadoDeInvocarElMetodo = (Objeto)(new com.ncubo.evaluador.libraries.Numero(nuevoInt));
+		  }
+		  else if(object instanceof java.lang.String)
+		  {
+		   String nuevoString = ((java.lang.String) object);
+		   resultadoDeInvocarElMetodo = (Objeto)(new com.ncubo.evaluador.libraries.Hilera(nuevoString));
+		  }
+		  else if(object instanceof java.lang.Boolean)
+		  {
+		   boolean nuevoBoolean = ((java.lang.Boolean) object).booleanValue();
+		   resultadoDeInvocarElMetodo = (Objeto) (new com.ncubo.evaluador.libraries.Boolean(nuevoBoolean));
+		  }
+		  else if(object instanceof java.lang.Double)
+		  {
+		   double nuevoDouble = ((java.lang.Double) object).doubleValue();
+		   resultadoDeInvocarElMetodo = (Objeto) (new com.ncubo.evaluador.libraries.Decimal(nuevoDouble));
+		  }
+		  else
+		  {
+		   resultadoDeInvocarElMetodo = (Objeto) object;
+		  }
+		  
+		return resultadoDeInvocarElMetodo;
 	}
 	
 	protected Method obtenerElMetodoDelObjetoSiExiste(Class<?> classDelObjeto)
