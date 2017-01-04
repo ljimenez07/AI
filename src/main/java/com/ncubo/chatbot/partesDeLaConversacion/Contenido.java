@@ -389,7 +389,7 @@ public abstract class Contenido
 					textoAUsarParaGenerarElAudio = frase;
 				}else if (tipo.contains("vineta")){
 					vineta = frase;
-				}else if (tipo.contains("condicion")){
+				}else if (tipo.contains("soloSi")){
 					condicion = frase;
 				}
 				System.out.println("Frase: "+frase);
