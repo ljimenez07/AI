@@ -25,7 +25,6 @@ public class Agente extends Participante{
 	private final Hashtable<String, String> miContextos = new Hashtable<String, String>();
 	private final Hashtable<String, ConversationWatson> miWatsonConversacions = new Hashtable<String, ConversationWatson>();
 	private String nombreDelWorkSpaceGeneral;
-	private static final int MAXIMO_DE_INTENTOS_OPCIONALES = 4; // Sino se aborda el tema
 	private String nombreDeWorkspaceActual;
 	private String nombreDeLaIntencionGeneralActiva;
 	private String nombreDeLaIntencionEspecificaActiva;
@@ -48,8 +47,8 @@ public class Agente extends Participante{
 		this.nombreDelWorkSpaceGeneral = "";
 		this.nombreDeLaIntencionGeneralActiva = "";
 		this.nombreDeLaIntencionEspecificaActiva = "";
-		this.numeroDeIntentosActualesEnRepetirUnaPregunta = 1;
-		this.numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico = 1;
+		this.numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
+		this.numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico = 0;
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
 		this.inicializarContextos();
 	}
@@ -96,13 +95,14 @@ public class Agente extends Participante{
 		
 		respuesta = new Respuesta(frase, miWatsonConversacions.get(nombreDeWorkspaceActual), miContextos.get(nombreDeWorkspaceActual));
 		respuesta.llamarAWatson(respuestaDelCliente);
+
 		
 		noEntendiLaUltimaRespuesta = (! respuesta.entendiLaRespuesta()) && (frase.esMandatorio()) && 
-				(numeroDeIntentosActualesEnRepetirUnaPregunta != MAXIMO_DE_INTENTOS_OPCIONALES);
+				(numeroDeIntentosActualesEnRepetirUnaPregunta != Constantes.MAXIMO_DE_INTENTOS_OPCIONALES);
 		if(noEntendiLaUltimaRespuesta){
 			numeroDeIntentosActualesEnRepetirUnaPregunta ++;
 		}else{
-			if(numeroDeIntentosActualesEnRepetirUnaPregunta == MAXIMO_DE_INTENTOS_OPCIONALES){
+			if(numeroDeIntentosActualesEnRepetirUnaPregunta == Constantes.MAXIMO_DE_INTENTOS_OPCIONALES){
 				// Abordar el tema
 				abordarElTemaPorNOLoEntendi = true; // Buscar otro tema
 				cambiarDeTema = true; // Buscar otro tema
@@ -142,7 +142,7 @@ public class Agente extends Participante{
 				}
 				
 			}
-			numeroDeIntentosActualesEnRepetirUnaPregunta = 1;
+			numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		}
 		
 		return respuesta;
@@ -153,9 +153,10 @@ public class Agente extends Participante{
 		
 		respuesta = new Respuesta(frase, miWatsonConversacions.get(nombreDeWorkspaceActual), miContextos.get(nombreDeWorkspaceActual));
 		respuesta.llamarAWatson(respuestaDelCliente);
+		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
 		
 		noEntendiLaUltimaRespuesta = (! (respuesta.entendiLaRespuesta() && ! respuesta.hayAlgunAnythingElse())) && 
-				(numeroDeIntentosActualesEnRepetirUnaPregunta != MAXIMO_DE_INTENTOS_OPCIONALES);
+				(numeroDeIntentosActualesEnRepetirUnaPregunta != maximoIntentos);
 		if(noEntendiLaUltimaRespuesta){
 			System.out.println("No entendi la respuesta ...");
 			// Validar si es que el usuario cambio de intencion general
@@ -177,7 +178,7 @@ public class Agente extends Participante{
 				}
 			}
 		}else{
-			if(numeroDeIntentosActualesEnRepetirUnaPregunta == MAXIMO_DE_INTENTOS_OPCIONALES){
+			if(numeroDeIntentosActualesEnRepetirUnaPregunta == maximoIntentos){
 				// Abordar el tema
 				cambiarDeTema = true; // Buscar otro tema
 				// Actualizar contexto
@@ -205,7 +206,7 @@ public class Agente extends Participante{
 					}
 				}
 			}
-			numeroDeIntentosActualesEnRepetirUnaPregunta = 1;
+			numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		}
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 	    borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);
@@ -222,15 +223,17 @@ public class Agente extends Participante{
 		Respuesta respuesta = new Respuesta(frase, miWatsonConversacions.get(nombreWorkSpace), miContextos.get(nombreWorkSpace));
 		respuesta.llamarAWatson(respuestaDelCliente);
 		
+		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
+		
 		noEntendiLaUltimaRespuestaWSEspecifico = (! (respuesta.entendiLaRespuesta() && ! respuesta.hayAlgunAnythingElse())) && 
-				(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico != MAXIMO_DE_INTENTOS_OPCIONALES);
+				(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico != maximoIntentos);
 		if(noEntendiLaUltimaRespuestaWSEspecifico){
 			System.out.println("No entendi la respuesta ...");
 			if(frase.esMandatorio()){	
 				numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico ++;
 			}
 		}else{
-			if(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico == MAXIMO_DE_INTENTOS_OPCIONALES){
+			if(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico == maximoIntentos){
 				// Abordar el tema
 				cambiarDeTemaWSEspecifico = true;
 				miContextos.put(nombreWorkSpace, respuesta.getMiContexto());
@@ -249,7 +252,7 @@ public class Agente extends Participante{
 					borrarUnaVariableDelContextoEnUnWorkspace(Constantes.ID_TEMA, nombreWorkSpace); // Solo se borra el id cuando el tema termina
 				}
 			}
-			numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico = 1;
+			numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico = 0;
 		}
 		borrarUnaVariableDelContextoEnUnWorkspace(Constantes.ANYTHING_ELSE, nombreWorkSpace);
 		borrarUnaVariableDelContextoEnUnWorkspace(Constantes.NODO_ACTIVADO, nombreWorkSpace);

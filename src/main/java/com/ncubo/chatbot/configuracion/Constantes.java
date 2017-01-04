@@ -54,6 +54,7 @@ public class Constantes {
 	public static String ORACIONES_AFIRMATIVAS = "oracionesAfirmativas";
 	public static String CAMBIAR_A_GENERAL = "cambiarAGeneral";
 	public static String ID_TEMA = "idTema";
+	public static int MAXIMO_DE_INTENTOS_OPCIONALES = 4; // Sino se aborda el tema
 	
 	// Tipos de frases
 	public static String FRASE_SALUDO = "saludo";

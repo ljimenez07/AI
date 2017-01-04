@@ -219,6 +219,16 @@ public abstract class Contenido
 						caracteristicasDeLaFrase[1] = CaracteristicaDeLaFrase.sePuedeDecirEnVozAlta;
 					}
 					
+				
+					int intentosFallidos = Constantes.MAXIMO_DE_INTENTOS_OPCIONALES;
+					try {
+						intentosFallidos = Integer.parseInt(eElement.getElementsByTagName("intentosFallidos").item(0).getTextContent());
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					System.out.println("intentosFallidos : " + intentosFallidos);
+					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
 					
 					/*String tipoDeFraseACargar = "frase";
@@ -234,18 +244,18 @@ public abstract class Contenido
 					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
+						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
 						miFrase = new Pregunta(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
-								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)));
+								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase);
+						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}
