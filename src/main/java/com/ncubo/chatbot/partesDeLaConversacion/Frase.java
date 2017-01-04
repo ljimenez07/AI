@@ -23,12 +23,15 @@ public abstract class Frase
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
 	
-	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase,
+	private int intentosFallidos = 0;
+	
+	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
 		this.caracteristicas = caracteristicas;
 		this.idFrase = idFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
+		this.intentosFallidos = intentosFallidos;
 		cargarLaFrase();
 		cargarVinetas(vinetasDeLaFrase);
 		if(esEstatica()){
@@ -103,18 +106,37 @@ public abstract class Frase
 		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_ME_RINDO);
 	}
 	
+	private ArrayList<ComponentesDeLaFrase> buscarFrasesConjunciones(){
+		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_CONJUNCION);
+	}
+	
 	public String getIdFrase() {
 		return idFrase;
 	}
 	
-	public ComponentesDeLaFrase texto(){
+	public ComponentesDeLaFrase textosDeConjunciones(){
+		
 		ComponentesDeLaFrase resultado = null;
-		if(misSinonimosDeLaFrase.size() > 0){
-			int unIndiceAlAzar = (int) Math.floor(Math.random() * misSinonimosDeLaFrase.size());
-			resultado = misSinonimosDeLaFrase.get(unIndiceAlAzar);
+		ArrayList<ComponentesDeLaFrase> textos = buscarFrasesConjunciones();
+		if(textos.size() > 0){
+			int unIndiceAlAzar = (int)Math.floor(Math.random()*textos.size());
+			resultado = textos.get(unIndiceAlAzar);
+		}
+		
+		return resultado;
+	}
+
+	public ComponentesDeLaFrase texto(){
+		
+		ComponentesDeLaFrase resultado = null;
+		ArrayList<ComponentesDeLaFrase> textos = buscarFrasesGenerales();
+		if(textos.size() > 0){
+			int unIndiceAlAzar = (int)Math.floor(Math.random()*textos.size());
+			resultado = textos.get(unIndiceAlAzar);
 			if(resultado.tieneUnaCondicion())
 				return texto();
 		}
+		
 		return resultado;
 	}
 	
@@ -400,7 +422,7 @@ public abstract class Frase
 	}*/
 	
 	public ComponentesDeLaFrase conjuncionParaRepreguntar(){
-		return Conjunciones.getInstance().obtenerUnaConjuncion().texto();
+		return Conjunciones.getInstance().obtenerUnaConjuncion().textosDeConjunciones();
 	}
 	
 	public String getPathAGuardarLosAudiosTTS() {
@@ -452,4 +474,7 @@ public abstract class Frase
 		return misSinonimosDeLaFrase;
 	}
 	
+	public int obtenerNumeroIntentosFallidos (){
+		return this.intentosFallidos;
+	}
 }

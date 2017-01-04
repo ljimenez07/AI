@@ -4,8 +4,8 @@ import java.util.ArrayList;
 
 public class Afirmacion extends Frase 
 {
-	protected Afirmacion(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, CaracteristicaDeLaFrase[] caracteristicas)
+	protected Afirmacion(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos, CaracteristicaDeLaFrase[] caracteristicas)
 	{
-		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, caracteristicas);
+		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, intentosFallidos, caracteristicas);
 	}
 }
