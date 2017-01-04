@@ -116,7 +116,7 @@ public class Participante{
 			
 			String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false);
 			String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
-			sonido = new Sonido(miIp);
+			sonido = new Sonido(miIp, texto);
 			
 			if (sonido != null)
 				salida.escribir(sonido, respuesta, tema, frase);
@@ -189,7 +189,7 @@ public class Participante{
 							
 							String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
 							String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
-							sonido = new Sonido(miIp);
+							sonido = new Sonido(miIp, textoParaReproducir);
 						}catch(Exception e){
 							System.out.println("Error al generar el audio dinamico de: "+texto);
 						}

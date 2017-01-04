@@ -70,12 +70,15 @@ public class Salida {
 	
 	public Sonido getMiSonido() {
 		if(miSonido == null){
-			return new Sonido("");
+			return new Sonido("", "");
 		}
 		return miSonido;
 	}
 
 	public Vineta getMiVineta() {
+		if(miVineta == null){
+			return new Vineta("");
+		}
 		return miVineta;
 	}
 	

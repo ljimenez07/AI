@@ -224,8 +224,7 @@ public abstract class Contenido
 					try {
 						intentosFallidos = Integer.parseInt(eElement.getElementsByTagName("intentosFallidos").item(0).getTextContent());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block
-					}
+						// TODO Auto-generated catch block					}
 					System.out.println("intentosFallidos : " + intentosFallidos);
 					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
@@ -388,7 +387,7 @@ public abstract class Contenido
 					textoAUsarParaGenerarElAudio = frase;
 				}else if (tipo.contains("vineta")){
 					vineta = frase;
-				}else if (tipo.contains("condicion")){
+				}else if (tipo.contains("soloSi")){
 					condicion = frase;
 				}
 				System.out.println("Frase: "+frase);
