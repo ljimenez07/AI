@@ -27,10 +27,10 @@ public class Sistema extends Objeto{
 		return new Numero(Integer.parseInt(hora[1]));
 	}
 	
-	public Numero diaActual(){
+	public int diaActual(){
 		fechaActual = new Date();
 		String hora[] = formato.format(fechaActual).split("/");
-		return new Numero(Integer.parseInt(hora[2]));
+		return Integer.parseInt(hora[2]);
 	}
 	
 	public Numero horaActual(){
