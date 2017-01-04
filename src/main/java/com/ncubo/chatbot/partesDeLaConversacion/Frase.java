@@ -14,15 +14,6 @@ public abstract class Frase
 	
 	private final ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
 	
-	/*private String[] textosDeLaFrase;
-	private ArrayList<Sonido> sonidosDeLosTextosDeLaFrase = new ArrayList<Sonido>();
-	
-	private String[] textosDeLaFraseMeRindo;
-	private ArrayList<Sonido> sonidosDeLosTextosDeLaFraseMeRindo = new ArrayList<Sonido>();
-	
-	private String[] textosImpertinetesDeLaFrase;
-	private ArrayList<Sonido> sonidosDeLosTextosImpertinentesDeLaFrase = new ArrayList<Sonido>();*/
-	
 	private ArrayList<Vineta> vinetasDeLosTextosDeLaFrase = new ArrayList<Vineta>();
 	
 	private final CaracteristicaDeLaFrase[] caracteristicas;

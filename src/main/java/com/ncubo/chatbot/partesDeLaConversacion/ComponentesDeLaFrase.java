@@ -1,5 +1,7 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.util.ArrayList;
+
 public class ComponentesDeLaFrase {
 
 	private String tipoDeFrase;
@@ -8,6 +10,7 @@ public class ComponentesDeLaFrase {
 	private Sonido audio = null;
 	private Vineta vineta = null;
 	private String condicion;
+	private ArrayList<Placeholder> placeholders;
 	
 	public ComponentesDeLaFrase(String tipoDeFrase, String textoDeLaFrase, String textoAUsarParaGenerarElAudio, String vineta, String condicion){
 		this.tipoDeFrase = tipoDeFrase;
@@ -19,6 +22,15 @@ public class ComponentesDeLaFrase {
 		if(! vineta.isEmpty())
 			this.vineta = new Vineta(vineta);
 		this.condicion = condicion;
+		this.placeholders = new ArrayList<>();
+	}
+	
+	private void buscarPlaceholders(){
+		
+	}
+	
+	public boolean tienePlaceholders(){
+		return placeholders.isEmpty();
 	}
 	
 	public String getTextoDeLaFrase() {
