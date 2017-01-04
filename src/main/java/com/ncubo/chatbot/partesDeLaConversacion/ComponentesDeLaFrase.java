@@ -1,6 +1,8 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ComponentesDeLaFrase {
 
@@ -23,14 +25,35 @@ public class ComponentesDeLaFrase {
 			this.vineta = new Vineta(vineta);
 		this.condicion = condicion;
 		this.placeholders = new ArrayList<>();
+		buscarPlaceholders();
 	}
 	
 	private void buscarPlaceholders(){
+		// http://stackoverflow.com/questions/2286648/named-placeholders-in-string-formatting
+		Matcher matcher = Pattern.compile("\\$\\{(\\w+)}").matcher(this.textoDeLaFrase);
+	    while (matcher.find()){
+	        String key = matcher.group(1);
+	        if( ! existeElPlaceholder(key)){
+	        	System.out.println("Agregando placeholder: "+key);
+	        	placeholders.add(new Placeholder(key));
+	        }
+	    }
+	}
+	
+	private boolean existeElPlaceholder(String nombre){
+		boolean resultado = false;
+		if(tienePlaceholders()){
+			for(Placeholder placeholder: placeholders){
+				if(placeholder.getNombreDelPlaceholder().equals(nombre))
+					return true;
+			}
+		}
 		
+		return resultado;
 	}
 	
 	public boolean tienePlaceholders(){
-		return placeholders.isEmpty();
+		return ! placeholders.isEmpty();
 	}
 	
 	public String getTextoDeLaFrase() {
@@ -63,5 +86,11 @@ public class ComponentesDeLaFrase {
 	
 	public boolean tieneUnaCondicion(){
 		return ! condicion.isEmpty();
+	}
+	
+	
+	public static void main(String argv[]) {
+		ComponentesDeLaFrase componente = new ComponentesDeLaFrase("frase", "Tu saldo de la cuenta ${cuenta} es de $${saldo} de la cuenta ${cuenta}", "Tu saldo es de", "", "");
+		System.out.println(System.getProperty("user.home"));
 	}
 }

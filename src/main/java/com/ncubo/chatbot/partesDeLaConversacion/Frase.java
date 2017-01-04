@@ -273,7 +273,7 @@ public abstract class Frase
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					String miIp = ipPublica+nombreDelArchivo;
-					miFrase.setAudio(new Sonido(miIp));
+					miFrase.setAudio(new Sonido(miIp, testoParaAudio));
 					contadorDeSinonimos ++;
 				}
 				
@@ -467,7 +467,8 @@ public abstract class Frase
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(int index, String nombreDelArchivo, String pathAGuardar, String ipPublica){
 		String miIp = ipPublica+nombreDelArchivo;
-		this.misSinonimosDeLaFrase.get(index).setAudio(new Sonido(miIp));
+		// TODO Enviar el texto del audio
+		this.misSinonimosDeLaFrase.get(index).setAudio(new Sonido(miIp, ""));
 	}
 	
 	public ArrayList<ComponentesDeLaFrase> obtenerMisSinonimosDeLaFrase(){
