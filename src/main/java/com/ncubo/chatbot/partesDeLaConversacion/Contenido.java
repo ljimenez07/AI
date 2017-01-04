@@ -225,7 +225,6 @@ public abstract class Contenido
 						intentosFallidos = Integer.parseInt(eElement.getElementsByTagName("intentosFallidos").item(0).getTextContent());
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
-						e.printStackTrace();
 					}
 					System.out.println("intentosFallidos : " + intentosFallidos);
 					
