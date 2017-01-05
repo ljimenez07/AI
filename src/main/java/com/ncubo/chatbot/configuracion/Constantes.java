@@ -71,6 +71,8 @@ public class Constantes {
 	public static String INTENCION_DESPISTADOR = "despistar";
 	public static String INTENCION_QUE_PUEDEN_PREGUNTAR = "que_pueden_preguntar";
 	public static String INTENCION_REPETIR_ULTIMA_FRASE = "repetir_ultima";
+	public static String INTENCION_CONJUNCION_REPETIR = "conjuncionRepetirFrase";
+	
 	// Frase
 	public static String CONDICION_POR_DEFECTO = "enCualquierMomento";
 	public static String TIPO_FRASE_GERERAL = "frase";

@@ -326,7 +326,7 @@ public class Agente extends Participante{
 		}
 	}
 		
-	private Intent determinarLaIntencionGeneral(String mensaje){
+	public Intent determinarLaIntencionGeneral(String mensaje){
 		Intent intencion = determinarLaIntencionDeConfianzaEnUnWorkspace(mensaje, nombreDelWorkSpaceGeneral);
 		return intencion;
 	}
