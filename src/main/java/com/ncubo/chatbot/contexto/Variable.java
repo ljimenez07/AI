@@ -4,13 +4,11 @@ public class Variable {
 
 	private final String nombre;
 	private String valorDeLaVariable;
-	private final String tipoValor;
 	private final String tipoVariable;
 
-	public Variable(String nombre, String valorPorDefecto, String tipoValor, String tipoVariable){
+	public Variable(String nombre, String valorPorDefecto, String tipoVariable){
 		this.nombre = nombre;
 		this.valorDeLaVariable = valorPorDefecto;
-		this.tipoValor = tipoValor;
 		this.tipoVariable = tipoVariable;
 	}
 	
@@ -29,9 +27,5 @@ public class Variable {
 	public void setValorDeLaVariable(String valorPorDefecto) {
 		this.valorDeLaVariable = valorPorDefecto;
 	}
-
-	public String getTipoValor() {
-		return tipoValor;
-	}
-
+	
 }

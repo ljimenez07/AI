@@ -3,6 +3,7 @@ package com.ncubo.chatbot.contexto;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.evaluador.main.Evaluador;
 
 public class AdministradorDeVariablesDeContexto {
@@ -22,10 +23,8 @@ public class AdministradorDeVariablesDeContexto {
 		while(keys.hasMoreElements()){
 			String key = keys.nextElement();
 			Variable variable = variables.get(key);
-			if( ! variable.getValorDeLaVariable().equals("")){
+			if( ! variable.getValorDeLaVariable().equals("") && variable.getTipoVariable().equals(Constantes.VARIABLE_TIPO_CONTEXTO)){
 				agregarVariableDeContexto(variable.getNombre(), variable.getValorDeLaVariable());
-			}else if(variable.getValorDeLaVariable().equals("")){
-				agregarVariableDeContexto(variable.getNombre(), "\"vacio\"");
 			}
 		}
 	}

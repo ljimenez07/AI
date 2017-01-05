@@ -2,6 +2,8 @@ package com.ncubo.chatbot.contexto;
 
 import java.util.Hashtable;
 
+import com.ncubo.chatbot.exceptiones.ChatException;
+
 public class VariablesDeContexto {
 
 	private final static Hashtable<String, Variable> misVariables = new Hashtable<String, Variable>();
@@ -24,11 +26,11 @@ public class VariablesDeContexto {
 		return misVariables.containsKey(variable);
 	}
 	
-	public String obtenerUnaVariableDeMiContexto(String variable){
+	public Variable obtenerUnaVariableDeMiContexto(String variable){
 		if (verificarSiUnaVariableDeContextoExiste(variable))
-			return misVariables.get(variable).getValorDeLaVariable();
+			return misVariables.get(variable);
 		else
-			return "";
+			throw new ChatException(String.format("La variable %s no existe en el sistema", variable));
 	}
 	
 	public Hashtable<String, Variable> obtenerTodasLasVariablesDeMiContexto(){

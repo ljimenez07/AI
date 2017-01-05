@@ -177,7 +177,7 @@ public abstract class Contenido
 					String tipoValor = eElement.getAttribute("tipo");
 					String valorPorDefecto = nNode.getTextContent();
 					System.out.println("ValorDeAmbiente: "+nombre);
-					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valorPorDefecto, tipoValor, Constantes.VARIABLE_TIPO_CONTEXTO));
+					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valorPorDefecto, tipoValor));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando las conjunciones "+e.getMessage());
