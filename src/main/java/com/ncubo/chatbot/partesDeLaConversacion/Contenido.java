@@ -49,7 +49,7 @@ public abstract class Contenido
 		}
 		
 		throw new ChatException(
-			String.format("El el archivo de contenido '%s' no se esta ninguna frase cuyo id sea '%s'", archivoDeConfiguracion(pathFileXML).getAbsoluteFile(), idDeLaFrase)
+			String.format("En el archivo de contenido '%s' no hay ninguna frase cuyo id sea '%s'", archivoDeConfiguracion(pathFileXML).getAbsoluteFile(), idDeLaFrase)
 		);
 	}
 	
@@ -224,7 +224,9 @@ public abstract class Contenido
 					try {
 						intentosFallidos = Integer.parseInt(eElement.getElementsByTagName("intentosFallidos").item(0).getTextContent());
 					} catch (Exception e) {
-						// TODO Auto-generated catch block					}
+						// TODO Auto-generated catch block
+				
+					}
 					System.out.println("intentosFallidos : " + intentosFallidos);
 					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
