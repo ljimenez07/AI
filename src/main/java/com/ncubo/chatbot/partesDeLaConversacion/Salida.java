@@ -1,10 +1,12 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.util.ArrayList;
+
 public class Salida {
 
 	private String miTexto;
 	private Sonido miSonido;
-	private Vineta miVineta;
+	private ArrayList<Vineta> misVinetas;
 	private Respuesta miRespuesta;
 	private Tema temaActual;
 	private Frase fraseActual;
@@ -13,7 +15,7 @@ public class Salida {
 	public Salida(){
 		miTexto = "";
 		miSonido = null;
-		miVineta = null;
+		misVinetas = new ArrayList<Vineta>();
 		miRespuesta = null;
 		temaActual = null;
 		seTerminoElChat = false;
@@ -36,7 +38,8 @@ public class Salida {
 	} 
 	
 	public void escribir(Vineta vineta, Respuesta respuesta, Tema tema, Frase frase){
-		this.miVineta = vineta;
+		if(vineta != null)
+			this.misVinetas.add(vineta);
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
@@ -54,7 +57,8 @@ public class Salida {
 	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase){
 		this.miTexto = miFrase.getTextoDeLaFrase();
 		this.miSonido = miFrase.getAudio();
-		this.miVineta = miFrase.getVineta();
+		if(miFrase.getVineta() != null)
+			this.misVinetas.add(miFrase.getVineta());
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
@@ -75,11 +79,8 @@ public class Salida {
 		return miSonido;
 	}
 
-	public Vineta getMiVineta() {
-		if(miVineta == null){
-			return new Vineta("");
-		}
-		return miVineta;
+	public ArrayList<Vineta> getMisVinetas() {
+		return misVinetas;
 	}
 	
 	public Respuesta obtenerLaRespuestaDeIBM(){

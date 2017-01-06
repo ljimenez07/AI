@@ -57,8 +57,6 @@ public class ComponentesDeLaFrase {
 	}
 	
 	public String getTextoDeLaFrase() {
-		if(textoDeLaFrase.equals(""))
-			return textoAUsarParaGenerarElAudio;
 		return textoDeLaFrase;
 	}
 
