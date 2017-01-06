@@ -1,12 +1,15 @@
 package com.ncubo.evaluador.interprete;
 
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
 import com.ncubo.evaluador.db.TablaDeSimbolos;
 import com.ncubo.evaluador.interprete.Token.TokenType;
+import com.ncubo.evaluador.interprete.libraries.Linea;
 import com.ncubo.evaluador.interprete.libraries.Comando;
+import com.ncubo.evaluador.interprete.libraries.ComandoIf;
 import com.ncubo.evaluador.interprete.libraries.ComandoNuevaInstancia;
 import com.ncubo.evaluador.interprete.libraries.ComandoNulo;
 import com.ncubo.evaluador.interprete.libraries.ComandoShow;
@@ -14,7 +17,6 @@ import com.ncubo.evaluador.interprete.libraries.Expresion;
 import com.ncubo.evaluador.interprete.libraries.Id;
 import com.ncubo.evaluador.interprete.libraries.IdConPunto;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
-import com.ncubo.evaluador.interprete.libraries.Linea;
 import com.ncubo.evaluador.interprete.libraries.LineaDePrograma;
 import com.ncubo.evaluador.interprete.libraries.LiteralBoolean;
 import com.ncubo.evaluador.interprete.libraries.LiteralDecimal;
@@ -26,6 +28,7 @@ import com.ncubo.evaluador.interprete.libraries.LiteralMoneda;
 import com.ncubo.evaluador.interprete.libraries.LiteralNull;
 import com.ncubo.evaluador.interprete.libraries.LiteralNumero;
 import com.ncubo.evaluador.interprete.libraries.NuevaInstancia;
+import com.ncubo.evaluador.interprete.libraries.OpAnd;
 import com.ncubo.evaluador.interprete.libraries.OpDividir;
 import com.ncubo.evaluador.interprete.libraries.OpIgualQue;
 import com.ncubo.evaluador.interprete.libraries.OpMayorOIgualQue;
@@ -35,6 +38,8 @@ import com.ncubo.evaluador.interprete.libraries.OpMenorQue;
 import com.ncubo.evaluador.interprete.libraries.OpMenos;
 import com.ncubo.evaluador.interprete.libraries.OpMultiplicar;
 import com.ncubo.evaluador.interprete.libraries.OpNoIgualQue;
+import com.ncubo.evaluador.interprete.libraries.OpNot;
+import com.ncubo.evaluador.interprete.libraries.OpOr;
 import com.ncubo.evaluador.interprete.libraries.OpRestar;
 import com.ncubo.evaluador.interprete.libraries.OpSumar;
 import com.ncubo.evaluador.interprete.libraries.ParserValidation;
@@ -46,7 +51,6 @@ import com.ncubo.evaluador.libraries.FechaHora;
 import com.ncubo.evaluador.libraries.Hilera;
 import com.ncubo.evaluador.libraries.Meses;
 import com.ncubo.evaluador.libraries.Monedas;
-import com.ncubo.evaluador.libraries.Objeto;
 
 public class Parser 
 {
@@ -54,6 +58,7 @@ public class Parser
 	private final TablaDeSimbolos tablaDeSimbolos;
 	private final Lexer lexer;
 	private final Salida salida;
+	
 	private static final HashMap<String, Class<?>> tiposPrimitivos = new HashMap<String, Class<?>>();
 	
 	static
@@ -65,11 +70,11 @@ public class Parser
 		}
 	}
 
-	public Parser(TablaDeSimbolos tablaDeSimbolos, Salida salida, String contexto) 
+	public Parser(TablaDeSimbolos tablaDeSimbolos, Salida salida, String rutaEntrada) 
 	{
 		this.tablaDeSimbolos = tablaDeSimbolos;
 		this.salida = salida;
-		lexer = new Lexer(contexto);
+		lexer = new Lexer(rutaEntrada);
 	}
 	
 	public Programa procesar()
@@ -78,7 +83,7 @@ public class Parser
 		return result;
 	}
 
-	public void establecerComando(String comando) throws Exception
+	public void establecerComando(String comando)  
 	{
 		this.lexer.setComando(comando);
 	}
@@ -116,6 +121,9 @@ public class Parser
 			case show:
 				result = parsearComandoShow();
 				break;
+			case IF:
+				result = parsearComandoIf();
+				break;
 			case id:
 				result = parserComandoCreateOCall();
 				break;
@@ -130,29 +138,37 @@ public class Parser
 		return result;
 	}
 	
-	
-	
-	@SuppressWarnings("unchecked")
-	private Class<? extends Objeto> parsearTipo()
+	private Comando parsearComandoIf()  
 	{
-		String nombreDelTipo = lexer.tokenActual.getValor().toLowerCase();
-		Class<?> tipo = tiposPrimitivos.get(nombreDelTipo);
-		if (tipo == null)
-		{
-			throw new LanguageException("Se encontró un tipo no válido en los parámetros del procedimiento: '" + nombreDelTipo + "'", nombreDelTipo, 1, 1);
-		}
+		Comando resultado;
 		lexer.aceptar();
-		return (Class<? extends Objeto>) tipo;
-	} 
+		lexer.aceptar(TokenType.lParentesis);
+		Expresion exp = parseExpresionLogica();
+		lexer.aceptar(TokenType.rParentesis);
 		
-	private Comando parserComentarioDeLinea()
+		Comando comandosDelIF = parsearComando();
+		
+		if (lexer.tokenActual.getType() == TokenType.ELSE)
+		{
+			lexer.aceptar();
+			Comando comandosDelElse = parsearComando();
+			resultado = new ComandoIf(exp, comandosDelIF, comandosDelElse);
+		}
+		else
+		{
+			resultado = new ComandoIf(exp, comandosDelIF);
+		}
+		return resultado;
+	}
+		
+	private Comando parserComentarioDeLinea()  
 	{
 		String comentario = lexer.tokenActual.getValor();
 		lexer.aceptar(TokenType.comentarioDeLinea);
 		return new ComandoNulo(comentario);
 	}
 
-	private Comando parserComandoCreateOCall()
+	private Comando parserComandoCreateOCall()  
 	{
 		Comando resultado;
 		Expresion punto = parsearPunto();
@@ -161,98 +177,74 @@ public class Parser
 		return resultado;
 	}
 	
-	
-	private Comando parsearComandoCreate(Expresion lValue)
+	private Comando parsearComandoCreate(Expresion lValue)  
 	{
 		lexer.aceptar(TokenType.igual);
-		Expresion rValue = parsearExpresion();
+		Expresion rValue = parseExpresionLogica();
 		return new ComandoNuevaInstancia(tablaDeSimbolos, lValue, rValue);
 	}
 
 	private Comando parsearComandoShow()
 	{
 		lexer.aceptar();
-		Expresion exp  = parsearExpresion();
+		Expresion exp  = parseExpresionLogica();
 		lexer.aceptar(TokenType.puntoComa);
 		return new ComandoShow(salida, exp);
 	}
 
-
-	private Expresion parsearPunto()
+	@SuppressWarnings("incomplete-switch")
+	private Expresion parsearPunto()  
 	{
 		Expresion resultado = parsearId();
-		boolean salir = false;
-		while ( ! salir ) 
+		TokenType tipo = lexer.tokenActual.getType();
+		switch (tipo)
 		{
-			TokenType tipo = lexer.tokenActual.getType();
-			switch (tipo)
-			{
-				case punto:
-					lexer.aceptar();
-					String metodo = lexer.tokenActual.getValor();
-					lexer.aceptar(TokenType.id);
-					
-					if( lexer.tokenActual.getType() != TokenType.lParentesis )
-					{
-						if (resultado instanceof Id) 
-						{
-							resultado = new IdConPunto(tablaDeSimbolos, (Id) resultado, metodo );
-						}
-						else
-						{
-							resultado = new IdConPunto(tablaDeSimbolos, (NuevaInstancia) resultado, metodo );
-						}
-					}
-					else
-					{
-						lexer.aceptar(TokenType.lParentesis);
-						//TODO aca va un if preguntado si es id o nuevaInstancia
-						if (resultado instanceof Id) 
-						{
-							resultado = new IdConPunto(tablaDeSimbolos, (Id) resultado, metodo, parsearArgumentos() );
-						}
-						else
-						{
-							resultado = new IdConPunto(tablaDeSimbolos, (NuevaInstancia) resultado, metodo, parsearArgumentos() );
-						}
-						
-						lexer.aceptar(TokenType.rParentesis);
-						
-						boolean siguienteEsUnPunto = lexer.tokenActual.getType() == TokenType.punto;
-						while(siguienteEsUnPunto )
-						{
-							lexer.aceptar();
-							metodo = lexer.tokenActual.getValor();
-							lexer.aceptar(TokenType.id);
-							
-							if( lexer.tokenActual.getType() != TokenType.lParentesis )
-							{
-								resultado = new PuntoConPunto( (Punto) resultado, metodo);
-							}
-							else
-							{
-								lexer.aceptar(TokenType.lParentesis);
-								resultado = new PuntoConPunto( (Punto) resultado, metodo, parsearArgumentos() );
-								lexer.aceptar(TokenType.rParentesis);
-							}
-							siguienteEsUnPunto = lexer.tokenActual.getType() == TokenType.punto;
-						}
-					}
-					break;
-				case lParentesis:
-					lexer.aceptar();
-					resultado = new NuevaInstancia (tablaDeSimbolos, (Id) resultado, parsearArgumentos() );		
+			case punto:
+				lexer.aceptar();
+				String metodo = lexer.tokenActual.getValor();
+				lexer.aceptar(TokenType.id);
+				
+				if( lexer.tokenActual.getType() != TokenType.lParentesis )
+				{
+					resultado = new IdConPunto(tablaDeSimbolos, (Id) resultado, metodo );
+				}
+				else
+				{
+					lexer.aceptar(TokenType.lParentesis);
+					resultado = new IdConPunto(tablaDeSimbolos, (Id) resultado, metodo, parsearArgumentos() );
 					lexer.aceptar(TokenType.rParentesis);
-					break;
-				default:
-					salir = true;
-					break;
-			}
-		}		
+					
+					boolean siguienteEsUnPunto = lexer.tokenActual.getType() == TokenType.punto;
+					while(siguienteEsUnPunto )
+					{
+						lexer.aceptar();
+						metodo = lexer.tokenActual.getValor();
+						lexer.aceptar(TokenType.id);
+						
+						if( lexer.tokenActual.getType() != TokenType.lParentesis )
+						{
+							resultado = new PuntoConPunto( (Punto) resultado, metodo);
+						}
+						else
+						{
+							lexer.aceptar(TokenType.lParentesis);
+							resultado = new PuntoConPunto( (Punto) resultado, metodo, parsearArgumentos() );
+							lexer.aceptar(TokenType.rParentesis);
+						}
+						siguienteEsUnPunto = lexer.tokenActual.getType() == TokenType.punto;
+					}
+				}
+				break;
+			case lParentesis:
+				lexer.aceptar();
+				resultado = new NuevaInstancia (tablaDeSimbolos, (Id) resultado, parsearArgumentos() );		
+				lexer.aceptar(TokenType.rParentesis);
+				break;
+		}
 		return resultado;
 	}
 
-	private Expresion[] parsearArgumentos()
+	private Expresion[] parsearArgumentos()  
 	{
 		ArrayList<Expresion> argumentos = new ArrayList<Expresion>();
 		boolean salir = false;
@@ -263,19 +255,22 @@ public class Parser
 		}
 		while ( ! salir )
 		{
-			Expresion argumento = parsearExpresion();
+			Expresion argumento = parseExpresionLogica();
 			argumentos.add(argumento);
-			switch (lexer.tokenActual.getType())
+			boolean siguienteEsUnaComa = lexer.tokenActual.getType() == TokenType.coma;
+			siguienteCierraParentesis = lexer.tokenActual.getType() == TokenType.rParentesis;
+			if (siguienteCierraParentesis)
 			{
-				case coma:
-					lexer.aceptar();
-					break;
-				case rParentesis:
-					salir = true;
-					break;
-				default:
-					String hileraConProblemas = lexer.tokenActual.getValor();
-					throw new LanguageException("Se esperaba un argumento o un paréntesis para abrir la función pero se encontró, '" + hileraConProblemas + "'",hileraConProblemas,1,1);
+				salir = true;
+			}
+			else if (siguienteEsUnaComa)
+			{
+				lexer.aceptar();
+			}
+			else
+			{
+				String hileraConProblemas = lexer.tokenActual.getValor();
+				throw new LanguageException("Se esperaba un argumento o un paréntesis para abrir la función pero se encontró, '" + hileraConProblemas + "'",hileraConProblemas,1,1);
 			}
 		}
 		Expresion[] argumentosArr = new Expresion[argumentos.size()];
@@ -283,20 +278,20 @@ public class Parser
 		return argumentosArr; 
 	}
 
-	private Expresion parsearId()
+	private Expresion parsearId()  
 	{
 		String id = lexer.tokenActual.getValor();
 		lexer.aceptar(TokenType.id);
 		return new Id(tablaDeSimbolos, id);
 	}
 
-	private Expresion parsearExpresion()
+	private Expresion parsearExpresion() 
 	{
 		Expresion resultado = parseExpresionRelacional();
 		return resultado;
 	}
 
-	private Expresion parseFecha()  
+	private Expresion parseFecha()    
 	{
 		Fecha fecha = ParserValidation.parseFechaValidacion(lexer);
 		Expresion resultado = new LiteralFecha ( fecha );
@@ -306,18 +301,8 @@ public class Parser
 		}
 		return resultado;
 	}
-
-	private Expresion parseFechaHora()
-	{
-		Fecha fecha = ParserValidation.parseFechaValidacion(lexer);
-
-		FechaHora fechaHora = ParserValidation.parseFechaHoraValidacion(fecha, lexer);
-
-		Expresion resultado = new LiteralFechaHora( fechaHora );
-		return resultado;
-	}
 	
-	private Expresion parseFechaHora(Fecha fecha)
+	private Expresion parseFechaHora(Fecha fecha)  
 	{
 		FechaHora fechaHora = ParserValidation.parseFechaHoraValidacion(fecha, lexer);
 
@@ -332,6 +317,38 @@ public class Parser
 		
 		return 	tipo == TokenType.igualdad || tipo ==  TokenType.desigualdad || tipo == TokenType.menorIgual || 
 				tipo ==  TokenType.mayorIgual || tipo == TokenType.menor || tipo ==  TokenType.mayor;
+	}
+	
+	private boolean esOperadorLogica()
+	{
+		TokenType tipo = lexer.tokenActual.getType();
+		
+		return 	tipo == TokenType.yLogico || tipo ==  TokenType.oLogico;
+	}
+	
+	private Expresion parseExpresionLogica()
+	{
+		Expresion resultado = parsearExpresion();
+
+		boolean siguienteOperadorLogico = esOperadorLogica();
+		if(siguienteOperadorLogico)
+		{
+			TokenType tipo = lexer.tokenActual.getType();
+			lexer.aceptar();
+			Expresion segundoObjeto = parsearExpresion();
+			switch( tipo )
+			{
+				case yLogico:
+					resultado = new OpAnd(resultado, segundoObjeto);
+					break;
+				case oLogico:
+					resultado = new OpOr(resultado, segundoObjeto);
+					break;
+				default:
+					break;					
+			}	
+		}
+		return resultado;
 	}
 
 	private Expresion parseExpresionRelacional()
@@ -377,7 +394,7 @@ public class Parser
 		return resultado;
 	}
 
-	private Expresion parseExpresionMultiplicativa() 
+	private Expresion parseExpresionMultiplicativa()   
 	{
 		Expresion resultado = parseExpresionAditiva();
 		TokenType tipo = lexer.tokenActual.getType();
@@ -400,7 +417,7 @@ public class Parser
 		return resultado;
 	}
 
-	private Expresion parseExpresionAditiva()
+	private Expresion parseExpresionAditiva()  
 	{
 		Expresion resultado = parseExpresionAtomica();
 		TokenType tipo = lexer.tokenActual.getType();
@@ -423,7 +440,7 @@ public class Parser
 		return resultado;
 	}
 
-	private Expresion parseExpresionAtomica()
+	private Expresion parseExpresionAtomica()  
 	{
 		Expresion resultado;
 		TokenType tipo = lexer.tokenActual.getType();
@@ -446,6 +463,11 @@ public class Parser
 				lexer.aceptar();
 				resultado = parseExpresionMultiplicativa();
 				break;
+			case negacionLogica:
+				lexer.aceptar();
+				resultado = parsearExpresion();
+				resultado = new OpNot( resultado );
+				break;
 			default : 
 				resultado = parseLiteral();
 				break;
@@ -453,8 +475,8 @@ public class Parser
 		return resultado;
 	}
 
-	private Expresion parseLiteral() 
-	{	
+	private Expresion parseLiteral()   
+	{
 		Expresion resultado = null;
 		TokenType tipoDelLiteral = lexer.tokenActual.getType();
 		switch( tipoDelLiteral )
@@ -490,7 +512,7 @@ public class Parser
 			case boolFalse: case boolTrue:
 				resultado = parseBoolean();
 				break;
-			
+	
 			default:	
 				String hileraConProblemas = lexer.tokenActual.getValor();
 				throw new LanguageException("El símbolo '" + hileraConProblemas + "' es desconocido", hileraConProblemas, 1, 1);
@@ -498,56 +520,55 @@ public class Parser
 		return resultado;
 	}
 	
-	private Expresion parseMes()
+	private Expresion parseMes()  
 	{
-		String valor = lexer.tokenActual.getValor();
-		int primerSlash = valor.indexOf('/');
-
-
-		Meses mes = Meses.valueOf(valor.substring(0, primerSlash).toUpperCase());
-		int anno = Integer.parseInt(valor.substring(primerSlash+1));
+		final char SEPARADOR = '/';
+		String hilera = lexer.tokenActual.getValor();
+		int index = hilera.indexOf(SEPARADOR);
+		Meses mes = Meses.valueOf(hilera.substring(0, index).toUpperCase());
+		int anno = Integer.parseInt(hilera.substring(index+1));
 
 		lexer.aceptar(TokenType.mes);
 
 		return new LiteralMes(mes, anno);
 	}
 
-	private Expresion parseBoolean() 
+	private Expresion parseBoolean()   
 	{
 		Expresion resultado = new LiteralBoolean ( java.lang.Boolean.parseBoolean(lexer.tokenActual.getValor().toLowerCase()) );
 		lexer.aceptar();
 		return resultado;
 	}
 
-	private Expresion parseHilera()
+	private Expresion parseHilera()  
 	{		
 		String literal = lexer.tokenActual.getValor();
 		lexer.aceptar();
 		return new LiteralHilera(literal);
 	}
 
-	private Expresion parseDecimal()
+	private Expresion parseDecimal()  
 	{
 		Expresion decimalLiteral = new LiteralDecimal( Double.parseDouble(lexer.tokenActual.getValor()) );
 		lexer.aceptar();
 		return decimalLiteral;
 	}
 	
-	private Expresion parseNull()
+	private Expresion parseNull()  
 	{
 		Expresion resultado = new LiteralNull();
 		lexer.aceptar();
 		return resultado;
 	}
 
-	private Expresion parseNumero()
+	private Expresion parseNumero()  
 	{
 		Expresion resultado = new LiteralNumero(Integer.parseInt(lexer.tokenActual.getValor()));
 		lexer.aceptar();
 		return resultado;
 	}
 
-	private Expresion parseMonto() 
+	private Expresion parseMonto()   
 	{	
 		Monedas tipoActual = Monedas.obtenerTipoDeMonto(new Hilera(lexer.tokenActual.getValor()));
 		
@@ -568,4 +589,14 @@ public class Parser
 		return ultimoComandoValido.toString();
 	}
 	
+	public int fila()
+	{
+		return lexer.fila();
+	}
+	
+	public int columna()
+	{
+		return lexer.columna();
+	}
+
 }

@@ -30,6 +30,9 @@ public class Token
 		igual,
 		igualdad,
 		desigualdad,
+		negacionLogica,
+		yLogico,
+		oLogico,
 		suma, 
 		resta,
 		division, 
@@ -73,7 +76,6 @@ public class Token
 
 	public Token(TokenType type, String valor) 
 	{
-		super();
 		this.type = type;
 
 		if (this.type == TokenType.hilera)

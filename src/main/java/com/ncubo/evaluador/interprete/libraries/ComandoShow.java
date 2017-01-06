@@ -25,7 +25,7 @@ public class ComandoShow extends Comando
 	}
 
 	@Override
-	public void validarEstaticamente() throws Exception
+	public void validarEstaticamente()
 	{
 		Class<? extends Objeto> tipoExpresion = expression.calcularTipo();
 		if ( tipoExpresion.equals(Void.class) )

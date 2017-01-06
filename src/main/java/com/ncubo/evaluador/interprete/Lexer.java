@@ -13,493 +13,406 @@ import com.ncubo.evaluador.libraries.Monedas;
 
 public class Lexer 
 {
-	private char[] arregloCaracteres;
-	private String cadenaActual="";
 	public Token tokenActual;
-	private int fila=1;//contiene el indice de la linea actual por la cual se esta realizando el analisis
-	private int columna=1;//contiene el caracter de la linea en la que se realiza el analisis
-	private int indiceActual=0;
-	private Posiciones posiciones = new Posiciones();
+	private Entrada entrada;
 	
 	public Lexer(String contexto)
 	{
 		contexto += "\f";
-		arregloCaracteres = contexto.toCharArray();
+		entrada = new Entrada();
+		entrada.establecer(contexto);
 		obtenerSiguiente();
 	}
 	
-	public void setComando(String comando) throws Exception
+	public Lexer()
 	{
-		comando += "\f";
-		arregloCaracteres = comando.toCharArray();
-		indiceActual = 0;
+	}
+	
+	public void setComando(String comando)
+	{
+		comando += " \f";
+		entrada.establecer(comando);
 		obtenerSiguiente();
-	}	
-	
-	private char obtenerSiguienteChar()
-	{
-		return arregloCaracteres[indiceActual];
 	}
 	
-	private char obtenerCharAnterior()
+	private void obtenerSiguiente() 
 	{
-		return arregloCaracteres[indiceActual-1];
-	}
-	
-	private void avanceGuardandoCaracter()
-	{	
-		char caracterActual = obtenerSiguienteChar();
-		switch (caracterActual)
-		{
-			case '\n':
-				fila++;
-				columna=0;
-				break;
-			default: 
-				columna++;
-		}
-		posiciones.guardarPosicion(fila, columna, indiceActual);
-		cadenaActual += caracterActual;
-		indiceActual++;
-	}
-	
-	private void avanceCaracterSinGuardar()
-	{
-		char caracterActual = obtenerSiguienteChar();
-		switch (caracterActual)
-		{
-			case '\n':
-				fila++;
-				columna=0;
-				break;
-			default: 
-				columna++;
-		}
-		posiciones.limpiar();
-		indiceActual++;		
-	}
-	
-	private void devolverCaracter()
-	{
-		indiceActual = posiciones.getIndiceActual();
-		columna = posiciones.getColumna();
-		fila = posiciones.getFila();
-		posiciones.quitarLaUltimaPosicion();
-		cadenaActual=cadenaActual.substring(0, cadenaActual.length()-1);
-	}
-	
-	private void limpiar()
-	{
-		cadenaActual="";
-		posiciones.limpiar();
-	}
-	
-	String getPalabraActual()
-	{
-		return cadenaActual;
-	}
-	
-	private void devolverPalabra()
-	{
-		final int longitudDePalabraActual = cadenaActual.length();
-		for(int i=0; i < longitudDePalabraActual; i++)
-		{
-			devolverCaracter();
-		}
-			
-	}
-	
-	public boolean elSiguienteEsUn(TokenType tipoAEvaluar) throws Exception
-	{
-		int indiceParaElSigiente = indiceActual;
-		devolverPalabra();
-		int indiceReal = indiceActual;
-		indiceActual = indiceParaElSigiente;
-		obtenerSiguiente();
-		boolean resultado = tokenActual.getType() == tipoAEvaluar;		 
-		indiceActual = indiceReal;
-		obtenerSiguiente();
-		return resultado;
-	}
-	
-	protected void obtenerSiguiente() 
-	{
-		limpiar() ;
 		while(true)
 		{
 			try
 			{
-				eliminaEspacios();
-				
+				entrada.limpiarParaLeerOtroToken();
+				eliminarEspacios();
 				if(esNumero())
 				{
-					avanceGuardandoCaracter();
+					entrada.avanceGuardandoCaracter();
 					if(esNumero())//00..
 					{
-						avanceGuardandoCaracter();
-						if(sonDosPuntos()) //hora HH:
+						entrada.avanceGuardandoCaracter();
+						if(entrada.caracterActual == ':') //hora HH:
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero())
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esNumero())
 								{
-									avanceGuardandoCaracter();
-									if(sonDosPuntos()) //HH:MM:
+									entrada.avanceGuardandoCaracter();
+									if(entrada.caracterActual == ':') //HH:MM:
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esNumero())
 											{
-												avanceGuardandoCaracter();
+												entrada.avanceGuardandoCaracter();
 												if(esUnFinalDeNumero()) //HH:MM:SS<eol>
 												{
-													tokenActual = new Token(TokenType.hora,cadenaActual);
+													tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 													break;
 												}
 
-												devolverCaracter();
+												entrada.devolverCaracter();
 											}
 											else if(esUnFinalDeNumero()) //HH:MM:S<eol>
 											{
-												tokenActual = new Token(TokenType.hora,cadenaActual);
+												tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 												break;
 											}
-											devolverCaracter();
+											entrada.devolverCaracter();
 										}
-										devolverCaracter();
+										entrada.devolverCaracter();
 									}
-									devolverCaracter();
+									entrada.devolverCaracter();
 								}
-								else if(sonDosPuntos()) // HH:M:
+								else if(entrada.caracterActual == ':') // HH:M:
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())//HH:M:S
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero()) //HH:M:SS
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esUnFinalDeNumero())
 											{
-												tokenActual = new Token(TokenType.hora,cadenaActual);
+												tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 												break;
 											}
 										}
 										else if(esUnFinalDeNumero()) //HH:M:S<eol>
 										{
-											tokenActual = new Token(TokenType.hora,cadenaActual);
+											tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 											break;
 										}
 									}
-									devolverCaracter();
+									entrada.devolverCaracter();
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
-							devolverCaracter();
+							entrada.devolverCaracter();
 						}
 						else if(esUnDividir()) // DD/
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero())
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esNumero())
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esUnDividir()) //DD/MM/
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esNumero())
 											{
-												avanceGuardandoCaracter();
+												entrada.avanceGuardandoCaracter();
 												if(esNumero())
 												{
-													avanceGuardandoCaracter();
+													entrada.avanceGuardandoCaracter();
 													if(esNumero())
 													{
-														avanceGuardandoCaracter();
+														entrada.avanceGuardandoCaracter();
 														if(esUnFinalDeNumero())
 														{
-															tokenActual = new Token(TokenType.fecha,cadenaActual);
+															tokenActual = new Token(TokenType.fecha, entrada.cadenaActual());
 															break;
 														}
-														devolverCaracter();
+														entrada.devolverCaracter();
 													}
-													devolverCaracter();
+													entrada.devolverCaracter();
 												}
-												devolverCaracter();
+												entrada.devolverCaracter();
 											}
-											devolverCaracter();
+											entrada.devolverCaracter();
 										}
-										devolverCaracter();
+										entrada.devolverCaracter();
 									}
-									devolverCaracter();
+									entrada.devolverCaracter();
 								}
 								else if(esUnDividir()) //DD/M/
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esNumero())
 											{
-												avanceGuardandoCaracter();
+												entrada.avanceGuardandoCaracter();
 												if(esNumero())
 												{
-													avanceGuardandoCaracter();
+													entrada.avanceGuardandoCaracter();
 													if(esUnFinalDeNumero())
 													{
-														tokenActual = new Token(TokenType.fecha,cadenaActual);
+														tokenActual = new Token(TokenType.fecha, entrada.cadenaActual());
 														break;
 													}
-													devolverCaracter();
+													entrada.devolverCaracter();
 												}
-												devolverCaracter();
+												entrada.devolverCaracter();
 											}
-											devolverCaracter();
+											entrada.devolverCaracter();
 										}
-										devolverCaracter();
+										entrada.devolverCaracter();
 									}
-									devolverCaracter();	
+									entrada.devolverCaracter();	
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
-							devolverCaracter();
+							entrada.devolverCaracter();
 						}
-						devolverCaracter();
+						entrada.devolverCaracter();
 					}
 					else if(esUnDividir())//0...
 					{
-						avanceGuardandoCaracter();
+						entrada.avanceGuardandoCaracter();
 						if(esNumero())
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero())//D/MM
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esUnDividir())
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esNumero())
 											{
-												avanceGuardandoCaracter();
+												entrada.avanceGuardandoCaracter();
 												if(esNumero())
 												{
-													avanceGuardandoCaracter();
+													entrada.avanceGuardandoCaracter();
 													if(esUnFinalDeNumero())
 													{
-														tokenActual = new Token(TokenType.fecha,cadenaActual);
+														tokenActual = new Token(TokenType.fecha, entrada.cadenaActual());
 														break;
 													}
-													devolverCaracter();
+													entrada.devolverCaracter();
 												}
-												devolverCaracter();
+												entrada.devolverCaracter();
 											}
-											devolverCaracter();
+											entrada.devolverCaracter();
 										}
-										devolverCaracter();
+										entrada.devolverCaracter();
 									}
-									devolverCaracter();									
+									entrada.devolverCaracter();									
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
 							else if(esUnDividir()) //D/M/..
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esNumero())
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esNumero())
 											{
-												avanceGuardandoCaracter();
+												entrada.avanceGuardandoCaracter();
 												if(esUnFinalDeNumero())
 												{
-													tokenActual = new Token(TokenType.fecha,cadenaActual);
+													tokenActual = new Token(TokenType.fecha, entrada.cadenaActual());
 													break;
 												}
-												devolverCaracter();
+												entrada.devolverCaracter();
 											}
-											devolverCaracter();
+											entrada.devolverCaracter();
 										}
-										devolverCaracter();
+										entrada.devolverCaracter();
 									}
-									devolverCaracter();
+									entrada.devolverCaracter();
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
-							devolverCaracter();
+							entrada.devolverCaracter();
 						}
-						devolverCaracter();
+						entrada.devolverCaracter();
 					}
-					else if(sonDosPuntos())// H:
+					else if(entrada.caracterActual == ':')// H:
 					{
-						avanceGuardandoCaracter();
+						entrada.avanceGuardandoCaracter();
 						if(esNumero())
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero()) //H:MM
 							{
-								avanceGuardandoCaracter();
-								if(sonDosPuntos()) //H:MM:
+								entrada.avanceGuardandoCaracter();
+								if(entrada.caracterActual == ':') //H:MM:
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())//H:MM:S
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero()) //H:MM:SS
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esUnFinalDeNumero())
 											{
-												tokenActual = new Token(TokenType.hora,cadenaActual);
+												tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 												break;
 											}
 										}
 										else if(esUnFinalDeNumero()) //H:MM:S
 										{
-											tokenActual = new Token(TokenType.hora,cadenaActual);
+											tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 											break;
 										}
 									}
-									devolverCaracter();
+									entrada.devolverCaracter();
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
-							else if(sonDosPuntos()) //H:N:
+							else if(entrada.caracterActual == ':') //H:N:
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esNumero())//H:M:S
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero()) //H:MM:SS
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esUnFinalDeNumero())
 										{
-											tokenActual = new Token(TokenType.hora,cadenaActual);
+											tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 											break;
 										}
 									}
 									else if(esUnFinalDeNumero()) //H:M:S
 									{
-										tokenActual = new Token(TokenType.hora,cadenaActual);
+										tokenActual = new Token(TokenType.hora, entrada.cadenaActual());
 										break;
 									}
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
 						}
-						devolverCaracter();
+						entrada.devolverCaracter();
 					}
 					
 					boolean esDecimal = procesarNumero();
 					if(esDecimal)
 					{
-						tokenActual = new Token(TokenType.decimal,cadenaActual);
+						tokenActual = new Token(TokenType.decimal, entrada.cadenaActual());
 						break;
 					}
-					tokenActual = new Token(TokenType.numero,cadenaActual);
+					tokenActual = new Token(TokenType.numero, entrada.cadenaActual());
 					break;
 				}
 				else if(esUnCaracterDeId())
 				{
-					avanceGuardandoCaracter();
-					avanceGuardandoCaracter();
-					avanceGuardandoCaracter();
+					entrada.avanceGuardandoCaracter();
+					entrada.avanceGuardandoCaracter();
+					entrada.avanceGuardandoCaracter();
 					
 					if(esAlgunaMoneda())
 					{
 						if(esEspacio())
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero())
 							{
 								procesarMonto();
 								if(esUnFinalDeNumero())
 								{
-									tokenActual = new Token(TokenType.monto,cadenaActual);
+									tokenActual = new Token(TokenType.monto, entrada.cadenaActual());
 									break;
 								}
-								devolverCaracter();
+								entrada.devolverCaracter();
 							}
-							devolverCaracter();
+							entrada.devolverCaracter();
 						}
 						else if(esNumero())
 						{
 							procesarMonto();
 							if(esUnFinalDeNumero())
 							{
-								tokenActual = new Token(TokenType.monto,cadenaActual);
+								tokenActual = new Token(TokenType.monto, entrada.cadenaActual());
 								break;
 							}
-							devolverCaracter();
+							entrada.devolverCaracter();
 						}						
 					}
-					devolverCaracter();
-					devolverCaracter();
-					devolverCaracter();
+					entrada.devolverCaracter();
+					entrada.devolverCaracter();
+					entrada.devolverCaracter();
 
 					procesarIdentificador();
 					
 					if(esMultiplicacion())
 					{
-						avanceGuardandoCaracter();
+						entrada.avanceGuardandoCaracter();
 						if(esPunto())
 						{
 							procesarWildCard();
-							tokenActual = new Token(TokenType.wildcard,cadenaActual);
+							tokenActual = new Token(TokenType.wildcard, entrada.cadenaActual());
 							break;
 						}
-						devolverCaracter();
+						entrada.devolverCaracter();
 					}
 					
-					String cadenaActualUnsensitive = cadenaActual.toLowerCase(); 
-					if( cadenaActualUnsensitive.equals("show") )
+					String cadenaActualOriginal = entrada.cadenaActual();
+					String cadenaActualUnsensitive = cadenaActualOriginal.toUpperCase();
+					if( cadenaActualUnsensitive.equals("SHOW") )
 					{
-						tokenActual = new Token(TokenType.show,cadenaActual);
+						tokenActual = new Token(TokenType.show, cadenaActualOriginal );
 					}
-					else if(esAlgunMes())
+					else if(Meses.contieneElMes(cadenaActualUnsensitive))
 					{
 						if(esUnDividir())
 						{
-							avanceGuardandoCaracter();
+							entrada.avanceGuardandoCaracter();
 							if(esNumero())
 							{
-								avanceGuardandoCaracter();
+								entrada.avanceGuardandoCaracter();
 								if(esNumero())
 								{
-									avanceGuardandoCaracter();
+									entrada.avanceGuardandoCaracter();
 									if(esNumero())
 									{
-										avanceGuardandoCaracter();
+										entrada.avanceGuardandoCaracter();
 										if(esNumero())
 										{
-											avanceGuardandoCaracter();
+											entrada.avanceGuardandoCaracter();
 											if(esUnFinalDeNumero())
 											{
-												tokenActual = new Token(TokenType.mes,cadenaActual);
+												tokenActual = new Token(TokenType.mes, entrada.cadenaActual());
 												break;
 											}
 										}
@@ -508,212 +421,191 @@ public class Lexer
 							}
 						}
 
-						throw new LanguageException(cadenaActual+" es una palabra reservada del lenguaje",cadenaActual.trim(),fila,columna);
+						throw new LanguageException(entrada.cadenaActual() +" es una palabra reservada del lenguaje", cadenaActualOriginal, entrada.fila, entrada.columna);
 					}
-					else if( cadenaActualUnsensitive.equals("assert") )
+					else if( cadenaActualUnsensitive.equals("ASSERT") )
 					{
-						tokenActual = new Token(TokenType.asert, cadenaActual);
+						tokenActual = new Token(TokenType.asert, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("true") )
+					else if( cadenaActualUnsensitive.equals("TRUE") )
 					{
-						tokenActual = new Token(TokenType.boolTrue, cadenaActual);
+						tokenActual = new Token(TokenType.boolTrue, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("false") )
+					else if( cadenaActualUnsensitive.equals("FALSE") )
 					{
-						tokenActual = new Token(TokenType.boolFalse, cadenaActual);
+						tokenActual = new Token(TokenType.boolFalse, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("if") )
+					else if( cadenaActualUnsensitive.equals("IF") )
 					{
-						tokenActual = new Token(TokenType.IF, cadenaActual);
+						tokenActual = new Token(TokenType.IF, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("else") )
+					else if( cadenaActualUnsensitive.equals("ELSE") )
 					{
-						tokenActual = new Token(TokenType.ELSE, cadenaActual);
+						tokenActual = new Token(TokenType.ELSE, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("null") )
+					else if( cadenaActualUnsensitive.equals("NULL") )
 					{
-						tokenActual = new Token(TokenType.nulo, cadenaActual);
+						tokenActual = new Token(TokenType.nulo, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("procedure") )
+					else if( cadenaActualUnsensitive.equals("PROCEDURE") )
 					{
-						tokenActual = new Token(TokenType.procedure, cadenaActual);
+						tokenActual = new Token(TokenType.procedure, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("as") )
+					else if( cadenaActualUnsensitive.equals("AS") )
 					{
-						tokenActual = new Token(TokenType.as, cadenaActual);
+						tokenActual = new Token(TokenType.as, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("list") )
+					else if( cadenaActualUnsensitive.equals("LIST") )
 					{
-						tokenActual = new Token(TokenType.list, cadenaActual);
+						tokenActual = new Token(TokenType.list, cadenaActualOriginal);
 					}
-					else if( cadenaActualUnsensitive.equals("exit") )
+					else if( cadenaActualUnsensitive.equals("EXIT") )
 					{
-						tokenActual = new Token(TokenType.exit, cadenaActual);
+						tokenActual = new Token(TokenType.exit, cadenaActualOriginal);
 					}
 					else
 					{
-						tokenActual = new Token(TokenType.id,cadenaActual);
+						tokenActual = new Token(TokenType.id, cadenaActualOriginal);
 					}					
 					break;
 				}
-				else if(esLiteral())
+				else switch(entrada.caracterActual)
 				{
-					procesarLiteralString(obtenerSiguienteChar());
-					tokenActual = new Token(TokenType.hilera,cadenaActual);
-					break;
-				}
-				else if(esPunto())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.punto,cadenaActual);
-					break;
-				}
-				else if(esUnMas())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.suma,cadenaActual);
-					break;
-				}
-				else if(esUnMenos())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.resta,cadenaActual);
-					break;
-				}
-				else if(esUnDividir())  
-				{
-					avanceGuardandoCaracter();
-					boolean esComentarioDeLinea = obtenerSiguienteChar() == '/';
+				case '\'' :
+				case '\"' :
+					procesarLiteralString();
+					tokenActual = new Token(TokenType.hilera, entrada.cadenaActual());
+					return;
+				case '.' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.punto, ".");
+					return;
+				case '+' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.suma, "+");
+					return;
+				case '-' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.resta, "-");
+					return;
+				case '/':
+					entrada.avanceGuardandoCaracter();
+					boolean esComentarioDeLinea = entrada.caracterActual == '/';
 					if( esComentarioDeLinea )
 					{
-						avanceGuardandoCaracter();
+						entrada.avanceGuardandoCaracter();
 						procesarComentario();
-						tokenActual = new Token(TokenType.comentarioDeLinea, cadenaActual);
-						break;
+						tokenActual = new Token(TokenType.comentarioDeLinea, entrada.cadenaActual());
 					}
 					else
 					{
-						tokenActual = new Token(TokenType.division,cadenaActual);
-						break;
+						tokenActual = new Token(TokenType.division, "/");
 					}
-				}
-				else if(esUnMayorQue())
-				{
-					avanceGuardandoCaracter();
-					if(esUnIgual())
+					return;
+				case '>' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '=')
 					{
-						avanceGuardandoCaracter();
-						tokenActual = new Token(TokenType.mayorIgual,cadenaActual);
-						break;
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.mayorIgual, ">=");
+						return;
 					}					
-					tokenActual = new Token(TokenType.mayor,cadenaActual);
-					break;
-				}
-				else if(esUnMenorQue())
-				{
-					avanceGuardandoCaracter();
-					if(esUnIgual())
+					tokenActual = new Token(TokenType.mayor, ">");
+					return;
+				case '<' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '=')
 					{
-						avanceGuardandoCaracter();
-						tokenActual = new Token(TokenType.menorIgual,cadenaActual);
-						break;
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.menorIgual, "<=");
+						return;
 					}
 					
-					tokenActual = new Token(TokenType.menor,cadenaActual);
-					break;
-				}
-				else if(esUnIgual())
-				{
-					avanceGuardandoCaracter();
-					if(esUnIgual())
+					tokenActual = new Token(TokenType.menor, "<");
+					return;
+				case '=' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '=')
 					{
-						avanceGuardandoCaracter();
-						tokenActual = new Token(TokenType.igualdad,cadenaActual);
-						break;
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.igualdad, "==");
+						return;
 					}
 
-					tokenActual = new Token(TokenType.igual,cadenaActual);
-					break;
-				}
-				else if(esUnNegacion())
-				{
-					avanceGuardandoCaracter();
-					if(esUnIgual())
+					tokenActual = new Token(TokenType.igual, "=");
+					return;
+				case '&' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '&')
 					{
-						avanceGuardandoCaracter();
-						tokenActual = new Token(TokenType.desigualdad,cadenaActual);
-						break;
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.yLogico, "&&");
+						return;
 					}
-
-					tokenActual = new Token(TokenType.desigualdad, cadenaActual);
-					break;
-				}
-				else if(esMultiplicacion())
-				{
-					avanceGuardandoCaracter();
-					if(esPunto())
+					throw new LanguageException("Error de sintaxis en el caracter &", entrada.caracterActual+"", entrada.fila, entrada.columna);
+				case '|' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '|')
 					{
-						
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.oLogico, "&&");
+						return;
+					}
+					throw new LanguageException("Error de sintaxis en el caracter |", entrada.caracterActual+"", entrada.fila, entrada.columna);
+				case '!' :
+					entrada.avanceCaracterSinGuardar();
+					if(entrada.caracterActual == '=')
+					{
+						entrada.avanceCaracterSinGuardar();
+						tokenActual = new Token(TokenType.desigualdad, "!=");
+						return;
+					}
+					tokenActual = new Token(TokenType.negacionLogica, "!");
+					return;
+				case '*' :
+					entrada.avanceGuardandoCaracter();
+					if(entrada.caracterActual == '.')
+					{
 						procesarWildCard();
-						tokenActual = new Token(TokenType.wildcard,cadenaActual);
-						break;
+						tokenActual = new Token(TokenType.wildcard, entrada.cadenaActual());
+						return;
 					}
-					tokenActual = new Token(TokenType.multiplicacion, cadenaActual);
-					break;
-				}
-				else if( esFinDeBloque() )
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.end, cadenaActual);
-					break;
-				}
-				else if( esInicioDeBloque() )
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.begin, cadenaActual);
-					break;
-				}
-				else if(esParentesisI())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.lParentesis,cadenaActual);
-					break;
-				}
-				else if(esParentesisD())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.rParentesis,cadenaActual);
-					break;
-				}
-				else if( esComa() )
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.coma,cadenaActual);
-					break;
-				}
-				else if(esPuntoYComa())
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.puntoComa,cadenaActual);
-					break;
-				}
-				else if(obtenerSiguienteChar() =='\f')
-				{
+					tokenActual = new Token(TokenType.multiplicacion, "*");
+					return;
+				case '}' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.end, "}");
+					return;
+				case '{' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.begin, "{");
+					return;
+				case '(' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.lParentesis, "(");
+					return;
+				case ')' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.rParentesis, ")");
+					return;					
+				case ',' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.coma, ",");
+					return;
+				case ';' :
+					entrada.avanceCaracterSinGuardar();
+					tokenActual = new Token(TokenType.puntoComa, ";");
+					return;
+				case '\f' :
 					tokenActual = new Token(TokenType.eof, "<eof>");
-					break;
-				}
-				else if(obtenerSiguienteChar() =='\n')
-				{
-					avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.eol, "<eol>");
-					break;
-				}
-				else if(obtenerSiguienteChar() =='\r')
-				{
-					avanceCaracterSinGuardar();
-					if (obtenerSiguienteChar() =='\n') avanceGuardandoCaracter();
-					tokenActual = new Token(TokenType.eol, "<eol>");
-					break;
+					return;
+				case '\n' :
+					entrada.avanceCaracterSinGuardar();
+					continue;
+				case '\r' :
+					entrada.avanceCaracterSinGuardar();
+					if (entrada.caracterActual =='\n') entrada.avanceCaracterSinGuardar();
+					continue;
 				}
 			}
 			catch(Exception e)
@@ -722,57 +614,30 @@ public class Lexer
 				{
 					throw (LanguageException)e;
 				}
-				throw new LanguageException(" El caracter " + obtenerSiguienteChar() + " es inv√°lido.",cadenaActual.trim(),fila,columna);
+				throw new LanguageException(" El caracter " + entrada.caracterActual + " es inv·lido.", entrada.cadenaActual(), entrada.fila, entrada.columna);
 			}
 			
-			throw new LanguageException("La linea presenta un caracter inv√°lido.", bytesConflictivos(), fila, columna);
+			throw new LanguageException("La linea presenta un caracter inv·lido.", entrada.bytesConflictivos(), entrada.fila, entrada.columna);
 		}
 	}
 	
-	private String bytesConflictivos() 
-	{
-		char[] chars = chartSetConflictivo();
-	    CharBuffer charBuffer = CharBuffer.wrap(chars);
-	    ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
-	    byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
-	            byteBuffer.position(), byteBuffer.limit());
-	    Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
-	    Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
-	    return new String(bytes);
-	}
-
-	private char[] chartSetConflictivo() 
-	{
-		int punteroDelCaracterAIncluir = new String(arregloCaracteres).lastIndexOf(";") + 1;
-		
-		int tamanno = arregloCaracteres.length - punteroDelCaracterAIncluir;
-		char[] chars = new char[tamanno];
-		
-		for(int i = 0; i < tamanno; i++)
-		{
-			chars[i] = arregloCaracteres[punteroDelCaracterAIncluir];
-			punteroDelCaracterAIncluir++;
-		}
-		return chars;
-	}
-
 	private void procesarWildCard() throws Exception 
 	{
-		avanceGuardandoCaracter();
+		entrada.avanceGuardandoCaracter();
 		while(true)
 		{
 			if(esUnCaracterDeId() || esMultiplicacion() || esPunto() || esNumero())
 			{				
 				if(esPunto())
 				{
-					StringTokenizer wildcard = new StringTokenizer(cadenaActual.toString(), ".");
+					StringTokenizer wildcard = new StringTokenizer(entrada.cadenaActual(), ".");
 					boolean yaTieneUnPunto = wildcard.countTokens() == 2;
 					if(yaTieneUnPunto)
 					{
 						break;
 					}
 				}
-				avanceGuardandoCaracter();
+				entrada.avanceGuardandoCaracter();
 			}	
 			else if(esUnFinalDeNumero())
 			{
@@ -781,27 +646,21 @@ public class Lexer
 		}
 	}
 	
-	private void procesarComentario() throws Exception 
+	private void procesarComentario()
 	{
 		while(! esFinalDeComando())
 		{
-			avanceGuardandoCaracter();
+			entrada.avanceGuardandoCaracter();
 		}
 	}
 
-	private boolean esAlgunMes() 
-	{
-		boolean esList = Meses.contieneElMes(cadenaActual);
-		return esList;
-	}
-	
 	private boolean esAlgunaMoneda()
 	{
-		boolean esAlgunaMoneda = Monedas.contieneLaMoneda(cadenaActual);
+		boolean esAlgunaMoneda = Monedas.contieneLaMoneda(entrada.cadenaActual());
 		return esAlgunaMoneda;
 	}
 
-	public void aceptar()
+	public void aceptar() 
 	{
 		obtenerSiguiente();
 	}
@@ -811,7 +670,7 @@ public class Lexer
 		TokenType currentType = tokenActual.getType();
 		if (currentType != tipo)
 		{
-			throw new LanguageException(String.format("Se esperaba un '%s' y se encontr√≥ el valor '%s' de tipo '%s'.", tipo.name(), tokenActual.getValor(), currentType.name() ), cadenaActual.trim(), fila, columna);
+			throw new LanguageException(String.format("Se esperaba un '%s' y se encontrÛ el valor '%s' de tipo '%s'.", tipo.name(), tokenActual.getValor(), currentType.name() ), entrada.cadenaActual(), entrada.fila, entrada.columna);
 		}
 		aceptar();
 	}
@@ -826,23 +685,23 @@ public class Lexer
 			{
 				if(esDecimal)
 				{
-					throw new LanguageException("se encontro mas de 1 punto en el numero",cadenaActual.trim(),fila,columna);
+					throw new LanguageException("se encontro mas de 1 punto en el numero", entrada.cadenaActual(), entrada.fila, entrada.columna);
 				}
 				else
 				{
 					esDecimal = true;
 				}
 			}
-			avanceGuardandoCaracter();
+			entrada.avanceGuardandoCaracter();
 			
 		}		
 		if(esPorcentaje())
 		{
-			avanceCaracterSinGuardar();
+			entrada.avanceCaracterSinGuardar();
 		}
-		if(obtenerCharAnterior()=='.')
+		if(entrada.caracterActual =='.')
 		{
-			throw new LanguageException("se encontro un punto al final del numero",cadenaActual.trim(),fila,columna);
+			throw new LanguageException("se encontro un punto al final del numero", entrada.cadenaActual(), entrada.fila, entrada.columna);
 		}
 		
 		return esDecimal;
@@ -854,12 +713,11 @@ public class Lexer
 		int cantidadDeDecimales = 0;
 		while(esNumero() || esPunto())
 		{
-			
 			if(esPunto())
 			{
 				if(esDecimal)
 				{
-					throw new LanguageException("se encontro mas de 1 punto en el numero",cadenaActual.trim(),fila,columna);
+					throw new LanguageException("se encontro mas de 1 punto en el numero", entrada.cadenaActual(), entrada.fila, entrada.columna);
 				}
 				else
 				{
@@ -873,20 +731,19 @@ public class Lexer
 					cantidadDeDecimales++;
 				}
 			}
-			avanceGuardandoCaracter();
-			
+			entrada.avanceGuardandoCaracter();
 		}		
 		if(esPorcentaje())
 		{
-			avanceCaracterSinGuardar();
+			entrada.avanceCaracterSinGuardar();
 		}
-		if(obtenerCharAnterior()=='.')
+		if(entrada.caracterActual == '.')
 		{
-			throw new LanguageException("se encontro un punto al final del numero",cadenaActual.trim(),fila,columna);
+			throw new LanguageException("se encontro un punto al final del numero", entrada.cadenaActual(), entrada.fila, entrada.columna);
 		}
 		if(cantidadDeDecimales>0 && cantidadDeDecimales!=2)
 		{
-			throw new LanguageException("Los montos de dinero solo pueden tener 0 o 2 decimales",cadenaActual.trim(),fila,columna);
+			throw new LanguageException("Los montos de dinero solo pueden tener 0 o 2 decimales", entrada.cadenaActual(), entrada.fila, entrada.columna);
 		}
 		
 		return esDecimal;
@@ -894,12 +751,12 @@ public class Lexer
 	
 	private void procesarIdentificador() throws Exception
 	{
-		avanceGuardandoCaracter();
+		entrada.avanceGuardandoCaracter();
 		while(true)
 		{
 			if(esUnCaracterDeId() || esNumero())
 			{
-				avanceGuardandoCaracter();
+				entrada.avanceGuardandoCaracter();
 			}
 			else
 			{
@@ -908,182 +765,101 @@ public class Lexer
 		}
 	}
 	
-	private void procesarLiteralString(char comillaInicial) throws Exception
+	private void procesarLiteralString() throws Exception
 	{
+		char comillaInicial = entrada.caracterActual; 
 		while(true)
 		{
-			avanceGuardandoCaracter();
+			entrada.avanceGuardandoCaracter();
 
 			if(esBackSlash())
 			{
-				avanceCaracterSinGuardar();
+				entrada.avanceCaracterSinGuardar();
 			}
-			else if(obtenerSiguienteChar()==comillaInicial)
+			else if(entrada.caracterActual == comillaInicial)
 			{
-				avanceGuardandoCaracter();
+				entrada.avanceGuardandoCaracter();
 				break;
 			}
 		}					
 	}
 	
-	private void eliminaEspacios() throws Exception
+	private static final String CARACTERES_VALIDOS = new String(new char[]{'"', ';', '=', ':', ',', '(', ')', '+', '\'', '/', '*', '-', '>', '<', '!', '{', '}', '%', '.', '&', '|'});
+	private void eliminarEspacios() throws Exception
 	{
 		while(true)
 		{
-			char sgteCaracter = obtenerSiguienteChar();
-			boolean esFinDeArchivo_o_noEsUnEspacio = sgteCaracter == '\f' || ! (sgteCaracter == ' ' || sgteCaracter == '\t');
+			boolean esFinDeArchivo_o_noEsUnEspacio = Character.isLetterOrDigit(entrada.caracterActual) || CARACTERES_VALIDOS.indexOf(entrada.caracterActual) >= 0 || entrada.caracterActual == '\f';
 			if (esFinDeArchivo_o_noEsUnEspacio)
 			{
 				break;
 			}
 			else
 			{
-				avanceCaracterSinGuardar();
+				entrada.avanceCaracterSinGuardar();
 			}				
 		}
 	}
 	
 	private boolean esMultiplicacion() 
 	{
-		boolean esUnMultiplicacion = obtenerSiguienteChar()=='*';
+		boolean esUnMultiplicacion = entrada.caracterActual == '*';
 		return esUnMultiplicacion;
 	}
 
 	private boolean esUnDividir()
 	{
-		boolean esUnDividir = obtenerSiguienteChar()=='/';
+		boolean esUnDividir = entrada.caracterActual == '/';
 		return esUnDividir;
-	}
-	
-	private boolean esUnMayorQue()
-	{
-		boolean esUnMayorQue = obtenerSiguienteChar()=='>';
-		return esUnMayorQue;
-	}
-	private boolean esUnMenorQue()
-	{
-		boolean esUnMenorQue = obtenerSiguienteChar()=='<';
-		return esUnMenorQue;
-	}
-	
-	private boolean esUnMas()
-	{
-		boolean esUnMas = obtenerSiguienteChar()=='+';
-		return esUnMas;
-	}
-	
-	private boolean esUnMenos()
-	{
-		boolean esUnMenos = obtenerSiguienteChar()=='-';
-		return esUnMenos;
-	}
-	
-	private boolean esUnIgual()
-	{
-		boolean esUnIgual = obtenerSiguienteChar()=='=';
-		return esUnIgual;
-	}
-	
-	private boolean esUnNegacion()
-	{
-		boolean esNegacion = obtenerSiguienteChar()=='!';
-		return esNegacion;
 	}
 	
 	private boolean esPunto()
 	{
-		boolean esUnPunto =  obtenerSiguienteChar()=='.';
+		boolean esUnPunto =  entrada.caracterActual == '.';
 		return esUnPunto;
 	}
 	
 	private boolean esNumero()
 	{
-		boolean esUnNumero = Character.isDigit(obtenerSiguienteChar());
+		boolean esUnNumero = Character.isDigit(entrada.caracterActual);
 		return esUnNumero;
 	}
 	
-	private boolean sonDosPuntos()
-	{
-		boolean sonDosPuntos = obtenerSiguienteChar()==':';
-		
-		return sonDosPuntos;
-	}
-
 	boolean esEspacio()
 	{
-		char sgteCaracter = obtenerSiguienteChar();
-		boolean esUnEspacio = sgteCaracter == ' ' || sgteCaracter =='\t';
+		boolean esUnEspacio = entrada.caracterActual == ' ' || entrada.caracterActual =='\t';
 		return esUnEspacio;
 	}
 	
+	private static final String OPERADORES = new String(new char[]{'=', '+', '-', '*', '<', '>', '!', '/'});
+	private static final String FIN_DE_NUMERO = new String(new char[]{',', ')', '}', ';', '%'});
 	private boolean esUnFinalDeNumero()
 	{
-		return esEspacio() || esComa() || esFinDeBloque() || esParentesisD() || esUnOperador() || esPuntoYComa() || esFinalDeComando() ||  esPorcentaje();
-	}
-	
-	private boolean esUnOperador() 
-	{
-		return esUnMas() || esUnMenos() || esUnDividir() || esUnMayorQue() || esUnMenorQue() || esUnIgual() || esUnNegacion() || esMultiplicacion();
+		boolean esUnFinalDeNumero = esEspacio() || OPERADORES.indexOf(entrada.caracterActual) >= 0 || FIN_DE_NUMERO.indexOf(entrada.caracterActual) >= 0 || esFinalDeComando();
+		return esUnFinalDeNumero;
 	}
 	
 	private boolean esFinalDeComando()
 	{
-		char sgteCaracter = obtenerSiguienteChar();
-		boolean esElFinalDelComando = sgteCaracter =='\n' || sgteCaracter =='\r' || sgteCaracter =='\f';
+		boolean esElFinalDelComando = entrada.caracterActual =='\n' || entrada.caracterActual =='\r' || entrada.caracterActual =='\f';
 		return esElFinalDelComando;
 	}
 	
 	private boolean esPorcentaje()
 	{
-		boolean esUnPorcentaje = obtenerSiguienteChar()=='%';
+		boolean esUnPorcentaje = entrada.caracterActual == '%';
 		return esUnPorcentaje;
 	}
 	
 	private boolean esBackSlash()
 	{
-		boolean esBackSlash = obtenerSiguienteChar()=='\\';
+		boolean esBackSlash = entrada.caracterActual == '\\';
 		return esBackSlash;
-	}
-
-	private boolean esPuntoYComa()
-	{
-		boolean esPuntoYComa = obtenerSiguienteChar()==';';
-		return esPuntoYComa;
-	}
-	private boolean esParentesisD()
-	{
-		boolean esParentesisD = obtenerSiguienteChar()==')';
-		return esParentesisD;
-	}
-	
-	private boolean esComa()
-	{
-		boolean esUnaComa = obtenerSiguienteChar()==',';
-		return esUnaComa;
-	}
-	
-	private boolean esFinDeBloque()
-	{
-		boolean esUnaComa = obtenerSiguienteChar()=='}';
-		return esUnaComa;
-	}
-	
-	private boolean esInicioDeBloque()
-	{
-		boolean esUnaComa = obtenerSiguienteChar()=='{';
-		return esUnaComa;
-	}
-	
-	private boolean esLiteral()
-	{
-		char sgteCaracter = obtenerSiguienteChar();	
-		boolean esTexto = sgteCaracter == '"' || sgteCaracter == '\'';
-		return esTexto;
 	}
 	
 	private boolean esUnCaracterDeId()
 	{
-		char character = obtenerSiguienteChar();
+		char character = entrada.caracterActual;
 		boolean esLetra = Character.isLetter(character);
 		if (esLetra) return true;
 		boolean esGuionBajo = character=='_';
@@ -1092,41 +868,172 @@ public class Lexer
 		return esGuionBajo || esNumeral || esArroba;
 	}
 	
-	private boolean esParentesisI()
-	{
-		boolean esParentesisI = obtenerSiguienteChar()=='(';
-		return esParentesisI;
-	}
-	
 	public int fila()
 	{
-		return fila;
+		return entrada.fila;
 	}
 
 	public int columna()
 	{
-		return columna;
+		return entrada.columna;
+	}
+	
+	private class Entrada
+	{
+		public char caracterActual;
+		
+		private char[] arregloCaracteres;
+		private int indiceActual=0;
+		private int fila;
+		private int columna;
+		private StringBuilder cadenaActual = new StringBuilder();
+		
+		private Posiciones posiciones = new Posiciones(this); 
+
+		void establecer(String entrada)
+		{
+			arregloCaracteres = entrada.toCharArray();
+			limpiar();
+		}
+		
+		void limpiar()
+		{
+			caracterActual = ' ';
+			indiceActual = 0;
+			fila = 1;
+			columna = 0;
+			cadenaActual.setLength(0);
+		}
+		
+		void limpiarParaLeerOtroToken()
+		{
+			cadenaActual.setLength(0);
+			posiciones.limpiarParaLeerOtroToken();
+		}
+		
+		private void anotarElDesplazamientoDeLaLinea(boolean guardando)
+		{
+			fila++;
+			columna=0;
+			avanzar(guardando);
+		}
+		
+		private void anotarElDesplazamientoDeLaColumna(boolean guardando)
+		{
+			columna++;
+			avanzar(guardando);
+		}
+		
+		private void avanzar(boolean guardando)
+		{
+			if (guardando) 
+			{
+				posiciones.guardarPosicion();
+				cadenaActual.append(caracterActual);
+			}
+			caracterActual = arregloCaracteres[indiceActual];
+			indiceActual++;
+		}
+		
+		void avanceGuardandoCaracter()
+		{	
+			switch (caracterActual)
+			{
+				case '\n':
+					entrada.anotarElDesplazamientoDeLaLinea(true);
+					break;
+				case '\f':
+					throw new LanguageException("EOF inesperado", entrada.cadenaActual.toString(), entrada.fila, entrada.columna);
+				default:
+					entrada.anotarElDesplazamientoDeLaColumna(true);
+			}
+		}
+		
+		void avanceCaracterSinGuardar()
+		{
+			switch (caracterActual)
+			{
+				case '\n':
+					entrada.anotarElDesplazamientoDeLaLinea(false);
+					break;
+				case '\f':
+					throw new LanguageException("EOF inesperado", entrada.cadenaActual.toString(), entrada.fila, entrada.columna);
+				default: 
+					entrada.anotarElDesplazamientoDeLaColumna(false);
+			}
+		}
+		
+		void devolverCaracter()
+		{
+			indiceActual = posiciones.getIndiceActual();
+			columna = posiciones.getColumna();
+			fila = posiciones.getFila();
+			posiciones.quitarLaUltimaPosicion();
+			cadenaActual.setLength(cadenaActual.length()-1);
+			caracterActual = arregloCaracteres[indiceActual-1];
+		}
+				
+		String cadenaActual()
+		{
+			return cadenaActual.toString().trim();
+		}
+		
+		String bytesConflictivos() 
+		{
+			char[] chars = chartSetConflictivo();
+		    CharBuffer charBuffer = CharBuffer.wrap(chars);
+		    ByteBuffer byteBuffer = Charset.forName("UTF-8").encode(charBuffer);
+		    byte[] bytes = Arrays.copyOfRange(byteBuffer.array(),
+		            byteBuffer.position(), byteBuffer.limit());
+		    Arrays.fill(charBuffer.array(), '\u0000'); // clear sensitive data
+		    Arrays.fill(byteBuffer.array(), (byte) 0); // clear sensitive data
+		    return new String(bytes);
+		}
+
+		private char[] chartSetConflictivo() 
+		{
+			int punteroDelCaracterAIncluir = new String(arregloCaracteres).lastIndexOf(";") + 1;
+			
+			int tamanno = arregloCaracteres.length - punteroDelCaracterAIncluir;
+			char[] chars = new char[tamanno];
+			
+			for(int i = 0; i < tamanno; i++)
+			{
+				chars[i] = arregloCaracteres[punteroDelCaracterAIncluir];
+				punteroDelCaracterAIncluir++;
+			}
+			return chars;
+		}
 	}
 	
 	private class Posiciones
 	{
+		private Entrada entradaActual;
+		
 		private static final int MAX_TAMANO_DE_UN_LEXEMA = 1024;
 		private int fila[] = new int[MAX_TAMANO_DE_UN_LEXEMA];
 		private int columna[] = new int[MAX_TAMANO_DE_UN_LEXEMA];
 		private int indices[] = new int[MAX_TAMANO_DE_UN_LEXEMA];
 		private int indice = -1;
 		
-		void guardarPosicion (int fila, int columna, int indiceActual)
+		Posiciones(Entrada entrada)
 		{
-			indice++;
-			this.fila[indice] = fila;
-			this.columna[indice] = columna;
-			this.indices[indice] = indiceActual;
+			this.entradaActual = entrada;
+			guardarPosicion ();
 		}
 		
-		void limpiar()
+		void limpiarParaLeerOtroToken()
 		{
 			indice = -1;
+			guardarPosicion ();
+		}
+		
+		void guardarPosicion ()
+		{
+			indice++;
+			this.fila[indice] = entradaActual.fila;
+			this.columna[indice] = entradaActual.columna;
+			this.indices[indice] = entradaActual.indiceActual;
 		}
 		
 		void quitarLaUltimaPosicion()

@@ -25,7 +25,7 @@ public class ComandoNuevaInstancia extends Comando
 	}
 
 	@Override
-	public void validarEstaticamente() throws Exception
+	public void validarEstaticamente()
 	{
 		lValue.validarEstaticamente();
 		rValue.validarEstaticamente();
