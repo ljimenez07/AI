@@ -89,6 +89,7 @@ public class Constantes {
 	// Modos
 	public static String MODO_REAL = "Real";
 	public static String MODO_FAKE = "Fake";
+	public static String MODO_TEST = "Test";
 	
 	// Vinetas
 	public static String TIPO_VINETA_ILUSTRATIVA = "Ilustrativa";
