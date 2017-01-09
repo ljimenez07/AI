@@ -12,7 +12,7 @@ public class Entidad //extends WatsonUnderstand
 	private Hashtable<String, Operador> valores = new Hashtable<String, Operador>();
 	
 	public Entidad(String nombre, Hashtable<String, Operador> valores){
-		System.out.println("Agregando entidad: "+nombre);
+		System.out.println("Agregando entidad: "+nombre+" con valor "+valores.toString());
 		this.nombre = nombre;
 		this.valores = valores;
 	}
