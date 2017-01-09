@@ -84,6 +84,7 @@ public class Constantes {
 	public static String VARIABLE_TIPO_CONTEXTO = "Contexto";
 	public static String VARIABLE_TIPO_USUARIO = "Usuario";
 	public static String VARIABLE_TIPO_NEGOCIO = "Negocio";
+	public static String VARIABLE_TIPO_ENUM = "Enum";
 	
 	// Modos
 	public static String MODO_REAL = "Real";

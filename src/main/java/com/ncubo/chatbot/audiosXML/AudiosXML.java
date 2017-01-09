@@ -194,7 +194,7 @@ public class AudiosXML {
 		String resultado = "";
 		try{
 			if(exiteLaFrase(idFrase)){
-				resultado = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio().url();
+				resultado = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio("audio").url();
 			}
 		}catch(Exception e){
 			resultado = "";
@@ -327,7 +327,7 @@ public class AudiosXML {
 		System.out.println("Frase del xml: " + textoDelAudio);
 		System.out.println("Audios de la frase del xml: " + audio);
 		ComponentesDeLaFrase miSinonimoDeLaFrase = new ComponentesDeLaFrase(tipoFrase, "", textoDelAudio, "", "");
-		miSinonimoDeLaFrase.setAudio(new Sonido(audio, textoDelAudio));
+		miSinonimoDeLaFrase.setAudio("audio",new Sonido(audio, textoDelAudio));
 		misSinonimosDeLasConjunciones.add(miSinonimoDeLaFrase);
 	}
 
@@ -347,7 +347,7 @@ public class AudiosXML {
 			Element empName = doc.createElement(sinominoDeFrase.getTipoDeFrase());
 			empName.appendChild(doc.createTextNode(sinominoDeFrase.getTextoAUsarParaGenerarElAudio()));
 			try{
-				empName.setAttribute("audio", sinominoDeFrase.getAudio().url());
+				empName.setAttribute("audio", sinominoDeFrase.getAudio("audio").url());
 			}catch(Exception e){
 				empName.setAttribute("audio", "test.mp3");
 			}

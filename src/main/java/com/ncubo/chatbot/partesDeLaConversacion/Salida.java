@@ -56,7 +56,7 @@ public class Salida {
 	
 	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase){
 		this.miTexto = miFrase.getTextoDeLaFrase();
-		this.miSonido = miFrase.getAudio();
+		this.miSonido = miFrase.getAudio("audio");
 		if(miFrase.getVineta() != null)
 			this.misVinetas.add(miFrase.getVineta());
 		this.miRespuesta = respuesta;

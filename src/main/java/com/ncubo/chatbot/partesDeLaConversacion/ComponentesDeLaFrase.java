@@ -1,6 +1,7 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +10,7 @@ public class ComponentesDeLaFrase {
 	private String tipoDeFrase;
 	private String textoDeLaFrase;
 	private String textoAUsarParaGenerarElAudio;
-	private Sonido audio = null;
+	private Hashtable<String, Sonido> audios = new Hashtable<String, Sonido>();
 	private Vineta vineta = null;
 	private String condicion;
 	private ArrayList<Placeholder> placeholders;
@@ -60,12 +61,14 @@ public class ComponentesDeLaFrase {
 		return textoDeLaFrase;
 	}
 
-	public Sonido getAudio() {
-		return audio;
+	public Sonido getAudio(String key) {
+		return audios.get(key);
 	}
 
-	public void setAudio(Sonido audio) {
-		this.audio = audio;
+	public void setAudio(String key, Sonido audio) {
+		if(audios != null && audios.containsKey(key))
+			this.audios.replace(key, audio);
+		else this.audios.put(key, audio);
 	}
 
 	public String getTipoDeFrase() {

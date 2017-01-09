@@ -70,7 +70,7 @@ public class Participante{
 		}
 		
 		if (formaDeManifestarseOral.esEnFormaOral()){
-			Sonido sonido = fraseADecir.getAudio();
+			Sonido sonido = fraseADecir.getAudio("audio");
 			if (sonido != null)
 				salida.escribir(sonido, respuesta, tema, frase);
 		}
@@ -167,10 +167,10 @@ public class Participante{
 		if (formaDeManifestarseOral.esEnFormaOral()){
 			Sonido sonido = null;
 			if(meRindo && pregunta.hayTextosMeRindo()){
-				sonido = resultado.getAudio();
+				sonido = resultado.getAudio("audio");
 			}else{
 				if(pregunta.hayTextosImpertinetes()){
-					sonido = resultado.getAudio();
+					sonido = resultado.getAudio("audio");
 				}else{
 					if(! texto.equals("")){
 						try{
