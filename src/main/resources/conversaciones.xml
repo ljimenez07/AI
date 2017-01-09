@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE xml>
-<conversacions>
+<conversacions modo="Fake">
 	<conversacion id="saludoGeneral">
 		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>

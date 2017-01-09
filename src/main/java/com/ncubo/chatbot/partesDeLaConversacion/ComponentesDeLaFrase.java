@@ -52,6 +52,10 @@ public class ComponentesDeLaFrase {
 		return resultado;
 	}
 	
+	public ArrayList<Placeholder> obtenerLosPlaceholders(){
+		return placeholders;
+	}
+	
 	public boolean tienePlaceholders(){
 		return ! placeholders.isEmpty();
 	}
@@ -91,6 +95,5 @@ public class ComponentesDeLaFrase {
 	
 	public static void main(String argv[]) {
 		ComponentesDeLaFrase componente = new ComponentesDeLaFrase("frase", "Tu saldo de la cuenta ${cuenta} es de $${saldo} de la cuenta ${cuenta}", "Tu saldo es de", "", "");
-		System.out.println(System.getProperty("user.home"));
 	}
 }

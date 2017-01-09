@@ -30,8 +30,10 @@ public abstract class Contenido
 	//private ArrayList<Intencion> intenciones = new ArrayList<Intencion>();
 	private ArrayList<WorkSpace> miWorkSpaces = new ArrayList<WorkSpace>();
 	private String pathFileXML;
+	private String modoDeTrabajo;
 	
 	protected Contenido(String path){
+		modoDeTrabajo = Constantes.MODO_REAL;
 		pathFileXML = path;
 		File archivoDeConfiguracion = archivoDeConfiguracion(path);
 		// TODO Ver que el archivo existe, sino return error
@@ -88,6 +90,10 @@ public abstract class Contenido
 		return this;
 	}
 	
+	public String obtenerModoDeTrabajo(){
+		return modoDeTrabajo;
+	}
+	
 	@SuppressWarnings("null")
 	private void cargarPreguntasYRespuestasDelArchivoDeConfiguracion(File file){
 		
@@ -117,6 +123,16 @@ public abstract class Contenido
 			}*/
 			
 			// WorkSpaces
+			try{
+				Element root = doc.getDocumentElement();
+				modoDeTrabajo = root.getAttribute("modo");
+				System.out.println("Modo de trabajo: "+modoDeTrabajo);
+				if(! modoDeTrabajo.equals(Constantes.MODO_FAKE) && ! modoDeTrabajo.equals(Constantes.MODO_REAL) && ! modoDeTrabajo.equals(Constantes.MODO_TEST))
+					throw new ChatException("Verifique que el modo de trabajo sea valido (Fake/Real/Test)");
+			}catch(Exception e){
+				throw new ChatException("Error cargando el modo de trabajo. "+e.getMessage());
+			}
+			
 			try{
 				System.out.println("\nCargando los workspaces ...\n");
 				NodeList workspaces = doc.getElementsByTagName("workspaces");
@@ -326,9 +342,8 @@ public abstract class Contenido
 					misIntenciones.agregar(new Intencion(intencion, new Operador(obtenerTipoDeOperador(operador))));
 				}
 			}
-		}catch(Exception e){
-			
-		}
+		}catch(Exception e){}
+		
 		return misIntenciones;
 	}
 	

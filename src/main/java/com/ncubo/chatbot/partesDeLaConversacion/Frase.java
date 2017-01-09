@@ -58,7 +58,8 @@ public abstract class Frase
 
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
-			tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
+			//tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
+			tieneUnoOVariosPlaceHolders = miFrase.tienePlaceholders();
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
 		}
@@ -69,6 +70,14 @@ public abstract class Frase
 	public boolean hayFrasesConCondicion(){
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			if(miFrase.tieneUnaCondicion())
+				return true;
+		}
+		return false;
+	}
+	
+	public boolean hayFrasesConPlaceholders(){
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.tienePlaceholders())
 				return true;
 		}
 		return false;

@@ -45,6 +45,10 @@ public class Sistema extends Objeto{
 		return new Numero(Integer.parseInt(hora[1]));
 	}
 	
+	public String prueba(Numero numero){
+		return "Sergio "+numero;
+	}
+	
 	public static void main(String argv[]) throws Exception {
 		Sistema sistema = new Sistema();
 		System.out.println(sistema.horaActual());
