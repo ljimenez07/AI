@@ -1,9 +1,6 @@
 package com.ncubo.chatbot.watson;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -19,7 +16,6 @@ import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.service.exception.BadRequestException;
 import com.ibm.watson.developer_cloud.service.exception.InternalServerErrorException;
 import com.ibm.watson.developer_cloud.service.exception.UnauthorizedException;
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.parser.Operador;
 import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;

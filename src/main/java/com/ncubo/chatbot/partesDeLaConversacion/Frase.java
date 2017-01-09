@@ -1,10 +1,10 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
@@ -20,18 +20,20 @@ public abstract class Frase
 	//private Intencion intencion;
 	private boolean esEstatica = true;
 	
+	private boolean tieneVariablesEnum = false;
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
 	
 	private int intentosFallidos = 0;
 	
-	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
+	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos, Boolean tieneEnum,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
 		this.caracteristicas = caracteristicas;
 		this.idFrase = idFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		this.intentosFallidos = intentosFallidos;
+		this.tieneVariablesEnum = tieneEnum;
 		cargarLaFrase();
 		cargarVinetas(vinetasDeLaFrase);
 		if(esEstatica()){
@@ -273,16 +275,16 @@ public abstract class Frase
 			if(esEstatica()){
 				int contadorDeSinonimos = 0;
 				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-					String testoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
 					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, testoParaAudio, contadorDeSinonimos)){
-						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(testoParaAudio, false);
+					if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, textoParaAudio, contadorDeSinonimos)){
+						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false);
 					}else{
 						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, contadorDeSinonimos);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					String miIp = ipPublica+nombreDelArchivo;
-					miFrase.setAudio("audio",new Sonido(miIp, testoParaAudio));
+					miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
 					contadorDeSinonimos ++;
 				}
 				
@@ -387,6 +389,37 @@ public abstract class Frase
 				}*/
 				
 			}
+			if(tieneEnum()){
+				
+				
+				int contadorDeSinonimos = 0;
+				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+					
+					ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+					//replace con la clase Dia
+					
+					for (int i = 0; i < placeholders.size();i++){
+						String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getValorDeLaVariable();
+						for (int j = 0; j < valores.length;j++){
+							String textoParaAudioEnum = textoParaAudio.replace("${"+placeholders.get(i).getNombreDelPlaceholder()+"}", valores[j]);
+							String nombreDelArchivo = "";
+							if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, textoParaAudioEnum, contadorDeSinonimos)){
+								nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudioEnum, false);
+							}else{
+								nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, contadorDeSinonimos);
+								nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
+							}
+							String miIp = ipPublica+nombreDelArchivo;
+							miFrase.setAudio(valores[j],new Sonido(miIp, textoParaAudio));
+							
+						}
+							
+					}
+					
+					contadorDeSinonimos ++;
+				}
+			}
 		}
 	}
 	
@@ -417,6 +450,12 @@ public abstract class Frase
 	public boolean sePuedeDecirEnVozAlta(){
 		return buscarCaracteristica(CaracteristicaDeLaFrase.sePuedeDecirEnVozAlta);
 	}
+	
+	public boolean tieneEnum(){
+		
+		return this.tieneVariablesEnum;
+	}
+	
 	
 	/*public String[] getTextosDeLaFrase() {
 		return textosDeLaFrase;

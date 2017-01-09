@@ -24,7 +24,7 @@ public class AdministradorDeVariablesDeContexto {
 			String key = keys.nextElement();
 			Variable variable = variables.get(key);
 			if( ! variable.getValorDeLaVariable().equals("") && variable.getTipoVariable().equals(Constantes.VARIABLE_TIPO_CONTEXTO)){
-				agregarVariableDeContexto(variable.getNombre(), variable.getValorDeLaVariable());
+				agregarVariableDeContexto(variable.getNombre(), variable.getValorDeLaVariable()[0]);
 			}
 		}
 	}

@@ -13,8 +13,6 @@ import org.apache.commons.io.FilenameUtils;
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 
-import com.ncubo.chatbot.watson.TextToSpeechWatson;
-
 public class FTPCliente
 {
 	private String usuario;

@@ -1,8 +1,6 @@
 package com.ncubo.evaluador.main;
 
 import java.io.PrintStream;
-
-import com.ncubo.chatbot.variablesDeAmbiente.Sistema;
 import com.ncubo.evaluador.db.TablaDeSimbolos;
 import com.ncubo.evaluador.interprete.Parser;
 import com.ncubo.evaluador.interprete.Salida;

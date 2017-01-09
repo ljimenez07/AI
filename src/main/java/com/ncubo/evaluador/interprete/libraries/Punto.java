@@ -5,7 +5,6 @@ import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import com.ncubo.evaluador.libraries.Nulo;
 import com.ncubo.evaluador.libraries.Objeto;
 
 public abstract class Punto extends Expresion 

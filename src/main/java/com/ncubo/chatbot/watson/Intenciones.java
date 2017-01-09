@@ -1,12 +1,7 @@
 package com.ncubo.chatbot.watson;
 
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.exceptiones.ChatException;
 
 public class Intenciones { //implements Iterable<Intencion>

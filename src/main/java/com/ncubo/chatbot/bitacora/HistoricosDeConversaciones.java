@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.ncubo.db.BitacoraDao;
-import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.EstadisticasPorConversacionDao;
 
 public class HistoricosDeConversaciones {

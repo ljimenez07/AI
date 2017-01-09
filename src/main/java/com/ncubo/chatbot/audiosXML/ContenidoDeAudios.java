@@ -1,8 +1,6 @@
 package com.ncubo.chatbot.audiosXML;
 
 import java.util.ArrayList;
-
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 
 public class ContenidoDeAudios {

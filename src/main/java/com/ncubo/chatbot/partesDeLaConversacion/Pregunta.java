@@ -13,9 +13,9 @@ public class Pregunta extends Frase
 	private Intenciones misIntenciones;
 	
 	protected Pregunta(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase,
-			CaracteristicaDeLaFrase[] caracteristicas, Entidades entidades, Intenciones intenciones, int intentosFallidos)
+			CaracteristicaDeLaFrase[] caracteristicas, Entidades entidades, Intenciones intenciones, int intentosFallidos, Boolean tieneEnum)
 	{
-		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, intentosFallidos, caracteristicas);
+		super (idFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicas);
 		this.misEntidades = entidades;
 		this.misIntenciones = intenciones;
 	}

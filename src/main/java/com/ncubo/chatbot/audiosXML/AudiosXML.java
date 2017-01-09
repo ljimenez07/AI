@@ -18,8 +18,6 @@ import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
-import com.ncubo.chatbot.partesDeLaConversacion.Tema;
-import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 
 import java.io.File;
 import java.util.ArrayList;

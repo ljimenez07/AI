@@ -6,9 +6,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
 
-import com.mysql.jdbc.Blob;
-import com.ncubo.db.EstadisticasPorConversacionDao.atributosDeLasEstadisticasPorConversacionDao;
-
 public class BitacoraDao {
 
 	private final String NOMBRE_TABLA_BITACORA = "bitacora_de_conversaciones";

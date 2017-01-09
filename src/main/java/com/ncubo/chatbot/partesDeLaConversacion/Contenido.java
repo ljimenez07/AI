@@ -180,6 +180,7 @@ public abstract class Contenido
 			}
 			
 			// Variables de contexto
+			String[] valores ;
 			try{
 				System.out.println("\nCargando las variablesDeAmbiente ...\n");
 				NodeList variables = doc.getElementsByTagName("variablesDeAmbiente");
@@ -191,9 +192,32 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					String nombre = eElement.getAttribute("nombre");
 					String tipoValor = eElement.getAttribute("tipo");
+					
+					if(eElement.hasAttribute("valores"))	{
+						
+						NodeList nodoValores = eElement.getElementsByTagName("valores");
+						Node valorNode = nodoValores.item(0);
+						Element valorElement = (Element) valorNode;
+						NodeList valor = valorElement.getElementsByTagName("valor");
+						valores = new String [nodoValores.getLength()];
+
+						for (int i = 0; i < valor.getLength(); i++) {
+							Node nodoValor = valor.item(i);
+							Element elementoValor = (Element) nodoValor;
+							String valorPorDefecto = elementoValor.getTextContent();
+							valores[i] = valorPorDefecto;
+						}
+						VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
+
+					}
+					else{
+					
 					String valorPorDefecto = nNode.getTextContent();
 					System.out.println("ValorDeAmbiente: "+nombre);
-					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valorPorDefecto, tipoValor));
+					valores = new String [1];
+					valores[0]= valorPorDefecto;
+					}
+					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando las conjunciones "+e.getMessage());
@@ -244,7 +268,41 @@ public abstract class Contenido
 				
 					}
 					System.out.println("intentosFallidos : " + intentosFallidos);
-					
+										
+					Boolean tieneEnum = false;
+					// Variables de contexto
+					try{
+						System.out.println("\nCargando las variables de la frase ...\n");
+						NodeList variables = eElement.getElementsByTagName("variables");
+						Node variablesNode = variables.item(0);
+						Element variablesElement = (Element) variablesNode;
+						NodeList variable = variablesElement.getElementsByTagName("variable");
+						for (int temporal = 0; temporal < variable.getLength(); temporal++) {
+							Node nodo = variable.item(temporal);
+							Element element = (Element) nodo;
+							String nombre = element.getAttribute("nombre");
+							String tipoValor = element.getAttribute("tipo");
+							if(tipoValor.equals(Constantes.VARIABLE_TIPO_ENUM))
+								tieneEnum = true;
+							
+							NodeList nodoValores = eElement.getElementsByTagName("valores");
+							Node valorNode = nodoValores.item(0);
+							Element valorElement = (Element) valorNode;
+							NodeList valor = valorElement.getElementsByTagName("valor");
+							valores = new String [valor.getLength()];
+
+							for (int i = 0; i < valor.getLength(); i++) {
+								Node nodoValor = valor.item(i);
+								Element elementoValor = (Element) nodoValor;
+								String valorPorDefecto = elementoValor.getTextContent();
+								valores[i] = valorPorDefecto;
+							}
+							VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
+
+						}
+					}catch(Exception e){
+					}
+						 
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
 					
 					/*String tipoDeFraseACargar = "frase";
@@ -260,18 +318,18 @@ public abstract class Contenido
 					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
 						miFrase = new Pregunta(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
-								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos);
+								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos, tieneEnum);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}

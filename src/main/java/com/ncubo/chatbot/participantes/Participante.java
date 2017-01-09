@@ -6,11 +6,6 @@ import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.partesDeLaConversacion.Vineta;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
-import java.io.File;
-import java.util.Enumeration;
-import java.util.Hashtable;
-import java.util.List;
-
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;

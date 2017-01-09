@@ -3,10 +3,7 @@ package com.ncubo.evaluador.db;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
-import com.ncubo.evaluador.libraries.Hilera;
 import com.ncubo.evaluador.libraries.Nulo;
 import com.ncubo.evaluador.libraries.Objeto;
 
