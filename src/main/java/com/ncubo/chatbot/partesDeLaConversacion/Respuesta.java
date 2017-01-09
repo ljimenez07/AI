@@ -156,7 +156,7 @@ public class Respuesta {
 		return watsonRespuesta;
 	}
 	
-	private String obtenerElementoDelContextoDeWatson(String variableDeContexto){
+	public String obtenerElementoDelContextoDeWatson(String variableDeContexto){
 		try{
 			return watsonRespuesta.getContext().get(variableDeContexto).toString();
 		}catch(Exception e){

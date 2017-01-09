@@ -115,6 +115,7 @@ public class ComponentesDeLaFrase {
 		this.setAudio(new Sonido(miIp, textoAUsarParaGenerarElAudio));
 		return this;
 	}
+	
 	public ArrayList<Placeholder> obtenerLosPlaceholders(){
 		return placeholders;
 	}
@@ -154,7 +155,6 @@ public class ComponentesDeLaFrase {
 	public boolean tieneUnaCondicion(){
 		return ! condicion.isEmpty();
 	}
-	
 	
 	public static void main(String argv[]) {
 		ComponentesDeLaFrase componente = new ComponentesDeLaFrase("frase", "Tu saldo de la cuenta ${cuenta} es de $${saldo} en la cuenta ${cuenta}", "Tu saldo es de", "", "");
