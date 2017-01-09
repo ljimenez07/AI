@@ -29,6 +29,8 @@ public class Evaluador {
 		String resultado = "";
 		if(! dato.isEmpty())
 		{
+			if(parser == null)
+				this.parser = new Parser(tablaDeSimbolos, salida, dato);
 			parser.establecerComando(dato);
 			Programa programa = parser.procesar();
 			salida.conSalida();
