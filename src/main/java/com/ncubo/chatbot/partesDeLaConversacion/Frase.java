@@ -75,6 +75,15 @@ public abstract class Frase
 		return false;
 	}
 	
+	public ArrayList<ComponentesDeLaFrase> extraerFrasesConCondicion(){
+		ArrayList<ComponentesDeLaFrase> resultado = new ArrayList<>();
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.tieneUnaCondicion())
+				resultado.add(miFrase);
+		}
+		return resultado;
+	}
+	
 	public boolean hayFrasesConPlaceholders(){
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			if(miFrase.tienePlaceholders())
@@ -83,11 +92,11 @@ public abstract class Frase
 		return false;
 	}
 	
-	public ArrayList<ComponentesDeLaFrase> extraerFrasesConCondicion(){
-		ArrayList<ComponentesDeLaFrase> resultado = new ArrayList<>();
+	public ComponentesDeLaFrase extraerFraseConPlaceholders(){
+		ComponentesDeLaFrase resultado = null;
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			if(miFrase.tieneUnaCondicion())
-				resultado.add(miFrase);
+			if(miFrase.tienePlaceholders())
+				resultado = miFrase;
 		}
 		return resultado;
 	}

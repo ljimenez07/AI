@@ -21,6 +21,10 @@ public class Vineta {
 		return this.contenidoDeLaVineta;
 	}
 	
+	public void cambiarElContenido(String nuevoContenido){
+		this.contenidoDeLaVineta = nuevoContenido;
+	}
+	
 	public String obtenerTipoDeVineta(){
 		return this.tipoDeVineta;
 	}

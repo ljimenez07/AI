@@ -38,7 +38,7 @@ public class Salida {
 	} 
 	
 	public void escribir(Vineta vineta, Respuesta respuesta, Tema tema, Frase frase){
-		if(vineta != null)
+		if(vineta != null && ! existeLaVineta(vineta))
 			this.misVinetas.add(vineta);
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
@@ -57,13 +57,20 @@ public class Salida {
 	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase){
 		this.miTexto = miFrase.getTextoDeLaFrase();
 		this.miSonido = miFrase.getAudio();
-		if(miFrase.getVineta() != null)
+		if(miFrase.getVineta() != null && ! existeLaVineta(miFrase.getVineta()))
 			this.misVinetas.add(miFrase.getVineta());
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
 	}
 	
+	private boolean existeLaVineta(Vineta vineta){
+		for(Vineta miVineta: misVinetas){
+			if (miVineta.obtenerContenido().trim().equals(vineta.obtenerContenido().trim()))
+				return true;
+		}
+		return false;
+	}
 	public String getMiTexto() {
 		return miTexto;
 	}
