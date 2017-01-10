@@ -1,18 +1,13 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.ncubo.chatbot.configuracion.Constantes;
-import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
-public class ComponentesDeLaFrase {
+public class ComponentesDeLaFrase implements Cloneable{
 
 	private String tipoDeFrase;
 	private String textoDeLaFrase;
@@ -129,7 +124,7 @@ public class ComponentesDeLaFrase {
 		return resultado;
 	}
 	
-	public ComponentesDeLaFrase sustituirPlaceholder(Placeholder placeholder, String valorASustituir){
+	public void sustituirPlaceholder(Placeholder placeholder, String valorASustituir){
 		
 		String formatoDelPlaceholder = String.format("${%s}", placeholder.getNombreDelPlaceholder());
 		if(hayExpresionRegularEnElTexto(textoDeLaFrase, placeholder)){
@@ -147,14 +142,12 @@ public class ComponentesDeLaFrase {
 				vineta.cambiarElContenido(miVineta);
 			}
 		}
-		return this;
 	}
 	
-	public ComponentesDeLaFrase generarAudio(){
+	public void generarAudio(){
 		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarElAudio, false);
 		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
 		this.setAudio(new Sonido(miIp, textoAUsarParaGenerarElAudio));
-		return this;
 	}
 	
 	public ArrayList<Placeholder> obtenerLosPlaceholders(){
@@ -195,6 +188,16 @@ public class ComponentesDeLaFrase {
 	
 	public boolean tieneUnaCondicion(){
 		return ! condicion.isEmpty();
+	}
+	
+	public Object clonar(){
+		try {
+			return super.clone();
+		} catch (CloneNotSupportedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return this;
 	}
 	
 	public static void main(String argv[]) {

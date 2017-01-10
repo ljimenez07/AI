@@ -31,6 +31,8 @@ public abstract class Contenido
 	private ArrayList<WorkSpace> miWorkSpaces = new ArrayList<WorkSpace>();
 	private String pathFileXML;
 	private String modoDeTrabajo;
+	private ArrayList<Tema> misTemas = new ArrayList<>();
+	private Hashtable<String, DependenciasDeLaFrase> misDependencias = new Hashtable<String, DependenciasDeLaFrase>();
 	
 	protected Contenido(String path){
 		modoDeTrabajo = Constantes.MODO_REAL;
@@ -53,6 +55,14 @@ public abstract class Contenido
 		throw new ChatException(
 			String.format("En el archivo de contenido '%s' no hay ninguna frase cuyo id sea '%s'", archivoDeConfiguracion(pathFileXML).getAbsoluteFile(), idDeLaFrase)
 		);
+	}
+	
+	public ArrayList<Tema> obtenerMisTemas(){
+		return misTemas;
+	}
+	
+	public Hashtable<String, DependenciasDeLaFrase> obtenerMisDependencias(){
+		return misDependencias;
 	}
 	
 	private Contenido agregarFrase(Frase unaFrase){
@@ -255,6 +265,65 @@ public abstract class Contenido
 					}
 					agregarFrase(miFrase);
 				}
+			}
+			
+			// Temas
+			try{
+				System.out.println("\nCargando los temas ...\n");
+				NodeList temas = doc.getElementsByTagName("temas");
+				Node temasNode = temas.item(0);
+				Element temasElement = (Element) temasNode;
+				NodeList tema = temasElement.getElementsByTagName("tema");
+				for (int temp = 0; temp < tema.getLength(); temp++) {
+					Node nNode = tema.item(temp);
+					Element eElement = (Element) nNode;
+					
+					String idDelTema = eElement.getElementsByTagName("idDelTema").item(0).getTextContent();
+					System.out.println("idDelTema : " + idDelTema);
+					
+					String nombreDelTema = eElement.getElementsByTagName("nombreDelTema").item(0).getTextContent();
+					System.out.println("nombreDelTema : " + nombreDelTema);
+					
+					String nombreWorkspace = eElement.getElementsByTagName("nombreWorkspace").item(0).getTextContent();
+					System.out.println("nombreWorkspace : " + nombreWorkspace);
+					
+					String sePuedeRepetir = eElement.getElementsByTagName("sePuedeRepetir").item(0).getTextContent();
+					System.out.println("sePuedeRepetir : " + sePuedeRepetir);
+					
+					String idDeLaIntencionGeneral = eElement.getElementsByTagName("idDeLaIntencionGeneral").item(0).getTextContent();
+					System.out.println("idDeLaIntencionGeneral : " + idDeLaIntencionGeneral);
+					
+					// Frases
+					NodeList frases = eElement.getElementsByTagName("frases");
+					Node frasesNode = frases.item(0);
+					Element frasesElement = (Element) frasesNode;
+					NodeList frase = frasesElement.getElementsByTagName("frase");
+					Frase frasesACargar[] = new Frase[frase.getLength()];
+					for (int index = 0; index < frase.getLength(); index++) {
+						System.out.println(frase.item(index).getTextContent());
+						frasesACargar[index] = this.frase(frase.item(index).getTextContent());
+					}
+					
+					Tema temaACargar = new Tema(idDelTema, nombreDelTema, nombreWorkspace, Boolean.parseBoolean(sePuedeRepetir), idDeLaIntencionGeneral, frasesACargar);
+					misTemas.add(temaACargar);
+					
+					// Frases
+					try{
+						NodeList dependencias = eElement.getElementsByTagName("dependencias");
+						Node dependenciasNode = dependencias.item(0);
+						Element dependenciasElement = (Element) dependenciasNode;
+						NodeList dependencia = dependenciasElement.getElementsByTagName("dependencia");
+						DependenciasDeLaFrase lasDependencias = new DependenciasDeLaFrase();
+						for (int index = 0; index < dependencia.getLength(); index++) {
+							System.out.println(dependencia.item(index).getTextContent());
+							lasDependencias.agregarDependencia(dependencia.item(index).getTextContent());
+						}
+						if(! lasDependencias.obtenerMisDependencias().isEmpty())
+							misDependencias.put(idDelTema, lasDependencias);
+					}catch(Exception e){}
+				}
+			}catch(Exception e){
+				throw new ChatException("Error cargando los temas "+e.getMessage());
 			}
 		} catch (Exception e) {
 			e.printStackTrace();

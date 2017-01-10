@@ -15,8 +15,7 @@ public abstract class Temario
 	private ArrayList<Intenciones> intenciones = new ArrayList<Intenciones>();
 	private ArrayList<Entidades> entidades = new ArrayList<Entidades>();
 	
-	protected Temario(String pathXML)
-	{
+	protected Temario(String pathXML){
 		temasDelDiscurso = new Temas();
 		contenido = cargarContenido(pathXML);
 		cargarTemario(temasDelDiscurso);
@@ -24,7 +23,6 @@ public abstract class Temario
 		cargarDependencias(temasDelDiscurso);
 		//cargarEntidades(entidades);
 		//cargarIntenciones(intenciones);
-		
 	}
 	
 	protected abstract void cargarTemario(Temas temasDelDiscurso);
@@ -49,8 +47,7 @@ public abstract class Temario
 		return contenido.frase(idDeLaFrase);
 	}
 	
-	private void valirQueLasDependenciasEstenEnLosTemas()
-	{
+	private void valirQueLasDependenciasEstenEnLosTemas(){
 		/*for (Tema dependencia : dependenciasEntreLosTemas)
 			if (! temasDelDiscurso.contains(dependencia))
 				throw new ChatException(
@@ -112,7 +109,6 @@ public abstract class Temario
 						}
 					}
 				}
-				
 			}
 		}
 		if(temaActual.obtenerElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
@@ -122,11 +118,6 @@ public abstract class Temario
 	}
 	
 	public void generarAudioEstaticosDeTodasLasFrases(String pathAGuardar, String ipPublica){
-		/*for(Tema tema: temasDelDiscurso){
-			System.out.println("Generando audios al TEMA: "+tema.obtenerIdTema());
-			tema.generarAudiosEstaticos(pathAGuardar, ipPublica);
-		}*/
-		
 		ArrayList<Frase> misFrase = contenido.obtenerMiFrases();
 		for(int index = 0; index < misFrase.size(); index ++){
 			System.out.println("Generando audios de la frase: "+misFrase.get(index).getIdFrase());
@@ -158,8 +149,6 @@ public abstract class Temario
 			resultado += tema.obtenerTodasMisFrases(contador);
 			contador ++;
 		}
-		
 		return resultado;
 	}
-	
 }

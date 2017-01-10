@@ -57,8 +57,6 @@ public abstract class Frase
 		boolean tieneUnoOVariosPlaceHolders = false;
 
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
-			//tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
 			tieneUnoOVariosPlaceHolders = ! miFrase.buscarPlaceholdersEnElTextoADecir().isEmpty();
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
@@ -92,11 +90,13 @@ public abstract class Frase
 		return false;
 	}
 	
-	public ComponentesDeLaFrase extraerFraseConPlaceholders(){
+	public ComponentesDeLaFrase extraerFraseSinonimoConPlaceholders(){
 		ComponentesDeLaFrase resultado = null;
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			if(miFrase.tienePlaceholders())
+			if(miFrase.tienePlaceholders()){
 				resultado = miFrase;
+				break;
+			}
 		}
 		return resultado;
 	}
