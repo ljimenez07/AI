@@ -52,7 +52,18 @@ public class Salida {
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
+	}	
+	
+	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase, String keyAudio){
+		this.miTexto = miFrase.getTextoDeLaFrase();
+		this.miSonido = miFrase.getAudio(keyAudio);
+		if(miFrase.getVineta() != null && ! existeLaVineta(miFrase.getVineta()))
+			this.misVinetas.add(miFrase.getVineta());
+		this.miRespuesta = respuesta;
+		this.temaActual = tema;
+		this.fraseActual = frase;
 	}
+	
 	
 	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase){
 		this.miTexto = miFrase.getTextoDeLaFrase();

@@ -20,20 +20,18 @@ public abstract class Frase
 	//private Intencion intencion;
 	private boolean esEstatica = true;
 	
-	private boolean tieneVariablesEnum = false;
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
 	
 	private int intentosFallidos = 0;
 	
-	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos, Boolean tieneEnum,
+	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
 		this.caracteristicas = caracteristicas;
 		this.idFrase = idFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		this.intentosFallidos = intentosFallidos;
-		this.tieneVariablesEnum = tieneEnum;
 		cargarLaFrase();
 		cargarVinetas(vinetasDeLaFrase);
 		if(esEstatica()){
@@ -462,7 +460,25 @@ public abstract class Frase
 	
 	public boolean tieneEnum(){
 		
-		return this.tieneVariablesEnum;
+		boolean tieneSoloEnum = true;
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			
+		
+			ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+			//replace con la clase Dia
+			
+			
+			for (int i = 0; i < placeholders.size();i++){
+				String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
+
+				if(!tipo.equals(Constantes.VARIABLE_TIPO_ENUM))
+					return tieneSoloEnum = false;		
+				
+			}
+		
+		}
+		
+		return tieneSoloEnum;
 	}
 	
 	

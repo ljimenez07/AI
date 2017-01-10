@@ -269,8 +269,8 @@ public abstract class Contenido
 					}
 					System.out.println("intentosFallidos : " + intentosFallidos);
 										
-					Boolean tieneEnum = false;
-					// Variables de contexto
+				
+					// Variables de frase
 					try{
 						System.out.println("\nCargando las variables de la frase ...\n");
 						NodeList variables = eElement.getElementsByTagName("variables");
@@ -282,8 +282,6 @@ public abstract class Contenido
 							Element element = (Element) nodo;
 							String nombre = element.getAttribute("nombre");
 							String tipoValor = element.getAttribute("tipo");
-							if(tipoValor.equals(Constantes.VARIABLE_TIPO_ENUM))
-								tieneEnum = true;
 							
 							NodeList nodoValores = eElement.getElementsByTagName("valores");
 							Node valorNode = nodoValores.item(0);
@@ -318,18 +316,18 @@ public abstract class Contenido
 					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
+						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
 						miFrase = new Pregunta(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
-								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos, tieneEnum);
+								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, tieneEnum, caracteristicasDeLaFrase);
+						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}
