@@ -155,6 +155,12 @@ public class ComponentesDeLaFrase {
 		return this;
 	}
 	
+	public Sonido generarAudio(String texto){
+		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false);
+		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+		return new Sonido(miIp, texto);
+	}
+	
 	public ArrayList<Placeholder> obtenerLosPlaceholders(){
 		return placeholders;
 	}

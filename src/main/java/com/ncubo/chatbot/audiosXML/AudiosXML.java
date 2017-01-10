@@ -14,10 +14,13 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
+import com.ncubo.chatbot.partesDeLaConversacion.Placeholder;
 import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
+import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -129,13 +132,13 @@ public class AudiosXML {
 		guardarElArchivoADisco();
 	}
 	
-	private boolean exiteLaFrase(String idFrase){
+	private boolean existeLaFrase(String idFrase){
 		return misFrases.containsKey(idFrase);
 	}
 	
 	public boolean hayQueGenerarAudios(String idFrase, String textoDeLaFrase, int posicionDeLaFrase){
 		try{
-			if(exiteLaFrase(idFrase)){
+			if(existeLaFrase(idFrase)){
 				textoDeLaFrase = textoDeLaFrase.trim();
 				String miTexto = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getTextoAUsarParaGenerarElAudio().trim();
 				if(textoDeLaFrase.equals(miTexto))
@@ -191,7 +194,7 @@ public class AudiosXML {
 	public String obtenerUnAudioDeLaFrase(String idFrase, int posicionDeLaFrase){
 		String resultado = "";
 		try{
-			if(exiteLaFrase(idFrase)){
+			if(existeLaFrase(idFrase)){
 				resultado = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio("audio").url();
 			}
 		}catch(Exception e){
@@ -340,17 +343,49 @@ public class AudiosXML {
 		
 		Element frases = doc.createElement("frases");
 		
-		for(ComponentesDeLaFrase sinominoDeFrase: miFrase.obtenerMisSinonimosDeLaFrase()){
+		for(ComponentesDeLaFrase sinonimoDeFrase: miFrase.obtenerMisSinonimosDeLaFrase()){
 		
-			Element empName = doc.createElement(sinominoDeFrase.getTipoDeFrase());
-			empName.appendChild(doc.createTextNode(sinominoDeFrase.getTextoAUsarParaGenerarElAudio()));
-			try{
-				empName.setAttribute("audio", sinominoDeFrase.getAudio("audio").url());
-			}catch(Exception e){
-				empName.setAttribute("audio", "test.mp3");
+			if(sinonimoDeFrase.tienePlaceholders() && miFrase.tieneEnum())
+			{
+				String textoParaAudio = sinonimoDeFrase.getTextoAUsarParaGenerarElAudio();
+				
+				ArrayList<Placeholder> placeholders = sinonimoDeFrase.obtenerLosPlaceholders();
+				//replace con la clase Dia
+				
+				for (int i = 0; i < placeholders.size();i++){
+					String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getValorDeLaVariable();
+					for (int j = 0; j < valores.length;j++){
+						Element empName = doc.createElement(sinonimoDeFrase.getTipoDeFrase());
+						
+						String textoParaAudioEnum = textoParaAudio.replace("${"+placeholders.get(i).getNombreDelPlaceholder()+"}", valores[j]);
+						empName.appendChild(doc.createTextNode(textoParaAudioEnum));
+						try{
+							empName.setAttribute("audio", sinonimoDeFrase.getAudio(valores[j]).url());
+		
+						}catch(Exception e){
+							empName.setAttribute("audio", "test.mp3");
+						}
+						frases.appendChild(empName);
+					}						
+				}	
 			}
 			
-			frases.appendChild(empName);
+			else
+			{
+				Element empName = doc.createElement(sinonimoDeFrase.getTipoDeFrase());
+				empName.appendChild(doc.createTextNode(sinonimoDeFrase.getTextoAUsarParaGenerarElAudio()));
+				
+				try{
+					empName.setAttribute("audio", sinonimoDeFrase.getAudio("audio").url());
+
+				}catch(Exception e){
+					empName.setAttribute("audio", "test.mp3");
+				}
+				frases.appendChild(empName);
+
+			}
+			
+			
 			
 		}
 		

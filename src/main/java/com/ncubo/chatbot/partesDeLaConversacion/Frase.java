@@ -59,7 +59,7 @@ public abstract class Frase
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
 			//tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
-			tieneUnoOVariosPlaceHolders = ! miFrase.buscarPlaceholdersEnElTextoADecir().isEmpty();
+			tieneUnoOVariosPlaceHolders = miFrase.tienePlaceholders();
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
 		}
@@ -94,9 +94,15 @@ public abstract class Frase
 	
 	public ComponentesDeLaFrase extraerFraseConPlaceholders(){
 		ComponentesDeLaFrase resultado = null;
-		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			if(miFrase.tienePlaceholders())
-				resultado = miFrase;
+		
+		ArrayList<ComponentesDeLaFrase> textos = buscarFrasesGenerales();
+		if(textos.size() > 0){
+			int unIndiceAlAzar = (int)Math.floor(Math.random()*textos.size());
+			resultado = textos.get(unIndiceAlAzar);
+			if(resultado.tieneUnaCondicion())
+				extraerFraseConPlaceholders();
+			else if(resultado.tienePlaceholders())
+				return resultado;
 		}
 		return resultado;
 	}
@@ -419,12 +425,12 @@ public abstract class Frase
 							}
 							String miIp = ipPublica+nombreDelArchivo;
 							miFrase.setAudio(valores[j],new Sonido(miIp, textoParaAudio));
-							
+							contadorDeSinonimos ++;
 						}
 							
 					}
 					
-					contadorDeSinonimos ++;
+					
 				}
 			}
 		}
