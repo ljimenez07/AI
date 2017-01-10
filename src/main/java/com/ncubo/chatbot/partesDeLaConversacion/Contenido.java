@@ -55,19 +55,6 @@ public abstract class Contenido
 		);
 	}
 	
-	/*public void generarAudioEstatico(){
-		System.out.println("Cargar audios estaticos ...");
-		// Para cada frase en el xml 
-		for (Frase frase: frases){
-			if(frase.esEstatica()){
-				System.out.println("Es estatica ...");
-				for (int indice = 0; indice < frase.getTextosDeLaFrase().length; indice++){
-					System.out.println("Frase: "+frase.getTextosDeLaFrase()[indice]);
-				}
-			}
-		}
-	}*/
-	
 	private Contenido agregarFrase(Frase unaFrase){
 		System.out.println("Agregando frase: " +unaFrase.getIdFrase());
 		frases.add(unaFrase);
@@ -150,8 +137,6 @@ public abstract class Contenido
 					String nombre = nNode.getTextContent();
 					System.out.println("NOMBRE: " + nombre);
 					System.out.println("Tipo: " + tipo);
-					//System.out.println("User :" + user);
-					//System.out.println("idIBM :" + idIBM);
 					miWorkSpaces.add(new WorkSpace(user, pass, idIBM, tipo, nombre, intencionesParaSeReferenciado.split(",")));
 				}
 			}catch(Exception e){
@@ -246,11 +231,6 @@ public abstract class Contenido
 					System.out.println("intentosFallidos : " + intentosFallidos);
 					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
-					
-					/*String tipoDeFraseACargar = "frase";
-					if(elTipoEs.equals("pregunta")){
-						tipoDeFraseACargar = "curioso";
-					}*/
 					
 					Element vinetas = (Element) eElement.getElementsByTagName("vinetas").item(0);
 					String[] vinetasDeLaFrase = obtenerFrasesPorTipo(vinetas, "vineta");

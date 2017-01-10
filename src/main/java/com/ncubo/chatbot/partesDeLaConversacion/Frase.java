@@ -59,7 +59,7 @@ public abstract class Frase
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
 			//tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
-			tieneUnoOVariosPlaceHolders = miFrase.tienePlaceholders();
+			tieneUnoOVariosPlaceHolders = ! miFrase.buscarPlaceholdersEnElTextoADecir().isEmpty();
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
 		}
