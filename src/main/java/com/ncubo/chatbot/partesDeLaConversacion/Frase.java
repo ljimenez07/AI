@@ -1,6 +1,7 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
 import com.ncubo.chatbot.configuracion.Constantes;
@@ -92,15 +93,12 @@ public abstract class Frase
 	
 	public ComponentesDeLaFrase extraerFraseSinonimoConPlaceholders(){
 		ComponentesDeLaFrase resultado = null;
-		
-		ArrayList<ComponentesDeLaFrase> textos = buscarFrasesGenerales();
-		if(textos.size() > 0){
-			int unIndiceAlAzar = (int)Math.floor(Math.random()*textos.size());
-			resultado = textos.get(unIndiceAlAzar);
-			if(resultado.tieneUnaCondicion())
-				extraerFraseSinonimoConPlaceholders();
-			else if(resultado.tienePlaceholders())
-				return resultado;
+		Collections.shuffle(misSinonimosDeLaFrase); // Desordenar el array
+		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			if(miFrase.tienePlaceholders()){
+				resultado = miFrase;
+				break;
+			}
 		}
 		return resultado;
 	}
