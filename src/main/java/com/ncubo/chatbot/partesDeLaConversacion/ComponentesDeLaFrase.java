@@ -30,7 +30,7 @@ public class ComponentesDeLaFrase {
 		if(! vineta.isEmpty())
 			this.vineta = new Vineta(vineta);
 		else
-			this.vineta = new Vineta("");
+			this.vineta = new Vineta(textoDeLaFrase);
 		this.condicion = condicion;
 		this.placeholders = new ArrayList<>();
 		buscarPlaceholders();
@@ -42,21 +42,58 @@ public class ComponentesDeLaFrase {
 		
 		for(Placeholder placeholder: placeholders){
 			if(! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(placeholder.getNombreDelPlaceholder()))
-				throw new ChatException(String.format("La variable %s no existe en el sistema.", placeholder.getNombreDelPlaceholder()));
+				throw new ChatException(String.format("La variable '%s' no existe en el sistema.", placeholder.getNombreDelPlaceholder()));
 		}
 		
+		ArrayList<Placeholder> misPlaceholdersEnLaCondicion = buscarPlaceholdersEnLaCondicion();
+		for(Placeholder placeholder: misPlaceholdersEnLaCondicion){
+			if(! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(placeholder.getNombreDelPlaceholder()))
+				throw new ChatException(String.format("La variable %s no existe en el sistema.", placeholder.getNombreDelPlaceholder()));
+		}
 	}
 	
 	private void buscarPlaceholders(){
 		// http://stackoverflow.com/questions/2286648/named-placeholders-in-string-formatting
-		Matcher matcher = buscarExpresionRegular(this.textoDeLaFrase);
-	    while (matcher.find()){
+		Matcher matcher = null;
+		if(!textoDeLaFrase.isEmpty()){
+			matcher = buscarExpresionRegular(this.textoDeLaFrase);
+		}else if(! textoAUsarParaGenerarElAudio.isEmpty()){
+			matcher = buscarExpresionRegular(this.textoAUsarParaGenerarElAudio);
+		}else if(! vineta.obtenerContenido().isEmpty()){
+			matcher = buscarExpresionRegular(vineta.obtenerContenido());
+		}
+		
+		if(matcher != null){
+			while (matcher.find()){
+		        String key = matcher.group(1);
+		        if( ! existeElPlaceholder(key)){
+		        	System.out.println("Agregando placeholder: "+key);
+		        	placeholders.add(new Placeholder(key));
+		        }
+		    }
+		}
+	}
+	
+	public ArrayList<Placeholder> buscarPlaceholdersEnElTextoADecir(){
+		ArrayList<Placeholder> misPlaceholders = new ArrayList<>();
+		Matcher matcher = buscarExpresionRegular(this.textoAUsarParaGenerarElAudio);	
+		while (matcher.find()){
 	        String key = matcher.group(1);
-	        if( ! existeElPlaceholder(key)){
-	        	System.out.println("Agregando placeholder: "+key);
-	        	placeholders.add(new Placeholder(key));
-	        }
+	        if( ! existeElPlaceholder(misPlaceholders, key))
+	        	misPlaceholders.add(new Placeholder(key));
 	    }
+		return misPlaceholders;
+	}
+	
+	public ArrayList<Placeholder> buscarPlaceholdersEnLaCondicion(){
+		ArrayList<Placeholder> misPlaceholders = new ArrayList<>();
+		Matcher matcher = buscarExpresionRegular(this.condicion);	
+		while (matcher.find()){
+	        String key = matcher.group(1);
+	        if( ! existeElPlaceholder(misPlaceholders, key))
+	        	misPlaceholders.add(new Placeholder(key));
+	    }
+		return misPlaceholders;
 	}
 	
 	private Matcher buscarExpresionRegular(String texto){
@@ -75,9 +112,13 @@ public class ComponentesDeLaFrase {
 	}
 	
 	private boolean existeElPlaceholder(String nombre){
+		return existeElPlaceholder(placeholders, nombre);
+	}
+	
+	private boolean existeElPlaceholder(ArrayList<Placeholder> misPlaceholders, String nombre){
 		boolean resultado = false;
 		if(tienePlaceholders()){
-			for(Placeholder placeholder: placeholders){
+			for(Placeholder placeholder: misPlaceholders){
 				if(placeholder.getNombreDelPlaceholder().equals(nombre))
 					return true;
 			}
@@ -86,19 +127,19 @@ public class ComponentesDeLaFrase {
 		return resultado;
 	}
 	
-	public ComponentesDeLaFrase sustituirPlaceholder(Placeholder plaseholder, String valorASustituir){
+	public ComponentesDeLaFrase sustituirPlaceholder(Placeholder placeholder, String valorASustituir){
 		
-		String formatoDelPlaceholder = String.format("${%s}", plaseholder.getNombreDelPlaceholder());
-		if(hayExpresionRegularEnElTexto(textoDeLaFrase, plaseholder)){
+		String formatoDelPlaceholder = String.format("${%s}", placeholder.getNombreDelPlaceholder());
+		if(hayExpresionRegularEnElTexto(textoDeLaFrase, placeholder)){
 			textoDeLaFrase = textoDeLaFrase.replace(formatoDelPlaceholder, valorASustituir);
 		}
 		
-		if(hayExpresionRegularEnElTexto(textoAUsarParaGenerarElAudio, plaseholder)){
+		if(hayExpresionRegularEnElTexto(textoAUsarParaGenerarElAudio, placeholder)){
 			textoAUsarParaGenerarElAudio = textoAUsarParaGenerarElAudio.replace(formatoDelPlaceholder, valorASustituir);
 		}
 		
 		if(vineta != null){
-			if(hayExpresionRegularEnElTexto(vineta.obtenerContenido(), plaseholder)){
+			if(hayExpresionRegularEnElTexto(vineta.obtenerContenido(), placeholder)){
 				String miVineta = vineta.obtenerContenido();
 				miVineta = miVineta.replace(formatoDelPlaceholder, valorASustituir);
 				vineta.cambiarElContenido(miVineta);
