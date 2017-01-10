@@ -57,8 +57,6 @@ public abstract class Frase
 		boolean tieneUnoOVariosPlaceHolders = false;
 
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			// textoTag = texto.substring(texto.indexOf("{")+1, texto.indexOf("}"));
-			//tieneUnoOVariosPlaceHolders = ! (miFrase.getTextoDeLaFrase().indexOf("$") == -1);
 			tieneUnoOVariosPlaceHolders = miFrase.tienePlaceholders();
 			if(tieneUnoOVariosPlaceHolders) 
 				break;
@@ -92,7 +90,7 @@ public abstract class Frase
 		return false;
 	}
 	
-	public ComponentesDeLaFrase extraerFraseConPlaceholders(){
+	public ComponentesDeLaFrase extraerFraseSinonimoConPlaceholders(){
 		ComponentesDeLaFrase resultado = null;
 		
 		ArrayList<ComponentesDeLaFrase> textos = buscarFrasesGenerales();
@@ -100,7 +98,7 @@ public abstract class Frase
 			int unIndiceAlAzar = (int)Math.floor(Math.random()*textos.size());
 			resultado = textos.get(unIndiceAlAzar);
 			if(resultado.tieneUnaCondicion())
-				extraerFraseConPlaceholders();
+				extraerFraseSinonimoConPlaceholders();
 			else if(resultado.tienePlaceholders())
 				return resultado;
 		}

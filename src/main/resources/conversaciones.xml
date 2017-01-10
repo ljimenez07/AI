@@ -5,69 +5,54 @@
 		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
-			</frase>
-		</frases>
-		<vinetas></vinetas>
-	</conversacion>
-	
-	<conversacion id="saludoBuenosDias">
-		<tipo>saludo</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>
-				<texto>¡Buenos días!, soy tu asesora de Banco Atlántida.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¡Hola soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¡Buenos días, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+				<soloSi>show hora.horaActual() @@ 12;</soloSi>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¡Buenas tardes, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+				<soloSi>show hora.horaActual() ##= 12 #and@ hora.horaActual() @@ 18;</soloSi>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
 	</conversacion>
-	
+
 	<conversacion id="saludar">
 		<tipo>afirmativa</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>¡Hola!</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¡Hola!</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<frase>
-				<texto>¡Hola!, soy tu asesora de Banco Atlántida.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¡Hola soy Sofía su asesora virtual!</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
-			</frase>
-		</frases>
-		<vinetas></vinetas>
-		<when>
-			<condition operador="and" tipo="intencion">saludos</condition>
-		</when>
-	</conversacion>
-	
-	<conversacion id="saludarConNombre">
-		<tipo>afirmativa</tipo>
-		<mandatoria>true</mandatoria>
-		<enVozAlta>true</enVozAlta>
-		<frases>
-			<frase>
-				<texto>¡Hola $!</texto>
-				<sonido></sonido>
-				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<frase>
-				<texto>¡Hola $!, soy tu asesora de Banco Atlántida.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¡Buenos días, soy Sofía su asesora virtual!</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
+				<soloSi>show hora.horaActual() @@ 12;</soloSi>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¡Buenas tardes, soy Sofía su asesora virtual!</sonido>
+				<vineta></vineta>
+				<soloSi>show hora.horaActual() ##= 12 #and@ hora.horaActual() @@ 18;</soloSi>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
@@ -80,18 +65,105 @@
 		<tipo>pregunta</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>4</intentosFallidos>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>¿Cómo te puedo ayudar hoy?</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¿Cómo le puedo ayudar hoy?</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<frase>
-				<texto>¿En qué puedo ayudarte?</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>¿En qué le puedo ayudar?</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="preguntarPorOtraConsulta">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>2</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¿Hay algo más con lo que le pueda ayudar?</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¿Puedo ayudarle con algo más?</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¿Algo más en lo que pueda ayudarle?</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¿Tiene alguna consulta adicional?</sonido>
+				<vineta></vineta>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="quiereHacerOtraConsulta">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>5</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Muy bien, ¿qué información necesita?</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>Claro, dime ¿cómo le puedo ayudar?</sonido>
+				<vineta></vineta>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noQuiereHacerOtraConsulta">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Fue un placer ayudarle, ¡que pase un feliz día!. Hasta luego.</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>Fue un gusto servirle, recuerde que le podemos atender las 24 horas del día. Hasta luego.</sonido>
+				<vineta></vineta>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
@@ -101,30 +173,12 @@
 		<tipo>despedida</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>Fue un placer ayudarte, ¡que pases un feliz día! @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
-				<sonido>Fue un placer ayudarte, ¡que pases un feliz día! Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
+				<texto></texto>
+				<sonido>¡Perfecto! Ha sido un placer haber aclarado sus consultas y recuerde que le puedo atender las 24 horas del día. Espero poder servirle pronto.  ¡Hasta luego!</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
-			</frase>
-			<frase>
-				<texto>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
-				<sonido>Fue un gusto servirte, recuerda que te podemos atender las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
-				<vineta></vineta>
-				<condicion></condicion>
-			</frase>
-			<frase>
-				<texto>Es un placer servirle y recuerde que le atendemos las 24 horas del día. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
-				<sonido>Es un placer servirle y recuerde que le atendemos las 24 horas del día. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
-				<vineta></vineta>
-				<condicion></condicion>
-			</frase>
-			<frase>
-				<texto>Hasta luego, fue un gusto atenderte. @@br/## @@br/## Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80  10  10. @@br/## San Pedro Sula: 25  80  10  10. @@br/## La Ceiba: 24  80  10  10.</texto>
-				<sonido>Hasta luego, fue un gusto atenderte. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80  10  10. San Pedro Sula: 25  80  10  10. La Ceiba: 24  80  10  10.</sonido>
-				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
@@ -137,12 +191,12 @@
 		<tipo>afirmativa</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: @@br/## @@br/## 1. Cuentas de ahorro. @@br/## 2. Cuentas de cheques. @@br/## 3. Préstamos. @@br/## 4. Tarjetas de débito y crédito. @@br/## 5. Mensajitos. @@br/## 6. Atlántida Online. @@br/## @@br/## También puedo proporcionarte información sobre costos de citas para: @@br/## @@br/## 1. Licencia para conducir. @@br/## 2. Pasaporte. @@br/## 3. Embajada Americana (USA). @@br/## @@br/## Adicionalmente, te puedo ayudar con: @@br/## @@br/## 1. Costos de la hoja de antecedentes penales. @@br/## 2. Números telefónicos de nuestras agencias. @@br/## 3. Cómo reportar extravío o robo de tarjeta. @@br/## 4. Tipo de cambio. @@br/## @@br/## Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</texto>
-				<sonido>Puedo responder tus consultas sobre requisitos y costos de algunos de nuestros productos tales como: 1. Cuentas de ahorro. 2. Cuentas de cheques. 3. Préstamos. 4. Tarjetas de débito y crédito. 5. Mensajitos. 6. Atlántida Online. También puedo proporcionarte información sobre costos de citas para: 1. Licencia para conducir. 2. Pasaporte. 3. Embajada Americana (USA). Adicionalmente, te puedo ayudar con: 1. Costos de la hoja de antecedentes penales. 2. Números telefónicos de nuestras agencias. 3. Cómo reportar extravío o robo de tarjeta. 4. Tipo de cambio. Si has iniciado sesión también podré darte el saldo, disponible o últimos movimientos de tus cuentas o tarjetas de crédito.</sonido>
-				<vineta></vineta>
-				<condicion></condicion>
+				<texto></texto>
+				<sonido>Por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+				<vineta>Por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</vineta>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
@@ -155,18 +209,17 @@
 		<tipo>afirmativa</tipo>
 		<mandatoria>true</mandatoria>
 		<enVozAlta>true</enVozAlta>
+		<version>1</version>
 		<frases>
 			<frase>
-				<texto>Es un placer ayudarte.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>Es un placer ayudarle.</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<frase>
-				<texto>Es un placer servirte.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>Es un placer servirle.</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 		</frases>
 		<vinetas></vinetas>
@@ -175,25 +228,23 @@
 	<conversacion id="noEntendi">		
 		<tipo>afirmativa</tipo>
 		<mandatoria>true</mandatoria>		
-		<enVozAlta>true</enVozAlta>		
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>		
 		<frases>		
 			<frase>
-				<texto>Lo siento, no entendí. ¿En qué te puedo ayudar?</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. ¿En qué le puedo ayudar?</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<frase>
-				<texto>Creo que no entendí. ¿En que te gustaría que te ayude?</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>Creo que no entendí. ¿En que le gustaría que le ayude?</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 			<meRindo>
-				<texto>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: @@br/## @@br/## Tegucigalpa: 22 80 10 10. @@br/## San Pedro Sula: 25 80 10 10. @@br/## La Ceiba: 24 80 10 10.</texto>
-				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en los siguientes números telefónicos: Tegucigalpa: 22 80 10 10. San Pedro Sula: 25 80 10 10. La Ceiba: 24 80 10 10.</sonido>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</meRindo>
 		</frases>		
 		<vinetas></vinetas>		
@@ -202,13 +253,13 @@
 	<conversacion id="errorDeComunicacionConWatson">				
 		<tipo>afirmativa</tipo>		
 		<mandatoria>true</mandatoria>				
-		<enVozAlta>true</enVozAlta>				
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>		
 		<frases>				
 			<frase>
-				<texto>Disculpame, pero en este momento no puedo responderte, por favor intentalo más tarde.</texto>
-				<sonido></sonido>
+				<texto></texto>
+				<sonido>Disculpeme, pero en este momento no puedo responderle, por favor intentelo más tarde.</sonido>
 				<vineta></vineta>
-				<condicion></condicion>
 			</frase>
 		</frases>				
 		<vinetas></vinetas>				
@@ -217,34 +268,391 @@
 	<conversacion id="despistar">				
 		<tipo>afirmativa</tipo>		
 		<mandatoria>true</mandatoria>				
-		<enVozAlta>true</enVozAlta>				
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>
 		<frases>	
 			<frase>
-				<texto>Entiendo, ¿En que más te puedo ayudar?</texto>
-				<sonido></sonido>
-				<vineta></vineta>
-				<condicion></condicion>
+				<texto></texto>
+				<sonido>Entiendo, ¿En que más le puedo ayudar?</sonido>
+				<vineta>@@img src="http://emojipedia-us.s3.amazonaws.com/cache/75/e6/75e67ae041ac8091914d2dfb7eb338e1.png" class="imagen-del-chat" /##</vineta>
 			</frase>
 		</frases>				
 		<vinetas></vinetas>				
 	</conversacion>
 	
+	<conversacion id="leyDeclaracionBienesInmuebles">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Correcto!, de acuerdo con la Ley 7509 y 7729, cada cinco años debe presentar su Declaración de Bienes Inmuebles.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="leyDeclaracionPatentes">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Con gusto! De acuerdo con el Artículo 6 de la Ley 8824, todos los años, a más tardar el 31 de diciembre se debe hacer la presentación de la declaración. Recuerde que la declaración jurada es de sus ingresos brutos, y con  base en esa información, la Municipalidad calculará el impuesto a pagar.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualDeclaracion">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>5</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¿Necesita la declaración de Bienes Inmuebles o la declaración de patentes?</sonido>
+				<vineta></vineta>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="pedirIdentificacion">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>3</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Con gusto puedo verificarlo. Pero primero necesito que me indique su número de identificación. ¡Por favor!</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>¿Me puede dar su número de cédula?</sonido>
+				<vineta></vineta>
+			</frase>
+			<impertinente>
+				<texto></texto>
+				<sonido>No logro comprenderle. ¿Me puede dar su número de cédula?</sonido>
+				<vineta></vineta>
+			</impertinente>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cuandoPresentarDeclaracionBienesInmuebles">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Gracias! Le comento que en su caso  el próximo año le corresponde hacer la presentación de bienes inmuebles.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cuandoPagarDeclaracionPatentes">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Las patentes municipales se cancelan por adelantado y las fechas de pago son trimestrales:  Primer trimestre: Vence el 31 de diciembre del año anterior. Segundo trimestre: Vence el 31 de marzo del año en curso. Tercer trimestre: Vence el 30 de junio del año en curso. Cuarto trimestre: Vence el 30 de setiembre del año en curso.</sonido>
+				<vineta>Las patentes municipales se cancelan por adelantado y las fechas de pago son trimestrales: @@br/## @@br/##  Primer trimestre: Vence el 31 de diciembre del año anterior. @@br/## Segundo trimestre: Vence el 31 de marzo del año en curso. @@br/## Tercer trimestre: Vence el 30 de junio del año en curso. @@br/## Cuarto trimestre: Vence el 30 de setiembre del año en curso.</vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="exoneracionBienesInmuebles">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Claro que sí!  Y el trámite es muy sencillo. Permítame explicarle que el requisito primordial es que usted tenga una única propiedad registrada a su nombre en todo el país. Si cumple con eso entonces sólo debe hacer la solicitud de exoneración en nuestra municipalidad entre los meses de enero a marzo. Además, traer certificación de bien único del Registro Público de la Propiedad con menos de un  mes de expedida y con los derechos cancelados y una copia de la  cédula de identidad de los propietarios. Le comento que esa exoneración se aplica inmediatamente y se le brinda saldo pendiente en ese momento.</sonido>
+				<vineta>¡Claro que sí!  Y el trámite es muy sencillo. @@br/## @@br/## Permítame explicarle que el requisito primordial es que usted tenga una única propiedad registrada a su nombre en todo el país. Si cumple con eso entonces sólo debe hacer la solicitud de exoneración en nuestra municipalidad entre los meses de enero a marzo. @@br/## Además, traer certificación de bien único del Registro Público de la Propiedad con menos de un  mes de expedida y con los derechos cancelados y una copia de la  cédula de identidad de los propietarios. @@br/## Le comento que esa exoneración se aplica inmediatamente y se le brinda saldo pendiente en ese momento.</vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="noPuedePagar">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Le recuerdo que se puede solicitar un arreglo de pago en el Departamento de Cobros. Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="arregloPago">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="pedirNIS">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>3</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Claro! Me puede dar su número NIS, por favor.</sonido>
+				<vineta></vineta>
+			</frase>
+			<impertinente>
+				<texto></texto>
+				<sonido>No logro comprenderle. Me puede dar su número NIS, por favor.</sonido>
+				<vineta></vineta>
+			</impertinente>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoAgua">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto>¡Muchas gracias! El saldo de su recibo por consumo de agua es de: ${saldoAgua} colones y vence el día de mañana. Recuerde cancelar a tiempo para evitar que el servicio sea suspendido.</texto>
+				<sonido></sonido>
+				<vineta>¡Muchas gracias! @@br/## @@br/## El saldo de su recibo por consumo de agua es de: ${saldoAgua} colones y vence el día de mañana. @@br/## @@br/## Recuerde cancelar a tiempo para evitar que el servicio sea suspendido.</vineta>
+			</frase>
+			<frase>
+				<texto>¡Muchas gracias! Su cuenta se encuentra al día y no presenta deudas pendientes por consumo de agua.</texto>
+				<sonido></sonido>
+				<vineta>¡Muchas gracias! @@br/## @@br/## Su cuenta se encuentra al día y no presenta deudas pendientes por consumo de agua.</vineta>
+				<soloSi>show ${saldoAgua} == 0;</soloSi>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="dondePagar">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Puede venir a nuestras oficinas frente al parque central, o bien, hacer su pago en las cajas de cualquiera de los bancos del sistema nacional.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="saldoBasura">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¡Muchas gracias! De acuerdo con nuestros datos tienes dos meses adeudados por concepto de recolección de basura, y el monto actual es de 8,698 colones.  Ese dato incluye los intereses moratorios acumulados al día de hoy.</sonido>
+				<vineta>¡Muchas gracias! @@br/## @@br/## De acuerdo con nuestros datos tienes dos meses adeudados por concepto de recolección de basura, y el monto actual es de 8,698 colones.  Ese dato incluye los intereses moratorios acumulados al día de hoy.</vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="horarioOficinas">
+		<tipo>afirmativa</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>Nuestras oficinas están abiertas de Lunes a Viernes de 8 de la mañana a 4 de la tarde. @@br/## @@br/## Sin embargo, el servicio de recaudación (Cajas) tiene horario en esos mismos días, de 7 de la mañana a 5 de la tarde. Además, Sábados, de 7 a 11 de la mañana.</sonido>
+				<vineta>Nuestras oficinas están abiertas de Lunes a Viernes de 8 de la mañana a 4 de la tarde. @@br/## @@br/## Sin embargo, el servicio de recaudación (Cajas) tiene horario en esos mismos días, de 7 de la mañana a 5 de la tarde. Además, Sábados, de 7 a 11 de la mañana.</vineta>
+			</frase>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="cualServicio">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>5</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¿Sobre cuál servicio quiere conocer el saldo? ¿Agua o basura?</sonido>
+				<vineta></vineta>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<conversacion id="conjuncionRepetirFrase">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>
+		<frases>	
+			<frase>
+				<texto></texto>
+				<sonido>Lo que dije fue que</sonido>
+				<vineta></vineta>
+			</frase>
+			<frase>
+				<texto></texto>
+				<sonido>Esto fue lo que dije</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="queEsPatente">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>
+		<frases>	
+			<frase>
+				<texto></texto>
+				<sonido>Es un permiso brindado por la municipalidad en el que se indica que el negocio cumple con la exigencias legales que le permiten operar en la ciudad o país.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="queEsBienInmueble">				
+		<tipo>afirmativa</tipo>		
+		<mandatoria>true</mandatoria>				
+		<enVozAlta>true</enVozAlta>	
+		<version>1</version>
+		<frases>	
+			<frase>
+				<texto></texto>
+				<sonido>Son aquellos bienes considerados bienes raíces, por estar unidos íntimamente, física o jurídicamente, al terreno. Por ejemplo las casas, lotes, parcelas, urbanizadas o no, naves industriales, entre otros.</sonido>
+				<vineta></vineta>
+			</frase>
+		</frases>				
+		<vinetas></vinetas>				
+	</conversacion>
+	
+	<conversacion id="conceptoCualServicio">
+		<tipo>pregunta</tipo>
+		<mandatoria>true</mandatoria>
+		<enVozAlta>true</enVozAlta>
+		<intentosFallidos>5</intentosFallidos>
+		<version>1</version>
+		<frases>
+			<frase>
+				<texto></texto>
+				<sonido>¿Se refiere a un bien inmueble o a una patente?</sonido>
+				<vineta></vineta>
+			</frase>
+			<meRindo>
+				<texto></texto>
+				<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+				<vineta></vineta>
+			</meRindo>
+		</frases>
+		<vinetas></vinetas>
+	</conversacion>
+	
+	<temas>
+		<tema>
+			<idDelTema>saludo</idDelTema>
+			<nombreDelTema>Saludo</nombreDelTema>
+			<nombreWorkspace>DMuniIntents</nombreWorkspace>
+			<sePuedeRepetir>true</sePuedeRepetir>
+			<idDeLaIntencionGeneral>DMuniIntents</idDeLaIntencionGeneral>
+			<frases>
+				<frase>saludoGeneral</frase>
+				<frase>saludar</frase>
+				<frase>saludoPreguntar</frase>
+			</frases>
+			<dependencias>
+				<dependencia></dependencia>
+			</dependencias>
+		</tema>
+	</temas>
+	
 	<conjunciones>
-		<conjuncion id="conjuncion1">Disculpame, pero no te entiendo.</conjuncion>
-		<conjuncion id="conjuncion2">No logro comprenderte.</conjuncion>
+		<conjuncion id="conjuncion1">Disculpeme, pero no le entiendo.</conjuncion>
+		<conjuncion id="conjuncion2">No logro comprenderle.</conjuncion>
 	</conjunciones>
 	
 	<variablesDeAmbiente>
-		<variable nombre="tieneTarjetaCredito" tipo="boolean">false</variable>
-		<variable nombre="tieneCuentaAhorros" tipo="boolean">false</variable>
-		<variable nombre="nombreCliente" tipo="string"></variable>
-		<variable nombre="hora" tipo="hora"></variable>
-		<variable nombre="estaLogueado" tipo="boolean">false</variable>
+		<variable nombre="nombreCliente" tipo="Usuario"></variable>
+		<variable nombre="saldoAgua" tipo="Negocio"></variable>
+		<variable nombre="hora" tipo="Contexto">Sistema()</variable>
 	</variablesDeAmbiente>
 	
 	<workspaces user="37db1761-b00b-422e-a912-bca0e93d87d4" pass="enZ5tpEeGWUH">
 		<workspace tipo="general" idIBM="b9c3bb12-9003-4b7e-bf4c-b279534742c5" intencionesParaSeReferenciado="">DMuniIntents</workspace>
-		<workspace tipo="especifico" idIBM="3ce87107-ffe7-4509-86ac-47ecc30e64fe" intencionesParaSeReferenciado="">DMuniEspecifico</workspace>
+		<workspace tipo="especifico" idIBM="3ce87107-ffe7-4509-86ac-47ecc30e64fe" intencionesParaSeReferenciado="cuando_pagar,que_pueden_preguntar,presentar_declaracion,pedir_exoneracion,cuanto_pagar,cuando_presentar,saber_horarios,arreglo_pago,no_tengo_para_pagar,donde_pagar,agradecimiento,que_es">DMuniEspecifico</workspace>
 	</workspaces>
 	
 </conversacions>

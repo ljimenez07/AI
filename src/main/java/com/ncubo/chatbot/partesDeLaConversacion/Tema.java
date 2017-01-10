@@ -61,21 +61,30 @@ public class Tema
 	}
 	
 	public Frase buscarUnaFrase(String nombreDeLaFrase){
-		
+		Frase resultado = null;
 		for(int index = 0; index < frases.length; index ++){
-			if(frases[index].getIdFrase().equals(nombreDeLaFrase.trim()))
-				return frases[index];
+			if(frases[index].getIdFrase().equals(nombreDeLaFrase.trim())){
+				resultado = frases[index];
+				break;
+			}
 		}
-		
+		if(resultado != null){
+			return resultado;
+		}
 		throw new ChatException(String.format("No existe una frase con id %s en el tema %s", nombreDeLaFrase, this.idDelTema));
 	}
 	
 	public Frase buscarUnaFraseCon(CaracteristicaDeLaFrase caracteristica){
+		Frase resultado = null;
 		for(int index = 0; index < frases.length; index ++){
-			if(frases[index].buscarCaracteristica(caracteristica))
-				return frases[index];
+			if(frases[index].buscarCaracteristica(caracteristica)){
+				resultado = frases[index];
+				break;
+			}
 		}
-		
+		if(resultado != null){
+			return resultado;
+		}
 		throw new ChatException(String.format("No existe una frase con tipo %s", caracteristica.toString()));
 	}
 
