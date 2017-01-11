@@ -63,7 +63,7 @@ public class Tema
 	public Frase buscarUnaFrase(String nombreDeLaFrase){
 		Frase resultado = null;
 		for(int index = 0; index < frases.length; index ++){
-			if(frases[index].getIdFrase().equals(nombreDeLaFrase.trim())){
+			if(frases[index].obtenerNombreDeLaFrase().equals(nombreDeLaFrase.trim())){
 				resultado = frases[index];
 				break;
 			}
@@ -113,7 +113,7 @@ public class Tema
 	
 	public void generarAudiosEstaticos(String pathAGuardar, String ipPublica){
 		for(int index = 0; index < frases.length; index ++){
-			System.out.println("Generando audios a la frase: "+frases[index].getIdFrase());
+			System.out.println("Generando audios a la frase: "+frases[index].obtenerNombreDeLaFrase());
 			frases[index].generarAudiosEstaticos(pathAGuardar, ipPublica);
 		}
 	}

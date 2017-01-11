@@ -25,7 +25,7 @@ public class Respuesta {
 	private boolean cambiarIntencion;
 	private boolean cambiarAGeneral;
 	private String fraseActivada;
-	private List<String> idsDeOracionesAfirmativas;
+	private List<String> nombresDeOracionesAfirmativas;
 	private boolean hayOracionesAfirmativas;
 	private String loQueElClienteDijo;
 	private boolean hayProblemasEnLaComunicacionConWatson;
@@ -40,7 +40,7 @@ public class Respuesta {
 		this.miContexto = context;
 		this.misEntidades = new Entidades();
 		this.misIntenciones = new Intenciones();
-		this.idsDeOracionesAfirmativas = null;
+		this.nombresDeOracionesAfirmativas = null;
 		this.hayOracionesAfirmativas = false;
 		this.watsonRespuesta = null;
 		this.hayProblemasEnLaComunicacionConWatson = false;
@@ -56,7 +56,7 @@ public class Respuesta {
 		this.miContexto = context;
 		this.misEntidades = new Entidades();
 		this.misIntenciones = new Intenciones();
-		this.idsDeOracionesAfirmativas = null;
+		this.nombresDeOracionesAfirmativas = null;
 		this.hayOracionesAfirmativas = false;
 		this.hayProblemasEnLaComunicacionConWatson = false;
 	}
@@ -89,7 +89,7 @@ public class Respuesta {
 		this.cambiarIntencion = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_INTENCION).equals("true"));
 		this.fraseActivada = obtenerElementoDelContextoDeWatson(Constantes.NODO_ACTIVADO);
 		this.cambiarAGeneral = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_A_GENERAL).equals("true"));
-		obtenerIDsDeOracionesAfirmativas();
+		obtenerNombresDeOracionesAfirmativas();
 		
 	}
 	
@@ -164,7 +164,7 @@ public class Respuesta {
 		}
 	}
 	
-	private void obtenerIDsDeOracionesAfirmativas(){
+	private void obtenerNombresDeOracionesAfirmativas(){
 		String afirmativas = obtenerElementoDelContextoDeWatson(Constantes.ORACIONES_AFIRMATIVAS);
 		if(afirmativas.equals("")){
 			hayOracionesAfirmativas = false;
@@ -172,16 +172,16 @@ public class Respuesta {
 			hayOracionesAfirmativas = true;
 			System.out.println("Oraciones afirmativas: "+afirmativas);
 			afirmativas = afirmativas.replace("[", "").replace("]", "");
-			idsDeOracionesAfirmativas = new ArrayList<String>(Arrays.asList(afirmativas.split(",")));			
+			nombresDeOracionesAfirmativas = new ArrayList<String>(Arrays.asList(afirmativas.split(",")));			
 		}
 	}
 	
 	public boolean hayOracionesAfirmativasActivas(){
-		return this.hayOracionesAfirmativas || (idsDeOracionesAfirmativas != null);
+		return this.hayOracionesAfirmativas || (nombresDeOracionesAfirmativas != null);
 	}
 	
-	public List<String> obtenerLosIDsDeLasOracionesAfirmativasActivas(){
-		return this.idsDeOracionesAfirmativas;
+	public List<String> obtenerLosNombresDeLasOracionesAfirmativasActivas(){
+		return this.nombresDeOracionesAfirmativas;
 	}
 	
 	public String obtenerFraseActivada(){

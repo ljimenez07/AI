@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE xml>
-<conversacions modo="Fake">
+<conversaciones modo="Fake">
 	<conversacion id="saludoGeneral">
 		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>
@@ -655,4 +655,4 @@
 		<workspace tipo="especifico" idIBM="3ce87107-ffe7-4509-86ac-47ecc30e64fe" intencionesParaSeReferenciado="cuando_pagar,que_pueden_preguntar,presentar_declaracion,pedir_exoneracion,cuanto_pagar,cuando_presentar,saber_horarios,arreglo_pago,no_tengo_para_pagar,donde_pagar,agradecimiento,que_es">DMuniEspecifico</workspace>
 	</workspaces>
 	
-</conversacions>
+</conversaciones>

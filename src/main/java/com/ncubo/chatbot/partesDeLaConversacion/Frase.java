@@ -11,7 +11,9 @@ import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
 public abstract class Frase
 {
-	private final String idFrase;
+	private final String nombreDeLaFrase;
+	
+	private final int idFrase;
 	
 	private final ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
 	
@@ -26,11 +28,12 @@ public abstract class Frase
 	
 	private int intentosFallidos = 0;
 	
-	protected Frase (String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
+	protected Frase (int idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
-		this.caracteristicas = caracteristicas;
 		this.idFrase = idFrase;
+		this.caracteristicas = caracteristicas;
+		this.nombreDeLaFrase = nombreDeLaFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		this.intentosFallidos = intentosFallidos;
 		cargarLaFrase();
@@ -130,8 +133,8 @@ public abstract class Frase
 		return buscarFrasesSinonimoPorTipo(Constantes.TIPO_FRASE_CONJUNCION);
 	}
 	
-	public String getIdFrase() {
-		return idFrase;
+	public String obtenerNombreDeLaFrase() {
+		return nombreDeLaFrase;
 	}
 	
 	public ComponentesDeLaFrase textosDeConjunciones(){
@@ -253,14 +256,14 @@ public abstract class Frase
 	
 	protected void cargarLaFrase() 
 	{
-		if (idFrase == null) 
-			new ChatException("No has inicializado el id de la frase");
+		if (nombreDeLaFrase == null) 
+			new ChatException("No has inicializado el nombre de la frase");
 		
-		// Validar que en el archivo o repositorio existe ese ID.
-		//textoDeLaFrase = contenido.buscarLaFrase(this.idFrase);
+		// Validar que en el archivo o repositorio existe ese Nombre.
+		//textoDeLaFrase = contenido.buscarLaFrase(this.nombreDeLaFrase);
 		verSiLaFraseTienePlaceHolders();
 		// "Validar inconsistencias como una frase no puede ser de saludo y despedida a la vez, pregunta y afirmativa a la vez"
-		// Validar que ese ID al menos tenga un texto
+		// Validar que ese Nombre al menos tenga un texto
 		
 	}
 	
@@ -286,10 +289,10 @@ public abstract class Frase
 				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
 					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, textoParaAudio, contadorDeSinonimos)){
+					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudio, contadorDeSinonimos)){
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, contadorDeSinonimos);
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, contadorDeSinonimos);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					String miIp = ipPublica+nombreDelArchivo;
@@ -312,12 +315,12 @@ public abstract class Frase
 
 					}
 					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, texto, index)){
+					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, texto, index)){
 						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
 						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, index);
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, index);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					
@@ -347,12 +350,12 @@ public abstract class Frase
 
 					}
 					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudiosImpertinetes(this.idFrase, texto, index)){
+					if(AudiosXML.getInstance().hayQueGenerarAudiosImpertinetes(this.nombreDeLaFrase, texto, index)){
 						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
 						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseImpertinete(this.idFrase, index);
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseImpertinete(this.nombreDeLaFrase, index);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					
@@ -382,12 +385,12 @@ public abstract class Frase
 					}
 					
 					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudiosMeRindo(this.idFrase, texto, index)){
+					if(AudiosXML.getInstance().hayQueGenerarAudiosMeRindo(this.nombreDeLaFrase, texto, index)){
 						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
 						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseMeRindo(this.idFrase, index);
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseMeRindo(this.nombreDeLaFrase, index);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					
@@ -398,7 +401,7 @@ public abstract class Frase
 				}*/
 				
 			}
-			if(tieneEnum()){
+			if(soloTieneEnum()){
 				
 				
 				int contadorDeSinonimos = 0;
@@ -413,10 +416,10 @@ public abstract class Frase
 						for (int j = 0; j < valores.length;j++){
 							String textoParaAudioEnum = textoParaAudio.replace("${"+placeholders.get(i).getNombreDelPlaceholder()+"}", valores[j]);
 							String nombreDelArchivo = "";
-							if(AudiosXML.getInstance().hayQueGenerarAudios(this.idFrase, textoParaAudioEnum, contadorDeSinonimos)){
+							if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudioEnum, contadorDeSinonimos)){
 								nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudioEnum, false);
 							}else{
-								nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.idFrase, contadorDeSinonimos);
+								nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, contadorDeSinonimos);
 								nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 							}
 							String miIp = ipPublica+nombreDelArchivo;
@@ -460,7 +463,7 @@ public abstract class Frase
 		return buscarCaracteristica(CaracteristicaDeLaFrase.sePuedeDecirEnVozAlta);
 	}
 	
-	public boolean tieneEnum(){
+	public boolean soloTieneEnum(){
 		
 		boolean tieneSoloEnum = true;
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
@@ -552,5 +555,9 @@ public abstract class Frase
 	
 	public int obtenerNumeroIntentosFallidos (){
 		return this.intentosFallidos;
+	}
+	
+	public int obtenerIdDeLaFrase(){
+		return this.idFrase;
 	}
 }

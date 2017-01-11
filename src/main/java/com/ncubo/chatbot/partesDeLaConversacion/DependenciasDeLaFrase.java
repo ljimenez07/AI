@@ -10,8 +10,8 @@ public class DependenciasDeLaFrase {
 		misDependencias = new ArrayList<>();
 	}
 	
-	public void agregarDependencia(String idFrase){
-		misDependencias.add(idFrase);
+	public void agregarDependencia(String nombreDeLaFrase){
+		misDependencias.add(nombreDeLaFrase);
 	}
 	
 	public ArrayList<String> obtenerMisDependencias(){

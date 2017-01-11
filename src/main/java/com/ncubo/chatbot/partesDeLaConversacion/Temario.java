@@ -120,7 +120,7 @@ public abstract class Temario
 	public void generarAudioEstaticosDeTodasLasFrases(String pathAGuardar, String ipPublica){
 		ArrayList<Frase> misFrase = contenido.obtenerMiFrases();
 		for(int index = 0; index < misFrase.size(); index ++){
-			System.out.println("Generando audios de la frase: "+misFrase.get(index).getIdFrase());
+			System.out.println("Generando audios de la frase: "+misFrase.get(index).obtenerNombreDeLaFrase());
 			misFrase.get(index).generarAudiosEstaticos(pathAGuardar, ipPublica);
 		}
 	}
