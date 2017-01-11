@@ -17,6 +17,7 @@ public class ComponentesDeLaFrase implements Cloneable{
 	private Vineta vineta = null;
 	private String condicion;
 	private ArrayList<Placeholder> placeholders;
+	private boolean esEstatica = true;
 	
 	public ComponentesDeLaFrase(String tipoDeFrase, String textoDeLaFrase, String textoAUsarParaGenerarElAudio, String vineta, String condicion){
 		this.tipoDeFrase = tipoDeFrase;
@@ -67,9 +68,18 @@ public class ComponentesDeLaFrase implements Cloneable{
 		        if( ! existeElPlaceholder(key)){
 		        	System.out.println("Agregando placeholder: "+key);
 		        	placeholders.add(new Placeholder(key));
+		        	esEstatica = false;
 		        }
 		    }
 		}
+	}
+	
+	public boolean esEstatica(){
+		return esEstatica;
+	}
+	
+	public boolean esDinamica(){
+		return ! esEstatica;
 	}
 	
 	public ArrayList<Placeholder> buscarPlaceholdersEnElTextoADecir(){

@@ -21,7 +21,6 @@ public abstract class Frase
 	
 	private final CaracteristicaDeLaFrase[] caracteristicas;
 	//private Intencion intencion;
-	private boolean esEstatica = true;
 	
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
@@ -36,15 +35,14 @@ public abstract class Frase
 		this.nombreDeLaFrase = nombreDeLaFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		this.intentosFallidos = intentosFallidos;
-		cargarLaFrase();
+		//cargarLaFrase();
 		cargarVinetas(vinetasDeLaFrase);
-		if(esEstatica()){
+		/*if(esEstatica()){
 			System.out.println("Es estaticaaaaaaaa");
 		}
 		if(esDinamica()){
 			System.out.println("Es dinamicaaaaa");
-		}
-		
+		}*/
 	}
 	
 	private void cargarVinetas(String[] vinetasDeLaFrase){
@@ -57,7 +55,7 @@ public abstract class Frase
 		}
 	}
 	
-	private void verSiLaFraseTienePlaceHolders(){
+	/*private void verSiLaFraseTienePlaceHolders(){
 		boolean tieneUnoOVariosPlaceHolders = false;
 
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
@@ -67,7 +65,7 @@ public abstract class Frase
 		}
 		
 		esEstatica = ! tieneUnoOVariosPlaceHolders;
-	}
+	}*/
 	
 	public boolean hayFrasesConCondicion(){
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
@@ -235,10 +233,6 @@ public abstract class Frase
 		}
 	}
 	
-	public boolean esEstatica(){
-		return esEstatica;
-	}
-	
 	public Vineta vineta(){
 		Vineta resultado = null;
 		
@@ -250,10 +244,6 @@ public abstract class Frase
 		return resultado;
 	}
 	
-	public boolean esDinamica(){
-		return ! esEstatica;
-	}
-	
 	protected void cargarLaFrase() 
 	{
 		if (nombreDeLaFrase == null) 
@@ -261,7 +251,7 @@ public abstract class Frase
 		
 		// Validar que en el archivo o repositorio existe ese Nombre.
 		//textoDeLaFrase = contenido.buscarLaFrase(this.nombreDeLaFrase);
-		verSiLaFraseTienePlaceHolders();
+		//verSiLaFraseTienePlaceHolders();
 		// "Validar inconsistencias como una frase no puede ser de saludo y despedida a la vez, pregunta y afirmativa a la vez"
 		// Validar que ese Nombre al menos tenga un texto
 		
@@ -284,9 +274,10 @@ public abstract class Frase
 		//sonidosDeLosTextosDeLaFrase.clear();
 		
 		if (sePuedeDecirEnVozAlta()){
-			if(esEstatica()){
-				int contadorDeSinonimos = 0;
-				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+			
+			int contadorDeSinonimos = 0;
+			for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+				if(miFrase.esEstatica()){
 					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
 					String nombreDelArchivo = "";
 					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudio, contadorDeSinonimos)){
@@ -297,114 +288,13 @@ public abstract class Frase
 					}
 					String miIp = ipPublica+nombreDelArchivo;
 					miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
-					contadorDeSinonimos ++;
 				}
 				
-				/*for(int index = 0; index < textosDeLaFrase.length; index ++){
-					String texto = textosDeLaFrase[index];
-					String textoParaReproducir = texto;
-					String textoTag = ""; 
-					while(texto.contains("@@"))
-					{
-						texto = texto.replace("@@!", "&nbsp;");
-						textoParaReproducir = textoParaReproducir.replace("@@!", " ");
-						textoTag = texto.substring(texto.indexOf("@@")+2, texto.indexOf("@@@"));
-					
-						textoParaReproducir = textoParaReproducir.replace("@@"+textoTag+"@@@", "");
-						texto = texto.replace("@@"+textoTag+"@@@", "<"+textoTag+">");
-
-					}
-					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, texto, index)){
-						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
-						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
-						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
-					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, index);
-						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
-					}
-					
-					String path = pathAGuardar+File.separator+nombreDelArchivo;
-					String miIp = ipPublica+nombreDelArchivo;
-					sonidosDeLosTextosDeLaFrase.add(new Sonido(miIp));
-					textosDeLaFrase[index] = texto;
-				}
+				contadorDeSinonimos ++;
 			}
 			
-			if(hayTextosImpertinetes()){
-				//sonidosDeLosTextosImpertinentesDeLaFrase.clear();
-				
-				for(int index = 0; index < textosImpertinetesDeLaFrase.length; index ++){
-					String texto = textosImpertinetesDeLaFrase[index];
-					
-					String textoParaReproducir = texto;
-					String textoTag = ""; 
-					while(texto.contains("@@"))
-					{
-						texto = texto.replace("@@!", "&nbsp;");
-						textoParaReproducir = textoParaReproducir.replace("@@!", " ");
-						textoTag = texto.substring(texto.indexOf("@@")+2, texto.indexOf("@@@"));
-					
-						textoParaReproducir = textoParaReproducir.replace("@@"+textoTag+"@@@", "");
-						texto = texto.replace("@@"+textoTag+"@@@", "<"+textoTag+">");
-
-					}
-					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudiosImpertinetes(this.nombreDeLaFrase, texto, index)){
-						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
-						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
-						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
-					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseImpertinete(this.nombreDeLaFrase, index);
-						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
-					}
-					
-					String path = pathAGuardar+File.separator+nombreDelArchivo;
-					String miIp = ipPublica+nombreDelArchivo;
-					sonidosDeLosTextosImpertinentesDeLaFrase.add(new Sonido(miIp, path));
-				}
-				
-			}
-			
-			if(hayTextosMeRindo()){
-				sonidosDeLosTextosDeLaFraseMeRindo.clear();
-				
-				for(int index = 0; index < textosDeLaFraseMeRindo.length; index ++){
-					String texto = textosDeLaFraseMeRindo[index];
-					
-					String textoParaReproducir = texto;
-					String textoTag = ""; 
-					while(texto.contains("@@"))
-					{
-						texto = texto.replace("@@!", "&nbsp;");
-						textoParaReproducir = textoParaReproducir.replace("@@!", " ");
-						textoTag = texto.substring(texto.indexOf("@@")+2, texto.indexOf("@@@"));
-					
-						textoParaReproducir = textoParaReproducir.replace("@@"+textoTag+"@@@", "");
-						texto = texto.replace("@@"+textoTag+"@@@", "<"+textoTag+">");
-					}
-					
-					String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudiosMeRindo(this.nombreDeLaFrase, texto, index)){
-						textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
-						textoParaReproducir = textoParaReproducir.replace("&nbsp;"," ");
-						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, false);
-					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFraseMeRindo(this.nombreDeLaFrase, index);
-						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
-					}
-					
-					String path = pathAGuardar+File.separator+nombreDelArchivo;
-					String miIp = ipPublica+nombreDelArchivo;
-					sonidosDeLosTextosDeLaFraseMeRindo.add(new Sonido(miIp, path));
-					textosDeLaFraseMeRindo[index] = texto;
-				}*/
-				
-			}
 			if(soloTieneEnum()){
-				
-				
-				int contadorDeSinonimos = 0;
+				contadorDeSinonimos = 0;
 				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
 					
