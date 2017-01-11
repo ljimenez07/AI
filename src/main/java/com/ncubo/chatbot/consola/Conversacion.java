@@ -90,9 +90,9 @@ public class Conversacion {
 			ponerComoYaTratado(errorDeComunicacionConWatson);
 		}else{
 			if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta)){
-				String idFraseActivada = respuesta.obtenerFraseActivada();
+				String nombreDeLaFraseActivada = respuesta.obtenerFraseActivada();
 				if(respuesta.cambiarAGeneral()){
-					extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+					extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, nombreDeLaFraseActivada);
 					//this.temaActual = this.temario.buscarTema(Constantes.FRASE_SALUDO);
 					agente.cambiarAWorkspaceGeneral();
 					
@@ -102,8 +102,8 @@ public class Conversacion {
 				}else{
 					if(agente.hayQueCambiarDeTema()){
 						
-						idFraseActivada = respuesta.obtenerFraseActivada();
-						extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+						nombreDeLaFraseActivada = respuesta.obtenerFraseActivada();
+						extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, nombreDeLaFraseActivada);
 						String laIntencion = agente.obtenernombreDeLaIntencionEspecificaActiva();
 						
 						if(agente.seTieneQueAbordarElTema()){
@@ -121,7 +121,7 @@ public class Conversacion {
 								agente.cambiarAWorkspaceGeneral();
 							}
 						}else{
-							if (idFraseActivada.equals("")){ // Quiere decir que no hay ninguna pregunta en la salida
+							if (nombreDeLaFraseActivada.equals("")){ // Quiere decir que no hay ninguna pregunta en la salida
 								System.out.println("El proximo tema a tratar es: "+this.temaActual.obtenerIdTema());
 								
 								// Activar en el contexto el tema
@@ -129,10 +129,10 @@ public class Conversacion {
 								
 								// llamar a watson y ver que bloque se activo
 								respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-								idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+								nombreDeLaFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 								
-								System.out.println("Id de la frase a decir: "+idFraseActivada);
-								extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+								System.out.println("Nombre de la frase a decir: "+nombreDeLaFraseActivada);
+								extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, nombreDeLaFraseActivada);
 							}
 						}
 						if(this.temaActual != null){
@@ -142,8 +142,8 @@ public class Conversacion {
 					}else{
 						if (agente.entendiLaUltimaPregunta()){
 							
-							idFraseActivada = respuesta.obtenerFraseActivada();
-							extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+							nombreDeLaFraseActivada = respuesta.obtenerFraseActivada();
+							extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, nombreDeLaFraseActivada);
 							
 						}else{ 
 							// Verificar que fue	
@@ -268,21 +268,21 @@ public class Conversacion {
 		}
 	}
 	
-	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada){
-		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, false);
+	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String nombreDeLaFraseActivada){
+		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, nombreDeLaFraseActivada, false);
 	}
 	
-	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Boolean estaEnWorkSpaceEspecifico){
+	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, Respuesta respuesta, String nombreDeLaFraseActivada, Boolean estaEnWorkSpaceEspecifico){
 		Pregunta miPregunta = null;
-		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosIDsDeLasOracionesAfirmativasActivas(), respuesta, estaEnWorkSpaceEspecifico);
-		if( ! idFraseActivada.equals("")){
+		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta, estaEnWorkSpaceEspecifico);
+		if( ! nombreDeLaFraseActivada.equals("")){
 			
 			if(estaEnWorkSpaceEspecifico){
-				miPregunta = (Pregunta) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(idFraseActivada);
+				miPregunta = (Pregunta) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(nombreDeLaFraseActivada);
 				misSalidas.add(agente.decir(miPregunta, respuesta, temaActualDelWorkSpaceEspecifico));
 				fraseActualDelWorkSpaceEspecifico = miPregunta;
 			}else{
-				miPregunta = (Pregunta) this.temaActual.buscarUnaFrase(idFraseActivada);
+				miPregunta = (Pregunta) this.temaActual.buscarUnaFrase(nombreDeLaFraseActivada);
 				misSalidas.add(agente.decir(miPregunta, respuesta, temaActual));
 				fraseActual = miPregunta;
 			}
@@ -290,16 +290,16 @@ public class Conversacion {
 		}
 	}
 	
-	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecificoSinActualizar(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Boolean estaEnWorkSpaceEspecifico){
+	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecificoSinActualizar(ArrayList<Salida> misSalidas, Respuesta respuesta, String nombreDeLaFraseActivada, Boolean estaEnWorkSpaceEspecifico){
 		Pregunta miPregunta = null;
-		agregarOracionesAfirmativasDeWorkspaceEspecificoSinActualizar(misSalidas, respuesta.obtenerLosIDsDeLasOracionesAfirmativasActivas(), respuesta, estaEnWorkSpaceEspecifico);
-		if( ! idFraseActivada.equals("")){
+		agregarOracionesAfirmativasDeWorkspaceEspecificoSinActualizar(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta, estaEnWorkSpaceEspecifico);
+		if( ! nombreDeLaFraseActivada.equals("")){
 			
 			if(estaEnWorkSpaceEspecifico){
-				miPregunta = (Pregunta) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(idFraseActivada);
+				miPregunta = (Pregunta) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(nombreDeLaFraseActivada);
 				misSalidas.add(agente.decir(miPregunta, respuesta, temaActualDelWorkSpaceEspecifico));
 			}else{
-				miPregunta = (Pregunta) this.temaActual.buscarUnaFrase(idFraseActivada);
+				miPregunta = (Pregunta) this.temaActual.buscarUnaFrase(nombreDeLaFraseActivada);
 				misSalidas.add(agente.decir(miPregunta, respuesta, temaActual));
 			}
 			ponerComoYaTratado(miPregunta);
@@ -312,13 +312,13 @@ public class Conversacion {
 			for(int index = 0; index < afirmativas.size(); index++){
 				if(estaEnWorkSpaceEspecifico){
 					miAfirmacion = (Afirmacion) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.getIdFrase()) ){
+					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
 						misSalidas.add(agente.decir(miAfirmacion, respuesta, temaActualDelWorkSpaceEspecifico));
 						fraseActualDelWorkSpaceEspecifico = miAfirmacion;
 					}
 				}else{
 					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.getIdFrase()) ){
+					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
 						misSalidas.add(agente.decir(miAfirmacion, respuesta, temaActual));
 						fraseActual = miAfirmacion;
 					}
@@ -334,12 +334,12 @@ public class Conversacion {
 			for(int index = 0; index < afirmativas.size(); index++){
 				if(estaEnWorkSpaceEspecifico){
 					miAfirmacion = (Afirmacion) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.getIdFrase()) ){
+					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
 						misSalidas.add(agente.decir(miAfirmacion, respuesta, temaActualDelWorkSpaceEspecifico));
 					}
 				}else{
 					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.getIdFrase()) ){
+					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
 						misSalidas.add(agente.decir(miAfirmacion, respuesta, temaActual));
 					}
 				}
@@ -348,11 +348,11 @@ public class Conversacion {
 		}
 	}
 	
-	private boolean yaExisteEstaSalida(ArrayList<Salida> misSalidas, String idFrase){
+	private boolean yaExisteEstaSalida(ArrayList<Salida> misSalidas, String nombreDeLaFrase){
 		boolean resultado = false;
 		
 		for(int index = 0; index < misSalidas.size(); index ++){
-			if(misSalidas.get(index).getFraseActual().getIdFrase().equals(idFrase)){
+			if(misSalidas.get(index).getFraseActual().obtenerNombreDeLaFrase().equals(nombreDeLaFrase)){
 				resultado = true;
 				break;
 			}

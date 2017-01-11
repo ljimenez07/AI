@@ -56,7 +56,7 @@ public class AudiosXML {
 			docBuilder = docFactory.newDocumentBuilder();
 			doc = docBuilder.newDocument();
 			
-			rootElement = doc.createElement("conversacions");
+			rootElement = doc.createElement("conversaciones");
 			doc.appendChild(rootElement);
 			
 		}catch(Exception e){
@@ -64,7 +64,7 @@ public class AudiosXML {
 		}
 	}
 	
-	public boolean exiteLaFraseEnElArchivo(String idFrase){
+	public boolean exiteLaFraseEnElArchivo(String nombreFrase){
 		boolean resultado = false;
 
 		try{
@@ -83,9 +83,9 @@ public class AudiosXML {
 				
 				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 					Element eElement = (Element) nNode;
-					String idDeLaFrase = eElement.getAttribute("id");
+					String nombreDeLaFrase = eElement.getAttribute("nombre");
 					//System.out.println("\nCurrent Element :" + idDeLaFrase);
-					if(idDeLaFrase.equals(idFrase)){
+					if(nombreDeLaFrase.equals(nombreFrase)){
 						return true;
 					}
 				}
@@ -132,15 +132,15 @@ public class AudiosXML {
 		guardarElArchivoADisco();
 	}
 	
-	private boolean existeLaFrase(String idFrase){
-		return misFrases.containsKey(idFrase);
+	private boolean existeLaFrase(String nombreDeLaFrase){
+		return misFrases.containsKey(nombreDeLaFrase);
 	}
 	
-	public boolean hayQueGenerarAudios(String idFrase, String textoDeLaFrase, int posicionDeLaFrase){
+	public boolean hayQueGenerarAudios(String nombreDeLaFrase, String textoDeLaFrase, int posicionDeLaFrase){
 		try{
-			if(existeLaFrase(idFrase)){
+			if(existeLaFrase(nombreDeLaFrase)){
 				textoDeLaFrase = textoDeLaFrase.trim();
-				String miTexto = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getTextoAUsarParaGenerarElAudio().trim();
+				String miTexto = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getTextoAUsarParaGenerarElAudio().trim();
 				if(textoDeLaFrase.equals(miTexto))
 					return false;
 				else
@@ -153,12 +153,12 @@ public class AudiosXML {
 		}
 	}
 	
-	/*public boolean hayQueGenerarAudiosImpertinetes(String idFrase, String textoDeLaFrase, int posicionDeLaFrase){
+	/*public boolean hayQueGenerarAudiosImpertinetes(String nombreDeLaFrase, String textoDeLaFrase, int posicionDeLaFrase){
 		try{
-			if(exiteLaFrase(idFrase)){
+			if(exiteLaFrase(nombreDeLaFrase)){
 				textoDeLaFrase = textoDeLaFrase.trim();
 				String miTexto = "";
-				miTexto = misFrases.get(idFrase).getTextosImpertinetesDeLaFrase()[posicionDeLaFrase].trim();
+				miTexto = misFrases.get(nombreDeLaFrase).getTextosImpertinetesDeLaFrase()[posicionDeLaFrase].trim();
 				
 				if(textoDeLaFrase.equals(miTexto))
 					return false;
@@ -172,12 +172,12 @@ public class AudiosXML {
 		}
 	}
 	
-	public boolean hayQueGenerarAudiosMeRindo(String idFrase, String textoDeLaFrase, int posicionDeLaFrase){
+	public boolean hayQueGenerarAudiosMeRindo(String nombreDeLaFrase, String textoDeLaFrase, int posicionDeLaFrase){
 		try{
-			if(exiteLaFrase(idFrase)){
+			if(exiteLaFrase(nombreDeLaFrase)){
 				textoDeLaFrase = textoDeLaFrase.trim();
 				String miTexto = "";
-				miTexto = misFrases.get(idFrase).getTextosDeLaFraseMeRindo()[posicionDeLaFrase].trim();
+				miTexto = misFrases.get(nombreDeLaFrase).getTextosDeLaFraseMeRindo()[posicionDeLaFrase].trim();
 				
 				if(textoDeLaFrase.equals(miTexto))
 					return false;
@@ -191,11 +191,11 @@ public class AudiosXML {
 		}
 	}*/
 	
-	public String obtenerUnAudioDeLaFrase(String idFrase, int posicionDeLaFrase){
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, int posicionDeLaFrase){
 		String resultado = "";
 		try{
-			if(existeLaFrase(idFrase)){
-				resultado = misFrases.get(idFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio("audio").url();
+			if(existeLaFrase(nombreDeLaFrase)){
+				resultado = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio("audio").url();
 			}
 		}catch(Exception e){
 			resultado = "";
@@ -203,11 +203,11 @@ public class AudiosXML {
 		return resultado;
 	}
 	
-	/*public String obtenerUnAudioDeLaFraseImpertinete(String idFrase, int posicionDeLaFrase){
+	/*public String obtenerUnAudioDeLaFraseImpertinete(String nombreDeLaFrase, int posicionDeLaFrase){
 		String resultado = "";
 		try{
-			if(exiteLaFrase(idFrase)){
-				resultado = misFrases.get(idFrase).getSonidosDeLosTextosImpertinentesDeLaFrase()[posicionDeLaFrase];
+			if(exiteLaFrase(nombreDeLaFrase)){
+				resultado = misFrases.get(nombreDeLaFrase).getSonidosDeLosTextosImpertinentesDeLaFrase()[posicionDeLaFrase];
 			}
 		}catch(Exception e){
 			resultado = "";
@@ -215,11 +215,11 @@ public class AudiosXML {
 		return resultado;
 	}
 	
-	public String obtenerUnAudioDeLaFraseMeRindo(String idFrase, int posicionDeLaFrase){
+	public String obtenerUnAudioDeLaFraseMeRindo(String nombreDeLaFrase, int posicionDeLaFrase){
 		String resultado = "";
 		try{
-			if(exiteLaFrase(idFrase)){
-				resultado = misFrases.get(idFrase).getSonidosDeLosTextosDeLaFraseMeRindo()[posicionDeLaFrase];
+			if(exiteLaFrase(nombreDeLaFrase)){
+				resultado = misFrases.get(nombreDeLaFrase).getSonidosDeLosTextosDeLaFraseMeRindo()[posicionDeLaFrase];
 			}
 		}catch(Exception e){
 			resultado = "";
@@ -250,8 +250,8 @@ public class AudiosXML {
 
 					Element eElement = (Element) nNode;
 					
-					String idDeLaFrase = eElement.getAttribute("id");
-					System.out.println("Conversacion Id : " + idDeLaFrase);
+					String nombreDeLaFrase = eElement.getAttribute("nombre");
+					System.out.println("Nombre : " + nombreDeLaFrase);
 					
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
 					/*
@@ -267,9 +267,9 @@ public class AudiosXML {
 					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
 					obtenerFrasesPorTipo(misSinonimosDeLasConjunciones, frases);
 					
-					ContenidoDeAudios miFrase = new ContenidoDeAudios(idDeLaFrase, misSinonimosDeLasConjunciones);
+					ContenidoDeAudios miFrase = new ContenidoDeAudios(nombreDeLaFrase, misSinonimosDeLasConjunciones);
 					
-					misFrases.put(idDeLaFrase, miFrase);
+					misFrases.put(nombreDeLaFrase, miFrase);
 				}
 			}
 		}catch(Exception e){
@@ -335,7 +335,7 @@ public class AudiosXML {
 	public void escribirUnaFrase(Frase miFrase){
 		
 		Element conversacion = doc.createElement("conversacion");
-		conversacion.setAttribute("id", miFrase.getIdFrase());
+		conversacion.setAttribute("nombre", miFrase.obtenerNombreDeLaFrase());
 		
 		//Element esUnaPregunta = doc.createElement("esUnaPregunta");
 		//esUnaPregunta.appendChild(doc.createTextNode(miFrase.esUnaPregunta()+""));
@@ -345,7 +345,7 @@ public class AudiosXML {
 		
 		for(ComponentesDeLaFrase sinonimoDeFrase: miFrase.obtenerMisSinonimosDeLaFrase()){
 		
-			if(sinonimoDeFrase.tienePlaceholders() && miFrase.tieneEnum())
+			if(sinonimoDeFrase.tienePlaceholders() && miFrase.soloTieneEnum())
 			{
 				String textoParaAudio = sinonimoDeFrase.getTextoAUsarParaGenerarElAudio();
 				

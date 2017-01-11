@@ -5,7 +5,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 
 public class ContenidoDeAudios {
 
-	private final String idFrase;
+	private final String nombreDeLaFrase;
 
 	private ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
 	
@@ -18,8 +18,8 @@ public class ContenidoDeAudios {
 	private final String[] textosDeLaFraseMeRindo;
 	private final String[] sonidosDeLosTextosDeLaFraseMeRindo;*/
 	
-	public ContenidoDeAudios(String idFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase){
-		this.idFrase = idFrase;
+	public ContenidoDeAudios(String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase){
+		this.nombreDeLaFrase = nombreDeLaFrase;
 		this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
 		/*this.textosDeLaFrase = textosDeLaFrase;
 		this.sonidosDeLosTextosDeLaFrase = sonidosDeLosTextosDeLaFrase;
@@ -29,8 +29,8 @@ public class ContenidoDeAudios {
 		this.sonidosDeLosTextosDeLaFraseMeRindo = sonidosDeLosTextosDeLaFraseMeRindo;*/
 	}
 	
-	public String getIdFrase() {
-		return idFrase;
+	public String obtenerNombreDeLaFrase() {
+		return nombreDeLaFrase;
 	}
 
 	private ArrayList<ComponentesDeLaFrase> buscarFrasesSinonimoPorTipo(String tipoFrase){

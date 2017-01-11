@@ -47,7 +47,7 @@ public abstract class Contenido
 	public Frase frase(String idDeLaFrase){
 		
 		for(Frase frase: frases){
-			if(frase.getIdFrase().equalsIgnoreCase(idDeLaFrase)){
+			if(frase.obtenerNombreDeLaFrase().equalsIgnoreCase(idDeLaFrase)){
 				return frase;
 			}
 		}
@@ -66,7 +66,7 @@ public abstract class Contenido
 	}
 	
 	private Contenido agregarFrase(Frase unaFrase){
-		System.out.println("Agregando frase: " +unaFrase.getIdFrase());
+		System.out.println("Agregando frase: " +unaFrase.obtenerNombreDeLaFrase());
 		frases.add(unaFrase);
 		return this;
 	}
@@ -163,12 +163,13 @@ public abstract class Contenido
 				for (int temp = 0; temp < conjuncion.getLength(); temp++) {
 					Node nNode = conjuncion.item(temp);
 					Element eElement = (Element) nNode;
-					String id = eElement.getAttribute("id");
+					int id = Integer.parseInt(eElement.getAttribute("id"));
+					String nombre = eElement.getAttribute("nombre");
 					String frase = nNode.getTextContent();
 					System.out.println("Conjuncion: "+frase);
 					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
 					misSinonimosDeLasConjunciones.add(new ComponentesDeLaFrase(Constantes.TIPO_FRASE_CONJUNCION, frase, "", "", ""));
-					Conjunciones.getInstance().agregarConjuncion(new Conjuncion(id, misSinonimosDeLasConjunciones));
+					Conjunciones.getInstance().agregarConjuncion(new Conjuncion(id, nombre, misSinonimosDeLasConjunciones));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando las conjunciones "+e.getMessage());
@@ -232,8 +233,11 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					CaracteristicaDeLaFrase[] caracteristicasDeLaFrase = new CaracteristicaDeLaFrase[3];
 					
-					String idDeLaFrase = eElement.getAttribute("id");
+					int idDeLaFrase = Integer.parseInt(eElement.getAttribute("id"));
 					System.out.println("Conversacion Id : " + idDeLaFrase);
+					
+					String nombreDeLaFrase = eElement.getAttribute("nombre");
+					System.out.println("Nombre : " + nombreDeLaFrase);
 					
 					String elTipoEs = eElement.getElementsByTagName("tipo").item(0).getTextContent();
 					System.out.println("Tipo : " + elTipoEs);
@@ -306,18 +310,18 @@ public abstract class Contenido
 					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Saludo(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
-						miFrase = new Pregunta(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
+						miFrase = new Pregunta(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
 								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Despedida(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}

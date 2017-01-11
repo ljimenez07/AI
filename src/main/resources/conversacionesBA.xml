@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE xml>
-<conversacions>
+<conversaciones>
 	<conversacion id="saludoGeneral">
 		<tipo>saludo</tipo>
 		<mandatoria>true</mandatoria>
@@ -1959,4 +1959,4 @@
 		<workspace tipo="especifico" idIBM="6b8ed933-5592-42c9-a070-e70b30fce858" intencionesParaSeReferenciado="saldo_minimo,abrir_cuenta,precio,requisitos,reportar_extravio,ayuda_como,agradecimiento,saber_numeros,saber_horarios,saber_ubicacion,out_of_scope_bank">BAFAQ</workspace>
 	</workspaces>
 
-</conversacions>
+</conversaciones>
