@@ -143,11 +143,11 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					String tipo = eElement.getAttribute("tipo");
 					String idIBM = eElement.getAttribute("idIBM");
-					String intencionesParaSeReferenciado = eElement.getAttribute("intencionesParaSeReferenciado");
+					String intencionesParaSerReferenciado = eElement.getAttribute("intencionesParaSerReferenciado");
 					String nombre = nNode.getTextContent();
 					System.out.println("NOMBRE: " + nombre);
 					System.out.println("Tipo: " + tipo);
-					miWorkSpaces.add(new WorkSpace(user, pass, idIBM, tipo, nombre, intencionesParaSeReferenciado.split(",")));
+					miWorkSpaces.add(new WorkSpace(user, pass, idIBM, tipo, nombre, intencionesParaSerReferenciado.split(",")));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando los workspaces "+e.getMessage());
@@ -188,31 +188,10 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					String nombre = eElement.getAttribute("nombre");
 					String tipoValor = eElement.getAttribute("tipo");
-					
-					if(eElement.hasAttribute("valores"))	{
-						
-						NodeList nodoValores = eElement.getElementsByTagName("valores");
-						Node valorNode = nodoValores.item(0);
-						Element valorElement = (Element) valorNode;
-						NodeList valor = valorElement.getElementsByTagName("valor");
-						valores = new String [nodoValores.getLength()];
-
-						for (int i = 0; i < valor.getLength(); i++) {
-							Node nodoValor = valor.item(i);
-							Element elementoValor = (Element) nodoValor;
-							String valorPorDefecto = elementoValor.getTextContent();
-							valores[i] = valorPorDefecto;
-						}
-						VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
-
-					}
-					else{
-					
-					String valorPorDefecto = nNode.getTextContent();
+					String valorPorDefecto = eElement.getAttribute("valor");
 					System.out.println("ValorDeAmbiente: "+nombre);
 					valores = new String [1];
 					valores[0]= valorPorDefecto;
-					}
 					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
 				}
 			}catch(Exception e){
