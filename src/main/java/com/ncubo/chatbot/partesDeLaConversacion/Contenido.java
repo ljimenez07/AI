@@ -293,8 +293,8 @@ public abstract class Contenido
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
 						miFrase = new Pregunta(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
-								obtenerEntidades((Element) eElement.getElementsByTagName("when").item(0)), 
-								obtenerIntenciones((Element) eElement.getElementsByTagName("when").item(0)),intentosFallidos);
+								obtenerEntidades((Element) eElement.getElementsByTagName("condiciones").item(0)), 
+								obtenerIntenciones((Element) eElement.getElementsByTagName("condiciones").item(0)),intentosFallidos);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
 						miFrase = new Afirmacion(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
@@ -375,7 +375,7 @@ public abstract class Contenido
 		Hashtable<String, Operador> valores;
 		
 		try{
-			NodeList frase = condition.getElementsByTagName("condition");
+			NodeList frase = condition.getElementsByTagName("condicion");
 			
 			for (int temp = 0; temp < frase.getLength(); temp++) {
 				Node nNode = frase.item(temp);
@@ -384,7 +384,7 @@ public abstract class Contenido
 				valores = new Hashtable<String, Operador>();
 				
 				if(tipo.equals("entidad")){
-					String entidadValor = condition.getElementsByTagName("condition").item(temp).getTextContent();
+					String entidadValor = condition.getElementsByTagName("condicion").item(temp).getTextContent();
 					String entidadValores[] = entidadValor.split("@");
 					String entidad = "";
 					String valor = "";
@@ -412,7 +412,7 @@ public abstract class Contenido
 		Hashtable<String, Operador> valores;
 		
 		try{
-			NodeList frase = condition.getElementsByTagName("condition");
+			NodeList frase = condition.getElementsByTagName("condicion");
 			
 			for (int temp = 0; temp < frase.getLength(); temp++) {
 				Node nNode = frase.item(temp);
@@ -422,7 +422,7 @@ public abstract class Contenido
 				
 				if(tipo.equals("intencion")){
 					String operador = eElement.getAttribute("operador");
-					String intencion = condition.getElementsByTagName("condition").item(temp).getTextContent();
+					String intencion = condition.getElementsByTagName("condicion").item(temp).getTextContent();
 					valores.put(intencion, new Operador(obtenerTipoDeOperador(tipo)));
 					System.out.println("Intencion : " + intencion);
 					System.out.println("Entidad tipo: " + tipo);

@@ -331,7 +331,7 @@ public class Parser
 		Expresion resultado = parsearExpresion();
 
 		boolean siguienteOperadorLogico = esOperadorLogica();
-		if(siguienteOperadorLogico)
+		while(siguienteOperadorLogico)
 		{
 			TokenType tipo = lexer.tokenActual.getType();
 			lexer.aceptar();
@@ -346,7 +346,8 @@ public class Parser
 					break;
 				default:
 					break;					
-			}	
+			}
+			siguienteOperadorLogico = esOperadorLogica();
 		}
 		return resultado;
 	}
@@ -448,7 +449,7 @@ public class Parser
 		{
 			case lParentesis:
 				lexer.aceptar();
-				resultado = parsearExpresion();
+				resultado = parseExpresionLogica();
 				lexer.aceptar(Token.TokenType.rParentesis);
 				break;
 			case id:
