@@ -49,6 +49,8 @@ public class Evaluador {
 		//System.out.println(evaluador.ejecutaComando("show hora.mesActual();").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.diaActual();").trim());
 		//System.out.println(evaluador.ejecutaComando("verdad=1<10 && 'abc' != 'z' || !(MAY/2016 == JUN/2017); show verdad;").trim());
+		System.out.println(evaluador.ejecutaComando("show 6,479.25 == 0;"));
+		//System.out.println(evaluador.ejecutaComando("saldo=14,146.53; show saldo > 0;"));
 		
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());

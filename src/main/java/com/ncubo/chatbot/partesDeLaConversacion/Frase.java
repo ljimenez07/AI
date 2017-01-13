@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
@@ -12,19 +13,13 @@ import com.ncubo.chatbot.watson.TextToSpeechWatson;
 public abstract class Frase
 {
 	private final String nombreDeLaFrase;
-	
 	private final int idFrase;
-	
 	private final ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
-	
 	private ArrayList<Vineta> vinetasDeLosTextosDeLaFrase = new ArrayList<Vineta>();
-	
 	private final CaracteristicaDeLaFrase[] caracteristicas;
 	//private Intencion intencion;
-	
 	private String pathAGuardarLosAudiosTTS;
 	private String ipPublicaAMostrarLosAudioTTS;
-	
 	private int intentosFallidos = 0;
 	
 	protected Frase (int idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
@@ -54,18 +49,6 @@ public abstract class Frase
 			}
 		}
 	}
-	
-	/*private void verSiLaFraseTienePlaceHolders(){
-		boolean tieneUnoOVariosPlaceHolders = false;
-
-		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			tieneUnoOVariosPlaceHolders = miFrase.tienePlaceholders();
-			if(tieneUnoOVariosPlaceHolders) 
-				break;
-		}
-		
-		esEstatica = ! tieneUnoOVariosPlaceHolders;
-	}*/
 	
 	public boolean hayFrasesConCondicion(){
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
@@ -161,17 +144,6 @@ public abstract class Frase
 		return resultado;
 	}
 	
-	/*public Sonido obtenerSonidoAUsar(int idDelSonidoAUsar){
-		Sonido resultado = null;
-		if(esEstatica() && misSinonimosDeLaFrase.size() > 0){
-			if (idDelSonidoAUsar == -1){
-				idDelSonidoAUsar = (int)Math.floor(Math.random()*misSinonimosDeLaFrase.size());
-			}
-			resultado = misSinonimosDeLaFrase.get(idDelSonidoAUsar).getAudio();
-		}
-		return resultado;
-	}*/
-	
 	public ComponentesDeLaFrase textoImpertinente(){
 		ComponentesDeLaFrase resultado = null;
 		ArrayList<ComponentesDeLaFrase> textosImpertinetesDeLaFrase = buscarFrasesImpertinentes();
@@ -183,17 +155,6 @@ public abstract class Frase
 			return texto();
 		}
 	}
-	
-	/*public Sonido obtenerSonidoImpertinenteAUsar(int idDelSonidoImpertinenteAUsar){
-		Sonido resultado = null;
-		ArrayList<ComponentesDeLaFrase> sonidosDeLosTextosImpertinentesDeLaFrase = buscarFrasesImpertinentes();
-		if(hayTextosImpertinetes() && sonidosDeLosTextosImpertinentesDeLaFrase.size() > 0){
-			if (idDelSonidoImpertinenteAUsar == -1){
-				idDelSonidoImpertinenteAUsar = (int)Math.floor(Math.random()*sonidosDeLosTextosImpertinentesDeLaFrase.size());
-			}resultado = sonidosDeLosTextosImpertinentesDeLaFrase.get(idDelSonidoImpertinenteAUsar).getAudio();
-		}
-		return resultado;
-	}*/
 	
 	public boolean hayTextosImpertinetes(){
 		try{
@@ -213,18 +174,7 @@ public abstract class Frase
 		
 		return resultado;
 	}
-	
-	/*public Sonido obtenerSonidoMeRindoAUsar(int idDelSonidoMeRindoAUsar){
-		Sonido resultado = null;
-		ArrayList<ComponentesDeLaFrase> sonidosDeLosTextosDeLaFraseMeRindo = buscarFrasesMeRindo();
-		if(hayTextosMeRindo() && sonidosDeLosTextosDeLaFraseMeRindo.size() > 0){
-			if (idDelSonidoMeRindoAUsar == -1){
-				idDelSonidoMeRindoAUsar = (int)Math.floor(Math.random()*sonidosDeLosTextosDeLaFraseMeRindo.size());
-			}resultado = sonidosDeLosTextosDeLaFraseMeRindo.get(idDelSonidoMeRindoAUsar).getAudio();
-		}
-		return resultado;
-	}*/
-	
+
 	public boolean hayTextosMeRindo(){
 		try{
 			return (buscarFrasesMeRindo().size() > 0);
@@ -271,7 +221,6 @@ public abstract class Frase
 	public void generarAudiosEstaticos(String pathAGuardar, String ipPublica){
 		this.pathAGuardarLosAudiosTTS = pathAGuardar;
 		this.ipPublicaAMostrarLosAudioTTS = ipPublica;
-		//sonidosDeLosTextosDeLaFrase.clear();
 		
 		if (sePuedeDecirEnVozAlta()){
 			
@@ -289,7 +238,6 @@ public abstract class Frase
 					String miIp = ipPublica+nombreDelArchivo;
 					miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
 				}
-				
 				contadorDeSinonimos ++;
 			}
 			
@@ -300,7 +248,7 @@ public abstract class Frase
 					
 					ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
 					//replace con la clase Dia
-					
+
 					for (int i = 0; i < placeholders.size();i++){
 						String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getValorDeLaVariable();
 						for (int j = 0; j < valores.length;j++){
@@ -316,32 +264,25 @@ public abstract class Frase
 							miFrase.setAudio(valores[j],new Sonido(miIp, textoParaAudio));
 							contadorDeSinonimos ++;
 						}
-							
 					}
-					
-					
 				}
 			}
 		}
 	}
 	
 	public boolean esUnaPregunta(){
-		//boolean resultado = IntStream.of(caracteristicas).anyMatch(x -> x == CaracteristicaDeLaFrase.esUnaPregunta);
 		return buscarCaracteristica(CaracteristicaDeLaFrase.esUnaPregunta);
 	}
 
 	public boolean esUnSaludo(){
-		//boolean resultado = IntStream.of(caracteristicas).anyMatch(x -> x == CaracteristicaDeLaFrase.esUnSaludo);
 		return buscarCaracteristica(CaracteristicaDeLaFrase.esUnSaludo);
 	}
 	
 	public boolean esUnaOracionAfirmativa(){
-		//boolean resultado = IntStream.of(caracteristicas).anyMatch(x -> x == CaracteristicaDeLaFrase.esUnaOracionAfirmativa);
 		return buscarCaracteristica(CaracteristicaDeLaFrase.esUnaOracionAfirmativa);
 	}
 	
 	public boolean esUnaDespedida(){
-		//boolean resultado = IntStream.of(caracteristicas).anyMatch(x -> x == CaracteristicaDeLaFrase.esUnaDespedida);
 		return buscarCaracteristica(CaracteristicaDeLaFrase.esUnaDespedida);
 	}
 	
@@ -358,37 +299,19 @@ public abstract class Frase
 		boolean tieneSoloEnum = true;
 		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 			
-		
 			ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
 			//replace con la clase Dia
-			
-			
 			for (int i = 0; i < placeholders.size();i++){
-				String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
+				TiposDesVariables tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
 
-				if(!tipo.equals(Constantes.VARIABLE_TIPO_ENUM))
+				if(!tipo.equals(TiposDesVariables.ENUM))
 					return tieneSoloEnum = false;		
-				
 			}
-		
 		}
 		
 		return tieneSoloEnum;
 	}
-	
-	
-	/*public String[] getTextosDeLaFrase() {
-		return textosDeLaFrase;
-	}
 
-	public String[] getTextosImpertinetesDeLaFrase() {
-		return textosImpertinetesDeLaFrase;
-	}
-	
-	public String[] getTextosMeRindoDeLaFrase() {
-		return textosDeLaFraseMeRindo;
-	}*/
-	
 	public ComponentesDeLaFrase conjuncionParaRepreguntar(){
 		return Conjunciones.getInstance().obtenerUnaConjuncion().textosDeConjunciones();
 	}
@@ -408,27 +331,6 @@ public abstract class Frase
 			resultado += "Frases: \n";
 			resultado += "     - "+miFrase.getTextoDeLaFrase()+"\n";
 		}
-		
-		/*if(textosDeLaFrase.length > 0){
-			resultado += "Frases: \n";
-			for (int index = 0; index < textosDeLaFrase.length; index ++){
-				resultado += "     - "+textosDeLaFrase[index]+"\n";
-			}
-		}
-		
-		if(hayTextosImpertinetes()){
-			resultado += "Frases Impertinentes: \n";
-			for (int index = 0; index < textosImpertinetesDeLaFrase.length; index ++){
-				resultado += "     - "+textosImpertinetesDeLaFrase[index]+"\n";
-			}
-		}
-		
-		if(hayTextosMeRindo()){
-			resultado += "Frases me reindo: \n";
-			for (int index = 0; index < textosDeLaFraseMeRindo.length; index ++){
-				resultado += "     - "+textosDeLaFraseMeRindo[index]+"\n";
-			}
-		}*/
 		
 		return resultado;
 	}

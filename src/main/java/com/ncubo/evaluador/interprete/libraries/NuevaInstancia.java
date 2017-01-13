@@ -11,6 +11,7 @@ import java.util.Enumeration;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.evaluador.db.TablaDeSimbolos;
 import com.ncubo.evaluador.libraries.Objeto;
 
@@ -20,8 +21,7 @@ public class NuevaInstancia extends Expresion
 	private Expresion[] argumentos;
 	private Objeto instancia;
 	private final TablaDeSimbolos tablaDeSimbolos;
-	
-	private final static String BIBLIOTECA = "com.ncubo.chatbot.variablesDeAmbiente";
+	private final static String BIBLIOTECA = Constantes.PATH_VARIABLES;
 	private final static ClassFinder finder = new ClassFinder(BIBLIOTECA);
 	private final static Class<?>[] libraries = finder.find();
 	

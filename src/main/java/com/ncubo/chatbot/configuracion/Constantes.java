@@ -2,6 +2,9 @@ package com.ncubo.chatbot.configuracion;
 
 public class Constantes {
 	
+	public enum ModoDeLaVariable{ REAL, PRUEBA }
+	public enum TiposDesVariables{ CONTEXTO, USUARIO, NEGOCIO, ENUM }
+	
 	// Watson IBM f63e42df-1405-4ea7-8bff-7556a2586828
 	public static String WATSON_CONVERSATION_ID = "8af4d07d-d2b5-4a32-804c-6a0e2749ffed";
 	public static String WATSON_CONVERSATION_USER = "bb9bd2e7-d63f-490c-b5d6-32f026a4c646";
@@ -86,12 +89,15 @@ public class Constantes {
 	public static String VARIABLE_TIPO_NEGOCIO = "Negocio";
 	public static String VARIABLE_TIPO_ENUM = "Enum";
 	
-	// Modos
-	public static String MODO_REAL = "Real";
-	public static String MODO_FAKE = "Fake";
-	public static String MODO_TEST = "Test";
-	
 	// Vinetas
 	public static String TIPO_VINETA_ILUSTRATIVA = "Ilustrativa";
 	public static String TIPO_VINETA_SELECTIVA = "Selectiva";
+	
+	// Reflexivas
+	public static String PATH_VARIABLES = "com.bibliotecas";
+	public static String NOMBRE_VARIABLE = "nombreDeLaVariable";
+	public static String TIPO_VARIABLE = "tipoDeLaVariable";
+	public static String VARIABLE = "Variable";
+	public static String CLASE_PARAMETROS = "ParametrosDeLasVariables";
+	public static String INSTANCEA_PARAMETROS = "parametros";
 }

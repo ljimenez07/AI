@@ -1,18 +1,20 @@
 package com.ncubo.chatbot.contexto;
 
+import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
+
 public class Variable {
 
 	private final String nombre;
 	private String[] valorDeLaVariable;
-	private final String tipoVariable;
+	private final TiposDesVariables tipoVariable;
 
-	public Variable(String nombre, String[] valorPorDefecto, String tipoVariable){
+	public Variable(String nombre, String[] valorPorDefecto, TiposDesVariables tipoVariable){
 		this.nombre = nombre;
 		this.valorDeLaVariable = valorPorDefecto;
 		this.tipoVariable = tipoVariable;
 	}
 	
-	public String getTipoVariable() {
+	public TiposDesVariables getTipoVariable() {
 		return tipoVariable;
 	}
 	

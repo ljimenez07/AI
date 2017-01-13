@@ -153,10 +153,6 @@ public class ComponentesDeLaFrase implements Cloneable{
 				vineta.cambiarElContenido(miVineta);
 			}
 		}
-	
-		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarElAudio, false);
-		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
-		this.setAudio("audio",new Sonido(miIp, textoAUsarParaGenerarElAudio));
 	}
 	
 	public Sonido generarAudio(String texto){
@@ -224,9 +220,5 @@ public class ComponentesDeLaFrase implements Cloneable{
 	
 	public static void main(String argv[]) {
 		ComponentesDeLaFrase componente = new ComponentesDeLaFrase("frase", "Tu saldo de la cuenta ${cuenta} es de $${saldo} en la cuenta ${cuenta}", "Tu saldo es de", "", "");
-		System.out.println(componente.getTextoDeLaFrase());
-		componente.sustituirPlaceholder(new Placeholder("saldo"), "100");
-		componente.sustituirPlaceholder(new Placeholder("cuenta"), "de ahorros");
-		System.out.println(componente.getTextoDeLaFrase());
 	}
 }
