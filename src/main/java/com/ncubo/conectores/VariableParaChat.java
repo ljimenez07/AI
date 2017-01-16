@@ -8,7 +8,7 @@ public abstract class VariableParaChat extends Objeto{
 
 	protected ModoDeLaVariable modoDeLaVariable = ModoDeLaVariable.PRUEBA;
 	
-	public abstract String nombre(); // Ej: Salso, Cuenta
+	public abstract String nombre(); // Ej: Saldo, Cuenta
 	protected abstract TiposDesVariables tipo(); 
 	public abstract Objeto cambiarModoReal();
 	public abstract Objeto cambiarModoPrueba();

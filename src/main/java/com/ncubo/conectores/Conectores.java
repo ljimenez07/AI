@@ -75,18 +75,7 @@ public class Conectores {
 		}
 		return null;
 	}
-	
-	private void obtenerFunciones(){
-		System.out.println("\nFunciones:");
-		for (Class<?> unaClase : libraries){
-			//Si queremos obtener todos los métodos, independientemente de si son privados o no
-			Method[] todosLosMetodosDeclarados = unaClase.getDeclaredMethods();
-			for(int index = 0; index < todosLosMetodosDeclarados.length; index++){
-				System.out.println(todosLosMetodosDeclarados[index].getName()+" - "+todosLosMetodosDeclarados[index].getReturnType());
-			}
-		}
-	}
-	
+
 	public Objeto ejecutarElMetodoEvaluar(String valorDeLaVariable){
 		Objeto resultado = null;
 		String metodo = "evaluar";
@@ -139,8 +128,7 @@ public class Conectores {
 	}
 	
 	private Object invocarUnMetodo(Method metodo, VariableParaChat objetoDeMiClase){
-		
-		System.out.println("Nombre del MÉTODO a invocar: " + metodo.getName());
+		System.out.println("Nombre del MeTODO a invocar: " + metodo.getName());
 		try {
 			if (Modifier.isPrivate(metodo.getModifiers())) {
 				metodo.setAccessible(true);
@@ -185,8 +173,7 @@ public class Conectores {
 			return resultado;
 		}
 
-	    private final  List<Class<?>> find(final File file, final String scannedPackage)
-	    {
+	    private final  List<Class<?>> find(final File file, final String scannedPackage){
 	    	List<Class<?>> classes = new LinkedList<Class<?>>();
 	        final String resource = scannedPackage + DOT + file.getName();
 	        if (file.isDirectory()) 
@@ -226,7 +213,6 @@ public class Conectores {
 	        }
 	        return classes;
 	    }
-
 	}
 
 	public static void main(String argv[]){
