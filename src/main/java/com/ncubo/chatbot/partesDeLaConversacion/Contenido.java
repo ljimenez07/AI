@@ -176,7 +176,7 @@ public abstract class Contenido
 			}
 			
 			// Variables de contexto
-			String[] valores ;
+			String[] valores = new String[] {""};
 			try{
 				System.out.println("\nCargando las variablesDeAmbiente ...\n");
 				NodeList variables = doc.getElementsByTagName("variablesDeAmbiente");
@@ -188,14 +188,25 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					String nombre = eElement.getAttribute("nombre");
 					String tipoValor = eElement.getAttribute("tipo");
-					String valorPorDefecto = eElement.getAttribute("valor");
-					System.out.println("ValorDeAmbiente: "+nombre);
-					valores = new String [1];
-					valores[0]= valorPorDefecto;
+
+					NodeList nodoValores = eElement.getElementsByTagName("valores");
+					if(nodoValores.getLength()>0){
+						Node valorNode = nodoValores.item(0);
+						Element valorElement = (Element) valorNode;
+						NodeList valor = valorElement.getElementsByTagName("valor");
+						valores = new String [valor.getLength()];
+		
+						for (int i = 0; i < valor.getLength(); i++) {
+							Node nodoValor = valor.item(i);
+							Element elementoValor = (Element) nodoValor;
+							String valorPorDefecto = elementoValor.getTextContent();
+							valores[i] = valorPorDefecto;
+						}
+					}
 					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
 				}
 			}catch(Exception e){
-				throw new ChatException("Error cargando las conjunciones "+e.getMessage());
+				System.out.println("Error cargando las variables de ambiente "+e.getMessage());
 			}
 						
 			//System.out.println("Root element :" + doc.getDocumentElement().getNodeName());

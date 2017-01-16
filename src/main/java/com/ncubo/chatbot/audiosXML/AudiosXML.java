@@ -24,6 +24,7 @@ import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.Hashtable;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -347,27 +348,24 @@ public class AudiosXML {
 		
 			if(sinonimoDeFrase.tienePlaceholders() && miFrase.soloTieneEnum())
 			{
-				String textoParaAudio = sinonimoDeFrase.getTextoAUsarParaGenerarElAudio();
+				Hashtable<String, Sonido> audios = sinonimoDeFrase.getAudios();
 				
-				ArrayList<Placeholder> placeholders = sinonimoDeFrase.obtenerLosPlaceholders();
-				//replace con la clase Dia
+				Enumeration<String> llaves = audios.keys();
 				
-				for (int i = 0; i < placeholders.size();i++){
-					String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getValorDeLaVariable();
-					for (int j = 0; j < valores.length;j++){
-						Element empName = doc.createElement(sinonimoDeFrase.getTipoDeFrase());
-						
-						String textoParaAudioEnum = textoParaAudio.replace("${"+placeholders.get(i).getNombreDelPlaceholder()+"}", valores[j]);
-						empName.appendChild(doc.createTextNode(textoParaAudioEnum));
-						try{
-							empName.setAttribute("audio", sinonimoDeFrase.getAudio(valores[j]).url());
-		
-						}catch(Exception e){
-							empName.setAttribute("audio", "test.mp3");
-						}
-						frases.appendChild(empName);
-					}						
-				}	
+				while (llaves.hasMoreElements()) {
+					String llave = llaves.nextElement();
+					
+					Element empName = doc.createElement(sinonimoDeFrase.getTipoDeFrase());
+					
+					empName.appendChild(doc.createTextNode(audios.get(llave).getTextoUsadoParaGenerarElSonido()));
+					try{
+						empName.setAttribute("audio", sinonimoDeFrase.getAudio(llave).url());
+	
+					}catch(Exception e){
+						empName.setAttribute("audio", "test.mp3");
+					}
+					frases.appendChild(empName);
+				}
 			}
 			
 			else

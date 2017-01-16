@@ -27,6 +27,9 @@ public abstract class Frase
 	
 	private int intentosFallidos = 0;
 	
+	private int indiceValoresActual = 0;
+	private int subIndiceValoresActual = 0;
+	
 	protected Frase (int idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
@@ -295,35 +298,124 @@ public abstract class Frase
 			
 			if(soloTieneEnum()){
 				contadorDeSinonimos = 0;
+
 				for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
-					
-					ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
-					//replace con la clase Dia
-					
-					for (int i = 0; i < placeholders.size();i++){
-						String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getValorDeLaVariable();
-						for (int j = 0; j < valores.length;j++){
-							String textoParaAudioEnum = textoParaAudio.replace("${"+placeholders.get(i).getNombreDelPlaceholder()+"}", valores[j]);
-							String nombreDelArchivo = "";
-							if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudioEnum, contadorDeSinonimos)){
-								nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudioEnum, false);
-							}else{
-								nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, contadorDeSinonimos);
-								nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
-							}
-							String miIp = ipPublica+nombreDelArchivo;
-							miFrase.setAudio(valores[j],new Sonido(miIp, textoParaAudio));
-							contadorDeSinonimos ++;
-						}
-							
+				
+					int[] indicesValores = new int[miFrase.obtenerLosPlaceholders().size()];
+					String [] [] valoresPlaceholders = new String[miFrase.obtenerLosPlaceholders().size()][];
+					int index=0;
+					for(Placeholder placeholder: miFrase.obtenerLosPlaceholders()){
+						valoresPlaceholders[index] = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
+						indicesValores[index]=0;
+						index++;
 					}
 					
-					
+					indiceValoresActual = indicesValores.length-1;
+					subIndiceValoresActual = indiceValoresActual;
+					String 		textoAUsarParaGenerarAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+
+					generarAudioEnums(miFrase, textoAUsarParaGenerarAudio, indicesValores, valoresPlaceholders, contadorDeSinonimos, ipPublica);			
 				}
 			}
 		}
 	}
+	
+	
+	public void generarAudioEnums(ComponentesDeLaFrase miFrase, String textoAUsarParaGenerarAudio, int[] indicesValores, String[][]valores, int contadorDeSinonimos, String ipPublica){
+		
+	
+		int contadorPlaceholder = 0;
+		String idAudio = "";
+		for(Placeholder placeholder: miFrase.obtenerLosPlaceholders()){
+			textoAUsarParaGenerarAudio = textoAUsarParaGenerarAudio.replace("${"+placeholder.getNombreDelPlaceholder()+"}",  valores[contadorPlaceholder][indicesValores[contadorPlaceholder]]);
+			idAudio = idAudio + "-" + valores[contadorPlaceholder][indicesValores[contadorPlaceholder]];
+			contadorPlaceholder++;
+		}
+		String nombreDelArchivo = "";
+		if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoAUsarParaGenerarAudio, contadorDeSinonimos)){
+			nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false);
+		}else{
+			nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, contadorDeSinonimos);
+			nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
+		}
+		String miIp = ipPublica+nombreDelArchivo;
+		miFrase.setAudio(idAudio,new Sonido(miIp, textoAUsarParaGenerarAudio));
+		contadorDeSinonimos ++;
+		if(!esElUltimo(indicesValores, valores)){
+			indicesValores = actualizarIndicesValores(indicesValores, valores);
+			textoAUsarParaGenerarAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+			generarAudioEnums(miFrase, textoAUsarParaGenerarAudio, indicesValores, valores, contadorDeSinonimos, ipPublica);
+		}
+	}
+	
+	public int[] actualizarIndicesValores(int[] indicesValores, String[][]valores)
+	{
+		if(disminuirIndiceValoresActual(indicesValores, valores)){
+			subIndiceValoresActual = indiceValoresActual;
+			indiceValoresActual--;
+			indicesValores[indiceValoresActual] =  indicesValores[indiceValoresActual] + 1;
+			indicesValores = reiniciarIndicesALaDerecha(indiceValoresActual, indicesValores);
+		}
+		else if(indicesValores[subIndiceValoresActual] + 1 == valores[subIndiceValoresActual].length)
+		{
+			subIndiceValoresActual --;
+			indicesValores[subIndiceValoresActual] =  indicesValores[subIndiceValoresActual] + 1;
+			indicesValores = reiniciarIndicesALaDerecha(subIndiceValoresActual, indicesValores);
+			
+		}
+		else{
+			indicesValores = aumentarIndicesALaDerecha(subIndiceValoresActual, indicesValores,valores);
+		}
+		return indicesValores;
+	}
+	
+	public int[] reiniciarIndicesALaDerecha(int posicion, int[] indicesValores)
+	{
+		for(int i = posicion +1; i < indicesValores.length; i++){
+			indicesValores[i] = 0;
+		}
+		subIndiceValoresActual = indicesValores.length - 1;
+		return indicesValores;
+	}
+
+	public int[]aumentarIndicesALaDerecha(int posicion, int[] indicesValores, String[][]valores)
+	{	
+		for (int max = indicesValores.length - 1; max >= posicion; max--){
+			if(indicesValores[max] < (valores[max].length-1))
+			{
+				indicesValores[max] =  indicesValores[max] + 1;
+				return indicesValores;
+			}
+		}
+		
+		return indicesValores;
+	}
+	
+	
+	public boolean esElUltimo(int[] indicesValores, String [] [] valores){
+		boolean terminar = true;
+		
+		for(int i = 0; i < indicesValores.length; i++)
+		{
+			if(indicesValores[i] < (valores[i].length-1))
+				return terminar = false;
+		}
+		
+		return terminar;
+	}
+	 
+	
+	public boolean disminuirIndiceValoresActual(int[] indicesValores, String [] [] valores){
+		boolean terminar = true;
+		
+		for(int i = indicesValores.length - 1 ; i >= indiceValoresActual; i--)
+		{
+			if(indicesValores[i] < (valores[i].length-1))
+				return terminar = false;
+		}
+		return terminar;
+	}
+	
 	
 	public boolean esUnaPregunta(){
 		//boolean resultado = IntStream.of(caracteristicas).anyMatch(x -> x == CaracteristicaDeLaFrase.esUnaPregunta);
@@ -354,28 +446,35 @@ public abstract class Frase
 	}
 	
 	public boolean soloTieneEnum(){
-		
-		boolean tieneSoloEnum = true;
-		for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
-			
-		
-			ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
-			//replace con la clase Dia
-			
-			
-			for (int i = 0; i < placeholders.size();i++){
-				String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
-
-				if(!tipo.equals(Constantes.VARIABLE_TIPO_ENUM))
-					return tieneSoloEnum = false;		
-				
+		boolean tieneSoloEnum = false;
+		if(this.hayFrasesConPlaceholders()){
+			tieneSoloEnum = true;
+			for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+				ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+					for (int i = 0; i < placeholders.size();i++){
+						String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
+						if(!tipo.equals(Constantes.VARIABLE_TIPO_ENUM))
+							return tieneSoloEnum = false;							
+				}
 			}
-		
 		}
-		
 		return tieneSoloEnum;
 	}
 	
+	public int totalPlaceholderEnum(){
+		int totalEnum = 0;
+		if(this.hayFrasesConPlaceholders()){
+			for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
+				ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+				for (int i = 0; i < placeholders.size();i++){
+					String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable();
+					if(tipo.equals(Constantes.VARIABLE_TIPO_ENUM))
+						return totalEnum++;							
+				}
+			}
+		}
+		return totalEnum;
+	}
 	
 	/*public String[] getTextosDeLaFrase() {
 		return textosDeLaFrase;

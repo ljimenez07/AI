@@ -185,7 +185,7 @@ public class ComponentesDeLaFrase implements Cloneable{
 	public Sonido getAudio(String key) {
 		return audios.get(key);
 	}
-
+	
 	public void setAudio(String key, Sonido audio) {
 		if(audios != null && audios.containsKey(key))
 			this.audios.replace(key, audio);
@@ -198,6 +198,10 @@ public class ComponentesDeLaFrase implements Cloneable{
 
 	public String getTextoAUsarParaGenerarElAudio() {
 		return textoAUsarParaGenerarElAudio;
+	}
+
+	public void setTextoAUsarParaGenerarElAudio(String texto) {
+		textoAUsarParaGenerarElAudio = texto;
 	}
 
 	public Vineta getVineta() {
@@ -220,6 +224,10 @@ public class ComponentesDeLaFrase implements Cloneable{
 			e.printStackTrace();
 		}
 		return this;
+	}
+	
+	public Hashtable<String, Sonido> getAudios(){
+		return audios;
 	}
 	
 	public static void main(String argv[]) {
