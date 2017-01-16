@@ -10,6 +10,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
+import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
 import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
@@ -30,12 +32,12 @@ public abstract class Contenido
 	//private ArrayList<Intencion> intenciones = new ArrayList<Intencion>();
 	private ArrayList<WorkSpace> miWorkSpaces = new ArrayList<WorkSpace>();
 	private String pathFileXML;
-	private String modoDeTrabajo;
+	private ModoDeLaVariable modoDeTrabajo;
 	private ArrayList<Tema> misTemas = new ArrayList<>();
 	private Hashtable<String, DependenciasDeLaFrase> misDependencias = new Hashtable<String, DependenciasDeLaFrase>();
 	
 	protected Contenido(String path){
-		modoDeTrabajo = Constantes.MODO_REAL;
+		modoDeTrabajo = Constantes.ModoDeLaVariable.REAL;
 		pathFileXML = path;
 		File archivoDeConfiguracion = archivoDeConfiguracion(path);
 		// TODO Ver que el archivo existe, sino return error
@@ -87,7 +89,7 @@ public abstract class Contenido
 		return this;
 	}
 	
-	public String obtenerModoDeTrabajo(){
+	public ModoDeLaVariable obtenerModoDeTrabajo(){
 		return modoDeTrabajo;
 	}
 	
@@ -122,9 +124,14 @@ public abstract class Contenido
 			// WorkSpaces
 			try{
 				Element root = doc.getDocumentElement();
-				modoDeTrabajo = root.getAttribute("modo");
+				String miModo = root.getAttribute("modo");
+				if(miModo.equals("REAL"))
+					modoDeTrabajo = ModoDeLaVariable.REAL;
+				else
+					modoDeTrabajo = ModoDeLaVariable.PRUEBA;
+				
 				System.out.println("Modo de trabajo: "+modoDeTrabajo);
-				if(! modoDeTrabajo.equals(Constantes.MODO_FAKE) && ! modoDeTrabajo.equals(Constantes.MODO_REAL) && ! modoDeTrabajo.equals(Constantes.MODO_TEST))
+				if(! modoDeTrabajo.equals(Constantes.ModoDeLaVariable.PRUEBA) && ! modoDeTrabajo.equals(Constantes.ModoDeLaVariable.REAL))
 					throw new ChatException("Verifique que el modo de trabajo sea valido (Fake/Real/Test)");
 			}catch(Exception e){
 				throw new ChatException("Error cargando el modo de trabajo. "+e.getMessage());
@@ -203,7 +210,7 @@ public abstract class Contenido
 							valores[i] = valorPorDefecto;
 						}
 					}
-					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
+					VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, obtenerTipoDeVariable(tipoValor)));
 				}
 			}catch(Exception e){
 				System.out.println("Error cargando las variables de ambiente "+e.getMessage());
@@ -284,7 +291,7 @@ public abstract class Contenido
 								String valorPorDefecto = elementoValor.getTextContent();
 								valores[i] = valorPorDefecto;
 							}
-							VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, tipoValor));
+							VariablesDeContexto.getInstance().agregarVariableAMiContexto(new Variable(nombre, valores, obtenerTipoDeVariable(tipoValor)));
 
 						}
 					}catch(Exception e){
@@ -292,8 +299,12 @@ public abstract class Contenido
 						 
 					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
 					
-					Element vinetas = (Element) eElement.getElementsByTagName("vinetas").item(0);
-					String[] vinetasDeLaFrase = obtenerFrasesPorTipo(vinetas, "vineta");
+					Element vinetas = null;
+					String[] vinetasDeLaFrase = null;
+					try{
+						vinetas = (Element) eElement.getElementsByTagName("vinetas").item(0);
+						vinetasDeLaFrase = obtenerFrasesPorTipo(vinetas, "vineta");
+					}catch(Exception e){}
 					
 					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
 					obtenerFrasesPorTipo(misSinonimosDeLasConjunciones, frases);
@@ -416,6 +427,20 @@ public abstract class Contenido
 			
 		}
 		return misEntidades;
+	}
+	
+	private TiposDesVariables obtenerTipoDeVariable(String tipo){
+		if(tipo.equals(Constantes.VARIABLE_TIPO_CONTEXTO)){
+			return TiposDesVariables.CONTEXTO;
+		}else if(tipo.equals(Constantes.VARIABLE_TIPO_NEGOCIO)){
+			return TiposDesVariables.NEGOCIO;
+		}else if(tipo.equals(Constantes.VARIABLE_TIPO_USUARIO)){
+			return TiposDesVariables.USUARIO;
+		}else if(tipo.equals(Constantes.VARIABLE_TIPO_ENUM)){
+			return TiposDesVariables.ENUM;
+		}
+		
+		throw new ChatException(String.format("El tipo de variable '%s' no se encuentra definida en el sistema.", tipo));
 	}
 	
 	private Intenciones obtenerIntenciones(Element condition){

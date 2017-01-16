@@ -96,7 +96,6 @@ public class Agente extends Participante{
 		respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreDeWorkspaceActual), miContextos.get(nombreDeWorkspaceActual));
 		respuesta.llamarAWatson(respuestaDelCliente);
 
-		
 		noEntendiLaUltimaRespuesta = (! respuesta.entendiLaRespuesta()) && (frase.esMandatorio()) && 
 				(numeroDeIntentosActualesEnRepetirUnaPregunta != Constantes.MAXIMO_DE_INTENTOS_OPCIONALES);
 		if(noEntendiLaUltimaRespuesta){
