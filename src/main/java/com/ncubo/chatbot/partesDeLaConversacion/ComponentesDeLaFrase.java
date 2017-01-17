@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
@@ -67,7 +69,8 @@ public class ComponentesDeLaFrase implements Cloneable{
 		        String key = matcher.group(1);
 		        if( ! existeElPlaceholder(key)){
 		        	System.out.println("Agregando placeholder: "+key);
-		        	placeholders.add(new Placeholder(key));
+		        	Variable miVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(key);
+		        	placeholders.add(new Placeholder(key, miVariable.getTipoVariable()));
 		        	esEstatica = false;
 		        }
 		    }
@@ -87,8 +90,10 @@ public class ComponentesDeLaFrase implements Cloneable{
 		Matcher matcher = buscarExpresionRegular(this.textoAUsarParaGenerarElAudio);	
 		while (matcher.find()){
 	        String key = matcher.group(1);
-	        if( ! existeElPlaceholder(misPlaceholders, key))
-	        	misPlaceholders.add(new Placeholder(key));
+	        if( ! existeElPlaceholder(misPlaceholders, key)){
+	        	Variable miVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(key);
+	        	misPlaceholders.add(new Placeholder(key, miVariable.getTipoVariable()));
+	        }
 	    }
 		return misPlaceholders;
 	}
@@ -98,9 +103,11 @@ public class ComponentesDeLaFrase implements Cloneable{
 		Matcher matcher = buscarExpresionRegular(this.condicion);	
 		while (matcher.find()){
 	        String key = matcher.group(1);
-	        if( ! existeElPlaceholder(misPlaceholders, key))
-	        	misPlaceholders.add(new Placeholder(key));
-	    }
+	        if( ! existeElPlaceholder(misPlaceholders, key)){
+	        	Variable miVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(key);
+	        	misPlaceholders.add(new Placeholder(key, miVariable.getTipoVariable()));
+	        }
+	     }
 		return misPlaceholders;
 	}
 	

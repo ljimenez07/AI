@@ -8,7 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.ncubo.chatbot.configuracion.Constantes;
-import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
+import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
 import com.ncubo.evaluador.interprete.libraries.LanguageException;
 import com.ncubo.evaluador.libraries.Objeto;
 
@@ -26,7 +26,7 @@ public class Conectores {
 	
 	public Conectores(){}
 	
-	public boolean existeLaVariable(String valorDeLaVariable, TiposDesVariables tipoDeLaVariable){
+	public boolean existeLaVariable(String valorDeLaVariable, TiposDeVariables tipoDeLaVariable){
 		boolean resultado = false;
 		String nombreDeLaVariable = Constantes.NOMBRE_VARIABLE;
 		String tipo = Constantes.TIPO_VARIABLE;
@@ -45,7 +45,7 @@ public class Conectores {
 		return resultado;
 	}
 	
-	public String obtenerElNombreDeLaClase(String valorDeLaVariable, TiposDesVariables tipoDeLaVariable){
+	public String obtenerElNombreDeLaClase(String valorDeLaVariable, TiposDeVariables tipoDeLaVariable){
 		String nombreDeLaVariable = Constantes.NOMBRE_VARIABLE;
 		String tipo = Constantes.TIPO_VARIABLE;
 		String resultado = "";
@@ -222,7 +222,7 @@ public class Conectores {
 		//conectores.obtenerConstructores();
 		//conectores.obtenerModificadoresDeLasVariables();
 		//conectores.obtenerTodosLosValoresDeLasVariables();
-		System.out.println(conectores.existeLaVariable("saldoAgua", TiposDesVariables.NEGOCIO));
+		System.out.println(conectores.existeLaVariable("saldoAgua", TiposDeVariables.NEGOCIO));
 		String[] parametros = new String[1];
 		parametros[0] = "1234";
 		System.out.println("El resultado es: "+conectores.ejecutarElMetodoEvaluar("saldoAgua"));

@@ -4,7 +4,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.ncubo.chatbot.configuracion.Constantes;
-import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
+import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
 import com.ncubo.evaluador.main.Evaluador;
 
 public class AdministradorDeVariablesDeContexto {
@@ -24,7 +24,7 @@ public class AdministradorDeVariablesDeContexto {
 		while(keys.hasMoreElements()){
 			String key = keys.nextElement();
 			Variable variable = variables.get(key);
-			if( ! variable.getValorDeLaVariable().equals("") && variable.getTipoVariable().equals(TiposDesVariables.CONTEXTO)){
+			if( ! variable.getValorDeLaVariable().equals("") && variable.getTipoVariable().equals(TiposDeVariables.CONTEXTO)){
 				agregarVariableDeContexto(variable.getNombre(), variable.getValorDeLaVariable()[0]);
 			}
 		}

@@ -11,7 +11,7 @@ import org.w3c.dom.NodeList;
 
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
-import com.ncubo.chatbot.configuracion.Constantes.TiposDesVariables;
+import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
 import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
@@ -429,15 +429,15 @@ public abstract class Contenido
 		return misEntidades;
 	}
 	
-	private TiposDesVariables obtenerTipoDeVariable(String tipo){
+	private TiposDeVariables obtenerTipoDeVariable(String tipo){
 		if(tipo.equals(Constantes.VARIABLE_TIPO_CONTEXTO)){
-			return TiposDesVariables.CONTEXTO;
+			return TiposDeVariables.CONTEXTO;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_NEGOCIO)){
-			return TiposDesVariables.NEGOCIO;
+			return TiposDeVariables.NEGOCIO;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_USUARIO)){
-			return TiposDesVariables.USUARIO;
+			return TiposDeVariables.USUARIO;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_ENUM)){
-			return TiposDesVariables.ENUM;
+			return TiposDeVariables.ENUM;
 		}
 		
 		throw new ChatException(String.format("El tipo de variable '%s' no se encuentra definida en el sistema.", tipo));

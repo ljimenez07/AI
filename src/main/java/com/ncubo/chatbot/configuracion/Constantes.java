@@ -3,7 +3,7 @@ package com.ncubo.chatbot.configuracion;
 public class Constantes {
 	
 	public enum ModoDeLaVariable{ REAL, PRUEBA }
-	public enum TiposDesVariables{ CONTEXTO, USUARIO, NEGOCIO, ENUM }
+	public enum TiposDeVariables{ CONTEXTO, USUARIO, NEGOCIO, ENUM }
 	
 	// Watson IBM f63e42df-1405-4ea7-8bff-7556a2586828
 	public static String WATSON_CONVERSATION_ID = "8af4d07d-d2b5-4a32-804c-6a0e2749ffed";
