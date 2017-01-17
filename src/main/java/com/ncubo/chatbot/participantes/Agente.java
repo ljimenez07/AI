@@ -86,6 +86,10 @@ public class Agente extends Participante{
 		miHistorico.agregarHistorialALaConversacion(miSalida);
 	}
 	
+	public HistoricosDeConversacion verMiHistorico(){
+		return miHistorico;
+	}
+	
 	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
 		try {
 			miBitacora.insertar(idSesion, idCliente, miHistorico);

@@ -96,7 +96,7 @@ public class BitacoraDao {
 	            bais = new ByteArrayInputStream(rs.getBytes(atributosDeLaBitacoraDao.CONVERSACION.toString()));
 	            ins = new ObjectInputStream(bais);
 	            resultado = (HistoricosDeConversacion)ins.readObject();
-	            System.out.println("Object in value :"+resultado.verHistorialDeLaConversacion().get(0).getElTextoQueDijoElFramework());
+	            System.out.println("Object in value :"+resultado.verHistorialDeLaConversacion().get(0).idFraseQueUso);
 	            ins.close();
             }
             catch (Exception e) {

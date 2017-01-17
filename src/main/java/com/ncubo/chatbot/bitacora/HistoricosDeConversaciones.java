@@ -24,6 +24,18 @@ public class HistoricosDeConversaciones {
 		return historicoDeMisConversaciones.containsKey(idSesion);
 	}
 	
+	private void agregarUnHistoricoALaConversacion(String idSesion, HistoricosDeConversacion historico){
+		synchronized(historicoDeMisConversaciones){
+			historicoDeMisConversaciones.put(idSesion, historico);
+		}
+	}
+	
+	public void agregarHistorialALaConversacion(String idSesion, HistoricosDeConversacion historico){
+		if(! existeElHistoricoDeLaConversacion(idSesion)){
+			agregarUnHistoricoALaConversacion(idSesion, historico);
+		}
+	}
+	
 	public HistoricosDeConversacion verElHistoricoDeUnaConversacion(String idSesion){
 		HistoricosDeConversacion miHistorico = null;
 	
