@@ -27,7 +27,7 @@ public class Respuesta {
 	private String fraseActivada;
 	private List<String> nombresDeOracionesAfirmativas;
 	private boolean hayOracionesAfirmativas;
-	private String loQueElClienteDijo;
+	private String loQueElClienteDijo = "";
 	private boolean hayProblemasEnLaComunicacionConWatson;
 	
 	public Respuesta(Frase frase, ConversationWatson conversacion, String context){

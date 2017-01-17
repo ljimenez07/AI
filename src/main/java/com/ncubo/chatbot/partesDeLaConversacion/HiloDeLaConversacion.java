@@ -1,10 +1,15 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 // Hilo de la converzacion actual - Se puede borrar cuando la seccion caduca
-public class HiloDeLaConversacion {
+public class HiloDeLaConversacion implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 2467563711251769111L;
 	private Temas temasYaDichos = new Temas();
 	private Temas temasYaDichosQueNoPuedoRepetir = new Temas();
 	private Temas temasYaDichosQueNoPuedoRepetirParaWorkspaceEspecifico = new Temas();
