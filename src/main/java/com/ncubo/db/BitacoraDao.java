@@ -1,10 +1,18 @@
 package com.ncubo.db;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+
+import com.ncubo.chatbot.bitacora.HistoricoDeLaConversacion;
+import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
 
 public class BitacoraDao {
 
@@ -31,7 +39,7 @@ public class BitacoraDao {
 		}
 	}
 	
-	public void insertar(String idSesion, String idUsuarioenBA, String historicoDeLaConversacion) throws ClassNotFoundException, SQLException{
+	public void insertar(String idSesion, String idUsuarioenBA, HistoricosDeConversacion historicoDeLaConversacion) throws ClassNotFoundException, SQLException{
 		
 		// insert into bitacora_de_conversaciones (id_sesion, id_usuario, fecha, conversacion, esConversacionEspecifica) values ("1234", "1234", now(), "", 0);
 		String query = "INSERT INTO "+NOMBRE_TABLA_BITACORA
@@ -46,15 +54,28 @@ public class BitacoraDao {
 		stmt.setString(1, idSesion);
 		stmt.setString(2, idUsuarioenBA);
 		stmt.setTimestamp(3, miFechaActual);
-		stmt.setBytes(4, historicoDeLaConversacion.getBytes());
+		
+		ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try {
+        	ObjectOutputStream oos = new ObjectOutputStream(bos);
+			oos.writeObject(historicoDeLaConversacion);
+			oos.flush();
+	        oos.close();
+	        bos.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+        byte[] data = bos.toByteArray();
+		stmt.setObject(4, data);
 		
 		stmt.executeUpdate();
 		
 		ConexionALaDB.getInstance().closeConBD();
 	}
 	
-	public String buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException{
-		String resultado = "";
+	public HistoricosDeConversacion buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException{
+		HistoricosDeConversacion resultado = null;
 		
 		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
 				atributosDeLaBitacoraDao.ID_SESION+" = ? and "+atributosDeLaBitacoraDao.FECHA+" = ?;";
@@ -68,9 +89,19 @@ public class BitacoraDao {
 		ResultSet rs = stmt.executeQuery();
 		
 		if( rs.next() )
-		{
-			byte[] blob = rs.getBytes(atributosDeLaBitacoraDao.CONVERSACION.toString());
-			resultado = new String(blob);
+		{			
+			ByteArrayInputStream bais;
+            ObjectInputStream ins;
+            try {
+	            bais = new ByteArrayInputStream(rs.getBytes(atributosDeLaBitacoraDao.CONVERSACION.toString()));
+	            ins = new ObjectInputStream(bais);
+	            resultado = (HistoricosDeConversacion)ins.readObject();
+	            System.out.println("Object in value :"+resultado.verHistorialDeLaConversacion().get(0).getElTextoQueDijoElFramework());
+	            ins.close();
+            }
+            catch (Exception e) {
+            	e.printStackTrace();
+            }
 		}
 		
 		return resultado;

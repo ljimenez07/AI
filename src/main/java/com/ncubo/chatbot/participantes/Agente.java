@@ -1,5 +1,6 @@
 package com.ncubo.chatbot.participantes;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -11,12 +12,15 @@ import org.json.JSONObject;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
+import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
+import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.watson.ConversationWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
+import com.ncubo.db.BitacoraDao;
 
 // Es como el watson de Ncubo
 public class Agente extends Participante{
@@ -38,6 +42,8 @@ public class Agente extends Participante{
 	private boolean abordarElTemaPorNOLoEntendiEspecifico = false;
 	private boolean abordarElTemaPorNOLoEntendi = false;
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
+	private HistoricosDeConversacion miHistorico = new HistoricosDeConversacion();
+	private BitacoraDao miBitacora;
 	
 	public Agente(ArrayList<WorkSpace> miWorkSpaces){
 		this.noEntendiLaUltimaRespuesta = true;
@@ -51,6 +57,7 @@ public class Agente extends Participante{
 		this.numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico = 0;
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
 		this.inicializarContextos();
+		miBitacora = new BitacoraDao();
 	}
 	
 	public Agente(){
@@ -72,6 +79,25 @@ public class Agente extends Participante{
 		
 		if(nombreDelWorkSpaceGeneral == ""){
 			throw new ChatException("No existe un workspace general en para conectarse a Watson IBM");
+		}
+	}
+	
+	public void agregarHistorico(Salida miSalida){
+		miHistorico.agregarHistorialALaConversacion(miSalida);
+	}
+	
+	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
+		try {
+			miBitacora.insertar(idSesion, idCliente, miHistorico);
+			return true;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
 		}
 	}
 	

@@ -1,9 +1,16 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
-public class Salida {
+public class Salida implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8818069211558314639L;
+	
 	private String miTexto;
 	private Sonido miSonido;
 	private ArrayList<Vineta> misVinetas;
@@ -11,6 +18,7 @@ public class Salida {
 	private Tema temaActual;
 	private Frase fraseActual;
 	private boolean seTerminoElChat;
+	private Date miFecha;
 	
 	public Salida(){
 		miTexto = "";
@@ -19,6 +27,7 @@ public class Salida {
 		miRespuesta = null;
 		temaActual = null;
 		seTerminoElChat = false;
+		miFecha = new Date();
 	}
 	
 	public void escribir(String texto, Respuesta respuesta, Tema tema, Frase frase){
