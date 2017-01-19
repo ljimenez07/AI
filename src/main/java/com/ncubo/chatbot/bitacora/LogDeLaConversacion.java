@@ -9,24 +9,24 @@ import org.json.JSONObject;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 
 @SuppressWarnings("serial")
-public class LaConversacion implements Serializable{
+public class LogDeLaConversacion implements Serializable{
 
-	public ArrayList<HistoricoDeLaConversacion> historico = new ArrayList<HistoricoDeLaConversacion>();
+	public ArrayList<Dialogo> historico = new ArrayList<Dialogo>();
 	
-	public LaConversacion(){}
+	public LogDeLaConversacion(){}
 	
 	public void agregarHistorialALaConversacion(Salida miSalida){
-		historico.add(new HistoricoDeLaConversacion(miSalida));
+		historico.add(new Dialogo(miSalida));
 	}
 	
-	public ArrayList<HistoricoDeLaConversacion> verHistorialDeLaConversacion(){
+	public ArrayList<Dialogo> verHistorialDeLaConversacion(){
 		return historico;
 	}
 
 	public String verMiHistorialDeLaConversacion(){
 		JSONArray respuesta = new JSONArray();
 		int contador = 0;
-		for(HistoricoDeLaConversacion historico: this.verHistorialDeLaConversacion()){
+		for(Dialogo historico: this.verHistorialDeLaConversacion()){
 			JSONObject conversacion = new JSONObject();
 			try {
 				conversacion.put("conversacion", contador);

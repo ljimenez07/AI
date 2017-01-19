@@ -10,7 +10,7 @@ import com.ncubo.db.EstadisticasPorConversacionDao;
 
 public class HistoricosDeConversaciones {
 
-	private final static Hashtable<String, LaConversacion> historicoDeMisConversaciones = new Hashtable<String, LaConversacion>();
+	private final static Hashtable<String, LogDeLaConversacion> historicoDeMisConversaciones = new Hashtable<String, LogDeLaConversacion>();
 	
 	private BitacoraDao miBitacora;
 	private EstadisticasPorConversacionDao estadisticasPorConversacion;
@@ -24,20 +24,20 @@ public class HistoricosDeConversaciones {
 		return historicoDeMisConversaciones.containsKey(idSesion);
 	}
 	
-	private void agregarUnHistoricoALaConversacion(String idSesion, LaConversacion historico){
+	private void agregarUnHistoricoALaConversacion(String idSesion, LogDeLaConversacion historico){
 		synchronized(historicoDeMisConversaciones){
 			historicoDeMisConversaciones.put(idSesion, historico);
 		}
 	}
 	
-	public void agregarHistorialALaConversacion(String idSesion, LaConversacion historico){
+	public void agregarHistorialALaConversacion(String idSesion, LogDeLaConversacion historico){
 		if(! existeElHistoricoDeLaConversacion(idSesion)){
 			agregarUnHistoricoALaConversacion(idSesion, historico);
 		}
 	}
 	
-	public LaConversacion verElHistoricoDeUnaConversacion(String idSesion){
-		LaConversacion miHistorico = null;
+	public LogDeLaConversacion verElHistoricoDeUnaConversacion(String idSesion){
+		LogDeLaConversacion miHistorico = null;
 	
 		if(existeElHistoricoDeLaConversacion(idSesion)){
 			miHistorico = historicoDeMisConversaciones.get(idSesion);
