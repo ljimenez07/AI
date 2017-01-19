@@ -226,8 +226,7 @@ public abstract class Frase
 		this.ipPublicaAMostrarLosAudioTTS = ipPublica;
 		
 		if (sePuedeDecirEnVozAlta()){
-			
-			int contadorDeSinonimos = 0;
+			int contadorSinonimos = 0;
 			for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 				if(miFrase.esEstatica()){
 					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
@@ -235,68 +234,62 @@ public abstract class Frase
 					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudio)){
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, "audio");
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, "audio",contadorSinonimos);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					String miIp = ipPublica+nombreDelArchivo;
 					miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
 				}
-				contadorDeSinonimos ++;
-			}
-			
-			if(soloTieneEnum()){
-				contadorDeSinonimos = 0;
-				generarAudioEnums(this.misSinonimosDeLaFrase, ipPublica, contadorDeSinonimos);
-				
+				if(soloTieneEnum(miFrase)){
+					generarAudioEnums(miFrase, ipPublica);	
+				}
+				contadorSinonimos++;
 			}
 		}
 	}
 	
 	
-	public boolean generarAudioEnums(ArrayList<ComponentesDeLaFrase> misSinonimos, String ipPublica, int contadorSinonimos){
+	public boolean generarAudioEnums(ComponentesDeLaFrase miFrase, String ipPublica){
 		
 		int totalCombinaciones = 1;
 		boolean generados = false; 
-		for(ComponentesDeLaFrase miFrase: misSinonimos){
 			
-			ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
-			final List<List<Object>> c = new ArrayList<>(placeholders.size());
-			for(Placeholder placeholder: placeholders){
-				final List<Object> lista = new ArrayList<Object>();
-				String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
-				totalCombinaciones = totalCombinaciones * valores.length;
-				for(String valor: valores){	
+		ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+		final List<List<Object>> c = new ArrayList<>(placeholders.size());
+		for(Placeholder placeholder: placeholders){
+			final List<Object> lista = new ArrayList<Object>();
+			String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
+			totalCombinaciones = totalCombinaciones * valores.length;
+		for(String valor: valores){	
 					lista.add(valor);
+			}
+			c.add(lista);
+		}
+		
+		if(totalCombinaciones <= 50){
+			generados = true; 
+			final List<List<Object>> m = this.combine(c);
+		   
+		    for (List<Object> valores:m){
+		    	String textoAUsarParaGenerarAudio = miFrase.getTextoAUsarParaGenerarElAudio();
+		    	 int contadorValores = 0;	
+		    	 String idAudio = "";
+		    	for(Placeholder placeholder: miFrase.obtenerLosPlaceholders()){
+					textoAUsarParaGenerarAudio = textoAUsarParaGenerarAudio.replace("${"+placeholder.getNombreDelPlaceholder()+"}",  valores.get(contadorValores).toString());
+					idAudio = idAudio + "-" + valores.get(contadorValores);
+					contadorValores++;
+		    	}
+		    	
+		    	String nombreDelArchivo = "";
+				if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoAUsarParaGenerarAudio)){
+					nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false);
+				}else{
+					nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, idAudio);
+					nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 				}
-				c.add(lista);
-			}
-			
-			if(totalCombinaciones <= 50){
-				generados = true; 
-				final List<List<Object>> m = this.combine(c);
-			   
-			    for (List<Object> valores:m){
-			    	String textoAUsarParaGenerarAudio = miFrase.getTextoAUsarParaGenerarElAudio();
-			    	 int contadorValores = 0;	
-			    	 String idAudio = "";
-			    	for(Placeholder placeholder: miFrase.obtenerLosPlaceholders()){
-						textoAUsarParaGenerarAudio = textoAUsarParaGenerarAudio.replace("${"+placeholder.getNombreDelPlaceholder()+"}",  valores.get(contadorValores).toString());
-						idAudio = idAudio + "-" + valores.get(contadorValores);
-						contadorValores++;
-			    	}
-			    	
-			    	String nombreDelArchivo = "";
-					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoAUsarParaGenerarAudio)){
-						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false);
-					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, idAudio);
-						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
-					}
-					String miIp = ipPublica+nombreDelArchivo;
-					miFrase.setAudio(idAudio,new Sonido(miIp, textoAUsarParaGenerarAudio));
-			    	contadorSinonimos++;
-			    }
-			}
+				String miIp = ipPublica+nombreDelArchivo;
+				miFrase.setAudio(idAudio,new Sonido(miIp, textoAUsarParaGenerarAudio));
+		    }
 		}
 		return generados;
 	}
@@ -405,6 +398,20 @@ public abstract class Frase
 						if(!tipo.equals(TiposDeVariables.ENUM.name()))
 							return tieneSoloEnum = false;							
 				}
+			}
+		}
+		return tieneSoloEnum;
+	}
+	
+	public boolean soloTieneEnum(ComponentesDeLaFrase miFrase){
+		boolean tieneSoloEnum = false;
+		if(this.hayFrasesConPlaceholders()){
+			tieneSoloEnum = true;
+			ArrayList<Placeholder> placeholders = miFrase.obtenerLosPlaceholders();
+					for (int i = 0; i < placeholders.size();i++){
+						String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable().name();
+						if(!tipo.equals(TiposDeVariables.ENUM.name()))
+							return tieneSoloEnum = false;							
 			}
 		}
 		return tieneSoloEnum;

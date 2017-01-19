@@ -9,7 +9,7 @@ import java.util.Hashtable;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
-import com.ncubo.chatbot.bitacora.LaConversacion;
+import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
@@ -372,7 +372,7 @@ public class Conversaciones {
 	}
 	
 	public String verElHistoricoDeLaConversacion(String idSesion, String fecha){
-		LaConversacion miHistorico = null;
+		LogDeLaConversacion miHistorico = null;
 		
 		if(existeLaConversacion(idSesion)){
 			miHistorico = misConversaciones.get(idSesion).obtenerAgenteDeLaMuni().verMiHistorico();

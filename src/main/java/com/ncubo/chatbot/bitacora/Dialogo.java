@@ -6,7 +6,7 @@ import java.util.Date;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 
 // http://www.easywayserver.com/java/save-serializable-object-in-java/
-public class HistoricoDeLaConversacion implements Serializable{
+public class Dialogo implements Serializable{
 
 	/**
 	 * 
@@ -21,7 +21,7 @@ public class HistoricoDeLaConversacion implements Serializable{
 	private String loQueDijoElParticipante = "";
 	private Date laFechaEnQueSeCreo;
 	
-	public HistoricoDeLaConversacion(Salida miSalida){
+	public Dialogo(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
 		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).obtenerContenido();

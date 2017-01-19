@@ -5,3 +5,4 @@
 .springBeans
 /target/
 /.apt_generated/
+/bin/
