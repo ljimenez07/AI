@@ -2,6 +2,8 @@ package com.ncubo.logicaDeLasConversaciones;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -19,10 +21,10 @@ import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 public class Conversaciones {
 
-	// key puede ser el id del usuario o el id de la seccion
 	private final static Hashtable<String, Conversacion> misConversaciones = new Hashtable<String, Conversacion>();
 	private final static Hashtable<String, Cliente> misClientes = new Hashtable<String, Cliente>();
 	private static Temario miTemario;
@@ -30,9 +32,12 @@ public class Conversaciones {
 	private ConsultaDao consultaDao;
 	private final Conectores misConectores = new Conectores();
 	private HistoricosDeConversaciones historicoDeConversaciones;
+	private HiloParaBorrarConversacionesInactivas hiloParaBorrarConversacionesInactivas;
 	
 	public Conversaciones(){
 		historicoDeConversaciones = new HistoricosDeConversaciones();
+		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas();
+		hiloParaBorrarConversacionesInactivas.start();
 	}
 	
 	private String crearUnaNuevoConversacion(Usuario usuario, AgenteDeLaConversacion agente) throws Exception{
@@ -175,6 +180,35 @@ public class Conversaciones {
 	
 	public String verMiTemario(){
 		return miTemario.verMiTemario();
+	}
+	
+	private class HiloParaBorrarConversacionesInactivas extends Thread{
+		
+		public HiloParaBorrarConversacionesInactivas(){}
+		
+		public void run(){
+			while(true){
+				Enumeration<String> keys = misConversaciones.keys();
+				Date fechaActual = Calendar.getInstance().getTime();
+				while(keys.hasMoreElements()){
+					String key = keys.nextElement();
+					Date ultimoRegistro = misConversaciones.get(key).obtenerLaFechaDelUltimoRegistroDeLaConversacion();
+					long diff = fechaActual.getTime() - ultimoRegistro.getTime();
+					if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 3){ // Si es mayor de 3 dias hay q borrar
+						synchronized(misConversaciones){
+							borrarUnaConversacion(key);
+						}
+					}
+				}
+				
+				try {
+					Thread.sleep(86400000); // Dormir por un dia
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 	
 	private class HiloParaGenerarAudiosEstaticos extends Thread{

@@ -207,6 +207,10 @@ public class Conversacion {
 		return misSalidas;
 	}
 	
+	public Date obtenerLaFechaDelUltimoRegistroDeLaConversacion(){
+		return fechaDelUltimoRegistroDeLaConversacion;
+	}
+	
 	private void decirTemaNoEntendi(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		System.out.println("No entendi bien ...");
 		this.temaActual = this.temario.buscarTema(Constantes.INTENCION_NO_ENTIENDO);
