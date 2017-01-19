@@ -189,6 +189,19 @@ public class AudiosXML {
 		}
 	}*/
 
+
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio, int posicion){
+		String resultado = "";
+		try{
+			if(existeLaFrase(nombreDeLaFrase)){
+				ArrayList<ComponentesDeLaFrase> misSinonimos = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase();
+				resultado = misSinonimos.get(posicion).getAudio(idAudio).url();
+			}
+		}catch(Exception e){
+			resultado = "";
+		}
+		return resultado;
+	}
 	
 	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio){
 		String resultado = "";

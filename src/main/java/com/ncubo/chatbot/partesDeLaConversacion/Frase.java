@@ -226,7 +226,7 @@ public abstract class Frase
 		this.ipPublicaAMostrarLosAudioTTS = ipPublica;
 		
 		if (sePuedeDecirEnVozAlta()){
-			
+			int contadorSinonimos = 0;
 			for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
 				if(miFrase.esEstatica()){
 					String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
@@ -234,7 +234,7 @@ public abstract class Frase
 					if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoParaAudio)){
 						nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false);
 					}else{
-						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, "audio");
+						nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, "audio",contadorSinonimos);
 						nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 					}
 					String miIp = ipPublica+nombreDelArchivo;
@@ -243,6 +243,7 @@ public abstract class Frase
 				if(soloTieneEnum(miFrase)){
 					generarAudioEnums(miFrase, ipPublica);	
 				}
+				contadorSinonimos++;
 			}
 		}
 	}
