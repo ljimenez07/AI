@@ -7,20 +7,15 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import com.ncubo.chatbot.configuracion.Constantes;
-import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
-import com.ncubo.chatbot.partesDeLaConversacion.Placeholder;
 import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
-import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -137,23 +132,25 @@ public class AudiosXML {
 		return misFrases.containsKey(nombreDeLaFrase);
 	}
 	
-	public boolean hayQueGenerarAudios(String nombreDeLaFrase, String textoDeLaFrase, int posicionDeLaFrase){
+	
+	public boolean hayQueGenerarAudios(String nombreDeLaFrase, String textoDeLaFrase){
 		try{
 			if(existeLaFrase(nombreDeLaFrase)){
 				textoDeLaFrase = textoDeLaFrase.trim();
-				String miTexto = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getTextoAUsarParaGenerarElAudio().trim();
-				if(textoDeLaFrase.equals(miTexto))
-					return false;
-				else
-					return true;
+				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
+					String miTexto = miFrase.getTextoAUsarParaGenerarElAudio().trim();
+					if(textoDeLaFrase.equals(miTexto))
+						return false;	
+				}
+				return true;
 			}else{
 				return true;
 			}
 		}catch(Exception e){
 			return true;
 		}
+		
 	}
-	
 	/*public boolean hayQueGenerarAudiosImpertinetes(String nombreDeLaFrase, String textoDeLaFrase, int posicionDeLaFrase){
 		try{
 			if(exiteLaFrase(nombreDeLaFrase)){
@@ -191,12 +188,15 @@ public class AudiosXML {
 			return true;
 		}
 	}*/
+
 	
-	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, int posicionDeLaFrase){
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio){
 		String resultado = "";
 		try{
 			if(existeLaFrase(nombreDeLaFrase)){
-				resultado = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase().get(posicionDeLaFrase).getAudio("audio").url();
+				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase())
+					if(miFrase.getAudios().containsKey(idAudio))
+						resultado = miFrase.getAudio(idAudio).url();
 			}
 		}catch(Exception e){
 			resultado = "";

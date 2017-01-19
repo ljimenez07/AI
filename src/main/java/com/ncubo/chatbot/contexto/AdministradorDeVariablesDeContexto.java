@@ -2,8 +2,6 @@ package com.ncubo.chatbot.contexto;
 
 import java.util.Enumeration;
 import java.util.Hashtable;
-
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
 import com.ncubo.evaluador.main.Evaluador;
 

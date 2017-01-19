@@ -42,16 +42,17 @@ public class Evaluador {
     {
 		Evaluador evaluador = new Evaluador();
 		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
-		evaluador.crearContexto("hora = Sistema();");
+		//evaluador.crearContexto("lista = Lista();");
 		//System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.horaActual() >= 12 && hora.horaActual() < 18;").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.horaActual();").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.mesActual();").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.diaActual();").trim());
 		//System.out.println(evaluador.ejecutaComando("verdad=1<10 && 'abc' != 'z' || !(MAY/2016 == JUN/2017); show verdad;").trim());
-		System.out.println(evaluador.ejecutaComando("show 6,479.25 == 0;"));
+		//System.out.println(evaluador.ejecutaComando("show 6479.25 == 0;"));
 		//System.out.println(evaluador.ejecutaComando("saldo=14,146.53; show saldo > 0;"));
-		
+		System.out.println(evaluador.ejecutaComando("hilera = Hilera('hola');"));
+		System.out.println(evaluador.ejecutaComando("lista = Lista(); x = lista.guardarObjeto(hilera); show x;"));
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
 		

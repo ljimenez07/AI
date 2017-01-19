@@ -33,7 +33,7 @@ public class Conectores {
 		for (Class<?> unaClase : libraries){
 			String nombreDeLaClase = unaClase.getSimpleName();
 			System.out.println("Nombre de la clase: "+nombreDeLaClase);
-			if( ! nombreDeLaClase.contains(Constantes.CLASE_PARAMETROS)){
+			if( ! nombreDeLaClase.contains(Constantes.CLASE_PARAMETROS) && ! nombreDeLaClase.contains("Lista") && ! nombreDeLaClase.contains("Hilera")){
 				Field variableValor = obtenerVariable(nombreDeLaVariable, unaClase);
 				Field variableTipo = obtenerVariable(tipo, unaClase);
 				if(variableValor != null && variableTipo != null){
@@ -51,7 +51,7 @@ public class Conectores {
 		String resultado = "";
 		for (Class<?> unaClase : libraries){
 			String nombreDeLaClase = unaClase.getSimpleName();
-			if( ! nombreDeLaClase.contains(Constantes.CLASE_PARAMETROS)){
+			if( ! nombreDeLaClase.contains(Constantes.CLASE_PARAMETROS) && ! nombreDeLaClase.contains("Lista") && ! nombreDeLaClase.contains("Hilera")){
 				Field variableValor = obtenerVariable(nombreDeLaVariable, unaClase);
 				Field variableTipo = obtenerVariable(tipo, unaClase);
 				if(variableValor != null && variableTipo != null){

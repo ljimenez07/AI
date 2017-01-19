@@ -15,7 +15,7 @@ public class ComponentesDeLaFrase implements Cloneable{
 	private String tipoDeFrase;
 	private String textoDeLaFrase;
 	private String textoAUsarParaGenerarElAudio;
-	private Hashtable<String, Sonido> audios = new Hashtable<String, Sonido>();
+	private Hashtable<String, Sonido> audios = new Hashtable<>();
 	private Vineta vineta = null;
 	private String condicion;
 	private ArrayList<Placeholder> placeholders;
@@ -190,9 +190,7 @@ public class ComponentesDeLaFrase implements Cloneable{
 	}
 	
 	public void setAudio(String key, Sonido audio) {
-		if(audios != null && audios.containsKey(key))
-			this.audios.replace(key, audio);
-		else this.audios.put(key, audio);
+		this.audios.put(key, audio);
 	}
 
 	public String getTipoDeFrase() {

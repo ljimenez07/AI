@@ -22,6 +22,7 @@ public class NuevaInstancia extends Expresion
 	private Objeto instancia;
 	private final TablaDeSimbolos tablaDeSimbolos;
 	private final static String BIBLIOTECA = Constantes.PATH_VARIABLES;
+	//private final static String BIBLIOTECA = "com.ncubo.evaluador.libraries";
 	private final static ClassFinder finder = new ClassFinder(BIBLIOTECA);
 	private final static Class<?>[] libraries = finder.find();
 	

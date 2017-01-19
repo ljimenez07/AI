@@ -45,9 +45,9 @@ public class Lista extends Objeto implements Primitiva
 		lista.remove(objeto);
 	}
 
-	public void guardarObjeto(Objeto objeto) 
+	public boolean guardarObjeto(Objeto objeto) 
 	{
-		lista.add(objeto);
+		return lista.add(objeto);
 	}
 
 	public void guardarLista(ArrayList<Objeto> lista)
