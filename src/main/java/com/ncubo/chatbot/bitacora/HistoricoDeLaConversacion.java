@@ -13,13 +13,13 @@ public class HistoricoDeLaConversacion implements Serializable{
 	 */
 	private static final long serialVersionUID = -3713915913976165952L;
 	
-	public String elTextoQueDijoElFramework = "";
-	public String elAudioQueDijoElFramework = "";
-	public String laVinetaQueMostroElFramework = "";
-	public String idTemaQueUso = "" ;
-	public int idFraseQueUso;
-	public String loQueDijoElParticipante = "";
-	public Date laFechaEnQueSeCreo;
+	private String elTextoQueDijoElFramework = "";
+	private String elAudioQueDijoElFramework = "";
+	private String laVinetaQueMostroElFramework = "";
+	private String idTemaQueUso = "" ;
+	private int idFraseQueUso;
+	private String loQueDijoElParticipante = "";
+	private Date laFechaEnQueSeCreo;
 	
 	public HistoricoDeLaConversacion(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
@@ -94,8 +94,8 @@ public class HistoricoDeLaConversacion implements Serializable{
 	
 	/*public static void main(String argv[]) {
 		HistoricoDeLaConversacion historico = new HistoricoDeLaConversacion();
-		historico.agregarHistorico("Hola!", "{\"textos\":[{\"texto\":\"¡Hola!\",\"audio\":\"\"},{\"texto\":\"¿En qué puedo ayudarte?\",\"audio\":\"\"}]}");
-		historico.agregarHistorico("como estas", "{\"textos\":[{\"texto\":\"¡Hola!, soy tu asesor del Banco Atlántida.\",\"audio\":\"\"},{\"texto\":\"¿En qué puedo ayudarte?\",\"audio\":\"\"}]}");
+		historico.agregarHistorico("Hola!", "{\"textos\":[{\"texto\":\"ï¿½Hola!\",\"audio\":\"\"},{\"texto\":\"ï¿½En quï¿½ puedo ayudarte?\",\"audio\":\"\"}]}");
+		historico.agregarHistorico("como estas", "{\"textos\":[{\"texto\":\"ï¿½Hola!, soy tu asesor del Banco Atlï¿½ntida.\",\"audio\":\"\"},{\"texto\":\"ï¿½En quï¿½ puedo ayudarte?\",\"audio\":\"\"}]}");
 		
 		System.out.println(historico.verMiHistorico());
 	}*/

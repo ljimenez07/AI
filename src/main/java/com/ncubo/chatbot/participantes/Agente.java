@@ -12,7 +12,7 @@ import org.json.JSONObject;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
-import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
+import com.ncubo.chatbot.bitacora.LaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
@@ -42,7 +42,7 @@ public class Agente extends Participante{
 	private boolean abordarElTemaPorNOLoEntendiEspecifico = false;
 	private boolean abordarElTemaPorNOLoEntendi = false;
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
-	private HistoricosDeConversacion miHistorico = new HistoricosDeConversacion();
+	private LaConversacion miHistorico = new LaConversacion();
 	private BitacoraDao miBitacora;
 	
 	public Agente(ArrayList<WorkSpace> miWorkSpaces){
@@ -86,7 +86,7 @@ public class Agente extends Participante{
 		miHistorico.agregarHistorialALaConversacion(miSalida);
 	}
 	
-	public HistoricosDeConversacion verMiHistorico(){
+	public LaConversacion verMiHistorico(){
 		return miHistorico;
 	}
 	

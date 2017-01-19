@@ -12,7 +12,7 @@ import java.sql.SQLException;
 import java.util.Calendar;
 
 import com.ncubo.chatbot.bitacora.HistoricoDeLaConversacion;
-import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
+import com.ncubo.chatbot.bitacora.LaConversacion;
 
 public class BitacoraDao {
 
@@ -39,7 +39,7 @@ public class BitacoraDao {
 		}
 	}
 	
-	public void insertar(String idSesion, String idUsuarioenBA, HistoricosDeConversacion historicoDeLaConversacion) throws ClassNotFoundException, SQLException{
+	public void insertar(String idSesion, String idUsuarioenBA, LaConversacion historicoDeLaConversacion) throws ClassNotFoundException, SQLException{
 		
 		// insert into bitacora_de_conversaciones (id_sesion, id_usuario, fecha, conversacion, esConversacionEspecifica) values ("1234", "1234", now(), "", 0);
 		String query = "INSERT INTO "+NOMBRE_TABLA_BITACORA
@@ -74,8 +74,8 @@ public class BitacoraDao {
 		ConexionALaDB.getInstance().closeConBD();
 	}
 	
-	public HistoricosDeConversacion buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException{
-		HistoricosDeConversacion resultado = null;
+	public LaConversacion buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException{
+		LaConversacion resultado = null;
 		
 		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
 				atributosDeLaBitacoraDao.ID_SESION+" = ? and "+atributosDeLaBitacoraDao.FECHA+" = ?;";
@@ -95,8 +95,8 @@ public class BitacoraDao {
             try {
 	            bais = new ByteArrayInputStream(rs.getBytes(atributosDeLaBitacoraDao.CONVERSACION.toString()));
 	            ins = new ObjectInputStream(bais);
-	            resultado = (HistoricosDeConversacion)ins.readObject();
-	            System.out.println("Object in value :"+resultado.verHistorialDeLaConversacion().get(0).idFraseQueUso);
+	            resultado = (LaConversacion)ins.readObject();
+	            System.out.println("Object in value :"+resultado.verHistorialDeLaConversacion().get(0).getIdFraseQueUso());
 	            ins.close();
             }
             catch (Exception e) {
@@ -158,7 +158,7 @@ public class BitacoraDao {
 			
 			ConexionALaDB.getInstance().closeConBD();
 			
-			return "La actualización se hizo exitosamente.";
+			return "La actualizaciÃ³n se hizo exitosamente.";
 		}catch(Exception e){
 			return "Error al actualizar: "+e.getMessage();
 		}
