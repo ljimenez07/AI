@@ -9,11 +9,11 @@ import org.json.JSONObject;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 
 @SuppressWarnings("serial")
-public class HistoricosDeConversacion implements Serializable{
+public class LaConversacion implements Serializable{
 
 	public ArrayList<HistoricoDeLaConversacion> historico = new ArrayList<HistoricoDeLaConversacion>();
 	
-	public HistoricosDeConversacion(){}
+	public LaConversacion(){}
 	
 	public void agregarHistorialALaConversacion(Salida miSalida){
 		historico.add(new HistoricoDeLaConversacion(miSalida));
@@ -30,8 +30,10 @@ public class HistoricosDeConversacion implements Serializable{
 			JSONObject conversacion = new JSONObject();
 			try {
 				conversacion.put("conversacion", contador);
+				conversacion.put("Fecha", historico.getLaFechaEnQueSeCreo());
 				conversacion.put("idFrase", historico.getIdFraseQueUso());
 				conversacion.put("texto", historico.getElTextoQueDijoElFramework());
+				conversacion.put("Cliente", historico.getLoQueDijoElParticipante());
 				conversacion.put("audio", historico.getElAudioQueDijoElFramework());
 			} catch (JSONException e) {
 				// TODO Auto-generated catch block
