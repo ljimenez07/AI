@@ -17,6 +17,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Saludo;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.Agente;
+import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.estadisticas.Estadisticas;
@@ -27,7 +28,7 @@ public class Conversacion {
 	private Cliente participante;
 	private HiloDeLaConversacion hilo; // Mantiene el contexto, osea todas las intenciones y entidades, sabe que se dijo 
 	private Temario temario;
-	private Agente agente;
+	private AgenteDeLaConversacion agente;
 	private Tema temaActual;
 	private Frase fraseActual = null;
 	private Tema temaActualDelWorkSpaceEspecifico = null;
@@ -35,11 +36,12 @@ public class Conversacion {
 	private boolean hayUnWorkspaceEspecifico = false;
 	private Estadisticas estadisticasTemasTratados;
 	
-	public Conversacion(Temario temario, Cliente participante, ConsultaDao consultaDao){
+	public Conversacion(Temario temario, Cliente participante, ConsultaDao consultaDao, AgenteDeLaConversacion miAgente){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.participante = participante;
-		this.agente = new Agente(temario.contenido().getMiWorkSpaces());
+		//this.agente = new Agente(temario.contenido().getMiWorkSpaces());
+		this.agente = miAgente;
 		this.agente.manifestarseEnFormaOral();
 		this.agente.manifestarseEnFormaVisual();
 		

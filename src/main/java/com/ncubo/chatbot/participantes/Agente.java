@@ -14,16 +14,18 @@ import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.ConversationWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
 
 // Es como el watson de Ncubo
-public class Agente extends Participante{
+public abstract class Agente extends Participante{
 
 	private final ArrayList<WorkSpace> miWorkSpaces;
 	private final Hashtable<String, String> miContextos = new Hashtable<String, String>();
@@ -540,11 +542,6 @@ public class Agente extends Participante{
 		return this.hayIntencionNoAsociadaANingunWorkspace;
 	}
 	
-	public static void main(String[] args) throws Exception {
-		Agente agente = new Agente();
-		agente.respaldarVariablesDeContexto("{system={dialog_request_counter=2.0, dialog_stack=[{dialog_node=node_2_1479401409144}], dialog_turn_counter=2.0}, idTema=quiereMovimientos, conversation_id=95225b89-891d-43a5-9db2-2a190d730343, quiereMovimientos=true, oracionesAfirmativas=[movimientos], nodo=preguntarPorOtraConsulta}");
-	}
-	
 	public boolean seTieneQueAbordarElTema(){
 		return abordarElTemaPorNOLoEntendi;
 	}
@@ -559,5 +556,12 @@ public class Agente extends Participante{
 	
 	public void yaNoSeTieneQueAbordarElTemaEspecifico(){
 		abordarElTemaPorNOLoEntendiEspecifico = false;
+	}
+	
+	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
+	
+	public static void main(String[] args) throws Exception {
+		/*Agente agente = new Agente();
+		agente.respaldarVariablesDeContexto("{system={dialog_request_counter=2.0, dialog_stack=[{dialog_node=node_2_1479401409144}], dialog_turn_counter=2.0}, idTema=quiereMovimientos, conversation_id=95225b89-891d-43a5-9db2-2a190d730343, quiereMovimientos=true, oracionesAfirmativas=[movimientos], nodo=preguntarPorOtraConsulta}");*/
 	}
 }

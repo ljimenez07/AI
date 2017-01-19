@@ -29,7 +29,7 @@ public class HistoricoDeLaConversacion implements Serializable{
 		this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
 		if(miSalida.obtenerLaRespuestaDeIBM() != null)
 			this.loQueDijoElParticipante = miSalida.obtenerLaRespuestaDeIBM().loQueElClienteDijoFue();
-		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();;
+		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();
 	}
 	
 	public String getElTextoQueDijoElFramework() {

@@ -8,12 +8,14 @@ import java.util.ArrayList;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
+import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
+import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 
 public class Consola {
 
-	private static Temario temarioDelBancoAtlantida;
+	private static Temario temarioDePrueba;
 	
 	public Consola(){}
 	
@@ -52,11 +54,11 @@ public class Consola {
 	public static void main(String argv[]) throws Exception {
 		Consola main = new Consola();
 		
-		temarioDelBancoAtlantida = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
+		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
-		Cliente cliente = new Cliente("Ricky", "123456");
-		Conversacion miconversacion = new Conversacion(temarioDelBancoAtlantida, cliente, consultaDao);
+		ClienteDePrueba cliente = new ClienteDePrueba("Ricky", "123456", new Conectores());
+		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
 		
 		String respuesta = "";
 		
