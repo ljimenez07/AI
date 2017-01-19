@@ -346,7 +346,7 @@ public class AudiosXML {
 		
 		for(ComponentesDeLaFrase sinonimoDeFrase: miFrase.obtenerMisSinonimosDeLaFrase()){
 		
-			if(sinonimoDeFrase.tienePlaceholders() && miFrase.soloTieneEnum())
+			if(sinonimoDeFrase.tienePlaceholders() && miFrase.soloTieneEnum(sinonimoDeFrase))
 			{
 				Hashtable<String, Sonido> audios = sinonimoDeFrase.getAudios();
 				
