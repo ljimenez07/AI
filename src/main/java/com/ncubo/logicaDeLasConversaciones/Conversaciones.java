@@ -6,8 +6,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.ncubo.chatbot.audiosXML.AudiosXML;
-import com.ncubo.chatbot.bitacora.HistoricosDeConversacion;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
+import com.ncubo.chatbot.bitacora.LaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
@@ -338,7 +338,7 @@ public class Conversaciones {
 	}
 	
 	public String verElHistoricoDeLaConversacion(String idSesion, String fecha){
-		HistoricosDeConversacion miHistorico = null;
+		LaConversacion miHistorico = null;
 		
 		if(existeLaConversacion(idSesion)){
 			miHistorico = misConversaciones.get(idSesion).obtenerAgenteDeLaMuni().verMiHistorico();
