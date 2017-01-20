@@ -153,7 +153,10 @@ public class Participante{
 					texto = resultado.getTextoDeLaFrase();
 				}else{
 					resultado = pregunta.texto();
-					texto = pregunta.conjuncionParaRepreguntar().getTextoDeLaFrase()+" "+resultado.getTextoDeLaFrase();
+					String laPreguntaEs = resultado.getTextoDeLaFrase();
+					if(laPreguntaEs.isEmpty())
+						laPreguntaEs = resultado.getTextoAUsarParaGenerarElAudio();
+					texto = pregunta.conjuncionParaRepreguntar().getTextoDeLaFrase()+" "+laPreguntaEs;
 				}
 			}		
 			salida.escribir(texto, respuesta, tema, pregunta);

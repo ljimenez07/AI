@@ -21,16 +21,16 @@ import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
 
-public class ConversationWatson {
+public class ConversacionConWarson {
 
 	private ConversationService service;
-	//private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private String usuario;
 	private String contrasena;
 	private String idConversacion;
 	private final static String FECHA_VERSION_WATSON = "2016-09-20";
-	
-	public ConversationWatson(String usuario, String contrasena, String idConversacion) {
+	private String contextoConWatson;
+
+	public ConversacionConWarson(String usuario, String contrasena, String idConversacion) {
 		
 		/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();
@@ -49,10 +49,8 @@ public class ConversationWatson {
 			obj = new JSONObject(jsonData);
 			obj = new JSONObject(obj.get("output").toString());
 			result = obj.getJSONArray("text").toString().replace("[", "").replace("]", "").replace("\"", "");
-			//logger.info("Watson response: "+result);
-		}catch (Exception e){
-			//logger.info("Watson response: "+jsonData);
-		}
+		}catch (Exception e){}
+		
 		return result;
 	}
 	
@@ -120,6 +118,10 @@ public class ConversationWatson {
 		return response;
 	}
 	
+	public MessageResponse enviarAWatson(String msg){
+		return enviarAWatson(msg, contextoConWatson);
+	}
+	
 	public MessageResponse enviarAWatson(String msg, String context){
 		//logger.info("Asking to Watson: "+msg);
 		JSONObject obj = null;
@@ -176,6 +178,14 @@ public class ConversationWatson {
 		}
 		System.out.println("Contexto modificado: "+obj.toString());
 		return obj.toString();
+	}
+	
+	public String getElContextoConWatson() {
+		return contextoConWatson;
+	}
+
+	public void setElContextoConWatson(String contexto) {
+		this.contextoConWatson = contexto;
 	}
 	
 	/*public static void main(String[] args) throws Exception {

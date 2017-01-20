@@ -255,7 +255,7 @@ public class Conversaciones {
 	public String borrarUnaConversacion(String idSesion){
 		historicoDeConversaciones.borrarElHistoricoDeUnaConversacion(idSesion, this.buscarUnClienteApartirDeLaSesion(idSesion));
 		
-		String resultado = "La conversación con id "+idSesion+" no existe.";
+		String resultado = "La conversacion con id "+idSesion+" no existe.";
 		if(existeLaConversacion(idSesion)){
 			synchronized(misConversaciones){
 				try {
@@ -265,7 +265,7 @@ public class Conversaciones {
 					e.printStackTrace();
 				}
 				misConversaciones.remove(idSesion);
-				resultado = "La conversación con id "+idSesion+" se borró exitosamente.";
+				resultado = "La conversacion con id "+idSesion+" se borrado exitosamente.";
 			}
 		}
 		System.out.println(resultado);

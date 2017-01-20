@@ -6,7 +6,7 @@ import java.util.List;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.configuracion.Constantes;
-import com.ncubo.chatbot.watson.ConversationWatson;
+import com.ncubo.chatbot.watson.ConversacionConWarson;
 import com.ncubo.chatbot.watson.Entidades;
 import com.ncubo.chatbot.watson.Intencion;
 import com.ncubo.chatbot.watson.Intenciones;
@@ -16,7 +16,7 @@ public class Respuesta {
 	private Frase miFrase;
 	private Entidades misEntidades;
 	private Intenciones misIntenciones;
-	private ConversationWatson miConversacion;
+	private ConversacionConWarson miConversacion;
 	private String miContexto;
 	
 	private MessageResponse watsonRespuesta;
@@ -30,7 +30,7 @@ public class Respuesta {
 	private String loQueElClienteDijo = "";
 	private boolean hayProblemasEnLaComunicacionConWatson;
 	
-	public Respuesta(Frase frase, ConversationWatson conversacion, String context){
+	public Respuesta(Frase frase, ConversacionConWarson conversacion, String context){
 		this.terminoElTema = false;
 		this.fraseActivada = "";
 		this.hayUnAnythingElse = false;
@@ -46,7 +46,7 @@ public class Respuesta {
 		this.hayProblemasEnLaComunicacionConWatson = false;
 	}
 	
-	public Respuesta(ConversationWatson conversacion, String context){
+	public Respuesta(ConversacionConWarson conversacion, String context){
 		this.terminoElTema = false;
 		this.fraseActivada = "";
 		this.hayUnAnythingElse = false;
@@ -79,7 +79,7 @@ public class Respuesta {
 		procesarLaRespuestaDeWatson(this.miConversacion, watsonRespuesta);
 	}
 	
-	private void procesarLaRespuestaDeWatson(ConversationWatson conversacion, MessageResponse watsonRespuesta){
+	private void procesarLaRespuestaDeWatson(ConversacionConWarson conversacion, MessageResponse watsonRespuesta){
 
 		this.misEntidades = conversacion.entidadesQueWatsonIdentifico(watsonRespuesta);
 		this.misIntenciones = conversacion.probablesIntenciones(watsonRespuesta);

@@ -20,7 +20,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
-import com.ncubo.chatbot.watson.ConversationWatson;
+import com.ncubo.chatbot.watson.ConversacionConWarson;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
 
@@ -28,8 +28,7 @@ import com.ncubo.db.BitacoraDao;
 public abstract class Agente extends Participante{
 
 	private final ArrayList<WorkSpace> miWorkSpaces;
-	private final Hashtable<String, String> miContextos = new Hashtable<String, String>();
-	private final Hashtable<String, ConversationWatson> miWatsonConversaciones = new Hashtable<String, ConversationWatson>();
+	private final Hashtable<String, ConversacionConWarson> miWatsonConversaciones = new Hashtable<String, ConversacionConWarson>();
 	private String nombreDelWorkSpaceGeneral;
 	private String nombreDeWorkspaceActual;
 	private String nombreDeLaIntencionGeneralActiva;
@@ -68,10 +67,10 @@ public abstract class Agente extends Participante{
 	
 	private void inicializarContextos(){
 		for(WorkSpace workspace: miWorkSpaces){
-			ConversationWatson conversacion = new ConversationWatson(workspace.getUsuarioIBM(), workspace.getContrasenaIBM(), workspace.getIdIBM());
+			ConversacionConWarson conversacion = new ConversacionConWarson(workspace.getUsuarioIBM(), workspace.getContrasenaIBM(), workspace.getIdIBM());
 			String contexto = conversacion.enviarMSG("", null).getContext().toString();
+			conversacion.setElContextoConWatson(contexto);
 			miWatsonConversaciones.put(workspace.getNombre(), conversacion);
-			miContextos.put(workspace.getNombre(), contexto);
 			System.out.println("En el workspace "+workspace.getNombre()+" se tiene el Contexto: "+contexto);
 			if(workspace.getTipo().equals(Constantes.WORKSPACE_GENERAL)){
 				nombreDeWorkspaceActual = workspace.getNombre();
@@ -108,7 +107,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public MessageResponse llamarAWatson(String mensaje, String nombreWorkspace){
-		return miWatsonConversaciones.get(nombreWorkspace).enviarAWatson(mensaje, miContextos.get(nombreWorkspace));
+		return miWatsonConversaciones.get(nombreWorkspace).enviarAWatson(mensaje);
 	}
 	
 	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase){
@@ -125,7 +124,7 @@ public abstract class Agente extends Participante{
 	public Respuesta analizarRespuestaGeneral(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = null;
 		
-		respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreDeWorkspaceActual), miContextos.get(nombreDeWorkspaceActual));
+		respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreDeWorkspaceActual), miWatsonConversaciones.get(nombreDeWorkspaceActual).getElContextoConWatson());
 		respuesta.llamarAWatson(respuestaDelCliente);
 
 		noEntendiLaUltimaRespuesta = (! respuesta.entendiLaRespuesta()) && (frase.esMandatorio()) && 
@@ -139,7 +138,7 @@ public abstract class Agente extends Participante{
 				cambiarDeTema = true; // Buscar otro tema
 			}else{
 				// Actualizar contexto
-				miContextos.put(nombreDeWorkspaceActual, respuesta.getMiContexto());
+				miWatsonConversaciones.get(nombreDeWorkspaceActual).setElContextoConWatson(respuesta.getMiContexto());
 				abordarElTemaPorNOLoEntendi = false;
 				
 				// Analizar si ya tengo que cambiar de workspace
@@ -182,7 +181,7 @@ public abstract class Agente extends Participante{
 	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = null;
 		
-		respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreDeWorkspaceActual), miContextos.get(nombreDeWorkspaceActual));
+		respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreDeWorkspaceActual), miWatsonConversaciones.get(nombreDeWorkspaceActual).getElContextoConWatson());
 		respuesta.llamarAWatson(respuestaDelCliente);
 		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
 		
@@ -209,18 +208,16 @@ public abstract class Agente extends Participante{
 				}
 			}
 		}else{
+			// Actualizar contexto
+			miWatsonConversaciones.get(nombreDeWorkspaceActual).setElContextoConWatson(respuesta.getMiContexto());
 			if(numeroDeIntentosActualesEnRepetirUnaPregunta == maximoIntentos){
 				// Abordar el tema
 				cambiarDeTema = true; // Buscar otro tema
-				// Actualizar contexto
-				miContextos.put(nombreDeWorkspaceActual, respuesta.getMiContexto());
 				cambiarAWorkspaceGeneral();
 				noEntendiLaUltimaRespuesta = true;
 				// TODO decir frase me rindo
 				abordarElTemaPorNOLoEntendi = true;
 			}else{
-				// Actualizar contexto
-				miContextos.put(nombreDeWorkspaceActual, respuesta.getMiContexto());
 				abordarElTemaPorNOLoEntendi = false;
 				
 				// Analizar si tengo que cambiar de workspace
@@ -251,7 +248,7 @@ public abstract class Agente extends Participante{
 
 	public Respuesta analizarRespuestaWSEspecifico(String respuestaDelCliente, Frase frase, String nombreWorkSpace){
 		
-		Respuesta respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreWorkSpace), miContextos.get(nombreWorkSpace));
+		Respuesta respuesta = new Respuesta(frase, miWatsonConversaciones.get(nombreWorkSpace), miWatsonConversaciones.get(nombreWorkSpace).getElContextoConWatson());
 		respuesta.llamarAWatson(respuestaDelCliente);
 		
 		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
@@ -264,18 +261,18 @@ public abstract class Agente extends Participante{
 				numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico ++;
 			}
 		}else{
+			// Actualizar contexto
+			miWatsonConversaciones.get(nombreWorkSpace).setElContextoConWatson(respuesta.getMiContexto());
+			
 			if(numeroDeIntentosActualesEnRepetirUnaPreguntaWSEspecifico == maximoIntentos){
 				// Abordar el tema
 				cambiarDeTemaWSEspecifico = true;
-				miContextos.put(nombreWorkSpace, respuesta.getMiContexto());
 				
 				noEntendiLaUltimaRespuesta = true;
 				// TODO decir frase me rindo
 				abordarElTemaPorNOLoEntendiEspecifico = true;
 			}else{
 				abordarElTemaPorNOLoEntendiEspecifico = false;
-				// Actualizar contexto
-				miContextos.put(nombreWorkSpace, respuesta.getMiContexto());
 				
 				// Analizar si tengo que cambiar de workspace
 				cambiarDeTemaWSEspecifico = respuesta.seTerminoElTema() || respuesta.quiereCambiarIntencion();
@@ -306,7 +303,7 @@ public abstract class Agente extends Participante{
 	
 	public void seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo(){
 		// Respaldar la variables de contexto que tengo
-		Hashtable<String, String> misVariables = respaldarVariablesDeContexto(miContextos.get(nombreDeWorkspaceActual));
+		Hashtable<String, String> misVariables = respaldarVariablesDeContexto(miWatsonConversaciones.get(nombreDeWorkspaceActual).getElContextoConWatson());
 		
 		// Generar la nueva converzacion
 		seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActual();
@@ -316,9 +313,9 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActual(){
-		ConversationWatson conversacion = miWatsonConversaciones.get(nombreDeWorkspaceActual);
+		ConversacionConWarson conversacion = miWatsonConversaciones.get(nombreDeWorkspaceActual);
 		String nuevoContexto = conversacion.enviarMSG("", null).getContext().toString();
-		miContextos.put(nombreDeWorkspaceActual, nuevoContexto);
+		miWatsonConversaciones.get(nombreDeWorkspaceActual).setElContextoConWatson(nuevoContexto);
 	}
 	
 	private Hashtable<String, String> respaldarVariablesDeContexto(String contexto){
@@ -433,12 +430,12 @@ public abstract class Agente extends Participante{
 	
 	public void activarTemaEnElContextoDeWatson(String nombreTema){
 		activarValiableEnElContextoDeWatson(Constantes.ID_TEMA, nombreTema);
-		System.out.println("Contexto modificado: "+miContextos.get(nombreDeWorkspaceActual));
+		System.out.println("Contexto modificado: "+miWatsonConversaciones.get(nombreDeWorkspaceActual).getElContextoConWatson());
 	}
 	
 	public void activarTemaEnElContextoDeWatsonEnWorkspaceEspecifico(String nombreTema, String nombreWorkspace){
 		activarValiableEnElContextoDeWatson(Constantes.ID_TEMA, nombreTema, nombreWorkspace);
-		System.out.println("Contexto modificado: "+miContextos.get(nombreWorkspace));
+		System.out.println("Contexto modificado: "+miWatsonConversaciones.get(nombreWorkspace).getElContextoConWatson());
 	}
 	
 	public void activarValiableEnElContextoDeWatson(String nombre, String valor){
@@ -446,7 +443,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void activarValiableEnElContextoDeWatson(String nombre, String valor, String nombreWorkspace){
-		String context = miContextos.get(nombreWorkspace);
+		String context = miWatsonConversaciones.get(nombreWorkspace).getElContextoConWatson();
 		System.out.println(context);
 		JSONObject obj = null;
 		try {
@@ -456,11 +453,11 @@ public abstract class Agente extends Participante{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		miContextos.put(nombreWorkspace, obj.toString());
+		miWatsonConversaciones.get(nombreWorkspace).setElContextoConWatson(obj.toString());
 	}
 	
 	public void activarValiableEnElContextoDeWatson(String nombre, double valor, String nombreWorkspace){
-		String context = miContextos.get(nombreWorkspace);
+		String context = miWatsonConversaciones.get(nombreWorkspace).getElContextoConWatson();
 		System.out.println(context);
 		JSONObject obj = null;
 		try {
@@ -470,7 +467,7 @@ public abstract class Agente extends Participante{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		miContextos.put(nombreWorkspace, obj.toString());
+		miWatsonConversaciones.get(nombreWorkspace).setElContextoConWatson(obj.toString());
 	}
 	
 	public void borrarUnaVariableDelContexto(String nombreDeLaVariable){
@@ -478,7 +475,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void borrarUnaVariableDelContextoEnUnWorkspace(String nombreDeLaVariable, String nombreWorkspace){
-		String context = miContextos.get(nombreWorkspace);
+		String context = miWatsonConversaciones.get(nombreWorkspace).getElContextoConWatson();
 		JSONObject obj = null;
 		try {
 			obj = new JSONObject(context);
@@ -488,7 +485,7 @@ public abstract class Agente extends Participante{
 			e.printStackTrace();
 		}
 		//System.out.println("Contexto modificado: "+obj.toString());
-		miContextos.put(nombreWorkspace, obj.toString());
+		miWatsonConversaciones.get(nombreWorkspace).setElContextoConWatson(obj.toString());
 	}
 	
 	public Respuesta inicializarTemaEnWatson(String respuestaDelCliente){
@@ -496,12 +493,12 @@ public abstract class Agente extends Participante{
 	}
 	
 	public Respuesta inicializarTemaEnWatsonWorkspaceEspecifico(String respuestaDelCliente, String nombreWorkspace){
-		Respuesta respuesta = new Respuesta(miWatsonConversaciones.get(nombreWorkspace), miContextos.get(nombreWorkspace));
+		Respuesta respuesta = new Respuesta(miWatsonConversaciones.get(nombreWorkspace), miWatsonConversaciones.get(nombreWorkspace).getElContextoConWatson());
 		//MessageResponse response = miWatsonConversaciones.get(nombreDeWorkspaceActual).enviarAWatson(respuestaDelCliente, miContextos.get(nombreDeWorkspaceActual));
 		respuesta.llamarAWatson(respuestaDelCliente);
 		//String context = response.getContext().toString();
 		String context = respuesta.messageResponse().getContext().toString();
-		miContextos.put(nombreWorkspace, context);
+		miWatsonConversaciones.get(nombreWorkspace).setElContextoConWatson(context);
 		
 		borrarUnaVariableDelContextoEnUnWorkspace(Constantes.ANYTHING_ELSE, nombreWorkspace);
 		borrarUnaVariableDelContextoEnUnWorkspace(Constantes.NODO_ACTIVADO, nombreWorkspace);
