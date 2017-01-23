@@ -68,13 +68,13 @@ public class TablaDeSimbolos {
 	}
 
 	public boolean existeLaVariable(String nombreInstancia) {
+		agregarVariablesEstaticas(nombreInstancia);
 		String instancia = nombreInstancia.toLowerCase();
 		for (int i = 0; i <= nivel; i++)
 		{
 			boolean existe = tablaDeVariables.containsKey(instancia + SEPARADOR_NIVEL + i);
 			if (existe) return true;
 		}
-		agregarVariablesEstaticas(nombreInstancia);
 		return false;
 	}
 
