@@ -29,4 +29,9 @@ public class LiteralBoolean extends Expresion
 		resultado.append(valor);
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+
+	}
+
 }

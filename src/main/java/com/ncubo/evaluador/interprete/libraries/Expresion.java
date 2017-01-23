@@ -12,5 +12,6 @@ public abstract class Expresion extends AST
 
 	abstract void write(StringBuilder resultado);
 	
+	public abstract void buscarVariablesEstaticas();
 }
 

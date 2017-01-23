@@ -58,4 +58,10 @@ public class PuntoConPunto extends Punto
 		}
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

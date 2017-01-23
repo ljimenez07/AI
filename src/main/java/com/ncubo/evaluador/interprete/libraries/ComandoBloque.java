@@ -59,4 +59,19 @@ public class ComandoBloque extends Comando
 		resultado.append(generarTabs(tabs));
 		resultado.append("}\r");
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		tablaDeSimbolos.abrirBloque();
+		for (Comando comando : comandos)  
+		{
+			if (comando instanceof ComandoNuevaInstancia) 
+			{
+				//((ComandoNuevaInstancia) comando).estoyEnPrimerNivel(false);
+			}
+			//comando.cargarListenerDeEventos(listenerDeEventos);
+			//comando.ejecutar();
+		 }
+		 tablaDeSimbolos.cerrarBloque();
+	}
 }

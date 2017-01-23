@@ -413,4 +413,10 @@ public class NuevaInstancia extends Expresion
 		resultado.append(')');
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

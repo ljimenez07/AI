@@ -24,13 +24,13 @@ public class OpOr extends Expresion {
 		if (! e1.calcularTipo().equals(com.ncubo.evaluador.libraries.Boolean.class))
 		{
 			throw new LanguageException(
-				String.format("La expresión %s al lado izquierdo del AND debe retornar un valor true o false.", e1.getClass().getSimpleName())
+				String.format("La expresiï¿½n %s al lado izquierdo del AND debe retornar un valor true o false.", e1.getClass().getSimpleName())
 			);
 		}
 		if (! e2.calcularTipo().equals(com.ncubo.evaluador.libraries.Boolean.class))
 		{
 			throw new LanguageException(
-				String.format("La expresión %s al lado derecho del OR debe retornar un valor true o false.", e2.getClass().getSimpleName())
+				String.format("La expresiï¿½n %s al lado derecho del OR debe retornar un valor true o false.", e2.getClass().getSimpleName())
 			);
 		}
 	}
@@ -51,6 +51,12 @@ public class OpOr extends Expresion {
 		e1.write(resultado);
 		resultado.append(" || ");
 		e2.write(resultado);
+	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		e1.buscarVariablesEstaticas();
+		e2.buscarVariablesEstaticas();
 	}
 
 

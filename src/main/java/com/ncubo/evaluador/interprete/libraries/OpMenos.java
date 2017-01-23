@@ -50,4 +50,9 @@ public class OpMenos extends Expresion {
 		resultado.append('-');
 		e.write(resultado);
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		e.buscarVariablesEstaticas();
+	}
 }

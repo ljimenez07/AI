@@ -31,4 +31,10 @@ public class LiteralHilera extends Expresion
 		resultado.append( valor.replace("\'", "\\\'") );
 		resultado.append('\'');
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
 }

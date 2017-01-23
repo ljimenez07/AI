@@ -43,4 +43,10 @@ public class OpNoIgualQue extends Expresion {
 		e2.write(resultado);
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+		e1.buscarVariablesEstaticas();
+		e2.buscarVariablesEstaticas();
+	}
+
 }

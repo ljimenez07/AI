@@ -48,4 +48,10 @@ public class ComandoNulo extends Comando
 		}
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

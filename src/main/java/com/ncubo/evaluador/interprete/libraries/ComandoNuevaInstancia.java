@@ -43,4 +43,9 @@ public class ComandoNuevaInstancia extends Comando
 			resultado.append(";\r");
 		}
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		rValue.buscarVariablesEstaticas();
+	}
 }

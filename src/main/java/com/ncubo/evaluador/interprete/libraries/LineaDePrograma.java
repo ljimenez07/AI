@@ -48,5 +48,17 @@ public class LineaDePrograma extends Linea
 			comando.write(resultado, 0);
 		}
 	}
+
+	@Override
+	void buscarVariablesEstaticas() {
+		for(Comando comando : comandos)
+		{
+			try
+			{
+				comando.buscarVariablesEstaticas();
+			}
+			catch (Exception e){}
+		}
+	}
 	
 }

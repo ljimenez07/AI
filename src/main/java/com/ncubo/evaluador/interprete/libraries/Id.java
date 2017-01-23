@@ -38,11 +38,15 @@ public class Id extends Expresion
 		return valor;
 	}
 
+	public void buscarVariablesEstaticas() {
+		if ( ! tablaDeSimbolos.existeLaVariable(id) ){
+			System.out.println(String.format("La variable %s no ha sido definida (es estatica).", id));
+		}
+	}
+	
 	@Override
 	void write(StringBuilder resultado) 
 	{
 		resultado.append(id);
 	}
-
-	
 }

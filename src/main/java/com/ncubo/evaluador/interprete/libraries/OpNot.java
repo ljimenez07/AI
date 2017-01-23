@@ -22,7 +22,7 @@ public class OpNot extends Expresion {
 		if (! e.calcularTipo().equals(com.ncubo.evaluador.libraries.Boolean.class))
 		{
 			throw new LanguageException(
-				String.format("La expresión %s al lado derecho del NOT debe retornar un valor true o false.", e.getClass().getSimpleName())
+				String.format("La expresiï¿½n %s al lado derecho del NOT debe retornar un valor true o false.", e.getClass().getSimpleName())
 			);
 		}
 	}
@@ -39,6 +39,11 @@ public class OpNot extends Expresion {
 	{
 		resultado.append(" ! ");
 		e.write(resultado);
+	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		e.buscarVariablesEstaticas();
 	}
 
 }

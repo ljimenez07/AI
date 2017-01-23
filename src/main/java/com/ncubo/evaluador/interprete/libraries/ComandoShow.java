@@ -46,4 +46,8 @@ public class ComandoShow extends Comando
 		resultado.append(";\r");
 	}
 
+	@Override
+	public void buscarVariablesEstaticas() {
+		expression.buscarVariablesEstaticas();
+	}
 }

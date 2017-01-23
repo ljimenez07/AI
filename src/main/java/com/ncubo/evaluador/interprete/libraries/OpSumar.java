@@ -81,4 +81,10 @@ public class OpSumar extends Expresion
 		resultado.append(" + ");
 		e2.write(resultado);
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		e1.buscarVariablesEstaticas();
+		e2.buscarVariablesEstaticas();
+	}
 }

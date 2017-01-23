@@ -30,4 +30,10 @@ public class LiteralMes extends Expresion {
 	{
 		resultado.append(mes);	
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
 }

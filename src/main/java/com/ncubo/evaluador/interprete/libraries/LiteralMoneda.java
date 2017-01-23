@@ -51,4 +51,10 @@ public class LiteralMoneda extends Expresion
 	{
 		resultado.append(valor);	
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
 }

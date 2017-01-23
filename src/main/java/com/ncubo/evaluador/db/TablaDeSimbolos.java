@@ -74,10 +74,16 @@ public class TablaDeSimbolos {
 			boolean existe = tablaDeVariables.containsKey(instancia + SEPARADOR_NIVEL + i);
 			if (existe) return true;
 		}
-		variablesEstaticas.add(nombreInstancia);
+		agregarVariablesEstaticas(nombreInstancia);
 		return false;
 	}
 
+	private void agregarVariablesEstaticas(String variable){
+		if( ! variablesEstaticas.contains(variable)){
+			variablesEstaticas.add(variable);
+		}
+	}
+	
 	public void limpiarVariablesEstaticas(){
 		variablesEstaticas.clear();
 	}

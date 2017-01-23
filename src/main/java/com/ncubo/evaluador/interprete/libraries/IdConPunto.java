@@ -107,4 +107,10 @@ public class IdConPunto extends Punto
 			
 		}
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
 }

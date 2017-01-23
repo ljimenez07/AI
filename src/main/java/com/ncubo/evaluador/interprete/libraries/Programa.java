@@ -16,7 +16,6 @@ public class Programa extends AST
 	
 	public String ejecutar()
 	{
-		/// Limpiar mi array en tabla de simbolos
 		if (! salida.vacio()) salida.limpiar();
 		for (Linea linea : lineasDePrograma)
 		{
@@ -25,8 +24,19 @@ public class Programa extends AST
 		}
 		String resultado = salida.toString();
 		salida.limpiar();
-		// obtener la variables estaticas
 		return resultado;
+	}
+	
+	public void buscarVariablesEstaticas()
+	{
+		if (! salida.vacio()) 
+			salida.limpiar();
+		for (Linea linea : lineasDePrograma)
+		{
+			if (linea instanceof LineaDePrograma) lineaEnEjecucion = (LineaDePrograma) linea;
+			linea.buscarVariablesEstaticas();
+		}
+		salida.limpiar();
 	}
 	
 	public String lineaEnEjecucion()

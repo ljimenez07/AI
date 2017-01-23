@@ -24,4 +24,10 @@ public class LiteralNull extends Expresion
 	{
 		resultado.append("Null");	
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		// TODO Auto-generated method stub
+		
+	}
 }

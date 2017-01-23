@@ -68,4 +68,9 @@ public class ComandoIf extends Comando
 			if ( !(comandosDelElse instanceof ComandoBloque) ) tabs--;
 		}
 	}
+
+	@Override
+	public void buscarVariablesEstaticas() {
+		expresion.buscarVariablesEstaticas();
+	}
 }

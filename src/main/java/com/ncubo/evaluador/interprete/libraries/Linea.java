@@ -6,4 +6,5 @@ public abstract class Linea extends AST
 	
 	abstract void write(StringBuilder resultado);
 	
+	abstract void buscarVariablesEstaticas();
 }

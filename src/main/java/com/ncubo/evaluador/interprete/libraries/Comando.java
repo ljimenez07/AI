@@ -9,6 +9,8 @@ public abstract class Comando extends AST
 
 	abstract void write(StringBuilder resultado, int tabs);
 	
+	public abstract void buscarVariablesEstaticas();
+	
 	@Override
 	public String toString()
 	{
