@@ -155,7 +155,7 @@ public class Conversacion {
 									System.out.println("El proximo tema a tratar es: "+this.temaActual.obtenerIdTema());
 									
 									// Activar en el contexto el tema
-									agente.activarTemaEnElContextoDeWatson(this.temaActual.obtenerIdTema());
+									agente.activarTemaEnElContextoDeWatson(this.temaActual.obtenerNombre());
 									
 									// llamar a watson y ver que bloque se activo
 									respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
@@ -166,7 +166,7 @@ public class Conversacion {
 								}
 							}
 							if(this.temaActual != null){
-								if( (! this.temaActual.obtenerIdTema().equals(Constantes.FRASE_SALUDO)) && (! this.temaActual.obtenerIdTema().equals(Constantes.FRASE_DESPEDIDA)) )
+								if( (! this.temaActual.obtenerNombre().equals(Constantes.FRASE_SALUDO)) && (! this.temaActual.obtenerNombre().equals(Constantes.FRASE_DESPEDIDA)) )
 									ponerComoYaTratado(this.temaActual);
 							}
 						}else{

@@ -57,7 +57,7 @@ public abstract class Temario
 	
 	public Tema buscarTema(String nombre){
 		for(Tema tema: temasDelDiscurso){
-			if(tema.obtenerIdTema().equals(nombre)){
+			if(tema.obtenerNombre().equals(nombre)){
 				return tema;
 			}
 		}
@@ -83,7 +83,7 @@ public abstract class Temario
 		for(Tema tema: temasDelDiscurso){
 			if(tema.obtenerElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
 				if(temaActual != null){
-					if(! tema.obtenerIdTema().equals(temaActual.obtenerIdTema())){
+					if(! tema.obtenerNombre().equals(temaActual.obtenerNombre())){
 						if(temasYaTratados.size() > 0){
 							if( ! temasYaTratados.contains(tema)){
 								if(tema.buscarSiTodasLasDependenciasYaFueronTratadas(temasYaTratados)){
