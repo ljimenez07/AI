@@ -1,5 +1,6 @@
 package com.ncubo.chatbot.contexto;
 
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
@@ -48,6 +49,11 @@ public class AdministradorDeVariablesDeContexto {
 	public String ejecutar(String comando) throws Exception {
 		System.out.println("Ejecutando el comando: "+comando);
 		return miEvaluador.ejecutaComando(comando);
+	}
+	
+	public ArrayList<String> buscarVariablesEstaticasEnElComando(String comando) throws Exception {
+		System.out.println("Ejecutando el comando: "+comando);
+		return miEvaluador.buscarVariablesEstaticasEnElComando(comando);
 	}
 	
 	public String obtenerVariable(String nombreDeLaVariable) throws Exception{

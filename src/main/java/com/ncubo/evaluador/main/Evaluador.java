@@ -42,7 +42,7 @@ public class Evaluador {
 		return resultado;
 	}
 
-	public ArrayList<String> bucarVariablesEstaticasEnElComando(String dato) throws Exception
+	public ArrayList<String> buscarVariablesEstaticasEnElComando(String dato) throws Exception
 	{ 
 		ArrayList<String> resultado = null;
 		tablaDeSimbolos.limpiarVariablesEstaticas();
@@ -79,6 +79,6 @@ public class Evaluador {
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
 		//System.out.println(evaluador.ejecutaComando("hora = 13;").trim());
 		//System.out.println(evaluador.ejecutaComando("x = hora > 12 && hora < 18; show x;").trim());
-		System.out.println(evaluador.bucarVariablesEstaticasEnElComando("x = hora > 12 && hora < 18; show x; c = 12; show c;"));
+		System.out.println(evaluador.buscarVariablesEstaticasEnElComando("x = hora > 12 && hora < 18; show x; c = 12; show c;"));
     }
 }

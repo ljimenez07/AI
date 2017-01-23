@@ -73,6 +73,10 @@ public class Cliente extends Participante{
 		return administradorDeVariablesDeContexto.ejecutar(comando);
 	}
 	
+	public ArrayList<String> buscarVariablesEstaticasEnElComando(String comando) throws Exception{
+		return administradorDeVariablesDeContexto.buscarVariablesEstaticasEnElComando(comando);
+	}
+	
 	// Nombre del cliente
 	public void guardarNombreDelCliente(String nombre) throws Exception{
 		String nombreVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto("nombreCliente").getNombre();

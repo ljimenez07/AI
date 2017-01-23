@@ -519,7 +519,7 @@ public abstract class Contenido
 
 			String tipo = misComponentesDeLaFrase.item(index).getNodeName();
 			String frase = misComponentesDeLaFrase.item(index).getTextContent();
-			frase = frase.replace("@@", "<").replace("##", ">").replace("@@!", "&nbsp;").replace("#and@", "&&").replace("#or@", "||");
+			//frase = frase.replace("@@", "<").replace("##", ">").replace("@@!", "&nbsp;").replace("#and@", "&&").replace("#or@", "||");
 			
 			if(! frase.isEmpty() && ! tipo.contains("#text")){
 				if(tipo.contains("texto")){
