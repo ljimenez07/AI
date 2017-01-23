@@ -284,7 +284,7 @@ public abstract class Frase
 				if(AudiosXML.getInstance().hayQueGenerarAudios(this.nombreDeLaFrase, textoAUsarParaGenerarAudio)){
 					nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false);
 				}else{
-					nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, idAudio);
+					nombreDelArchivo = AudiosXML.getInstance().obtenerUnAudioDeLaFrase(this.nombreDeLaFrase, textoAUsarParaGenerarAudio);
 					nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
 				}
 				String miIp = ipPublica+nombreDelArchivo;

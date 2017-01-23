@@ -203,13 +203,22 @@ public class AudiosXML {
 		return resultado;
 	}
 	
-	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio){
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String textoAudio){
 		String resultado = "";
 		try{
 			if(existeLaFrase(nombreDeLaFrase)){
-				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase())
-					if(miFrase.getAudios().containsKey(idAudio))
-						resultado = miFrase.getAudio(idAudio).url();
+				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
+						Hashtable<String, Sonido> audios = miFrase.getAudios();
+						
+						Enumeration<String> llaves = audios.keys();
+						
+						while (llaves.hasMoreElements()) {
+							String llave = llaves.nextElement();
+							if(audios.get(llave).getTextoUsadoParaGenerarElSonido().equals(textoAudio))
+								resultado = audios.get(llave).url();	
+						}
+						
+					}
 			}
 		}catch(Exception e){
 			resultado = "";
@@ -372,7 +381,7 @@ public class AudiosXML {
 					
 					empName.appendChild(doc.createTextNode(audios.get(llave).getTextoUsadoParaGenerarElSonido()));
 					try{
-						empName.setAttribute("audio", sinonimoDeFrase.getAudio(llave).url());
+						empName.setAttribute("audio", audios.get(llave).url());
 	
 					}catch(Exception e){
 						empName.setAttribute("audio", "test.mp3");
