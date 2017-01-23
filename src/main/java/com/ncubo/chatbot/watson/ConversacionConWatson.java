@@ -21,7 +21,7 @@ import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
 
-public class ConversacionConWarson {
+public class ConversacionConWatson {
 
 	private ConversationService service;
 	private String usuario;
@@ -30,7 +30,7 @@ public class ConversacionConWarson {
 	private final static String FECHA_VERSION_WATSON = "2016-09-20";
 	private String contextoConWatson;
 
-	public ConversacionConWarson(String usuario, String contrasena, String idConversacion) {
+	public ConversacionConWatson(String usuario, String contrasena, String idConversacion) {
 		
 		/*DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 		Date date = new Date();

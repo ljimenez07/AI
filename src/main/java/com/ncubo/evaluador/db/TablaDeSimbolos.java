@@ -10,7 +10,8 @@ import com.ncubo.evaluador.libraries.Objeto;
 public class TablaDeSimbolos {
 
 	private Map<String, SimboloVariable> tablaDeVariables = new HashMap<String, SimboloVariable>();
-
+	private ArrayList<String> variablesEstaticas = new ArrayList<String>();
+	
 	private int nivel = 0;
 	private static final char SEPARADOR_NIVEL = ':';
 
@@ -73,9 +74,18 @@ public class TablaDeSimbolos {
 			boolean existe = tablaDeVariables.containsKey(instancia + SEPARADOR_NIVEL + i);
 			if (existe) return true;
 		}
+		variablesEstaticas.add(nombreInstancia);
 		return false;
 	}
 
+	public void limpiarVariablesEstaticas(){
+		variablesEstaticas.clear();
+	}
+	
+	public ArrayList<String> obtenerVariblesEstaticas(){
+		return variablesEstaticas;
+	}
+	
 	private SimboloVariable variable(String nombreInstancia) {
 		String instancia = nombreInstancia.toLowerCase();
 		for (int i = nivel; i >= 0; i--)

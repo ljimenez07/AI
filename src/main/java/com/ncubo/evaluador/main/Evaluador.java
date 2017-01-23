@@ -25,6 +25,7 @@ public class Evaluador {
 	public String ejecutaComando(String dato) throws Exception
 	{ 
 		String resultado = "";
+		tablaDeSimbolos.limpiarVariablesEstaticas();
 		if(! dato.isEmpty())
 		{
 			if(parser == null)
@@ -33,6 +34,7 @@ public class Evaluador {
 			Programa programa = parser.procesar();
 			salida.conSalida();
 			resultado = programa.ejecutar();
+			tablaDeSimbolos.obtenerVariblesEstaticas();
 			salida.limpiar();
 		}
 		return resultado;
@@ -51,10 +53,10 @@ public class Evaluador {
 		//System.out.println(evaluador.ejecutaComando("verdad=1<10 && 'abc' != 'z' || !(MAY/2016 == JUN/2017); show verdad;").trim());
 		//System.out.println(evaluador.ejecutaComando("show 6479.25 == 0;"));
 		//System.out.println(evaluador.ejecutaComando("saldo=14,146.53; show saldo > 0;"));
-		System.out.println(evaluador.ejecutaComando("hilera = Hilera('hola');"));
-		System.out.println(evaluador.ejecutaComando("lista = Lista(); x = lista.guardarObjeto(hilera); show x;"));
+		//System.out.println(evaluador.ejecutaComando("hilera = Hilera('hola');"));
+		//System.out.println(evaluador.ejecutaComando("lista = Lista(); x = lista.guardarObjeto(hilera); show x;"));
 		//evaluador.crearContexto("leGustaLosHoteles = 0.0;");
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
-		
+		System.out.println(evaluador.ejecutaComando("show x;"));
     }
 }

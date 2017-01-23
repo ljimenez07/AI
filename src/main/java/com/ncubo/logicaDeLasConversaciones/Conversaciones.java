@@ -89,7 +89,7 @@ public class Conversaciones {
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgente(Usuario cliente, String textoDelCliente, AgenteDeLaConversacion agente) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(Usuario cliente, String textoDelCliente, AgenteDeLaConversacion agente) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -137,11 +137,44 @@ public class Conversaciones {
 		return resultado;
 	}
 	
+	public ArrayList<Salida> conversarConElAgenteCognitivo(Usuario cliente, String textoDelCliente) throws Exception{
+		ArrayList<Salida> resultado = null;
+		System.out.println("Coversar con "+cliente.getIdSesion());
+		
+		if( cliente.getUsuarioId().isEmpty() && cliente.getIdSesion().isEmpty() || (cliente.getUsuarioId().isEmpty() && cliente.getEstaLogueado())){ // Esta logueado
+			throw new ChatException("No se puede chatear porque no existe usuario ni id de sesion");
+		}
+		
+		if(cliente.getEstaLogueado()){ // Esta logueado
+			// Verificar si ya el usuario existe
+			if(existeElCliente(cliente.getUsuarioId()) && existeLaConversacion(cliente.getIdSesion())){
+				// TODO Verificar si cambio el id de sesion, si es asi agregarla al cliente y hacerlo saber a conversacion
+				misClientes.get(cliente.getUsuarioId()).agregarIdsDeSesiones(cliente.getIdSesion());
+				misConversaciones.get(cliente.getIdSesion()).cambiarParticipante(misClientes.get(cliente.getUsuarioId())); // Actualizar cliente en la conversacion
+				resultado = hablarConElAjente(cliente, textoDelCliente);
+				
+				synchronized (misClientes) {
+					misClientes.put(cliente.getUsuarioId(), misConversaciones.get(cliente.getIdSesion()).obtenerElParticipante());
+				}
+			}
+		}else{
+			if(! cliente.getIdSesion().equals("")){
+				if(existeLaConversacion(cliente.getIdSesion())){
+					resultado = hablarConElAjente(cliente, textoDelCliente);
+				}
+			}else{
+				throw new ChatException("No se puede chatear porque no existe id de sesion");
+			}
+		}
+		
+		return resultado;
+	}
+	
 	public boolean existeElCliente(String idDelCliente){
 		return misClientes.containsKey(idDelCliente);
 	}
 	
-	private boolean existeLaConversacion(String idSesion){
+	public boolean existeLaConversacion(String idSesion){
 		return misConversaciones.containsKey(idSesion);
 	}
 	

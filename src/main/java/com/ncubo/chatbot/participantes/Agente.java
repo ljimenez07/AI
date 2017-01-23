@@ -20,7 +20,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
-import com.ncubo.chatbot.watson.ConversacionConWarson;
+import com.ncubo.chatbot.watson.ConversacionConWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
 
@@ -28,7 +28,7 @@ import com.ncubo.db.BitacoraDao;
 public abstract class Agente extends Participante{
 
 	private final ArrayList<WorkSpace> miWorkSpaces;
-	private final Hashtable<String, ConversacionConWarson> miWatsonConversaciones = new Hashtable<String, ConversacionConWarson>();
+	private final Hashtable<String, ConversacionConWatson> miWatsonConversaciones = new Hashtable<String, ConversacionConWatson>();
 	private String nombreDelWorkSpaceGeneral;
 	private String nombreDeWorkspaceActual;
 	private String nombreDeLaIntencionGeneralActiva;
@@ -67,7 +67,7 @@ public abstract class Agente extends Participante{
 	
 	private void inicializarContextos(){
 		for(WorkSpace workspace: miWorkSpaces){
-			ConversacionConWarson conversacion = new ConversacionConWarson(workspace.getUsuarioIBM(), workspace.getContrasenaIBM(), workspace.getIdIBM());
+			ConversacionConWatson conversacion = new ConversacionConWatson(workspace.getUsuarioIBM(), workspace.getContrasenaIBM(), workspace.getIdIBM());
 			String contexto = conversacion.enviarMSG("", null).getContext().toString();
 			conversacion.setElContextoConWatson(contexto);
 			miWatsonConversaciones.put(workspace.getNombre(), conversacion);
@@ -313,7 +313,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActual(){
-		ConversacionConWarson conversacion = miWatsonConversaciones.get(nombreDeWorkspaceActual);
+		ConversacionConWatson conversacion = miWatsonConversaciones.get(nombreDeWorkspaceActual);
 		String nuevoContexto = conversacion.enviarMSG("", null).getContext().toString();
 		miWatsonConversaciones.get(nombreDeWorkspaceActual).setElContextoConWatson(nuevoContexto);
 	}
