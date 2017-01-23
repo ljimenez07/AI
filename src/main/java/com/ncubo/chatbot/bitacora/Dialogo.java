@@ -17,7 +17,7 @@ public class Dialogo implements Serializable{
 	private String elAudioQueDijoElFramework = "";
 	private String laVinetaQueMostroElFramework = "";
 	private String idTemaQueUso = "" ;
-	private int idFraseQueUso;
+	private String idFraseQueUso;
 	private String loQueDijoElParticipante = "";
 	private Date laFechaEnQueSeCreo;
 	
@@ -25,7 +25,7 @@ public class Dialogo implements Serializable{
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
 		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).obtenerContenido();
-		this.idTemaQueUso = miSalida.getTemaActual().obtenerIdTema();
+		this.idTemaQueUso = miSalida.getTemaActual().obtenerNombre();
 		this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
 		if(miSalida.obtenerLaRespuestaDeIBM() != null)
 			this.loQueDijoElParticipante = miSalida.obtenerLaRespuestaDeIBM().loQueElClienteDijoFue();
@@ -64,11 +64,11 @@ public class Dialogo implements Serializable{
 		this.idTemaQueUso = idTemaQueUso;
 	}
 
-	public int getIdFraseQueUso() {
+	public String getIdFraseQueUso() {
 		return idFraseQueUso;
 	}
 
-	public void setIdFraseQueUso(int idFraseQueUso) {
+	public void setIdFraseQueUso(String idFraseQueUso) {
 		this.idFraseQueUso = idFraseQueUso;
 	}
 

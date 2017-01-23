@@ -170,7 +170,7 @@ public abstract class Contenido
 				for (int temp = 0; temp < conjuncion.getLength(); temp++) {
 					Node nNode = conjuncion.item(temp);
 					Element eElement = (Element) nNode;
-					int id = Integer.parseInt(eElement.getAttribute("id"));
+					String id = eElement.getAttribute("id");
 					String nombre = eElement.getAttribute("nombre");
 					String frase = nNode.getTextContent();
 					System.out.println("Conjuncion: "+frase);
@@ -230,7 +230,7 @@ public abstract class Contenido
 					Element eElement = (Element) nNode;
 					CaracteristicaDeLaFrase[] caracteristicasDeLaFrase = new CaracteristicaDeLaFrase[3];
 					
-					int idDeLaFrase = Integer.parseInt(eElement.getAttribute("id"));
+					String idDeLaFrase = eElement.getAttribute("id");
 					System.out.println("Conversacion Id : " + idDeLaFrase);
 					
 					String nombreDeLaFrase = eElement.getAttribute("nombre");
@@ -345,6 +345,9 @@ public abstract class Contenido
 					String nombreDelTema = eElement.getElementsByTagName("nombreDelTema").item(0).getTextContent();
 					System.out.println("nombreDelTema : " + nombreDelTema);
 					
+					String descripcionDelTema = eElement.getElementsByTagName("descripcionDelTema").item(0).getTextContent();
+					System.out.println("descripcionDelTema : " + descripcionDelTema);
+					
 					String nombreWorkspace = eElement.getElementsByTagName("nombreWorkspace").item(0).getTextContent();
 					System.out.println("nombreWorkspace : " + nombreWorkspace);
 					
@@ -365,7 +368,7 @@ public abstract class Contenido
 						frasesACargar[index] = this.frase(frase.item(index).getTextContent());
 					}
 					
-					Tema temaACargar = new Tema(idDelTema, nombreDelTema, nombreWorkspace, Boolean.parseBoolean(sePuedeRepetir), idDeLaIntencionGeneral, frasesACargar);
+					Tema temaACargar = new Tema(idDelTema, nombreDelTema, descripcionDelTema, nombreWorkspace, Boolean.parseBoolean(sePuedeRepetir), idDeLaIntencionGeneral, frasesACargar);
 					misTemas.add(temaACargar);
 					
 					// Frases
@@ -380,7 +383,7 @@ public abstract class Contenido
 							lasDependencias.agregarDependencia(dependencia.item(index).getTextContent());
 						}
 						if(! lasDependencias.obtenerMisDependencias().isEmpty())
-							misDependencias.put(idDelTema, lasDependencias);
+							misDependencias.put(nombreDelTema, lasDependencias);
 					}catch(Exception e){}
 				}
 			}catch(Exception e){

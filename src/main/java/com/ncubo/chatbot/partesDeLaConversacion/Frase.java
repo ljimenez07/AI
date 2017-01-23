@@ -3,6 +3,8 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
+
 import com.ncubo.chatbot.audiosXML.AudiosXML;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
@@ -13,7 +15,7 @@ import com.ncubo.chatbot.watson.TextToSpeechWatson;
 public abstract class Frase
 {
 	private final String nombreDeLaFrase;
-	private final int idFrase;
+	private final String idFrase;
 	private final ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase;
 	private ArrayList<Vineta> vinetasDeLosTextosDeLaFrase = new ArrayList<Vineta>();
 	private final CaracteristicaDeLaFrase[] caracteristicas;
@@ -25,7 +27,7 @@ public abstract class Frase
 	private int indiceValoresActual = 0;
 	private int subIndiceValoresActual = 0;
 	
-	protected Frase (int idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
+	protected Frase (String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
 		this.idFrase = idFrase;
@@ -498,8 +500,13 @@ public abstract class Frase
 		return this.intentosFallidos;
 	}
 	
-	public int obtenerIdDeLaFrase(){
+	public String obtenerIdDeLaFrase(){
 		return this.idFrase;
+	}
+	
+	public String generarIdFrase(){
+		UUID uuid = UUID.randomUUID();
+		return uuid.toString().replace("-", "");
 	}
 	
 	public List<List<Object>> combine(final List<List<Object>> containers) {

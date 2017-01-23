@@ -9,14 +9,18 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Iterator;
 
-import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 
 public class BitacoraDao {
 
 	private final String NOMBRE_TABLA_BITACORA = "bitacora_de_conversaciones";
+	private final String ULTIMA_HORA_DEL_DIA = " 23:59:59";
 	
 	public enum atributosDeLaBitacoraDao
 	{
@@ -105,6 +109,181 @@ public class BitacoraDao {
 		}
 		
 		return resultado;
+	}
+	
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeHoy() throws ClassNotFoundException{
+		Date fecha = new Date( );
+		SimpleDateFormat formato = new SimpleDateFormat ("yyyy-MM-dd");
+		
+		try{
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.FECHA+" between ? and ?;";
+
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+
+		stmt.setString(1, formato.format(fecha));
+		stmt.setString(2, formato.format(fecha)+ULTIMA_HORA_DEL_DIA);
+
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	public Iterator<LogDeLaConversacion> buscarConversacionesEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.FECHA+" between ? and ?;";
+		
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+		
+		stmt.setString(1, fechaInicial);
+		stmt.setString(2, fechaFinal+ULTIMA_HORA_DEL_DIA);
+		
+		return recorrerResultadoDelQuery(stmt);
+	}catch(SQLException e) {
+		e.printStackTrace();
+	}
+	return null;
+	}
+	
+	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuario(String idUsuario) throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.ID_USARIO+" = ?;";
+		
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+		
+		stmt.setString(1, idUsuario);
+		
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuarioAnonimo() throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.ID_USARIO+" = ?;";
+		
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+		
+		stmt.setString(1, "");
+		
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosEspecificosEntreFechas(String idUsuario, String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.ID_USARIO+" = ?"+" and "+
+				atributosDeLaBitacoraDao.FECHA+" between ? and ?;";
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+		
+		stmt.setString(1, idUsuario);
+		stmt.setString(2, fechaInicial);
+		stmt.setString(3, fechaFinal+ULTIMA_HORA_DEL_DIA);
+		
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosAnonimosEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.ID_USARIO+" = ''"+" and "+
+				atributosDeLaBitacoraDao.FECHA+" between ? and ?;";
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+		
+		stmt.setString(1, fechaInicial);
+		stmt.setString(2, fechaFinal+ULTIMA_HORA_DEL_DIA);
+		
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Iterator<LogDeLaConversacion> buscarLasConversacionesDeTodosLosUsuariosNoAnonimos() throws ClassNotFoundException{
+		
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" where "+
+				atributosDeLaBitacoraDao.ID_USARIO+" != '';";
+		try{
+		Connection con = ConexionALaDB.getInstance().openConBD();
+		PreparedStatement stmt = con.prepareStatement(query);
+				
+		return recorrerResultadoDelQuery(stmt);
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public Iterator<LogDeLaConversacion> buscarTodasLasConversaciones() throws ClassNotFoundException {
+
+		String query = "select "+atributosDeLaBitacoraDao.CONVERSACION+" from "+NOMBRE_TABLA_BITACORA+" ;";
+
+		Connection con;
+		
+		try {
+			con = ConexionALaDB.getInstance().openConBD();
+			PreparedStatement stmt;
+			stmt = con.prepareStatement(query);
+
+			return recorrerResultadoDelQuery(stmt);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	private Iterator<LogDeLaConversacion> recorrerResultadoDelQuery(PreparedStatement stmt) throws SQLException{
+		LogDeLaConversacion resultado = null;
+		ArrayList<LogDeLaConversacion> conversaciones = new ArrayList<LogDeLaConversacion>();
+		
+		ResultSet rs = stmt.executeQuery();
+		
+		boolean hayDatos=rs.next();
+		
+		while( hayDatos )
+		{
+			ByteArrayInputStream bais;
+			ObjectInputStream ins;
+			try {
+				bais = new ByteArrayInputStream(rs.getBytes(atributosDeLaBitacoraDao.CONVERSACION.toString()));
+				ins = new ObjectInputStream(bais);
+				resultado = (LogDeLaConversacion)ins.readObject();
+				conversaciones.add(resultado);
+				ins.close();
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			hayDatos=rs.next();
+		}
+		return conversaciones.listIterator();
 	}
 	
 	private int obtenerIdDeLaBitacoraDeUnaConversacion(String idCliente, String idSesion, String fecha) throws ClassNotFoundException, SQLException{
