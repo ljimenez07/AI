@@ -24,9 +24,6 @@ public abstract class Frase
 	private String ipPublicaAMostrarLosAudioTTS;
 	private int intentosFallidos = 0;
 	
-	private int indiceValoresActual = 0;
-	private int subIndiceValoresActual = 0;
-	
 	protected Frase (String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
 			CaracteristicaDeLaFrase... caracteristicas)
 	{
@@ -294,76 +291,7 @@ public abstract class Frase
 		    }
 		}
 		return generados;
-	}
-	
-	public int[] actualizarIndicesValores(int[] indicesValores, String[][]valores)
-	{
-		if(disminuirIndiceValoresActual(indicesValores, valores)){
-			subIndiceValoresActual = indiceValoresActual;
-			indiceValoresActual--;
-			indicesValores[indiceValoresActual] =  indicesValores[indiceValoresActual] + 1;
-			indicesValores = reiniciarIndicesALaDerecha(indiceValoresActual, indicesValores);
-		}
-		else if(indicesValores[subIndiceValoresActual] + 1 == valores[subIndiceValoresActual].length)
-		{
-			subIndiceValoresActual --;
-			indicesValores[subIndiceValoresActual] =  indicesValores[subIndiceValoresActual] + 1;
-			indicesValores = reiniciarIndicesALaDerecha(subIndiceValoresActual, indicesValores);
-			
-		}
-		else{
-			indicesValores = aumentarIndicesALaDerecha(subIndiceValoresActual, indicesValores,valores);
-		}
-		return indicesValores;
-	}
-	
-	public int[] reiniciarIndicesALaDerecha(int posicion, int[] indicesValores)
-	{
-		for(int i = posicion +1; i < indicesValores.length; i++){
-			indicesValores[i] = 0;
-		}
-		subIndiceValoresActual = indicesValores.length - 1;
-		return indicesValores;
-	}
-
-	public int[]aumentarIndicesALaDerecha(int posicion, int[] indicesValores, String[][]valores)
-	{	
-		for (int max = indicesValores.length - 1; max >= posicion; max--){
-			if(indicesValores[max] < (valores[max].length-1))
-			{
-				indicesValores[max] =  indicesValores[max] + 1;
-				return indicesValores;
-			}
-		}
-		
-		return indicesValores;
-	}
-	
-	
-	public boolean esElUltimo(int[] indicesValores, String [] [] valores){
-		boolean terminar = true;
-		
-		for(int i = 0; i < indicesValores.length; i++)
-		{
-			if(indicesValores[i] < (valores[i].length-1))
-				return terminar = false;
-		}
-		
-		return terminar;
-	}
-	 
-	
-	public boolean disminuirIndiceValoresActual(int[] indicesValores, String [] [] valores){
-		boolean terminar = true;
-		
-		for(int i = indicesValores.length - 1 ; i >= indiceValoresActual; i--)
-		{
-			if(indicesValores[i] < (valores[i].length-1))
-				return terminar = false;
-		}
-		return terminar;
-	}
-	
+	}	
 	
 	public boolean esUnaPregunta(){
 		return buscarCaracteristica(CaracteristicaDeLaFrase.esUnaPregunta);

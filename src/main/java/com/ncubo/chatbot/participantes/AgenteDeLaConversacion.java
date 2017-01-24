@@ -23,4 +23,16 @@ public class AgenteDeLaConversacion extends Agente{
 		return null;
 	}
 
+	@Override
+	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

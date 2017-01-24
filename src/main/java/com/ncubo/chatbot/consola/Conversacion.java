@@ -110,7 +110,7 @@ public class Conversacion {
 						
 						if(agente.seTieneQueAbordarElTema()){
 							agente.yaNoSeTieneQueAbordarElTema();
-							misSalidas.add(agente.volverAPreguntarConMeRindo(fraseActual, respuesta, temaActual, true));
+							misSalidas.add(agente.volverAPreguntarConMeRindo(fraseActual, respuesta, temaActual, true, true));
 						}
 						
 						this.temaActual = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), laIntencion);
@@ -218,7 +218,7 @@ public class Conversacion {
 				System.out.println("Quiere saludar ...");
 				this.temaActual = this.temario.buscarTema(Constantes.FRASE_SALUDO);
 
-				Afirmacion saludar = (Afirmacion) this.temaActual.buscarUnaFrase("saludar");
+				Saludo saludar = (Saludo) this.temaActual.buscarUnaFrase("saludar");
 				misSalidas.add(agente.decir(saludar, respuesta, temaActual));
 				
 				ponerComoYaTratado(saludar);

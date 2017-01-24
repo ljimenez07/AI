@@ -557,6 +557,10 @@ public abstract class Agente extends Participante{
 	
 	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
 	
+	public abstract Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
+	
+	public abstract Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
+	
 	public static void main(String[] args) throws Exception {
 		/*Agente agente = new Agente();
 		agente.respaldarVariablesDeContexto("{system={dialog_request_counter=2.0, dialog_stack=[{dialog_node=node_2_1479401409144}], dialog_turn_counter=2.0}, idTema=quiereMovimientos, conversation_id=95225b89-891d-43a5-9db2-2a190d730343, quiereMovimientos=true, oracionesAfirmativas=[movimientos], nodo=preguntarPorOtraConsulta}");*/
