@@ -135,10 +135,10 @@ public class Participante{
 	}
 	
 	public Salida volverAPreguntar(Frase pregunta, Respuesta respuesta, Tema tema){
-		return volverAPreguntarConMeRindo(pregunta, respuesta, tema, false);
+		return volverAPreguntarConMeRindo(pregunta, respuesta, tema, false, true);
 	}
 	
-	public Salida volverAPreguntarConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo){
+	public Salida volverAPreguntarConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, boolean generarAudio){
 		
 		Salida salida = new Salida();
 		ComponentesDeLaFrase resultado = null;
@@ -176,9 +176,12 @@ public class Participante{
 							String textoParaReproducir = texto;
 							textoParaReproducir = textoParaReproducir.replace("&nbsp;", " ");
 							textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
-							
-							String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
-							String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+							String miIp = "";
+							if(generarAudio){
+								String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
+								miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+								
+							}
 							sonido = new Sonido(miIp, textoParaReproducir);
 						}catch(Exception e){
 							System.out.println("Error al generar el audio dinamico de: "+texto);

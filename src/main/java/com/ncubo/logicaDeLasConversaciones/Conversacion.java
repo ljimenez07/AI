@@ -138,7 +138,7 @@ public class Conversacion {
 							
 							if(agente.seTieneQueAbordarElTema()){
 								agente.yaNoSeTieneQueAbordarElTema();
-								misSalidas.add(agente.volverAPreguntarConMeRindo(fraseActual, respuesta, temaActual, true));
+								misSalidas.add(agente.volverAPreguntarUnaFraseConMeRindo(fraseActual, respuesta, temaActual, true, participante, modoDeResolucionDeResultadosFinales));
 							}
 							
 							this.temaActual = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), laIntencion);
@@ -179,7 +179,7 @@ public class Conversacion {
 								// Verificar que fue	
 								System.out.println("No entendi la ultima pregunta");
 								if(fraseActual.esMandatorio()){
-									misSalidas.add(agente.volverAPreguntar(fraseActual, respuesta, temaActual));
+									misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
 								}
 							}
 						}

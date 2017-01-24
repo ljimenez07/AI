@@ -3,6 +3,13 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
+import com.ncubo.chatbot.contexto.Variable;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
+import com.ncubo.chatbot.watson.TextToSpeechWatson;
 
 public class Salida implements Serializable{
 
@@ -104,6 +111,12 @@ public class Salida implements Serializable{
 		}
 		return miSonido;
 	}
+	
+	public void setMiSonido(String textoParaReproducir){
+		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
+		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+		miSonido = new Sonido(miIp, textoParaReproducir);
+	}
 
 	public ArrayList<Vineta> getMisVinetas() {
 		return misVinetas;
@@ -129,4 +142,89 @@ public class Salida implements Serializable{
 		return seTerminoElChat;
 	}
 	
+	private Matcher buscarExpresionRegular(String texto){
+		return Pattern.compile("\\$\\{(\\w+)}").matcher(texto);
+	}
+	
+	private boolean existeElPlaceholder(ArrayList<Placeholder> misPlaceholders, String nombre){
+		boolean resultado = false;
+		if(!misPlaceholders.isEmpty()){
+			for(Placeholder placeholder: misPlaceholders){
+				if(placeholder.getNombreDelPlaceholder().equals(nombre))
+					return true;
+			}
+		}
+		
+		return resultado;
+	}
+	
+	public ArrayList<Placeholder> obtienePlaceholders(){
+		// http://stackoverflow.com/questions/2286648/named-placeholders-in-string-formatting
+		ArrayList<Placeholder> placeholders = new ArrayList<>();
+		Matcher matcher = null;
+		if(!miTexto.isEmpty()){
+			matcher = buscarExpresionRegular(this.miTexto);
+		}else if(! miSonido.getTextoUsadoParaGenerarElSonido().isEmpty()){
+			matcher = buscarExpresionRegular(miSonido.getTextoUsadoParaGenerarElSonido());
+		}else{
+			for(Vineta vineta:misVinetas)
+				 if(! vineta.obtenerContenido().isEmpty())
+					 matcher = buscarExpresionRegular(vineta.obtenerContenido());
+		}
+		
+		if(matcher != null){
+			while (matcher.find()){
+		        String key = matcher.group(1);
+		        if( ! existeElPlaceholder(placeholders, key)){
+		        	Variable miVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(key);
+		        	placeholders.add(new Placeholder(key, miVariable.getTipoVariable()));
+		        }
+		    }
+		}
+		
+		return placeholders;
+	}
+	
+	private boolean hayExpresionRegularEnElTexto(String texto, Placeholder placeholder){
+		Matcher matcher = buscarExpresionRegular(texto);
+		boolean resultado = false;
+	    while (matcher.find()){
+	    	String key = matcher.group(1);
+	    	if(key.equals(placeholder.getNombreDelPlaceholder()))
+	    		return true;
+	    }
+	    return resultado;
+	}
+	
+	
+	public void sustituirPlaceholder(Placeholder placeholder, String valorASustituir){
+		
+		String formatoDelPlaceholder = String.format("${%s}", placeholder.getNombreDelPlaceholder());
+		if(hayExpresionRegularEnElTexto(miTexto, placeholder)){
+			miTexto = miTexto.replace(formatoDelPlaceholder, valorASustituir);
+		}
+		
+		if(hayExpresionRegularEnElTexto(miSonido.getTextoUsadoParaGenerarElSonido(), placeholder)){
+			miSonido.setTextoUsadoParaGenerarElSonido(miSonido.getTextoUsadoParaGenerarElSonido().replace(formatoDelPlaceholder, valorASustituir));
+		}
+		
+		for(Vineta vineta:misVinetas)
+			if(vineta != null){
+				if(hayExpresionRegularEnElTexto(vineta.obtenerContenido(), placeholder)){
+					String miVineta = vineta.obtenerContenido();
+					miVineta = miVineta.replace(formatoDelPlaceholder, valorASustituir);
+					vineta.cambiarElContenido(miVineta);
+				}
+			}
+	}
+	
+	public boolean soloTieneEnum(ArrayList<Placeholder> placeholders){
+		boolean tieneSoloEnum = false;
+			for (int i = 0; i < placeholders.size();i++){
+				String tipo = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholders.get(i).getNombreDelPlaceholder()).getTipoVariable().name();
+				if(!tipo.equals(TiposDeVariables.ENUM.name()))
+					return tieneSoloEnum = false;								
+			}
+		return tieneSoloEnum;
+	}
 }
