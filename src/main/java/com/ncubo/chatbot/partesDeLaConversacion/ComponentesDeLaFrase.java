@@ -32,7 +32,7 @@ public class ComponentesDeLaFrase implements Cloneable{
 		if(! vineta.isEmpty())
 			this.vineta = new Vineta(vineta);
 		else
-			this.vineta = new Vineta(textoDeLaFrase);
+			this.vineta = new Vineta("");
 		this.condicion = condicion;
 		this.placeholders = new ArrayList<>();
 		buscarPlaceholders();
