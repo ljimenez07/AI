@@ -39,12 +39,12 @@ public abstract class Temario
 		return contenido;
 	}
 	
-	public Frase frase(String idDeLaFrase){
+	public Frase frase(String nombreDeLaFrase){
 		if(contenido == null){
 			// TODO Error
 			throw new ChatException("No se ha cargado el contenido del archivo de configuracion");
 		}
-		return contenido.frase(idDeLaFrase);
+		return contenido.frase(nombreDeLaFrase);
 	}
 	
 	private void valirQueLasDependenciasEstenEnLosTemas(){
@@ -73,8 +73,17 @@ public abstract class Temario
 		return null;
 	}
 	
+	public Tema buscarTemaPorLaIntencion(String nombreIntencionGeneral){
+		for(Tema tema: temasDelDiscurso){
+			if(tema.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
+				return tema;
+			}
+		}
+		return null;
+	}
+	
 	public Frase extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase caracteristica){
-		Tema miSaludo = buscarTema(Constantes.FRASE_SALUDO);
+		Tema miSaludo = buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
 		return miSaludo.buscarUnaFraseCon(caracteristica);
 	}
 	

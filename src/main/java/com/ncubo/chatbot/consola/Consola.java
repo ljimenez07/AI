@@ -58,7 +58,7 @@ public class Consola {
 		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
-		ClienteDePrueba cliente = new ClienteDePrueba("Ricky", "123456", new Conectores());
+		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
 		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
 		
 		String respuesta = "";
