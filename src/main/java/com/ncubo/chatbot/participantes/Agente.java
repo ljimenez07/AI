@@ -524,6 +524,10 @@ public abstract class Agente extends Participante{
 		abordarElTemaPorNOLoEntendi = false;
 	}
 	
+	public String obtenerElContexto(){
+		return miTopico.obtenerElContexto();
+	}
+	
 	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
 	
 	public abstract Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);

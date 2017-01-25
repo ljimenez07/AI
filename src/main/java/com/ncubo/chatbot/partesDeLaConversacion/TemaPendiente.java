@@ -1,22 +1,26 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
-import com.ncubo.chatbot.watson.ConversacionConWatson;
-
 public class TemaPendiente {
 
 	private final Tema temaActual;
-	private final ConversacionConWatson miConversacion;
+	private final Frase fraseActual;
+	private final String contextoCognitivo;
 	
-	public TemaPendiente(Tema tema, ConversacionConWatson conversacion){
+	public TemaPendiente(Tema tema, Frase frase, String contexto){
 		temaActual = tema;
-		miConversacion = conversacion;
+		fraseActual = frase;
+		contextoCognitivo = contexto;
 	}
 	
 	public Tema getTemaActual() {
 		return temaActual;
 	}
 
-	public ConversacionConWatson getMiConversacion() {
-		return miConversacion;
+	public Frase getFraseActual() {
+		return fraseActual;
+	}
+
+	public String getContextoCognitivo() {
+		return contextoCognitivo;
 	}
 }

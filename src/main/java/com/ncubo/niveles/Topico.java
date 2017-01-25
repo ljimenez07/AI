@@ -1,24 +1,16 @@
 package com.ncubo.niveles;
 
-import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
-import com.ncubo.chatbot.partesDeLaConversacion.TemasPendientesDeAbordar;
 import com.ncubo.chatbot.watson.WorkSpace;
 
 public class Topico {
 
 	private NivelSuperior hiloDelNivelSuperior;
 	private NivelDetallado hiloDelNivelDetallado;
-	private final TemasPendientesDeAbordar temasPendientes;
 	
 	public Topico(WorkSpace misWorkSpaces){
 		crearHilosDeLosNiveles(misWorkSpaces);
-		temasPendientes = new TemasPendientesDeAbordar();
 	}
 	
 	private void crearHilosDeLosNiveles(WorkSpace workspace){

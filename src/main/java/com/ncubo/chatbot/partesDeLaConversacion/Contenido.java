@@ -93,7 +93,6 @@ public abstract class Contenido
 		return modoDeTrabajo;
 	}
 	
-	@SuppressWarnings("null")
 	private void cargarPreguntasYRespuestasDelArchivoDeConfiguracion(File file){
 		
 		try {
