@@ -46,16 +46,16 @@ public abstract class Contenido
 	
 	protected abstract File archivoDeConfiguracion(String path);
 
-	public Frase frase(String idDeLaFrase){
+	public Frase frase(String nombreDeLaFrase){
 		
 		for(Frase frase: frases){
-			if(frase.obtenerNombreDeLaFrase().equalsIgnoreCase(idDeLaFrase)){
+			if(frase.obtenerNombreDeLaFrase().equalsIgnoreCase(nombreDeLaFrase)){
 				return frase;
 			}
 		}
 		
 		throw new ChatException(
-			String.format("En el archivo de contenido '%s' no hay ninguna frase cuyo id sea '%s'", archivoDeConfiguracion(pathFileXML).getAbsoluteFile(), idDeLaFrase)
+			String.format("En el archivo de contenido '%s' no hay ninguna frase cuyo id sea '%s'", archivoDeConfiguracion(pathFileXML).getAbsoluteFile(), nombreDeLaFrase)
 		);
 	}
 	
@@ -214,6 +214,67 @@ public abstract class Contenido
 				}
 			}catch(Exception e){
 				System.out.println("Error cargando las variables de ambiente "+e.getMessage());
+			}
+			
+			try{
+				System.out.println("\nCargando las variablesDeAmbiente ...\n");
+				NodeList variables = doc.getElementsByTagName("intencionesNoReferenciadas");
+				Node variablesNode = variables.item(0);
+				Element variablesElement = (Element) variablesNode;
+				NodeList variable = variablesElement.getElementsByTagName("intencion");
+				for (int temp = 0; temp < variable.getLength(); temp++) {
+					Node nNode = variable.item(temp);
+					Element eElement = (Element) nNode;
+					String id = eElement.getAttribute("id");
+					String tipoValor = eElement.getAttribute("tipo");
+					String[] frasesDeIntenciones = new String[]{};
+					
+					NodeList nodoFrases = eElement.getElementsByTagName("frases");
+					if(nodoFrases.getLength()>0){
+						Node valorNode = nodoFrases.item(0);
+						Element valorElement = (Element) valorNode;
+						NodeList frase = valorElement.getElementsByTagName("frase");
+						frasesDeIntenciones = new String [frase.getLength()];
+		
+						for (int i = 0; i < frase.getLength(); i++) {
+							Node nodoValor = frase.item(i);
+							Element elementoValor = (Element) nodoValor;
+							String valorPorDefecto = elementoValor.getTextContent();
+							frasesDeIntenciones[i] = valorPorDefecto;
+						}
+					}
+					
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_SALUDAR)){
+						Constantes.INTENCION_SALUDAR = id;
+						Constantes.FRASES_INTENCION_SALUDAR = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_DESPEDIDA)){
+						Constantes.INTENCION_DESPEDIDA = id;
+						Constantes.FRASES_INTENCION_DESPEDIDA = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_DESPISTADOR)){
+						Constantes.INTENCION_DESPISTADOR = id;
+						Constantes.FRASES_INTENCION_DESPISTADOR = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_ERROR_CON_WATSON)){
+						Constantes.INTENCION_ERROR_CON_WATSON = id;
+						Constantes.FRASES_INTENCION_ERROR_CON_WATSON = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_FUERA_DE_CONTEXTO)){
+						Constantes.INTENCION_FUERA_DE_CONTEXTO = id;
+						Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_NO_ENTIENDO)){
+						Constantes.INTENCION_NO_ENTIENDO = id;
+						Constantes.FRASES_INTENCION_NO_ENTIENDO = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_REPETIR_ULTIMA_FRASE)){
+						Constantes.INTENCION_REPETIR_ULTIMA_FRASE = id;
+						Constantes.FRASES_INTENCION_REPETIR = frasesDeIntenciones;
+					}
+				}
+			}catch(Exception e){
+				System.out.println("Error cargando las intenciones no referenciadas"+e.getMessage());
 			}
 						
 			//System.out.println("Root element :" + doc.getDocumentElement().getNodeName());

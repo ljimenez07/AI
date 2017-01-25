@@ -54,7 +54,7 @@ public class TemarioDePruebas extends Temario{
 	
 	public static void main(String argv[]) {
 		TemarioDePruebas temario = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
-		temario.buscarTema(Constantes.FRASE_SALUDO);
+		temario.buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
 	}
 }
 

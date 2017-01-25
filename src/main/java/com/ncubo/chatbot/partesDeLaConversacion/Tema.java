@@ -78,9 +78,9 @@ public class Tema
 		if(resultado != null){
 			return resultado;
 		}
-		throw new ChatException(String.format("No existe una frase con id %s en el tema %s", nombreDeLaFrase, this.idDelTema));
+		throw new ChatException(String.format("No existe una frase con id %s en el tema %s", nombreDeLaFrase, this.nombre));
 	}
-	
+
 	public Frase buscarUnaFraseCon(CaracteristicaDeLaFrase caracteristica){
 		Frase resultado = null;
 		for(int index = 0; index < frases.length; index ++){

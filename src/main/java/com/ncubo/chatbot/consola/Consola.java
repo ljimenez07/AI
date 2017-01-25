@@ -54,7 +54,7 @@ public class Consola {
 	public static void main(String argv[]) throws Exception {
 		Consola main = new Consola();
 		
-		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
+		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_DMUNI);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		ClienteDePrueba cliente = new ClienteDePrueba("Ricky", "123456", new Conectores());

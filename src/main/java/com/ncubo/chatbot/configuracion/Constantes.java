@@ -59,22 +59,33 @@ public class Constantes {
 	public static String ID_TEMA = "idTema";
 	public static int MAXIMO_DE_INTENTOS_OPCIONALES = 4; // Sino se aborda el tema
 	
-	// Tipos de frases
-	public static String FRASE_SALUDO = "saludo";
-	public static String FRASE_DESPEDIDA = "despedida";
-	public static String FRASE_FUERA_DE_CONTEXTO = "fueraDeContexto";
-	public static String FRASE_ERROR_CON_WATSON = "errorDeComunicacionConWatson";
+	// Tipos de intenciones
+	
+	public static String TIPO_INTENCION_FUERA_DE_CONTEXTO = "fueraDeContexto";
+	public static String TIPO_INTENCION_NO_ENTIENDO = "noEntendi";
+	public static String TIPO_INTENCION_DESPEDIDA = "despedida";
+	public static String TIPO_INTENCION_SALUDAR = "saludo";
+	public static String TIPO_INTENCION_DESPISTADOR = "despistador";
+	public static String TIPO_INTENCION_REPETIR_ULTIMA_FRASE = "repetirUltima";
+	public static String TIPO_INTENCION_ERROR_CON_WATSON = "errorConWatson";
 	
 	// Intenciones
-	public static String INTENCION_FUERA_DE_CONTEXTO = "out_of_scope";
-	public static String INTENCION_NO_ENTIENDO = "noEntendi";
-	public static String INTENCION_NO_ENTIENDO_ESPECIFICO = "noEntendiConocerte";
-	public static String INTENCION_DESPEDIDA = "despedidas";
-	public static String INTENCION_SALUDAR = "saludos";
-	public static String INTENCION_DESPISTADOR = "despistar";
-	public static String INTENCION_QUE_PUEDEN_PREGUNTAR = "que_pueden_preguntar";
-	public static String INTENCION_REPETIR_ULTIMA_FRASE = "repetir_ultima";
-	public static String INTENCION_CONJUNCION_REPETIR = "conjuncionRepetirFrase";
+	public static String INTENCION_FUERA_DE_CONTEXTO = "";
+	public static String INTENCION_NO_ENTIENDO = "";
+	public static String INTENCION_DESPEDIDA = "";
+	public static String INTENCION_SALUDAR = "";
+	public static String INTENCION_DESPISTADOR = "";
+	public static String INTENCION_REPETIR_ULTIMA_FRASE = "";
+	public static String INTENCION_ERROR_CON_WATSON = "";
+	
+	
+	public static String[] FRASES_INTENCION_SALUDAR = new String[]{};
+	public static String[] FRASES_INTENCION_DESPEDIDA = new String[]{};
+	public static String[] FRASES_INTENCION_FUERA_DE_CONTEXTO  = new String[]{};
+	public static String[] FRASES_INTENCION_DESPISTADOR = new String[]{};
+	public static String[] FRASES_INTENCION_REPETIR = new String[]{};
+	public static String[] FRASES_INTENCION_NO_ENTIENDO = new String[]{};
+	public static String[] FRASES_INTENCION_ERROR_CON_WATSON = new String[]{};
 	
 	// Frase
 	public static String CONDICION_POR_DEFECTO = "enCualquierMomento";
