@@ -139,7 +139,8 @@ public class Conversacion {
 							
 							idFraseActivada = respuesta.obtenerFraseActivada();
 							extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
-							String laIntencion = agente.obtenernombreDeLaIntencionEspecificaActiva();
+							//String laIntencion = agente.obtenernombreDeLaIntencionEspecificaActiva();
+							String laIntencion = agente.obtenerNombreDeLaIntencionGeneralActiva();
 							
 							if(agente.seTieneQueAbordarElTema()){
 								agente.yaNoSeTieneQueAbordarElTema();
@@ -193,7 +194,9 @@ public class Conversacion {
 						}
 						
 						if(respuesta.seTerminoElTema()){
-							Tema miTema = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), agente.obtenernombreDeLaIntencionEspecificaActiva());
+							//Tema miTema = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), agente.obtenernombreDeLaIntencionEspecificaActiva());
+							Tema miTema = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), agente.obtenerNombreDeLaIntencionGeneralActiva());
+
 							if(miTema == null){
 								this.temaActual = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
 								agente.borrarUnaVariableDelContexto(Constantes.TERMINO_EL_TEMA);

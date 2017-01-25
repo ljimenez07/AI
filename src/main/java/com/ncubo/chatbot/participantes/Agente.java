@@ -32,7 +32,7 @@ public abstract class Agente extends Participante{
 	//private String nombreDelWorkSpaceGeneral;
 	private String nombreDeWorkspaceActual;
 	private String nombreDeLaIntencionGeneralActiva;
-	private String nombreDeLaIntencionEspecificaActiva;
+	//private String nombreDeLaIntencionEspecificaActiva;
 	//private boolean estaEnElWorkspaceGeneral;
 	private boolean hayQueEvaluarEnNivelSuperior;
 	private boolean noEntendiLaUltimaRespuesta;
@@ -50,7 +50,7 @@ public abstract class Agente extends Participante{
 		this.misWorkSpaces = miWorkSpaces;
 		//this.nombreDelWorkSpaceGeneral = "";
 		this.nombreDeLaIntencionGeneralActiva = "";
-		this.nombreDeLaIntencionEspecificaActiva = "";
+		//this.nombreDeLaIntencionEspecificaActiva = "";
 		this.numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
 		this.inicializarContextos();
@@ -154,7 +154,7 @@ public abstract class Agente extends Participante{
 						//System.out.println(String.format("Cambiando al workspace %s e intencion %s", nombreDeWorkspaceActual, nombreDeLaIntencionGeneralActiva));
 						cambiarDeTema = true; // Buscar otro tema
 						//nombreDeLaIntencionEspecificaActiva = determinarLaIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente, nombreDeWorkspaceActual).getIntent();
-						nombreDeLaIntencionEspecificaActiva = determinarLaIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente).getIntent();
+						//nombreDeLaIntencionEspecificaActiva = determinarLaIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente).getIntent();
 						abordarElTemaPorNOLoEntendi = false;
 						//estaEnElWorkspaceGeneral = false;
 						hayQueEvaluarEnNivelSuperior = false;
@@ -166,16 +166,15 @@ public abstract class Agente extends Participante{
 						}else{
 							nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
 						}
-						nombreDeLaIntencionEspecificaActiva = "";
+						//nombreDeLaIntencionEspecificaActiva = "";
 						hayIntencionNoAsociadaANingunWorkspace = true;
 					}
 				}catch(Exception e){
 					System.out.println("No hay ninguna intencion real o de confianza");
 					nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
-					nombreDeLaIntencionEspecificaActiva = "";
+					//nombreDeLaIntencionEspecificaActiva = "";
 					hayIntencionNoAsociadaANingunWorkspace = true;
 				}
-				
 			}
 			numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		}
@@ -198,12 +197,11 @@ public abstract class Agente extends Participante{
 			Intent miIntencion = this.determinarLaIntencionGeneral(respuestaDelCliente);
 			if(elClienteQuiereCambiarDeIntencionGeneral(miIntencion)){
 				if(! miIntencion.getIntent().equals(nombreDeLaIntencionGeneralActiva)){
-					System.out.println("Se requiere cambiar a WROKSPACE GENERAL ...");
+					System.out.println("Se requiere cambiar a NIVER SUPERIOR ...");
 					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();;
 					//cambiarAWorkspaceGeneral();
 					cambiarANivelSuperior();
 					respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
-					//respuesta = enviarRespuestaAWatson(respuestaDelClinete, frase); // Especifico
 				}else{
 					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 				}
@@ -234,9 +232,9 @@ public abstract class Agente extends Participante{
 					String laIntencion = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 					if( ! laIntencion.equals("")){
 						borrarUnaVariableDelContexto(Constantes.ID_TEMA); // Solo se borra el id cuando el tema termina
-						if(! laIntencion.equals("afirmacion")) // TODO Esto no deberia ir aca
-						{
-							nombreDeLaIntencionEspecificaActiva = laIntencion;
+						if(! laIntencion.equals("afirmacion")){ // TODO Esto no deberia ir aca
+							//nombreDeLaIntencionEspecificaActiva = laIntencion;
+							nombreDeLaIntencionGeneralActiva = laIntencion;
 						}
 						seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 					}
@@ -296,7 +294,7 @@ public abstract class Agente extends Participante{
 		Iterator<?> json_keys = jsonObj.keys();
 		while( json_keys.hasNext() ){
 			String json_key = (String) json_keys.next();
-			if( ! json_key.equals("system") && ! json_key.equals("conversation_id") && ! json_key.equals("estaLogueado")){
+			if( ! json_key.equals("system") && ! json_key.equals("conversation_id")){
 				try {
 					System.out.println("Respaldando: "+json_key);
 					misVariables.put(json_key, jsonObj.getString(json_key));
@@ -505,13 +503,14 @@ public abstract class Agente extends Participante{
 		return this.nombreDeLaIntencionGeneralActiva;
 	}
 	
+	/*
 	public String obtenernombreDeLaIntencionEspecificaActiva(){
 		return nombreDeLaIntencionEspecificaActiva;
 	}
 	
 	public void establecerNombreDeLaIntencionEspecificaActiva(String nombreDeLaIntencion) {
 		this.nombreDeLaIntencionEspecificaActiva = nombreDeLaIntencion;
-	}
+	}*/
 	
 	public boolean hayIntencionNoAsociadaANingunWorkspace(){
 		return this.hayIntencionNoAsociadaANingunWorkspace;
