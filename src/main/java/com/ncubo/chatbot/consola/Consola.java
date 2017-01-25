@@ -12,6 +12,7 @@ import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
+import com.ncubo.logicaDeLasConversaciones.Conversacion;
 
 public class Consola {
 
@@ -54,10 +55,10 @@ public class Consola {
 	public static void main(String argv[]) throws Exception {
 		Consola main = new Consola();
 		
-		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_DMUNI);
+		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
-		ClienteDePrueba cliente = new ClienteDePrueba("Ricky", "123456", new Conectores());
+		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
 		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
 		
 		String respuesta = "";
