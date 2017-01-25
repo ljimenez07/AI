@@ -12,6 +12,7 @@ import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
+import com.ncubo.logicaDeLasConversaciones.Conversacion;
 
 public class Consola {
 

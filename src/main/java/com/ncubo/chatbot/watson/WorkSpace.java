@@ -5,15 +5,15 @@ public class WorkSpace {
 	private String usuarioIBM;
 	private String contrasenaIBM;
 	private String idIBM;
-	private String tipo;
+	private String nombreDelTopico;
 	private String nombre;
 	private String[] listaDeIntencionesUsadasParaReferenciarAlWorkspace;
 	
-	public WorkSpace(String usuarioIBM, String contrasenaIBM, String idIBM, String tipo, String nombre, String... intenciones) {
+	public WorkSpace(String usuarioIBM, String contrasenaIBM, String idIBM, String nombreDelTopico, String nombre, String... intenciones) {
 		this.usuarioIBM = usuarioIBM;
 		this.contrasenaIBM = contrasenaIBM;
 		this.idIBM = idIBM;
-		this.tipo = tipo;
+		this.nombreDelTopico = nombreDelTopico;
 		this.nombre = nombre;
 		this.listaDeIntencionesUsadasParaReferenciarAlWorkspace = intenciones;
 	}
@@ -51,12 +51,12 @@ public class WorkSpace {
 		this.idIBM = idIBM;
 	}
 
-	public String getTipo() {
-		return tipo;
+	public String getNombreDelTopico() {
+		return nombreDelTopico;
 	}
 
-	public void setTipo(String tipo) {
-		this.tipo = tipo;
+	public void setNombreDelTopico(String nombreDelTopico) {
+		this.nombreDelTopico = nombreDelTopico;
 	}
 
 	public String getNombre() {

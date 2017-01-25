@@ -24,7 +24,7 @@ public class AgenteDeLaConversacion extends Agente{
 		return null;
 	}
 
-@Override
+	@Override
 	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales) {
 		// TODO Auto-generated method stub
 		return null;

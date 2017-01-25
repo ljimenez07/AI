@@ -29,6 +29,7 @@ public class Respuesta {
 	private boolean hayOracionesAfirmativas;
 	private String loQueElClienteDijo = "";
 	private boolean hayProblemasEnLaComunicacionConWatson;
+	private boolean teminoDeProcesarLaRespuestaDelAgente = false;
 	
 	public Respuesta(Frase frase, ConversacionConWatson conversacion, String context){
 		this.terminoElTema = false;
@@ -77,6 +78,11 @@ public class Respuesta {
 		}
 		
 		procesarLaRespuestaDeWatson(this.miConversacion, watsonRespuesta);
+		teminoDeProcesarLaRespuestaDelAgente = true;
+	}
+	
+	public boolean teminoDeProcesarLaRespuestaDelAgente(){
+		return teminoDeProcesarLaRespuestaDelAgente;
 	}
 	
 	private void procesarLaRespuestaDeWatson(ConversacionConWatson conversacion, MessageResponse watsonRespuesta){

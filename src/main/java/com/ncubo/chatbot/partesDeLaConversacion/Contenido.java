@@ -148,13 +148,13 @@ public abstract class Contenido
 				for (int temp = 0; temp < workspace.getLength(); temp++) {
 					Node nNode = workspace.item(temp);
 					Element eElement = (Element) nNode;
-					String tipo = eElement.getAttribute("tipo");
+					String nombreDelTopico = eElement.getAttribute("nombreDelTopico");
 					String idIBM = eElement.getAttribute("idIBM");
 					String intencionesParaSerReferenciado = eElement.getAttribute("intencionesParaSerReferenciado");
 					String nombre = nNode.getTextContent();
 					System.out.println("NOMBRE: " + nombre);
-					System.out.println("Tipo: " + tipo);
-					miWorkSpaces.add(new WorkSpace(user, pass, idIBM, tipo, nombre, intencionesParaSerReferenciado.split(",")));
+					System.out.println("Tipo: " + nombreDelTopico);
+					miWorkSpaces.add(new WorkSpace(user, pass, idIBM, nombreDelTopico, nombre, intencionesParaSerReferenciado.split(",")));
 				}
 			}catch(Exception e){
 				throw new ChatException("Error cargando los workspaces "+e.getMessage());

@@ -124,7 +124,8 @@ public class Conversacion {
 					if(respuesta.cambiarAGeneral()){
 						extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
 						//this.temaActual = this.temario.buscarTema(Constantes.FRASE_SALUDO);
-						agente.cambiarAWorkspaceGeneral();
+						//agente.cambiarAWorkspaceGeneral();
+						agente.cambiarANivelSuperior();
 						
 						if (misSalidas.isEmpty()){
 							return analizarLaRespuestaConWatson(respuestaDelCliente);
@@ -148,7 +149,8 @@ public class Conversacion {
 								this.temaActual = this.temario.buscarTema(Constantes.FRASE_SALUDO);
 								
 								if(this.temario.buscarTema(agente.obtenerNombreDelWorkspaceActual(), laIntencion) == null && ! laIntencion.equals("afirmacion") && ! laIntencion.equals("negacion")){
-									agente.cambiarAWorkspaceGeneral();
+									//agente.cambiarAWorkspaceGeneral();
+									agente.cambiarANivelSuperior();
 								}
 							}else{
 								if (idFraseActivada.equals("")){ // Quiere decir que no hay ninguna pregunta en la salida
@@ -189,7 +191,8 @@ public class Conversacion {
 							if(miTema == null){
 								this.temaActual = this.temario.buscarTema(Constantes.FRASE_SALUDO);
 								agente.borrarUnaVariableDelContexto(Constantes.TERMINO_EL_TEMA);
-								agente.cambiarAWorkspaceGeneral();
+								//agente.cambiarAWorkspaceGeneral();
+								agente.cambiarANivelSuperior();
 							}
 						}
 					}
