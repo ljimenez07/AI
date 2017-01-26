@@ -10,7 +10,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.WorkSpace;
 
-public class AgenteDeLaConversacion extends Agente{
+public class AgenteDeLaConversacion extends AgenteCognitivo{
 
 	public AgenteDeLaConversacion(){}
 	

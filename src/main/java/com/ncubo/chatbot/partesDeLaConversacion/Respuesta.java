@@ -22,8 +22,8 @@ public class Respuesta {
 	private MessageResponse watsonRespuesta;
 	private boolean terminoElTema;
 	private boolean hayUnAnythingElse;
-	private boolean cambiarIntencion;
-	private boolean cambiarAGeneral;
+	//private boolean cambiarIntencion;
+	//private boolean cambiarAGeneral;
 	private String fraseActivada;
 	private List<String> nombresDeOracionesAfirmativas;
 	private boolean hayOracionesAfirmativas;
@@ -35,7 +35,7 @@ public class Respuesta {
 		this.terminoElTema = false;
 		this.fraseActivada = "";
 		this.hayUnAnythingElse = false;
-		this.cambiarIntencion = false;
+		//this.cambiarIntencion = false;
 		this.miFrase = frase;
 		this.miConversacion = conversacion;
 		this.miContexto = context;
@@ -51,7 +51,7 @@ public class Respuesta {
 		this.terminoElTema = false;
 		this.fraseActivada = "";
 		this.hayUnAnythingElse = false;
-		this.cambiarIntencion = false;
+		//this.cambiarIntencion = false;
 		this.miFrase = null;
 		this.miConversacion = conversacion;
 		this.miContexto = context;
@@ -92,9 +92,9 @@ public class Respuesta {
 		
 		this.terminoElTema = (obtenerElementoDelContextoDeWatson(Constantes.TERMINO_EL_TEMA).equals("true"));
 		this.hayUnAnythingElse = (obtenerElementoDelContextoDeWatson(Constantes.ANYTHING_ELSE).equals("true"));
-		this.cambiarIntencion = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_INTENCION).equals("true"));
+		//this.cambiarIntencion = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_INTENCION).equals("true"));
 		this.fraseActivada = obtenerElementoDelContextoDeWatson(Constantes.NODO_ACTIVADO);
-		this.cambiarAGeneral = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_A_GENERAL).equals("true"));
+		//this.cambiarAGeneral = (obtenerElementoDelContextoDeWatson(Constantes.CAMBIAR_A_GENERAL).equals("true"));
 		obtenerNombresDeOracionesAfirmativas();
 		
 	}
@@ -150,13 +150,13 @@ public class Respuesta {
 		return this.hayUnAnythingElse;
 	}
 	
-	public boolean quiereCambiarIntencion(){
+	/*public boolean quiereCambiarIntencion(){
 		return this.cambiarIntencion;
 	}
 	
 	public boolean cambiarAGeneral(){
 		return this.cambiarAGeneral;
-	}
+	}*/
 	
 	public MessageResponse messageResponse(){
 		return watsonRespuesta;

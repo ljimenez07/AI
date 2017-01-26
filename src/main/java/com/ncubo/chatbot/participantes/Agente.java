@@ -38,6 +38,8 @@ public abstract class Agente extends Participante{
 	private boolean noEntendiLaUltimaRespuesta;
 	private int numeroDeIntentosActualesEnRepetirUnaPregunta;
 	private boolean cambiarDeTema = false;
+	private boolean cambiarDeTemaForzosamente = false;
+	private boolean pareceQueQuiereCambiarDeTemaForzosamente = true;
 	private boolean abordarElTemaPorNOLoEntendi = false;
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
 	private LogDeLaConversacion miHistorico = new LogDeLaConversacion();
@@ -125,7 +127,7 @@ public abstract class Agente extends Participante{
 	
 	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
-		
+		cambiarDeTemaForzosamente = false;
 		//respuesta = new Respuesta(frase, misConversacionesConWatson.get(nombreDeWorkspaceActual), misConversacionesConWatson.get(nombreDeWorkspaceActual).getElContextoConWatson());
 		//respuesta.llamarAWatson(respuestaDelCliente);
 
@@ -153,6 +155,11 @@ public abstract class Agente extends Participante{
 						nombreDeLaIntencionGeneralActiva = intencionDelCliente;
 						//System.out.println(String.format("Cambiando al workspace %s e intencion %s", nombreDeWorkspaceActual, nombreDeLaIntencionGeneralActiva));
 						cambiarDeTema = true; // Buscar otro tema
+						if(pareceQueQuiereCambiarDeTemaForzosamente){
+							cambiarDeTemaForzosamente = true;
+							pareceQueQuiereCambiarDeTemaForzosamente = false;
+						}
+						
 						//nombreDeLaIntencionEspecificaActiva = determinarLaIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente, nombreDeWorkspaceActual).getIntent();
 						//nombreDeLaIntencionEspecificaActiva = determinarLaIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente).getIntent();
 						abordarElTemaPorNOLoEntendi = false;
@@ -184,7 +191,7 @@ public abstract class Agente extends Participante{
 	
 	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = miTopico.hablarConWatson(frase, respuestaDelCliente);
-		
+		cambiarDeTemaForzosamente = false;
 		//respuesta = new Respuesta(frase, misConversacionesConWatson.get(nombreDeWorkspaceActual), misConversacionesConWatson.get(nombreDeWorkspaceActual).getElContextoConWatson());
 		//respuesta.llamarAWatson(respuestaDelCliente);
 		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
@@ -201,6 +208,10 @@ public abstract class Agente extends Participante{
 					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();;
 					//cambiarAWorkspaceGeneral();
 					cambiarANivelSuperior();
+					if( ! respuesta.seTerminoElTema()){
+						pareceQueQuiereCambiarDeTemaForzosamente = true;
+					}
+					nombreDeLaIntencionGeneralActiva = miIntencion.getIntent();
 					respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
 				}else{
 					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
@@ -227,7 +238,8 @@ public abstract class Agente extends Participante{
 				abordarElTemaPorNOLoEntendi = false;
 				
 				// Analizar si tengo que cambiar de workspace
-				cambiarDeTema = respuesta.seTerminoElTema() || respuesta.quiereCambiarIntencion();
+				//cambiarDeTema = respuesta.seTerminoElTema() || respuesta.quiereCambiarIntencion();
+				cambiarDeTema = respuesta.seTerminoElTema();
 				if(cambiarDeTema){
 					String laIntencion = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 					if( ! laIntencion.equals("")){
@@ -349,6 +361,10 @@ public abstract class Agente extends Participante{
 	
 	public boolean hayQueCambiarDeTema(){
 		return cambiarDeTema;
+	}
+	
+	public boolean hayQueCambiarDeTemaForzosamente(){
+		return cambiarDeTemaForzosamente;
 	}
 	
 	public void yaNoCambiarDeTema(){

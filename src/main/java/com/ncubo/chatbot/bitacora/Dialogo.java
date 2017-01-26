@@ -17,7 +17,7 @@ public class Dialogo implements Serializable{
 	private String elAudioQueDijoElFramework = "";
 	private String laVinetaQueMostroElFramework = "";
 	private String idTemaQueUso = "" ;
-	private String idFraseQueUso;
+	private String idFraseQueUso = "";
 	private String loQueDijoElParticipante = "";
 	private Date laFechaEnQueSeCreo;
 	
@@ -25,8 +25,10 @@ public class Dialogo implements Serializable{
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
 		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).obtenerContenido();
-		this.idTemaQueUso = miSalida.getTemaActual().obtenerNombre();
-		this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
+		if(miSalida.getTemaActual() != null)
+			this.idTemaQueUso = miSalida.getTemaActual().obtenerNombre();
+		if(miSalida.getFraseActual() != null)
+			this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
 		if(miSalida.obtenerLaRespuestaDeIBM() != null)
 			this.loQueDijoElParticipante = miSalida.obtenerLaRespuestaDeIBM().loQueElClienteDijoFue();
 		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();

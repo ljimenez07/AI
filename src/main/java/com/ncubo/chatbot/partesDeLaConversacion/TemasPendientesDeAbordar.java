@@ -5,7 +5,7 @@ import java.util.Deque;
 
 public class TemasPendientesDeAbordar {
 
-	private final Deque<TemaPendiente> temasPendientes;
+	private Deque<TemaPendiente> temasPendientes;
 	
 	public TemasPendientesDeAbordar(){
 		temasPendientes = new ArrayDeque<TemaPendiente>();
