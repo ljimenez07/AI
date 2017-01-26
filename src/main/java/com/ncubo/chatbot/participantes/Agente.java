@@ -12,6 +12,7 @@ import org.json.JSONObject;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
+import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
@@ -23,6 +24,8 @@ import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
+import com.ncubo.db.DetalleDeConversacionDao;
+import com.ncubo.db.FrasesDao;
 
 // Es como el watson de Ncubo
 public abstract class Agente extends Participante{
@@ -45,6 +48,8 @@ public abstract class Agente extends Participante{
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
 	private LogDeLaConversacion miHistorico = new LogDeLaConversacion();
 	private BitacoraDao miBitacora;
+	private DetalleDeConversacionDao detalleDeLaConversacion;
+	private FrasesDao frasesDelFramework;
 	
 	public Agente(ArrayList<WorkSpace> miWorkSpaces){
 		this.noEntendiLaUltimaRespuesta = true;
@@ -59,6 +64,8 @@ public abstract class Agente extends Participante{
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
 		this.inicializarContextos();
 		miBitacora = new BitacoraDao();
+		detalleDeLaConversacion = new DetalleDeConversacionDao();
+		frasesDelFramework = new FrasesDao();
 	}
 	
 	public Agente(){
@@ -93,13 +100,13 @@ public abstract class Agente extends Participante{
 	
 	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
 		try {
-			miBitacora.insertar(idSesion, idCliente, miHistorico);
+			int idDeLaConversacion = miBitacora.insertar(idSesion, idCliente, miHistorico);
+			for (Dialogo conversacion : miHistorico.verHistorialDeLaConversacion()) {
+				int idDeLaFraseGuardada = frasesDelFramework.insertarFrasesDevueltasPorElFramework( conversacion);
+				detalleDeLaConversacion.insertarDetalledeLaConversacion(conversacion, idDeLaConversacion, idDeLaFraseGuardada);
+			}
 			return true;
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			return false;

@@ -9,12 +9,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Iterator;
 
+import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 
 public class BitacoraDao {
@@ -43,39 +46,53 @@ public class BitacoraDao {
 		}
 	}
 	
-	public void insertar(String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException, SQLException{
+	public int insertar(String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException
+	{
 		
-		// insert into bitacora_de_conversaciones (id_sesion, id_usuario, fecha, conversacion, esConversacionEspecifica) values ("1234", "1234", now(), "", 0);
 		String query = "INSERT INTO "+NOMBRE_TABLA_BITACORA
-				 + "("+atributosDeLaBitacoraDao.ID_SESION+", "+atributosDeLaBitacoraDao.ID_USARIO+", "+atributosDeLaBitacoraDao.FECHA+", "+
+				+ "("+atributosDeLaBitacoraDao.ID_SESION+", "+atributosDeLaBitacoraDao.ID_USARIO+", "+atributosDeLaBitacoraDao.FECHA+", "+
 				atributosDeLaBitacoraDao.CONVERSACION+") VALUES (?,?,?,?);";
 
-		Connection con = ConexionALaDB.getInstance().openConBD();
-		Calendar calendar = Calendar.getInstance();
-	    java.sql.Timestamp miFechaActual = new java.sql.Timestamp(calendar.getTime().getTime());
+		int idConversacion = 0;
 
-		PreparedStatement stmt = con.prepareStatement(query);
-		stmt.setString(1, idSesion);
-		stmt.setString(2, idUsuarioenBA);
-		stmt.setTimestamp(3, miFechaActual);
-		
-		ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try {
-        	ObjectOutputStream oos = new ObjectOutputStream(bos);
-			oos.writeObject(historicoDeLaConversacion);
-			oos.flush();
-	        oos.close();
-	        bos.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		try{
+			Connection con = ConexionALaDB.getInstance().openConBD();
+			Calendar calendar = Calendar.getInstance();
+			Timestamp miFechaActual = new Timestamp(calendar.getTime().getTime());
+
+			PreparedStatement stmt = con.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, idSesion);
+			stmt.setString(2, idUsuarioenBA);
+			stmt.setTimestamp(3, miFechaActual);
+
+			ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			try {
+				ObjectOutputStream oos = new ObjectOutputStream(bos);
+				oos.writeObject(historicoDeLaConversacion);
+				oos.flush();
+				oos.close();
+				bos.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			byte[] data = bos.toByteArray();
+			stmt.setObject(4, data);
+			stmt.executeUpdate();
+
+
+			ResultSet rs=stmt.getGeneratedKeys(); //obtengo las ultimas llaves generadas
+			while(rs.next()){ 
+				idConversacion = rs.getInt(1);
+			}
+
+			ConexionALaDB.getInstance().closeConBD();
+		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally
+		{
+
 		}
-        byte[] data = bos.toByteArray();
-		stmt.setObject(4, data);
-		
-		stmt.executeUpdate();
-		
-		ConexionALaDB.getInstance().closeConBD();
+		return idConversacion;
 	}
 	
 	public LogDeLaConversacion buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException{
