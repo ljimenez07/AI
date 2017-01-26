@@ -26,6 +26,7 @@ public class Salida implements Serializable{
 	private Frase fraseActual;
 	private boolean seTerminoElChat;
 	private Date miFecha;
+	private String miTextoConPlaceholder;
 	
 	public Salida(){
 		miTexto = "";
@@ -35,6 +36,7 @@ public class Salida implements Serializable{
 		temaActual = null;
 		seTerminoElChat = false;
 		miFecha = new Date();
+		miTextoConPlaceholder = "";
 	}
 	
 	public void escribir(String texto, Respuesta respuesta, Tema tema, Frase frase){
@@ -105,6 +107,15 @@ public class Salida implements Serializable{
 		miTexto = texto;
 	}
 	
+	
+	public String getMiTextoConPlaceholder() {
+		return miTextoConPlaceholder;
+	}
+
+	public void setMiTextoConPlaceholder(String miTextoConPlaceholder) {
+		this.miTextoConPlaceholder = miTextoConPlaceholder;
+	}
+
 	public Sonido getMiSonido() {
 		if(miSonido == null){
 			return new Sonido("", "");
@@ -201,7 +212,8 @@ public class Salida implements Serializable{
 		
 		String formatoDelPlaceholder = String.format("${%s}", placeholder.getNombreDelPlaceholder());
 		if(hayExpresionRegularEnElTexto(miTexto, placeholder)){
-			miTexto = miTexto.replace(formatoDelPlaceholder, valorASustituir);
+			miTextoConPlaceholder = miTexto;
+			miTexto = miTexto.replace(formatoDelPlaceholder, valorASustituir);	
 		}
 		
 		if(hayExpresionRegularEnElTexto(miSonido.getTextoUsadoParaGenerarElSonido(), placeholder)){

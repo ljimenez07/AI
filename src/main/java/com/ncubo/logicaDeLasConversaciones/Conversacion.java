@@ -306,6 +306,26 @@ public class Conversacion {
 				fraseActual = despistar;
 				ponerComoYaTratado(despistar);
 				
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_AGRADECIMIENTO)){
+				System.out.println("Quiere saludar ...");							
+				this.temaActual = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_AGRADECIMIENTO);
+
+				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_AGRADECIMIENTO);
+				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
+				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
+				fraseActual = queQuiere;
+				ponerComoYaTratado(queQuiere);
+				
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
+				System.out.println("Quiere saludar ...");							
+				this.temaActual = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR);
+
+				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR);
+				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
+				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
+				fraseActual = queQuiere;
+				ponerComoYaTratado(queQuiere);
+			
 			}
 			return true;
 		}else{
@@ -409,9 +429,17 @@ public class Conversacion {
 		int n = (int)Math.floor(Math.random()*frases.length);
 		if(this.temario.frase(frases[n]).esUnaDespedida())
 				frase = frases[n];
-		else obtenerUnaFraseAfirmativa(frases);
+		else obtenerUnaFraseDespedida(frases);
 		return frase;
 	}
 	
+	private String obtenerUnaPregunta(String[] frases){
+		String frase = frases[0];
+		int n = (int)Math.floor(Math.random()*frases.length);
+		if(this.temario.frase(frases[n]).esUnaPregunta())
+				frase = frases[n];
+		else obtenerUnaPregunta(frases);
+		return frase;
+	}
 	
 }

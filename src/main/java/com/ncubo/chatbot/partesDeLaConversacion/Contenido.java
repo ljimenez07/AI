@@ -272,6 +272,18 @@ public abstract class Contenido
 						Constantes.INTENCION_REPETIR_ULTIMA_FRASE = id;
 						Constantes.FRASES_INTENCION_REPETIR = frasesDeIntenciones;
 					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_AGRADECIMIENTO)){
+						Constantes.INTENCION_AGRADECIMIENTO = id;
+						Constantes.FRASES_INTENCION_AGRADECIMIENTO = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_QUE_PUEDEN_PREGUNTAR)){
+						Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR = id;
+						Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA)){
+						Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = id;
+						Constantes.FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = frasesDeIntenciones;
+					}
 				}
 			}catch(Exception e){
 				System.out.println("Error cargando las intenciones no referenciadas"+e.getMessage());
