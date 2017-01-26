@@ -68,6 +68,9 @@ public class Constantes {
 	public static String TIPO_INTENCION_DESPISTADOR = "despistador";
 	public static String TIPO_INTENCION_REPETIR_ULTIMA_FRASE = "repetirUltima";
 	public static String TIPO_INTENCION_ERROR_CON_WATSON = "errorConWatson";
+	public static String TIPO_INTENCION_AGRADECIMIENTO = "agradecimiento";
+	public static String TIPO_INTENCION_QUE_PUEDEN_PREGUNTAR = "quePuedenPreguntar";
+	public static String TIPO_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = "preguntarPorOtraConsulta";
 	
 	// Intenciones
 	public static String INTENCION_FUERA_DE_CONTEXTO = "";
@@ -77,7 +80,9 @@ public class Constantes {
 	public static String INTENCION_DESPISTADOR = "";
 	public static String INTENCION_REPETIR_ULTIMA_FRASE = "";
 	public static String INTENCION_ERROR_CON_WATSON = "";
-	
+	public static String INTENCION_AGRADECIMIENTO = "";
+	public static String INTENCION_QUE_PUEDEN_PREGUNTAR = "";
+	public static String INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = "";
 	
 	public static String[] FRASES_INTENCION_SALUDAR = new String[]{};
 	public static String[] FRASES_INTENCION_DESPEDIDA = new String[]{};
@@ -86,6 +91,10 @@ public class Constantes {
 	public static String[] FRASES_INTENCION_REPETIR = new String[]{};
 	public static String[] FRASES_INTENCION_NO_ENTIENDO = new String[]{};
 	public static String[] FRASES_INTENCION_ERROR_CON_WATSON = new String[]{};
+	public static String[] FRASES_INTENCION_AGRADECIMIENTO = new String[]{};
+	public static String[] FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR = new String[]{};
+	public static String[] FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = new String[]{};
+	
 	
 	// Frase
 	public static String CONDICION_POR_DEFECTO = "enCualquierMomento";

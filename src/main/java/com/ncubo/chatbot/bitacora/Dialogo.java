@@ -3,6 +3,10 @@ package com.ncubo.chatbot.bitacora;
 import java.io.Serializable;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
+
+import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
+import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 
 // http://www.easywayserver.com/java/save-serializable-object-in-java/
@@ -20,6 +24,9 @@ public class Dialogo implements Serializable{
 	private String idFraseQueUso = "";
 	private String loQueDijoElParticipante = "";
 	private Date laFechaEnQueSeCreo;
+	private int version;
+	private String intencion = "";
+	private String entidades = "";
 	
 	public Dialogo(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
@@ -29,9 +36,16 @@ public class Dialogo implements Serializable{
 			this.idTemaQueUso = miSalida.getTemaActual().obtenerNombre();
 		if(miSalida.getFraseActual() != null)
 			this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
-		if(miSalida.obtenerLaRespuestaDeIBM() != null)
+		if(miSalida.obtenerLaRespuestaDeIBM() != null){
 			this.loQueDijoElParticipante = miSalida.obtenerLaRespuestaDeIBM().loQueElClienteDijoFue();
+			MessageResponse response = miSalida.obtenerLaRespuestaDeIBM().messageResponse();
+			List<Entity> listaEntidades = response.getEntities();
+		  if(!listaEntidades.isEmpty())
+		   this.entidades = procesarEntidades(listaEntidades);
+		  }
 		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();
+		this.intencion = miSalida.getTemaActual().obtenerIntencionGeneralAlQuePertenece();
+		this.version = miSalida.getFraseActual().getVersion();
 	}
 	
 	public String getElTextoQueDijoElFramework() {
@@ -94,6 +108,48 @@ public class Dialogo implements Serializable{
 		return serialVersionUID;
 	}
 	
+	public int getVersion() {
+		return version;
+	}
+
+	public void setVersion(int version) {
+		this.version = version;
+	}
+
+	public String getIntencion() {
+		return intencion;
+	}
+
+	public void setIntencion(String intension) {
+		this.intencion = intension;
+	}
+	public String getEntidades() {
+		return entidades;
+	}
+
+	public void setEntidades(String entidades) {
+		this.entidades = entidades;
+	}
+	
+	private String procesarEntidades (List<Entity> lista){
+		  StringBuilder buffer = new StringBuilder();
+		  boolean processedFirst = false;
+		  String entidades = "";
+
+		  try{
+		      for(Entity record: lista){
+		          if(processedFirst)
+		              buffer.append(",");
+		          buffer.append(record.getEntity());
+		          processedFirst = true;
+		      }
+		      entidades = buffer.toString();
+		  }finally{
+		      buffer = null;
+		  }
+		  return entidades;
+		 }
+
 	/*public static void main(String argv[]) {
 		HistoricoDeLaConversacion historico = new HistoricoDeLaConversacion();
 		historico.agregarHistorico("Hola!", "{\"textos\":[{\"texto\":\"�Hola!\",\"audio\":\"\"},{\"texto\":\"�En qu� puedo ayudarte?\",\"audio\":\"\"}]}");

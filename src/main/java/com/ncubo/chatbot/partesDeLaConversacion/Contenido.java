@@ -271,6 +271,18 @@ public abstract class Contenido
 						Constantes.INTENCION_REPETIR_ULTIMA_FRASE = id;
 						Constantes.FRASES_INTENCION_REPETIR = frasesDeIntenciones;
 					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_AGRADECIMIENTO)){
+						Constantes.INTENCION_AGRADECIMIENTO = id;
+						Constantes.FRASES_INTENCION_AGRADECIMIENTO = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_QUE_PUEDEN_PREGUNTAR)){
+						Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR = id;
+						Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR = frasesDeIntenciones;
+					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA)){
+						Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = id;
+						Constantes.FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = frasesDeIntenciones;
+					}
 				}
 			}catch(Exception e){
 				System.out.println("Error cargando las intenciones no referenciadas"+e.getMessage());
@@ -291,6 +303,7 @@ public abstract class Contenido
 					CaracteristicaDeLaFrase[] caracteristicasDeLaFrase = new CaracteristicaDeLaFrase[3];
 					
 					String idDeLaFrase = eElement.getAttribute("id");
+					int version = Integer.parseInt(eElement.getElementsByTagName("version").item(0).getTextContent());
 					System.out.println("Conversacion Id : " + idDeLaFrase);
 					
 					String nombreDeLaFrase = eElement.getAttribute("nombre");
@@ -371,18 +384,18 @@ public abstract class Contenido
 					
 					if(elTipoEs.equals("saludo")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-						miFrase = new Saludo(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Saludo(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("pregunta")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
-						miFrase = new Pregunta(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
+						miFrase = new Pregunta(version ,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 								obtenerEntidades((Element) eElement.getElementsByTagName("condiciones").item(0)), 
 								obtenerIntenciones((Element) eElement.getElementsByTagName("condiciones").item(0)),intentosFallidos);
 					}else if(elTipoEs.equals("afirmativa")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-						miFrase = new Afirmacion(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Afirmacion(version, idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}else if(elTipoEs.equals("despedida")){
 						caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-						miFrase = new Despedida(idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+						miFrase = new Despedida(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
 					}
 					agregarFrase(miFrase);
 				}
