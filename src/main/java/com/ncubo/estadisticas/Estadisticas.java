@@ -26,8 +26,10 @@ public class Estadisticas
 	
 	public void darSeguimiento(Tema tema)
 	{
-		Integer valorDelKey = detalles.get(tema);
-		detalles.put( tema, (valorDelKey == null) ? 1 : ++valorDelKey);
+		if(tema != null){
+			Integer valorDelKey = detalles.get(tema);
+			detalles.put( tema, (valorDelKey == null) ? 1 : ++valorDelKey);
+		}
 	}
 	
 	public Hashtable<Tema, Integer> obtenerDetalles()

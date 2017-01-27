@@ -23,8 +23,6 @@ public abstract class Frase
     private String pathAGuardarLosAudiosTTS;
     private String ipPublicaAMostrarLosAudioTTS;
     private int intentosFallidos = 0;
-    
-    protected Frase (int idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
     private int version;
     
     protected Frase (int version, String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,

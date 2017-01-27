@@ -13,6 +13,7 @@ import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
+import com.ncubo.logicaDeLasConversaciones.ConversacionCognitiva;
 
 public class Consola {
 
@@ -59,7 +60,7 @@ public class Consola {
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
-		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
+		ConversacionCognitiva miconversacion = new ConversacionCognitiva(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
 		
 		String respuesta = "";
 		
@@ -69,7 +70,7 @@ public class Consola {
 		while(true){
 			respuesta = main.leerTexto();
 			
-			salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(respuesta);
+			salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(respuesta, true);
 			main.imprimirSalidas(salidasParaElCliente);
 		}
 	}
