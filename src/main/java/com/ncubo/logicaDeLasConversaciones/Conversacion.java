@@ -176,8 +176,6 @@ public class Conversacion {
 					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
 					if(respuesta.seTerminoElTema())
 						temaActual = null;
-				}else{
-					temaActual = null;
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola

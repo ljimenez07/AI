@@ -127,18 +127,14 @@ public abstract class Agente extends Participante{
 			// Validar si es que el usuario cambio de intencion general
 			Intent miIntencion = this.determinarLaIntencionGeneral(respuestaDelCliente);
 			if(elClienteQuiereCambiarDeIntencionGeneral(miIntencion)){
-				if(! miIntencion.getIntent().equals(nombreDeLaIntencionGeneralActiva)){
-					System.out.println("Se requiere cambiar a NIVER SUPERIOR ...");
-					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();;
-					cambiarANivelSuperior();
-					if( ! respuesta.seTerminoElTema()){
-						pareceQueQuiereCambiarDeTemaForzosamente = true;
-					}
-					nombreDeLaIntencionGeneralActiva = miIntencion.getIntent();
-					respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
-				}else{
-					this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+				System.out.println("Se requiere cambiar a NIVER SUPERIOR ...");
+				this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();;
+				cambiarANivelSuperior();
+				if( ! respuesta.seTerminoElTema()){
+					pareceQueQuiereCambiarDeTemaForzosamente = true;
 				}
+				nombreDeLaIntencionGeneralActiva = miIntencion.getIntent();
+				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
 				cambiarDeTema = true;
 			}else{
 				if(frase.esMandatorio()){	
