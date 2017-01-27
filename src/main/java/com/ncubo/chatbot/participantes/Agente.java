@@ -93,7 +93,6 @@ public abstract class Agente extends Participante{
 				}
 
 				abordarElTemaPorNOLoEntendi = false;
-				hayQueEvaluarEnNivelSuperior = false;
 				this.hayIntencionNoAsociadaANingunWorkspace = false;
 			}else{
 				System.out.println("Intencion no asociada a ningun workspace");
@@ -105,6 +104,7 @@ public abstract class Agente extends Participante{
 				hayIntencionNoAsociadaANingunWorkspace = true;
 				noEntendiLaUltimaRespuesta = true;
 			}
+			hayQueEvaluarEnNivelSuperior = false;
 		}catch(Exception e){
 			System.out.println("No hay ninguna intencion real o de confianza");
 			nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
@@ -118,6 +118,7 @@ public abstract class Agente extends Participante{
 	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = miTopico.hablarConWatson(frase, respuestaDelCliente);
 		cambiarDeTemaForzosamente = false;
+		hayIntencionNoAsociadaANingunWorkspace = false;
 		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
 		
 		noEntendiLaUltimaRespuesta = (! (respuesta.entendiLaRespuesta() && ! respuesta.hayAlgunAnythingElse())) && 

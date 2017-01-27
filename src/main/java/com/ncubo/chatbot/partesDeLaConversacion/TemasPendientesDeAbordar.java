@@ -35,4 +35,7 @@ public class TemasPendientesDeAbordar {
 		return siguienteTema;
 	}
 	
+	public void borrarLosTemasPendientes(){
+		temasPendientes.clear();
+	}
 }

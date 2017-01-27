@@ -116,6 +116,14 @@ public class Conversacion {
 				String idFraseActivada = respuesta.obtenerFraseActivada();
 				if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta)){
 					respuesta = analizarResultadosDelAgente(misSalidas, idFraseActivada, respuesta, respuestaDelCliente);
+				}else{
+					if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes()){
+						TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
+						this.temaActual = temaPendiente.getTemaActual();
+						this.fraseActual = temaPendiente.getFraseActual();
+						agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
+						volverlARetomarUnTema(misSalidas, respuesta);
+					}
 				}
 			}
 			
@@ -137,17 +145,21 @@ public class Conversacion {
 						}else{
 							decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 						}
+					}else{
+						if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes()){
+							TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
+							this.temaActual = temaPendiente.getTemaActual();
+							this.fraseActual = temaPendiente.getFraseActual();
+							agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
+							volverlARetomarUnTema(misSalidas, respuesta);
+						}
 					}
-				}else{
-					// TODO Buscar el siguiente tema a tocar (modo cuestionario - E.g: Hacer preguntas seguidas)
+				}else{// TODO Buscar el siguiente tema a tocar (modo cuestionario - E.g: Hacer preguntas seguidas)
 				}
 			}
 		}
 		
-		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
-		miUltimaSalida = misSalidas;
-		
-		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && esModoConsulta && respuesta.seTerminoElTema()){ // TODO Sacar un tema top de la Pila
+		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && respuesta.seTerminoElTema()){ // TODO Sacar un tema top de la Pila
 			TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 			this.temaActual = temaPendiente.getTemaActual();
 			this.fraseActual = temaPendiente.getFraseActual();
@@ -158,7 +170,14 @@ public class Conversacion {
 					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta"))
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 		}
-			
+		
+		if(misSalidas.isEmpty()){
+			decirTemaNoEntendi(misSalidas, respuesta);
+		}
+		
+		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
+		miUltimaSalida = misSalidas;
+		
 		return misSalidas;
 	}
 	
@@ -280,7 +299,6 @@ public class Conversacion {
 		
 		Afirmacion fueraDeContexto = (Afirmacion) this.temario.frase(nombreFrase);
 		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
-		fraseActual = null;
 		ponerComoYaTratado(miTema);
 	}
 	
@@ -301,6 +319,8 @@ public class Conversacion {
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(queQuiere);
 				
+				temasPendientes.borrarLosTemasPendientes();
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPEDIDA)){
 				System.out.println("Quiere despedirse ...");
 				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_DESPEDIDA);
@@ -309,6 +329,8 @@ public class Conversacion {
 				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(saludar);
+				
+				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_FUERA_DE_CONTEXTO)){
 				System.out.println("Esta fuera de contexto ...");
@@ -319,8 +341,11 @@ public class Conversacion {
 				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(miTema);
 				
+				temasPendientes.borrarLosTemasPendientes();
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				decirTemaNoEntendi(misSalidas, respuesta);
+				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
 				System.out.println("Quiere despistar  ...");
@@ -330,6 +355,8 @@ public class Conversacion {
 				Afirmacion despistar = (Afirmacion)  this.temario.frase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(despistar);
+				
+				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
 				System.out.println("Quiere repetir  ...");
@@ -342,6 +369,9 @@ public class Conversacion {
 				for(Salida salida: miUltimaSalida){
 					misSalidas.add(agente.decirUnaFrase(salida.getFraseActual(), respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
 				}
+	
+				temasPendientes.borrarLosTemasPendientes();
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_AGRADECIMIENTO)){
 				System.out.println("Esta agradeciendo ...");							
 				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_AGRADECIMIENTO);
@@ -349,7 +379,6 @@ public class Conversacion {
 				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_AGRADECIMIENTO);
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
-				fraseActual = queQuiere;
 				ponerComoYaTratado(queQuiere);
 			
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
@@ -359,7 +388,6 @@ public class Conversacion {
 				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR);
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
-				fraseActual = queQuiere;
 				ponerComoYaTratado(queQuiere);
 			}
 			
