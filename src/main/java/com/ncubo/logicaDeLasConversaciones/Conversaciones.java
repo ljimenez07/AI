@@ -25,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Conversaciones {
 
-	private final static Hashtable<String, ConversacionCognitiva> misConversaciones = new Hashtable<String, ConversacionCognitiva>();
+	private final static Hashtable<String, Conversacion> misConversaciones = new Hashtable<String, Conversacion>();
 	private final static Hashtable<String, Cliente> misClientes = new Hashtable<String, Cliente>();
 	private static Temario miTemario;
 	private final Semaphore semaphore = new Semaphore(1);
@@ -58,11 +58,11 @@ public class Conversaciones {
 			
 			synchronized(misConversaciones){
 				if(existeLaConversacion(usuario.getIdSesion())){
-					ConversacionCognitiva coversacion = misConversaciones.get(usuario.getIdSesion());
+					Conversacion coversacion = misConversaciones.get(usuario.getIdSesion());
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					ConversacionCognitiva coversacion = new ConversacionCognitiva(miTemario, cliente, consultaDao, agente);
+					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -73,7 +73,7 @@ public class Conversaciones {
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					ConversacionCognitiva coversacion = new ConversacionCognitiva(miTemario, cliente, consultaDao, agente);
+					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}

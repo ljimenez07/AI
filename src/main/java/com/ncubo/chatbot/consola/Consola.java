@@ -8,12 +8,10 @@ import java.util.ArrayList;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
-import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
-import com.ncubo.logicaDeLasConversaciones.ConversacionCognitiva;
 
 public class Consola {
 
@@ -60,7 +58,7 @@ public class Consola {
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
-		ConversacionCognitiva miconversacion = new ConversacionCognitiva(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
+		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
 		
 		String respuesta = "";
 		
