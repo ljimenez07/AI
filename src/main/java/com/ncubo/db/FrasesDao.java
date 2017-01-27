@@ -38,7 +38,10 @@ public class FrasesDao {
 
 		stmt.setString(1, conversacion.getIdFraseQueUso());
 		stmt.setInt(2, conversacion.getVersion());
-		stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
+		if(conversacion.getElTextoConPlaceholders().isEmpty())
+			stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
+		else stmt.setString(3, conversacion.getElTextoConPlaceholders());
+		//stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 
 		stmt.executeUpdate();
 		

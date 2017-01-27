@@ -105,6 +105,8 @@ public abstract class Agente extends Participante{
 				int idDeLaFraseGuardada = frasesDelFramework.insertarFrasesDevueltasPorElFramework( conversacion);
 				detalleDeLaConversacion.insertarDetalledeLaConversacion(conversacion, idDeLaConversacion, idDeLaFraseGuardada);
 			}
+			miHistorico.limpiarHistorialALaConversacion();
+			
 			return true;
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
