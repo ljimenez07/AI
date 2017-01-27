@@ -61,7 +61,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public MessageResponse llamarAWatson(String mensaje){
-		return miTopico.hablarConWatson(null, mensaje).messageResponse();
+		return miTopico.hablarConWatsonEnElNivelSuperior(null, mensaje).messageResponse();
 	}
 	
 	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase){
@@ -389,6 +389,10 @@ public abstract class Agente extends Participante{
 	
 	public String obtenerElContexto(){
 		return miTopico.obtenerElContexto();
+	}
+	
+	public String obtenerMiUltimoContexto(){
+		return miTopico.obtenerMiUltimoContexto();
 	}
 	
 	public void cambiarElContexto(String contexto){

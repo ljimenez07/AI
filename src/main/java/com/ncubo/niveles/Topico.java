@@ -45,6 +45,10 @@ public class Topico {
 		return hiloDelNivelDetallado.obtenerElContexto();
 	}
 	
+	public String obtenerMiUltimoContexto() {
+		return hiloDelNivelDetallado.obtenerMiUltimoContexto();
+	}
+	
 	public void reiniciarContexto(){
 		hiloDelNivelDetallado.reiniciarContexto();
 	}

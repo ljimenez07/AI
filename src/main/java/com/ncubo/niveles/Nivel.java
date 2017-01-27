@@ -8,6 +8,7 @@ import com.ncubo.chatbot.watson.WorkSpace;
 public abstract class Nivel extends Thread{
 
 	protected ConversacionConWatson miConversacionConElAgenteCognitivo = null;
+	protected String miUlTimoContexto;
 	protected WorkSpace miWorkSpace = null;
 	
 	private volatile boolean corriendo = true;
@@ -19,7 +20,8 @@ public abstract class Nivel extends Thread{
     
 	public Nivel(WorkSpace miWorkSpace){
 		this.miWorkSpace = miWorkSpace;
-		mensajeAEnviar = "";
+		this.mensajeAEnviar = "";
+		this.miUlTimoContexto = "";
 	}
 	
 	public void run() {
@@ -74,6 +76,10 @@ public abstract class Nivel extends Thread{
 	
 	public void detenerNivel(){
 		corriendo = false;
+	}
+	
+	public String obtenerMiUltimoContexto(){
+		return miUlTimoContexto;
 	}
 	
 	protected abstract void cargarWorkSpace();
