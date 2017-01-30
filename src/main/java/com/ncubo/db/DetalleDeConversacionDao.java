@@ -12,6 +12,7 @@ import java.util.Iterator;
 
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
+import com.ncubo.chatbot.configuracion.Constantes;
 
 
 public class DetalleDeConversacionDao {
@@ -29,7 +30,7 @@ public class DetalleDeConversacionDao {
 			PreparedStatement stmt = con.prepareStatement(queryParaTablaDetalle);
 
 			boolean elClienteDijoAlgo = conversacion.getLoQueDijoElParticipante() !="";
-			if (elClienteDijoAlgo) 
+			if (elClienteDijoAlgo && !conversacion.getIntencion().equals(Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA)) 
 			{
 				stmt = con.prepareStatement(queryParaTablaDetalle);
 				stmt.setTimestamp(1, miFechaActual);
