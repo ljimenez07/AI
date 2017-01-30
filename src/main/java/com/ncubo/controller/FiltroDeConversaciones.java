@@ -3,64 +3,65 @@ package com.ncubo.controller;
 import java.util.Iterator;
 
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
-import com.ncubo.db.BitacoraDao;
+import com.ncubo.db.DetalleDeConversacionDao;
 
 public class FiltroDeConversaciones {
 
+	
 	public Iterator<LogDeLaConversacion> obtenerConversacionesEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 		
-		return bitacora.buscarConversacionesEntreFechas(fechaInicial, fechaFinal);
+		return detalle.buscarConversacionesEntreFechas(fechaInicial, fechaFinal);
 	}
 
 	public Iterator<LogDeLaConversacion> obntenerLasConversacionesDeHoy() throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 		
-		return bitacora.buscarConversacionesDeHoy();
+		return detalle.buscarConversacionesDeHoy();
 	}
 
 	public Iterator<LogDeLaConversacion> obtenerConversacionesPorUsuario(String idUsuario) throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 
-		return bitacora.buscarConversacionesPorUsuario(idUsuario);
+		return detalle.buscarConversacionesPorUsuario(idUsuario);
 	}
 
 	public Iterator<LogDeLaConversacion> obtenerConversacionesPorUsuarioAnonimo() throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 		
-		return bitacora.buscarConversacionesPorUsuarioAnonimo();
+		return detalle.buscarConversacionesPorUsuarioAnonimo();
 	}
 	
 	public Iterator<LogDeLaConversacion> obtenerConversacionesPorUsuarioEntreFechas(String idUsuario ,String fechaInicial, String fechaFinal) throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 
-		return bitacora.buscarConversacionesDeUsuariosEspecificosEntreFechas(idUsuario, fechaInicial, fechaFinal);
+		return detalle.buscarConversacionesDeUsuariosEspecificosEntreFechas(idUsuario, fechaInicial, fechaFinal);
 	}
 	
 	public Iterator<LogDeLaConversacion> obtenerConversacionesDeUsusariosAnonimosEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 
-		return bitacora.buscarConversacionesDeUsuariosAnonimosEntreFechas(fechaInicial, fechaFinal);
+		return detalle.buscarConversacionesDeUsuariosAnonimosEntreFechas(fechaInicial, fechaFinal);
 	}
 	
 	public Iterator<LogDeLaConversacion> obtenerLasConversacionesDeTodosLosUsuariosNoAnonimos() throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 
-		return bitacora.buscarLasConversacionesDeTodosLosUsuariosNoAnonimos();
+		return detalle.buscarLasConversacionesDeTodosLosUsuariosNoAnonimos();
 	}
 	
 	public Iterator<LogDeLaConversacion> obtenerTodasLasConversaciones() throws ClassNotFoundException{
 
-		BitacoraDao bitacora = new BitacoraDao();
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 
-		return bitacora.buscarTodasLasConversaciones();
+		return detalle.buscarTodasLasConversaciones();
 	}
 	
 }

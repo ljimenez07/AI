@@ -35,6 +35,11 @@ public class Cliente extends Participante{
 		verificarExistenciaDeLasVariables();
 	}
 	
+	public Cliente(String nombre, String id) throws Exception{
+		miNombre = nombre;
+		miId = id;
+	}
+	
 	public String getMiNombre() {
 		return miNombre;
 	}

@@ -60,6 +60,9 @@ public class Dialogo implements Serializable{
 		this.elTextoConPlaceholders = miSalida.getMiTextoConPlaceholder();
 	}
 	
+	public Dialogo(){}
+		
+	
 	public String getElTextoQueDijoElFramework() {
 		return elTextoQueDijoElFramework;
 	}
