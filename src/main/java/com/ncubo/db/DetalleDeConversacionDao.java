@@ -50,16 +50,6 @@ public class DetalleDeConversacionDao {
 			stmt = con.prepareStatement(queryParaTablaDetalle);
 			stmt.setTimestamp(1, miFechaActual);
 			stmt.setString(2, "Chatbot");
-			stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
-			stmt.setInt(4, idDeLaFraseGuardada);
-			stmt.setString(5, conversacion.getIntencion());
-			stmt.setString(6, conversacion.getEntidades());
-			stmt.setInt(7, idDeLaConversacion);
-
-			stmt.executeUpdate();
-			stmt = con.prepareStatement(queryParaTablaDetalle);
-			stmt.setTimestamp(1, miFechaActual);
-			stmt.setString(2, "Chatbot");
 
 			if(conversacion.getElTextoConPlaceholders().isEmpty())
 				stmt.setString(3, null);
