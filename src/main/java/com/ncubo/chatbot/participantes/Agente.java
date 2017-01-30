@@ -2,6 +2,8 @@ package com.ncubo.chatbot.participantes;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -271,6 +273,25 @@ public abstract class Agente extends Participante{
 			}
 		}
 		return intencion;
+	}
+	
+	private ArrayList<Intent> determinarLasDosIntencionDeConfianzaEnUnWorkspace(String mensaje){
+		List<Intent> intenciones = llamarAWatson(mensaje).getIntents();
+		ArrayList<Intent> respuesta = new ArrayList<Intent>();
+		
+		Collections.sort(intenciones, new Comparator<Intent>() {
+
+	        public int compare(Intent laPrimeraIntencion, Intent laSegundaIntencion) {
+	            return laSegundaIntencion.getConfidence().compareTo(laPrimeraIntencion.getConfidence());
+	        }
+	    });
+		Double valorDeAmbas = intenciones.get(0).getConfidence() + intenciones.get(1).getConfidence();
+		if(valorDeAmbas >= 0.8 && intenciones.get(1).getConfidence() >= 0.3){
+			respuesta.add(intenciones.get(0));
+			respuesta.add(intenciones.get(1));
+		}
+		
+		return respuesta;
 	}
 	
 	public void activarTemaEnElContextoDeWatson(String nombreTema){
