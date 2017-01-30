@@ -64,4 +64,11 @@ public class FiltroDeConversaciones {
 		return detalle.buscarTodasLasConversaciones();
 	}
 	
+	public LogDeLaConversacion obtenerUnaConversacionPorMedioDelId(int idConversacion) throws ClassNotFoundException{
+
+		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
+
+		return detalle.buscarUnaConversacionPorId(idConversacion);
+	}
+	
 }
