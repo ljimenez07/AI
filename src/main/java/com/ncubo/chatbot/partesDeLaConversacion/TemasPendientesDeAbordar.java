@@ -2,6 +2,7 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.Iterator;
 
 public class TemasPendientesDeAbordar {
 
@@ -37,5 +38,22 @@ public class TemasPendientesDeAbordar {
 	
 	public void borrarLosTemasPendientes(){
 		temasPendientes.clear();
+	}
+	
+	public void borrarUnTemaPendiente(TemaPendiente tema){
+		for(Iterator<TemaPendiente> itr = temasPendientes.iterator(); itr.hasNext();)  {
+			TemaPendiente miTema = (TemaPendiente) itr.next();
+			if(miTema.getTemaActual().equals(tema))
+				temasPendientes.remove(tema);
+		}
+	}
+	
+	public TemaPendiente buscarUnTemaPendiente(Tema tema){
+		for(Iterator<TemaPendiente> itr = temasPendientes.iterator(); itr.hasNext();)  {
+			TemaPendiente miTema = (TemaPendiente) itr.next();
+			if(miTema.getTemaActual().equals(tema))
+				return miTema;
+		}
+		return null;
 	}
 }

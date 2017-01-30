@@ -195,6 +195,9 @@ public class Conversacion {
 					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
 					if(respuesta.seTerminoElTema())
 						temaActual = null;
+				}else{
+					temaActual = null;
+					agente.cambiarANivelSuperior();
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
@@ -242,6 +245,12 @@ public class Conversacion {
 		Tema temaNuevo = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), laIntencion);
 		if( temaNuevo != null){
 			temaActual = temaNuevo;
+			
+			TemaPendiente temaPrimitivo = temasPendientes.buscarUnTemaPendiente(temaActual);
+			boolean esteTemaEstaPendiente = temaPrimitivo != null;
+			if(esteTemaEstaPendiente)
+				temasPendientes.borrarUnTemaPendiente(temaPrimitivo);
+			
 			agente.yaNoCambiarDeTema();
 			agregarVariablesDeContextoDelClienteAWatson(temaActual);
 			
@@ -285,11 +294,23 @@ public class Conversacion {
 		extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada, this.temaActual);
 		
 		ponerComoYaTratado(this.temaActual);
+		agente.yaNoCambiarANivelSuperior();
 	}
 	
 	private void volverlARetomarUnTema(ArrayList<Salida> misSalidas, Respuesta respuesta){
+		decirFraseRecordatoria(misSalidas, respuesta);
 		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
+		agente.yaNoCambiarANivelSuperior();
 		ponerComoYaTratado(temaActual);
+	}
+	
+	private void decirFraseRecordatoria(ArrayList<Salida> misSalidas, Respuesta respuesta){
+		System.out.println("Frase recordatoria ...");
+		String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_RECORDAR_TEMAS);
+		
+		Afirmacion fraseRecordatoria = (Afirmacion) this.temario.frase(nombreFrase);
+		misSalidas.add(agente.decirUnaFrase(fraseRecordatoria, respuesta, null, participante, modoDeResolucionDeResultadosFinales));
+
 	}
 	
 	private void decirTemaNoEntendi(ArrayList<Salida> misSalidas, Respuesta respuesta){
@@ -342,6 +363,8 @@ public class Conversacion {
 				ponerComoYaTratado(miTema);
 				
 				temasPendientes.borrarLosTemasPendientes();
+
+				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				decirTemaNoEntendi(misSalidas, respuesta);
@@ -389,6 +412,8 @@ public class Conversacion {
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(queQuiere);
+				
+				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
 			}
 			
 			return true;

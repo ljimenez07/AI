@@ -14,6 +14,7 @@ import org.json.JSONObject;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
+import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
@@ -23,6 +24,8 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
+import com.ncubo.db.DetalleDeConversacionDao;
+import com.ncubo.db.FrasesDao;
 import com.ncubo.niveles.Topico;
 
 public abstract class Agente extends Participante{
@@ -41,6 +44,8 @@ public abstract class Agente extends Participante{
 	private boolean hayIntencionNoAsociadaANingunWorkspace;
 	private LogDeLaConversacion miHistorico = new LogDeLaConversacion();
 	private BitacoraDao miBitacora;
+	private DetalleDeConversacionDao detalleDeLaConversacion;
+	private FrasesDao frasesDelFramework;
 	
 	public Agente(ArrayList<WorkSpace> miWorkSpaces){
 		this.noEntendiLaUltimaRespuesta = true;
@@ -51,10 +56,15 @@ public abstract class Agente extends Participante{
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
 		this.inicializarContextos();
 		miBitacora = new BitacoraDao();
+		detalleDeLaConversacion = new DetalleDeConversacionDao();
+		frasesDelFramework = new FrasesDao();
 	}
 	
 	public Agente(){
 		misWorkSpaces = null;
+		miBitacora = new BitacoraDao();
+		detalleDeLaConversacion = new DetalleDeConversacionDao();
+		frasesDelFramework = new FrasesDao();
 	}
 	
 	private void inicializarContextos(){
@@ -87,14 +97,6 @@ public abstract class Agente extends Participante{
 		}
 	}
 	
-	public MessageResponse llamarAWatson(String mensaje, String nombreWorkspace){
-		return miWatsonConversaciones.get(nombreWorkspace).enviarAWatson(mensaje);
-	}
-<<<<<<< .mine
-
-=======
-	
->>>>>>> .theirs
 	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = null;
 		if(hayQueEvaluarEnNivelSuperior){
@@ -125,6 +127,7 @@ public abstract class Agente extends Participante{
 
 				abordarElTemaPorNOLoEntendi = false;
 				this.hayIntencionNoAsociadaANingunWorkspace = false;
+				hayQueEvaluarEnNivelSuperior = false;
 			}else{
 				System.out.println("Intencion no asociada a ningun workspace");
 				if (! intencionDelCliente.equals("")){
@@ -134,8 +137,9 @@ public abstract class Agente extends Participante{
 				}
 				hayIntencionNoAsociadaANingunWorkspace = true;
 				noEntendiLaUltimaRespuesta = true;
+				hayQueEvaluarEnNivelSuperior = true;
 			}
-			hayQueEvaluarEnNivelSuperior = false;
+			
 		}catch(Exception e){
 			System.out.println("No hay ninguna intencion real o de confianza");
 			nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
@@ -150,8 +154,10 @@ public abstract class Agente extends Participante{
 		Respuesta respuesta = miTopico.hablarConWatson(frase, respuestaDelCliente);
 		cambiarDeTemaForzosamente = false;
 		hayIntencionNoAsociadaANingunWorkspace = false;
-		int maximoIntentos = frase.obtenerNumeroIntentosFallidos();
-		
+		int maximoIntentos = 4;
+		if(frase != null)
+			maximoIntentos = frase.obtenerNumeroIntentosFallidos();
+			
 		noEntendiLaUltimaRespuesta = (! (respuesta.entendiLaRespuesta() && ! respuesta.hayAlgunAnythingElse())) && 
 				(numeroDeIntentosActualesEnRepetirUnaPregunta != maximoIntentos);
 		if(noEntendiLaUltimaRespuesta){
@@ -270,21 +276,6 @@ public abstract class Agente extends Participante{
 		miHistorico.agregarHistorialALaConversacion(miSalida);
 	}
 	
-	public LogDeLaConversacion verMiHistorico(){
-		return miHistorico;
-	}
-	
-	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
-		try {
-			miBitacora.insertar(idSesion, idCliente, miHistorico);
-			return true;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-	}
-	
 	public Intent determinarLaIntencionGeneral(String mensaje){
 		Intent intencion = determinarLaIntencionDeConfianzaEnUnWorkspace(mensaje);
 		return intencion;
@@ -396,6 +387,10 @@ public abstract class Agente extends Participante{
 	
 	public void cambiarANivelSuperior(){
 		this.hayQueEvaluarEnNivelSuperior = true;
+	}
+	
+	public void yaNoCambiarANivelSuperior(){
+		this.hayQueEvaluarEnNivelSuperior = false;
 	}
 	
 	public String obtenerNombreDeLaIntencionGeneralActiva() {

@@ -283,6 +283,9 @@ public abstract class Contenido
 						Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = id;
 						Constantes.FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = frasesDeIntenciones;
 					}
+					if(tipoValor.equals(Constantes.TIPO_INTENCION_RECORDAR_TEMA)){
+						Constantes.FRASES_INTENCION_RECORDAR_TEMAS = frasesDeIntenciones;
+					}
 				}
 			}catch(Exception e){
 				System.out.println("Error cargando las intenciones no referenciadas"+e.getMessage());

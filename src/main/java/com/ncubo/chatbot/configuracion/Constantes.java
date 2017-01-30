@@ -71,6 +71,7 @@ public class Constantes {
 	public static String TIPO_INTENCION_AGRADECIMIENTO = "agradecimiento";
 	public static String TIPO_INTENCION_QUE_PUEDEN_PREGUNTAR = "quePuedenPreguntar";
 	public static String TIPO_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = "preguntarPorOtraConsulta";
+	public static String TIPO_INTENCION_RECORDAR_TEMA = "recordatorTemasPendientes";
 	
 	// Intenciones
 	public static String INTENCION_FUERA_DE_CONTEXTO = "";
@@ -94,7 +95,7 @@ public class Constantes {
 	public static String[] FRASES_INTENCION_AGRADECIMIENTO = new String[]{};
 	public static String[] FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR = new String[]{};
 	public static String[] FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = new String[]{};
-	
+	public static String[] FRASES_INTENCION_RECORDAR_TEMAS = new String[]{};
 	
 	// Frase
 	public static String CONDICION_POR_DEFECTO = "enCualquierMomento";
