@@ -7,6 +7,7 @@ import java.util.List;
 
 import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 
 // http://www.easywayserver.com/java/save-serializable-object-in-java/
@@ -27,7 +28,16 @@ public class Dialogo implements Serializable{
 	private int version;
 	private String intencion = "";
 	private String entidades = "";
+	private String elTextoConPlaceholders = "";
 	
+	public String getElTextoConPlaceholders() {
+		return elTextoConPlaceholders;
+	}
+
+	public void setElTextoConPlaceholders(String elTextoConPlaceholders) {
+		this.elTextoConPlaceholders = elTextoConPlaceholders;
+	}
+
 	public Dialogo(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
@@ -47,6 +57,7 @@ public class Dialogo implements Serializable{
 		if(miSalida.getTemaActual() != null)
 			this.intencion = miSalida.getTemaActual().obtenerIntencionGeneralAlQuePertenece();
 		this.version = miSalida.getFraseActual().getVersion();
+		this.elTextoConPlaceholders = miSalida.getMiTextoConPlaceholder();
 	}
 	
 	public String getElTextoQueDijoElFramework() {
@@ -141,7 +152,9 @@ public class Dialogo implements Serializable{
 		      for(Entity record: lista){
 		          if(processedFirst)
 		              buffer.append(",");
-		          buffer.append(record.getEntity());
+		          if(record.getEntity().equals(Constantes.ENTIDAD_SYS_NUMBER))
+		        	buffer.append(record.getEntity());
+		          else buffer.append(record.getEntity()+":"+record.getValue());
 		          processedFirst = true;
 		      }
 		      entidades = buffer.toString();

@@ -120,4 +120,6 @@ public class Constantes {
 	public static String VARIABLE = "Variable";
 	public static String CLASE_PARAMETROS = "ParametrosDeLasVariables";
 	public static String INSTANCEA_PARAMETROS = "parametros";
+	
+	public static String ENTIDAD_SYS_NUMBER = "sys-number";
 }

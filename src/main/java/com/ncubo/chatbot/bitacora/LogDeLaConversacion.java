@@ -19,6 +19,10 @@ public class LogDeLaConversacion implements Serializable{
 		historico.add(new Dialogo(miSalida));
 	}
 	
+	public void limpiarHistorialALaConversacion(){
+		historico.clear();
+	}
+	
 	public ArrayList<Dialogo> verHistorialDeLaConversacion(){
 		return historico;
 	}

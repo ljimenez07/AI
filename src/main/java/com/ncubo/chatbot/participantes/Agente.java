@@ -66,6 +66,35 @@ public abstract class Agente extends Participante{
 		return miTopico.hablarConWatsonEnElNivelSuperior(null, mensaje).messageResponse();
 	}
 	
+	public LogDeLaConversacion verMiHistorico(){
+		return miHistorico;
+	}
+	
+	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
+		try {
+			int idDeLaConversacion = miBitacora.insertar(idSesion, idCliente, miHistorico);
+			for (Dialogo conversacion : miHistorico.verHistorialDeLaConversacion()) {
+				int idDeLaFraseGuardada = frasesDelFramework.insertarFrasesDevueltasPorElFramework( conversacion);
+				detalleDeLaConversacion.insertarDetalledeLaConversacion(conversacion, idDeLaConversacion, idDeLaFraseGuardada);
+			}
+			miHistorico.limpiarHistorialALaConversacion();
+			
+			return true;
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public MessageResponse llamarAWatson(String mensaje, String nombreWorkspace){
+		return miWatsonConversaciones.get(nombreWorkspace).enviarAWatson(mensaje);
+	}
+<<<<<<< .mine
+
+=======
+	
+>>>>>>> .theirs
 	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = null;
 		if(hayQueEvaluarEnNivelSuperior){
