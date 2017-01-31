@@ -301,24 +301,26 @@ public class Conversacion {
 						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
 						String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 						
-						System.out.println("Id de la frase a recordar: "+idFraseActivada);
-						Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
-						
-						String context = respuesta.messageResponse().getContext().toString();
-						JSONObject obj = null;
-						try {
-							obj = new JSONObject(context);
-							obj.remove(Constantes.NODO_ACTIVADO);
-						} catch (JSONException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
+						if( ! idFraseActivada.isEmpty()){
+							System.out.println("Id de la frase a recordar: "+idFraseActivada);
+							Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
+							
+							String context = respuesta.messageResponse().getContext().toString();
+							JSONObject obj = null;
+							try {
+								obj = new JSONObject(context);
+								obj.remove(Constantes.NODO_ACTIVADO);
+							} catch (JSONException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							context = obj.toString();
+							if(! temaNuevo.obtenerNombre().equals("preguntarPorOtraConsulta")){
+								TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
+								this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
+							}
+							agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 						}
-						context = obj.toString();
-						if(! temaNuevo.obtenerNombre().equals("preguntarPorOtraConsulta")){
-							TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
-							this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
-						}
-						agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 					}
 				}
 			}
