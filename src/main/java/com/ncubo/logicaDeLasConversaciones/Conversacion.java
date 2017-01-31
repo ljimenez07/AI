@@ -6,6 +6,10 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
 import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
@@ -242,6 +246,8 @@ public class Conversacion {
 	
 	private Respuesta cambiarDeTema(String idFraseActivada, String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
 		String laIntencion = agente.obtenerNombreDeLaIntencionGeneralActiva();
+		agregarUnSegundoTemaImportanteADecirComoPendiente(laIntencion, respuestaDelCliente);
+		
 		Tema temaNuevo = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), laIntencion);
 		if( temaNuevo != null){
 			temaActual = temaNuevo;
@@ -277,6 +283,46 @@ public class Conversacion {
 			agente.cambiarANivelSuperior();
 		}
 		return respuesta;
+	}
+	
+	private void agregarUnSegundoTemaImportanteADecirComoPendiente(String intencionPrincipal, String respuestaDelCliente){
+		ArrayList<Intent> misIntencionesDeConfianza = agente.obtenerLasDosUltimasIntencionesDeConfianza();
+		if(! misIntencionesDeConfianza.isEmpty()){
+			if( ! misIntencionesDeConfianza.get(1).getIntent().equals(intencionPrincipal)){
+				Tema temaNuevo = this.temario.proximoTemaATratar(temaActual, hilo.verTemasYaTratadosYQueNoPuedoRepetir(), agente.obtenerNombreDelWorkspaceActual(), misIntencionesDeConfianza.get(1).getIntent());
+				if( temaNuevo != null){
+					TemaPendiente temaPrimitivo = temasPendientes.buscarUnTemaPendiente(temaNuevo);
+					boolean esteTemaEstaPendiente = temaPrimitivo != null;
+					if( ! esteTemaEstaPendiente){
+						// Activar en el contexto el tema
+						agente.activarTemaEnElContextoDeWatson(temaNuevo.obtenerNombre());
+						
+						// llamar a watson y ver que bloque se activo
+						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+						String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+						
+						System.out.println("Id de la frase a recordar: "+idFraseActivada);
+						Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
+						
+						String context = respuesta.messageResponse().getContext().toString();
+						JSONObject obj = null;
+						try {
+							obj = new JSONObject(context);
+							obj.remove(Constantes.NODO_ACTIVADO);
+						} catch (JSONException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						context = obj.toString();
+						if(! temaNuevo.obtenerNombre().equals("preguntarPorOtraConsulta")){
+							TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
+							this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
+						}
+						agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+					}
+				}
+			}
+		}
 	}
 	
 	private void decirTemaPreguntarPorOtraCosa(ArrayList<Salida> misSalidas, Respuesta respuesta, String respuestaDelCliente){

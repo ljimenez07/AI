@@ -1,6 +1,5 @@
 package com.ncubo.chatbot.participantes;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -46,6 +45,7 @@ public abstract class Agente extends Participante{
 	private BitacoraDao miBitacora;
 	private DetalleDeConversacionDao detalleDeLaConversacion;
 	private FrasesDao frasesDelFramework;
+	private ArrayList<Intent> lasDosUltimasIntencionesDeConfianza;
 	
 	public Agente(ArrayList<WorkSpace> miWorkSpaces){
 		this.noEntendiLaUltimaRespuesta = true;
@@ -58,6 +58,7 @@ public abstract class Agente extends Participante{
 		miBitacora = new BitacoraDao();
 		detalleDeLaConversacion = new DetalleDeConversacionDao();
 		frasesDelFramework = new FrasesDao();
+		lasDosUltimasIntencionesDeConfianza = new ArrayList<>();
 	}
 	
 	public Agente(){
@@ -65,6 +66,7 @@ public abstract class Agente extends Participante{
 		miBitacora = new BitacoraDao();
 		detalleDeLaConversacion = new DetalleDeConversacionDao();
 		frasesDelFramework = new FrasesDao();
+		lasDosUltimasIntencionesDeConfianza = new ArrayList<>();
 	}
 	
 	private void inicializarContextos(){
@@ -110,6 +112,8 @@ public abstract class Agente extends Participante{
 	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
 		cambiarDeTemaForzosamente = false;
+		
+		lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente);
 		
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
@@ -166,7 +170,7 @@ public abstract class Agente extends Participante{
 			Intent miIntencion = this.determinarLaIntencionGeneral(respuestaDelCliente);
 			if(elClienteQuiereCambiarDeIntencionGeneral(miIntencion)){
 				System.out.println("Se requiere cambiar a NIVER SUPERIOR ...");
-				this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();;
+				this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 				cambiarANivelSuperior();
 				if( ! respuesta.seTerminoElTema()){
 					pareceQueQuiereCambiarDeTemaForzosamente = true;
@@ -305,10 +309,20 @@ public abstract class Agente extends Participante{
 	            return laSegundaIntencion.getConfidence().compareTo(laPrimeraIntencion.getConfidence());
 	        }
 	    });
+		
 		Double valorDeAmbas = intenciones.get(0).getConfidence() + intenciones.get(1).getConfidence();
 		if(valorDeAmbas >= 0.8 && intenciones.get(1).getConfidence() >= 0.3){
-			respuesta.add(intenciones.get(0));
-			respuesta.add(intenciones.get(1));
+			WorkSpace elPrimerWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(0).getIntent());
+			boolean seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace = elPrimerWorkSpace != null;
+			
+			WorkSpace elSegundoWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(1).getIntent());
+			boolean seEncontroLaSegundaIntencionAsociadaAUnWorkSpace = elSegundoWorkSpace != null;
+			
+			if(seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace && seEncontroLaSegundaIntencionAsociadaAUnWorkSpace){
+				respuesta.add(intenciones.get(0));
+				respuesta.add(intenciones.get(1));
+				System.out.println("HAY 2 INTENCIONES IMPORTANTES: 1- "+intenciones.get(0).getIntent()+"  2- "+intenciones.get(1).getIntent());
+			}
 		}
 		
 		return respuesta;
@@ -439,6 +453,12 @@ public abstract class Agente extends Participante{
 	
 	public void cambiarElContexto(String contexto){
 		miTopico.actualizarContexto(contexto);
+	}
+	
+	public ArrayList<Intent> obtenerLasDosUltimasIntencionesDeConfianza(){
+		ArrayList<Intent> misIntencionesDeConfianza = (ArrayList<Intent>) lasDosUltimasIntencionesDeConfianza.clone();
+		lasDosUltimasIntencionesDeConfianza.clear();
+		return misIntencionesDeConfianza;
 	}
 	
 	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales);
