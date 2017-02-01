@@ -199,7 +199,7 @@ public class Conversacion {
 					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
 					if(respuesta.seTerminoElTema())
 						temaActual = null;
-				}else{
+				}else if(agente.hayQueCambiarDeTema() && ! misSalidas.isEmpty()){
 					temaActual = null;
 					agente.cambiarANivelSuperior();
 				}
@@ -410,13 +410,13 @@ public class Conversacion {
 				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(miTema);
 				
-				temasPendientes.borrarLosTemasPendientes();
+				//temasPendientes.borrarLosTemasPendientes();
 
-				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
+				//decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				decirTemaNoEntendi(misSalidas, respuesta);
-				temasPendientes.borrarLosTemasPendientes();
+				//temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
 				System.out.println("Quiere despistar  ...");
