@@ -11,7 +11,7 @@ import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 import com.ncubo.evaluador.main.Evaluador;
 
-public class ComponentesDeLaFrase implements Cloneable{
+public class ComponentesDeLaFrase{
 
 	private String tipoDeFrase;
 	private String textoDeLaFrase;

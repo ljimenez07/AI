@@ -82,7 +82,8 @@ public abstract class Frase
         Collections.shuffle(misSinonimosDeLaFrase); // Desordenar el array
         for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
             if(miFrase.tienePlaceholders()){
-                resultado = miFrase;
+                resultado = new ComponentesDeLaFrase(miFrase.getTipoDeFrase(), miFrase.getTextoDeLaFrase(), 
+                		miFrase.getTextoAUsarParaGenerarElAudio(), miFrase.getVineta().obtenerContenido(), miFrase.getCondicion());
                 break;
             }
         }

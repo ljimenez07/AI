@@ -374,8 +374,10 @@ public class Conversacion {
 	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta) throws Exception{
 		if(agente.hayIntencionNoAsociadaANingunWorkspace()){
 			
-			if(! temaActual.obtenerNombre().equals("preguntarPorOtraConsulta"))
-				this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
+			if (temaActual != null && fraseActual != null){
+				if(! temaActual.obtenerNombre().equals("preguntarPorOtraConsulta"))
+					this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
+			}
 			
 			Tema miTema = null;
 			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_SALUDAR)){
@@ -456,6 +458,8 @@ public class Conversacion {
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(queQuiere);
 			
+				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
 				System.out.println("Quiere saber que hago ...");							
 				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR);
