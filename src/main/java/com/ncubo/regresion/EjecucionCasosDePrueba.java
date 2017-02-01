@@ -44,6 +44,7 @@ public class EjecucionCasosDePrueba {
 	
 	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite) throws Exception{
 		
+		resultados.clear();
 		temario = new TemarioDeLaRegresion(xmlFrases); //xml de conversaciones
 		
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME , Constantes.DB_USER,Constantes.DB_PASSWORD);
@@ -119,7 +120,7 @@ public class EjecucionCasosDePrueba {
 		runner.run();
 	}
 
-	public void correrUnCaso(int idConversacion, String descripcion){
+	public boolean correrUnCaso(int idConversacion, String descripcion){
 		
 		ConsultaDao consultaDao = new ConsultaDao();
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
@@ -151,66 +152,72 @@ public class EjecucionCasosDePrueba {
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
-					System.out.println("Problema al enviar la respuesta a Watson");
+					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(),5,miconversacion);
 				}
-				contadorSalidas = 0;
-
-				MessageResponse response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
-				List<Entity> listaDeEntidadesDeWatson = response.getEntities();
-				String laEntidadQueTrajoLaBD = dialogo.getEntidades();
-				
-				
-				boolean laListaDeEntidadesNoEstaVacia = listaDeEntidadesDeWatson.size() > 0;
-				boolean lasEntidadesCoinciden = false;
-
-				if (laListaDeEntidadesNoEstaVacia) 
-				{
-
-					String lasEntidadesDeLaBD[] = laEntidadQueTrajoLaBD.split(",");
-					boolean hayLaMismaCantidadDeEntidades = lasEntidadesDeLaBD.length == listaDeEntidadesDeWatson.size();
+				if(salidasParaElCliente.equals(null)){
+					status = false;
+					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+					break;
+				}
+				else{
+					contadorSalidas = 0;
+	
+					MessageResponse response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
+					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
+					String laEntidadQueTrajoLaBD = dialogo.getEntidades();
 					
-					if (hayLaMismaCantidadDeEntidades)
+					
+					boolean laListaDeEntidadesNoEstaVacia = listaDeEntidadesDeWatson.size() > 0;
+					boolean lasEntidadesCoinciden = false;
+	
+					if (laListaDeEntidadesNoEstaVacia) 
 					{
-
-						for (int i = 0; i < listaDeEntidadesDeWatson.size(); i++) 
+	
+						String lasEntidadesDeLaBD[] = laEntidadQueTrajoLaBD.split(",");
+						boolean hayLaMismaCantidadDeEntidades = lasEntidadesDeLaBD.length == listaDeEntidadesDeWatson.size();
+						
+						if (hayLaMismaCantidadDeEntidades)
 						{
-
-							String laEntidadQueTrajoWatson = listaDeEntidadesDeWatson.get(i).getEntity();
-							boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith("sys-");
-
-							if (seTrataDeUnSys) 
+	
+							for (int i = 0; i < listaDeEntidadesDeWatson.size(); i++) 
 							{
-								lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(lasEntidadesDeLaBD[i]);
-								if (lasEntidadesCoinciden) 
+	
+								String laEntidadQueTrajoWatson = listaDeEntidadesDeWatson.get(i).getEntity();
+								boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith("sys-");
+	
+								if (seTrataDeUnSys) 
 								{
-									observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+									lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(lasEntidadesDeLaBD[i]);
+									if (lasEntidadesCoinciden) 
+									{
+										observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+									}
+									else
+									{
+										observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: "+lasEntidadesDeLaBD[i] );
+									}
 								}
 								else
 								{
-									observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: "+lasEntidadesDeLaBD[i] );
+									laEntidadQueTrajoLaBD = lasEntidadesDeLaBD[i];
+									laEntidadQueTrajoWatson = laEntidadQueTrajoWatson+ ":" + listaDeEntidadesDeWatson.get(i).getValue();
+									lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(laEntidadQueTrajoLaBD);
+	
+									if (lasEntidadesCoinciden) 
+									{
+										observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+									}
+									else
+									{
+										observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: : "+lasEntidadesDeLaBD[i] );
+									}
 								}
 							}
-							else
-							{
-								laEntidadQueTrajoLaBD = lasEntidadesDeLaBD[i];
-								laEntidadQueTrajoWatson = laEntidadQueTrajoWatson+ ":" + listaDeEntidadesDeWatson.get(i).getValue();
-								lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(laEntidadQueTrajoLaBD);
-
-								if (lasEntidadesCoinciden) 
-								{
-									observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
-								}
-								else
-								{
-									observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: : "+lasEntidadesDeLaBD[i] );
-								}
-							}
+						}else{
+							observaciones.add("La cantidad de entidades no coinciden, la BD parece tener "+lasEntidadesDeLaBD.length+" entidades mientras que Watson responde que tiene "+listaDeEntidadesDeWatson.size()+" entidades" );
 						}
-					}else{
-						observaciones.add("La cantidad de entidades no coinciden, la BD parece tener "+lasEntidadesDeLaBD.length+" entidades mientras que Watson responde que tiene "+listaDeEntidadesDeWatson.size()+" entidades" );
 					}
 				}
-				
 			}
 			else{
 				if(salidasParaElCliente.size()<=contadorSalidas){
@@ -238,6 +245,7 @@ public class EjecucionCasosDePrueba {
 		
 		Resultado resultado = new Resultado(idConversacion, conversacion, status, logResultado, observaciones);
 		resultados.add(resultado);
+		return status;
 	}
 	
 	public ArrayList<Resultado> getResultados() {
@@ -247,4 +255,22 @@ public class EjecucionCasosDePrueba {
 	public void setResultados(ArrayList<Resultado> resultados) {
 		EjecucionCasosDePrueba.resultados = resultados;
 	}
+	
+	public ArrayList<Salida> reintentarRespuestaAWatson(String texto, int maximo, Conversacion miConversacion){
+		
+		ArrayList<Salida> salida = null;
+		if(maximo == 0)
+			return salida;
+		else{
+			try {
+				salida = miConversacion.analizarLaRespuestaConWatson(texto, true);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				reintentarRespuestaAWatson(texto, maximo--, miConversacion);
+			}
+		}
+		return salida;
+	}
+	
+	public EjecucionCasosDePrueba(){}
 }

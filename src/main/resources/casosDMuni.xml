@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<casosDePrueba>
+<caso descripcion="agua bienes inmuebles" idConversacion="33"/>
+<caso descripcion="agua ubicacion muni" idConversacion="34"/>
+<caso descripcion="patentes exoneracion agua" idConversacion="46"/>
+</casosDePrueba>

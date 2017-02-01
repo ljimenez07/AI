@@ -128,7 +128,7 @@ public class Constantes {
 	//Base de datos Regresion
 	
 	public static String DB_HOST = "172.16.60.2";
-	public static String DB_NAME = "dmuni";
+	public static String DB_NAME = "conversaciones";
 	public static String DB_USER = "root";
 	public static String DB_PASSWORD = "123456";
 	
