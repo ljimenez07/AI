@@ -2,6 +2,7 @@ package com.ncubo.regresion;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Vector;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -11,6 +12,8 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
+import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
+import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -24,23 +27,23 @@ import com.ncubo.logicaDeLasConversaciones.Conversacion;
 public class ComparadorDeIdDeFrases {
 
 	private static Temario temario;
-	
+
 	public static ArrayList<Resultado> compararConversaciones(String xmlFrases, String xmlCasos) throws Exception{
-		
+
 		ArrayList<Resultado> resultados = new ArrayList<Resultado>();
 		temario = new TemarioDeLaRegresion(xmlFrases); //xml de conversaciones
 		ConsultaDao consultaDao = new ConsultaDao();
-		
+
 		Cliente cliente = new Cliente("Ricky", "123456");
 		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()));
 
 		ConexionALaDB.getInstance("172.16.60.2", "dmuni", "root", "123456");
-		
-		
+
+
 
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
 
-		
+
 		File file = new File(xmlCasos);
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -48,8 +51,8 @@ public class ComparadorDeIdDeFrases {
 		Document doc = dBuilder.parse(file);
 
 		doc.getDocumentElement().normalize();
-		
-		
+
+
 		Element nodoCasosDePrueba = (Element)doc.getElementsByTagName("casosDePrueba").item(0);
 		NodeList listaDeCasos = nodoCasosDePrueba.getElementsByTagName("caso");
 		for (int x=0; x<listaDeCasos.getLength(); x++)
@@ -57,20 +60,78 @@ public class ComparadorDeIdDeFrases {
 			Element casoDePrueba = (Element)listaDeCasos.item(x);
 			int idConversacion = Integer.parseInt(casoDePrueba.getAttribute("idConversacion"));
 			String descripcion = casoDePrueba.getAttribute("descripcion");
-			
+
 			Vector <String> observaciones = new Vector <String>();
-			observaciones.add("\nEjecución del caso: " + descripcion);
-			
+			observaciones.add("\nEjecuciï¿½n del caso: " + descripcion);
+
 			int contadorSalidas = 0;
 			boolean status = true;
 			ArrayList<Salida> salidasParaElCliente = miconversacion.inicializarLaConversacion();
 			LogDeLaConversacion conversacion = filtro.obtenerUnaConversacionPorMedioDelId(idConversacion);
-			ArrayList<Dialogo> dialogos = conversacion.verHistorialDeLaConversacion();
-			for(Dialogo dialogo:dialogos){
+			
+
+			for(Dialogo dialogo: conversacion.verHistorialDeLaConversacion()){
 				if(!dialogo.getLoQueDijoElParticipante().equals(""))
 				{
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 					contadorSalidas = 0;
+
+					MessageResponse response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
+					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
+					String laEntidadQueTrajoLaBD = dialogo.getEntidades();
+					
+					
+					boolean laListaDeEntidadesNoEstaVacia = listaDeEntidadesDeWatson.size() > 0;
+					boolean lasEntidadesCoinciden = false;
+
+					if (laListaDeEntidadesNoEstaVacia) 
+					{
+
+						String lasEntidadesDeLaBD[] = laEntidadQueTrajoLaBD.split(",");
+						boolean hayLaMismaCantidadDeEntidades = lasEntidadesDeLaBD.length == listaDeEntidadesDeWatson.size();
+						
+						if (hayLaMismaCantidadDeEntidades)
+						{
+
+							for (int i = 0; i < listaDeEntidadesDeWatson.size(); i++) 
+							{
+
+								String laEntidadQueTrajoWatson = listaDeEntidadesDeWatson.get(i).getEntity();
+								boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith("sys-");
+
+								if (seTrataDeUnSys) 
+								{
+									lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(lasEntidadesDeLaBD[i]);
+									if (lasEntidadesCoinciden) 
+									{
+										observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+									}
+									else
+									{
+										observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: "+lasEntidadesDeLaBD[i] );
+									}
+								}
+								else
+								{
+									laEntidadQueTrajoLaBD = lasEntidadesDeLaBD[i];
+									laEntidadQueTrajoWatson = laEntidadQueTrajoWatson+ ":" + listaDeEntidadesDeWatson.get(i).getValue();
+									lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(laEntidadQueTrajoLaBD);
+
+									if (lasEntidadesCoinciden) 
+									{
+										observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+									}
+									else
+									{
+										observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: : "+lasEntidadesDeLaBD[i] );
+									}
+								}
+							}
+						}else{
+							observaciones.add("La cantidad de entidades no coinciden, la BD parece tener "+lasEntidadesDeLaBD.length+" entidades mientras que Watson responde que tiene "+listaDeEntidadesDeWatson.size()+" entidades" );
+						}
+					}
+					
 				}
 				else{
 					if(salidasParaElCliente.size()<=contadorSalidas){
@@ -89,13 +150,13 @@ public class ComparadorDeIdDeFrases {
 			Resultado resultado = new Resultado(idConversacion, conversacion, status, miconversacion.obtenerAgenteDeLaMuni().verMiHistorico(), observaciones);
 			resultados.add(resultado);
 		}
-		
+
 		return resultados;
 	}
 
 	public static void main(String argv[]) throws Exception {
 
-		ArrayList<Resultado> nuevasConversaciones = compararConversaciones("src/main/resources/conversacionesMuni.xml", "C:/Users/lisjm_000/casosDMuni.xml");
+		ArrayList<Resultado> nuevasConversaciones = compararConversaciones("src/main/resources/conversacionesMuni.xml", "C:/Users/nbetech02/Pictures/Banco_Atlantida/Prueba_en_curso/casosDMuni.xml");
 
 		for (int i = 0; i < nuevasConversaciones.size(); i++) {
 
@@ -104,12 +165,12 @@ public class ComparadorDeIdDeFrases {
 				System.out.println(observaciones.elementAt(j));
 			}
 		}
-		
-	/*	temario = new TemarioDeLaRegresion("src/main/resources/conversacionesBanco.xml"); //xml de conversaciones
+
+		/*	temario = new TemarioDeLaRegresion("src/main/resources/conversacionesBanco.xml"); //xml de conversaciones
 		ConsultaDao consultaDao = new ConsultaDao();
 
 		Conectores conectores = new Conectores();
-		
+
 		Cliente cliente = new Cliente("Ricky", "123456", conectores);
 		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()));
 
@@ -160,7 +221,7 @@ public class ComparadorDeIdDeFrases {
 
 			String laFrase = imprimirEvidencias.elementAt(i).substring(0,5);
 			esUnError = laFrase.equals("ERROR");
-			
+
 			if (esUnError) {
 				System.err.println(imprimirEvidencias.elementAt(i));
 			}else{
