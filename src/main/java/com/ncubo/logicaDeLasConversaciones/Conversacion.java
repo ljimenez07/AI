@@ -373,6 +373,10 @@ public class Conversacion {
 	
 	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta) throws Exception{
 		if(agente.hayIntencionNoAsociadaANingunWorkspace()){
+			
+			if(! temaActual.obtenerNombre().equals("preguntarPorOtraConsulta"))
+				this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
+			
 			Tema miTema = null;
 			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_SALUDAR)){
 				System.out.println("Quiere saludar ...");
