@@ -7,21 +7,19 @@ import org.testng.annotations.Test;
 
 public class RegresionTest {
  
-	@Test(dataProvider = "test1")
-	 public void f(Boolean status, String observaciones) throws Exception {
+	@Test(dataProvider = "obtenerStatusYObservaciones")
+	 public void regresion(Boolean status, String observaciones) throws Exception {
 			Assert.assertTrue(status, observaciones);
 	 }
 
-	 @DataProvider(name = "test1")	
-	 public static Object[][] primeNumbers() throws Exception {
+	 @DataProvider(name = "obtenerStatusYObservaciones")	
+	 public static Object[][] obtenerStatusYObservaciones() throws Exception {
 		
-		 ComparadorDeIdDeFrases comparador = new ComparadorDeIdDeFrases();
+		 EjecucionCasosDePrueba comparador = new EjecucionCasosDePrueba();
 	     ArrayList<Resultado> resultados = comparador.getResultados();
 		 Object[][] data = new Object[resultados.size()][2];
 
-		
 	     for (int i = 0; i < resultados.size(); i++) {
-				
 	    	 data[i][0] =resultados.get(i).getStatus();
 	    	 data[i][1] =resultados.get(i).getObservaciones().toString();
 	    }

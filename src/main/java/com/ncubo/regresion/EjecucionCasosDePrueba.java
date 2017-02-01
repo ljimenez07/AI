@@ -21,6 +21,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
+import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
@@ -32,10 +34,10 @@ import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 
-public class ComparadorDeIdDeFrases {
+public class EjecucionCasosDePrueba {
 
 	private static Temario temario;
-	
+
 	private static ConversacionesDeLaRegresion misConversaciones = new ConversacionesDeLaRegresion();
 	
 	private static ArrayList<Resultado> resultados = new ArrayList<Resultado>();
@@ -47,7 +49,7 @@ public class ComparadorDeIdDeFrases {
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME , Constantes.DB_USER,Constantes.DB_PASSWORD);
 		
 		misConversaciones.inicializarConversaciones(xmlFrases);
-
+		
 		File file = new File(xmlCasos);
 
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -55,7 +57,6 @@ public class ComparadorDeIdDeFrases {
 		Document doc = dBuilder.parse(file);
 
 		doc.getDocumentElement().normalize();
-		
 		Element nodoCasosDePrueba = (Element)doc.getElementsByTagName("casosDePrueba").item(0);
 		NodeList listaDeCasos = nodoCasosDePrueba.getElementsByTagName("caso");
 		for (int x=0; x<listaDeCasos.getLength(); x++)
@@ -69,7 +70,7 @@ public class ComparadorDeIdDeFrases {
 		}
 		
 		correrTestNG(xmlTestNG, nombreSuite);
-				
+
 		return resultados;
 	}
 	
@@ -123,12 +124,13 @@ public class ComparadorDeIdDeFrases {
 		ConsultaDao consultaDao = new ConsultaDao();
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
 
-		Cliente cliente = null ;
+		Cliente cliente = null;
 		try {
 			cliente = new Cliente("Regresion", "123456789");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 		}
+		
 		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()));
 
 		Vector <String> observaciones = new Vector <String>();
@@ -143,8 +145,7 @@ public class ComparadorDeIdDeFrases {
 		} catch (ClassNotFoundException e) {
 			System.out.println("Problema al traer la conversacion de la base de datos");
 		}
-		ArrayList<Dialogo> dialogos = conversacion.verHistorialDeLaConversacion();
-		for(Dialogo dialogo:dialogos){
+		for(Dialogo dialogo: conversacion.verHistorialDeLaConversacion()){
 			if(!dialogo.getLoQueDijoElParticipante().equals(""))
 			{
 				try {
@@ -153,6 +154,63 @@ public class ComparadorDeIdDeFrases {
 					System.out.println("Problema al enviar la respuesta a Watson");
 				}
 				contadorSalidas = 0;
+
+				MessageResponse response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
+				List<Entity> listaDeEntidadesDeWatson = response.getEntities();
+				String laEntidadQueTrajoLaBD = dialogo.getEntidades();
+				
+				
+				boolean laListaDeEntidadesNoEstaVacia = listaDeEntidadesDeWatson.size() > 0;
+				boolean lasEntidadesCoinciden = false;
+
+				if (laListaDeEntidadesNoEstaVacia) 
+				{
+
+					String lasEntidadesDeLaBD[] = laEntidadQueTrajoLaBD.split(",");
+					boolean hayLaMismaCantidadDeEntidades = lasEntidadesDeLaBD.length == listaDeEntidadesDeWatson.size();
+					
+					if (hayLaMismaCantidadDeEntidades)
+					{
+
+						for (int i = 0; i < listaDeEntidadesDeWatson.size(); i++) 
+						{
+
+							String laEntidadQueTrajoWatson = listaDeEntidadesDeWatson.get(i).getEntity();
+							boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith("sys-");
+
+							if (seTrataDeUnSys) 
+							{
+								lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(lasEntidadesDeLaBD[i]);
+								if (lasEntidadesCoinciden) 
+								{
+									observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+								}
+								else
+								{
+									observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: "+lasEntidadesDeLaBD[i] );
+								}
+							}
+							else
+							{
+								laEntidadQueTrajoLaBD = lasEntidadesDeLaBD[i];
+								laEntidadQueTrajoWatson = laEntidadQueTrajoWatson+ ":" + listaDeEntidadesDeWatson.get(i).getValue();
+								lasEntidadesCoinciden = laEntidadQueTrajoWatson.equals(laEntidadQueTrajoLaBD);
+
+								if (lasEntidadesCoinciden) 
+								{
+									observaciones.add("Las entidades coinciden correctamente. La entidad evaluada fue: "+lasEntidadesDeLaBD[i] );
+								}
+								else
+								{
+									observaciones.add("Error las entidades no coinciden correctamente. Se esperaba la entidad: : "+lasEntidadesDeLaBD[i] );
+								}
+							}
+						}
+					}else{
+						observaciones.add("La cantidad de entidades no coinciden, la BD parece tener "+lasEntidadesDeLaBD.length+" entidades mientras que Watson responde que tiene "+listaDeEntidadesDeWatson.size()+" entidades" );
+					}
+				}
+				
 			}
 			else{
 				if(salidasParaElCliente.size()<=contadorSalidas){
@@ -186,7 +244,7 @@ public class ComparadorDeIdDeFrases {
 		return resultados;
 	}
 
-	public static void setResultados(ArrayList<Resultado> resultados) {
-		ComparadorDeIdDeFrases.resultados = resultados;
+	public void setResultados(ArrayList<Resultado> resultados) {
+		EjecucionCasosDePrueba.resultados = resultados;
 	}
 }

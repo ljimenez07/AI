@@ -233,6 +233,7 @@ public class DetalleDeConversacionDao {
 
 					if (habloElcliente) {
 						dialogo.setLoQueDijoElParticipante(rs.getString("frase"));
+						dialogo.setEntidades(rs.getString("entidad"));
 					}else{
 						boolean laFraseDelFrameworkVieneNula = rs.getString("frase") == null;
 						if (laFraseDelFrameworkVieneNula)
@@ -287,6 +288,7 @@ public class DetalleDeConversacionDao {
 
 						if (habloElcliente) {
 							dialogo.setLoQueDijoElParticipante(res.getString("frase"));
+							dialogo.setEntidades(res.getString("entidad"));
 						}else{
 							boolean laFraseDelFrameworkVieneNula = res.getString("frase") == null;
 							if (laFraseDelFrameworkVieneNula)
