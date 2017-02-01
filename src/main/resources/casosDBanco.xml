@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<casosDePrueba>
+<caso descripcion="conversacion DMuni" idConversacion="1"/>
+<caso descripcion="ubicacion tipo cambio" idConversacion="38"/>
+<caso descripcion="prestamo personal-vivienda que puedo preguntar" idConversacion="39"/>
+</casosDePrueba>
