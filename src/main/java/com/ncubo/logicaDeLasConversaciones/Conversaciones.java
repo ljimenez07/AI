@@ -293,7 +293,7 @@ public class Conversaciones {
 			synchronized(misConversaciones){
 				try {
 					misConversaciones.get(idSesion).guardarEstadiscitas(idSesion);
-					misConversaciones.get(idSesion).obtenerAgenteDeLaMuni().guardarUnaConversacionEnLaDB(idSesion, misConversaciones.get(idSesion).obtenerElParticipante().getMiNombre());
+					misConversaciones.get(idSesion).obtenerAgente().guardarUnaConversacionEnLaDB(idSesion, misConversaciones.get(idSesion).obtenerElParticipante().getMiNombre());
 				} catch (ClassNotFoundException | SQLException e) {
 					e.printStackTrace();
 				}
@@ -408,7 +408,7 @@ public class Conversaciones {
 		LogDeLaConversacion miHistorico = null;
 		
 		if(existeLaConversacion(idSesion)){
-			miHistorico = misConversaciones.get(idSesion).obtenerAgenteDeLaMuni().verMiHistorico();
+			miHistorico = misConversaciones.get(idSesion).obtenerAgente().verMiHistorico();
 		}else{
 			try {
 				miHistorico = historicoDeConversaciones.obtenerMiBitacoraDeBD().buscarUnaConversacion(idSesion, fecha);

@@ -72,7 +72,7 @@ public class Conversacion {
 		return this.participante;
 	}
 	
-	public Agente obtenerAgenteDeLaMuni(){
+	public Agente obtenerAgente(){
 		return this.agente;
 	}
 	

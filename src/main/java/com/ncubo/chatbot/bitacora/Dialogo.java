@@ -155,7 +155,7 @@ public class Dialogo implements Serializable{
 		      for(Entity record: lista){
 		          if(processedFirst)
 		              buffer.append(",");
-		          if(record.getEntity().equals(Constantes.ENTIDAD_SYS_NUMBER))
+		          if(record.getEntity().startsWith(Constantes.ENTIDAD_SYS))
 		        	buffer.append(record.getEntity());
 		          else buffer.append(record.getEntity()+":"+record.getValue());
 		          processedFirst = true;
