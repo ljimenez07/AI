@@ -36,7 +36,7 @@ public class Resultado {
 		this.logCasoDePrueba = logCasoDePrueba;
 	}
 
-	public boolean isStatus() {
+	public boolean getStatus() {
 		return status;
 	}
 

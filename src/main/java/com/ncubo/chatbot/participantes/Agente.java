@@ -1,6 +1,5 @@
 package com.ncubo.chatbot.participantes;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,10 +7,8 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.bitacora.Dialogo;
@@ -80,7 +77,7 @@ public abstract class Agente extends Participante{
 		return miHistorico;
 	}
 	
-	public boolean guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
+	public int guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
 		try {
 			int idDeLaConversacion = miBitacora.insertar(idSesion, idCliente, miHistorico);
 			for (Dialogo conversacion : miHistorico.verHistorialDeLaConversacion()) {
@@ -89,11 +86,11 @@ public abstract class Agente extends Participante{
 			}
 			miHistorico.limpiarHistorialALaConversacion();
 			
-			return true;
+			return idDeLaConversacion;
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			return false;
+			return 0;
 		}
 	}
 	
