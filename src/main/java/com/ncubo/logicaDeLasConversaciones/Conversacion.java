@@ -364,9 +364,9 @@ public class Conversacion {
 	private void decirTemaNoEntendi(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		System.out.println("No entendi bien ...");
 		Tema miTema = this.temario.buscarTema(Constantes.INTENCION_NO_ENTIENDO);
-		String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_NO_ENTIENDO);
+		String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_NO_ENTIENDO);
 		
-		Afirmacion fueraDeContexto = (Afirmacion) this.temario.frase(nombreFrase);
+		Pregunta fueraDeContexto = (Pregunta) this.temario.frase(nombreFrase);
 		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 		ponerComoYaTratado(miTema);
 	}
@@ -416,24 +416,18 @@ public class Conversacion {
 				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(miTema);
 				
-				//temasPendientes.borrarLosTemasPendientes();
-
-				//decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
-				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				decirTemaNoEntendi(misSalidas, respuesta);
-				//temasPendientes.borrarLosTemasPendientes();
-				
+
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
 				System.out.println("Quiere despistar  ...");
 				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
-				String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_DESPISTADOR);
+				String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
 				
-				Afirmacion despistar = (Afirmacion)  this.temario.frase(nombreFrase);
+				Pregunta despistar = (Pregunta) this.temario.frase(nombreFrase);
+				
 				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(despistar);
-				
-				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
 				System.out.println("Quiere repetir  ...");
@@ -447,7 +441,7 @@ public class Conversacion {
 					misSalidas.add(agente.decirUnaFrase(salida.getFraseActual(), respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
 				}
 	
-				temasPendientes.borrarLosTemasPendientes();
+				//temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_AGRADECIMIENTO)){
 				System.out.println("Esta agradeciendo ...");							
@@ -457,8 +451,6 @@ public class Conversacion {
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(queQuiere);
-			
-				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
 				System.out.println("Quiere saber que hago ...");							
@@ -468,8 +460,6 @@ public class Conversacion {
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales));
 				ponerComoYaTratado(queQuiere);
-				
-				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, "watson");
 			}
 			
 			return true;

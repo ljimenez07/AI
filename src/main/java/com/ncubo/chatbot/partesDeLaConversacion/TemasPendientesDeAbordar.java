@@ -21,11 +21,17 @@ public class TemasPendientesDeAbordar {
 	}
 	
 	public void agregarUnTema(TemaPendiente tema){
-		if ( ! existeElTema(tema))
+		TemaPendiente miTema = buscarUnTemaPendiente(tema.getTemaActual());
+		boolean elTemaNoHaSidoAgregado = miTema != null;
+		if ( ! existeElTema(tema) && elTemaNoHaSidoAgregado){
 			temasPendientes.push(tema); // Agregar al top de la pila
+		}
 		else{
-			temasPendientes.remove(tema); // Eliminar el tema y moverlo al top
-			agregarUnTema(tema);
+			if(! elTemaNoHaSidoAgregado)
+				temasPendientes.remove(miTema); // Eliminar el tema y moverlo al top
+			else
+				temasPendientes.remove(tema); 
+			temasPendientes.push(tema);
 		}
 	}
 	
