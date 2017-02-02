@@ -152,12 +152,14 @@ public class EjecucionCasosDePrueba {
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
-					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(),5,miconversacion);
 				}
 				if(salidasParaElCliente.equals(null)){
-					status = false;
-					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
-					break;
+					salidasParaElCliente = reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(),3,miconversacion);
+					if(salidasParaElCliente.equals(null)){
+						status = false;
+						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+						break;
+					}
 				}
 				else{
 					contadorSalidas = 0;
@@ -265,9 +267,10 @@ public class EjecucionCasosDePrueba {
 			try {
 				salida = miConversacion.analizarLaRespuestaConWatson(texto, true);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				reintentarRespuestaAWatson(texto, maximo--, miConversacion);
+				// TODO Auto-generated catch block	
 			}
+			if(salida.equals(null))
+				reintentarRespuestaAWatson(texto, maximo--, miConversacion);
 		}
 		return salida;
 	}

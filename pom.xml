@@ -72,7 +72,22 @@
 		<groupId>org.testng</groupId>
 		<artifactId>testng</artifactId>
 		<version>6.8.7</version>
-		<scope>test</scope>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/src/main/java/lib/testng-6.8.7.jar</systemPath>
+	</dependency>
+	<dependency>
+		<groupId>org.testng</groupId>
+		<artifactId>testng</artifactId>
+		<version>6.8.7</version>
+		<scope>system</scope>
+		<systemPath>${project.basedir}/src/main/java/lib/testng-6.8.7.jar</systemPath>
+	</dependency>
+	<dependency>
+	    <groupId>com.beust</groupId>
+	    <artifactId>jcommander</artifactId>
+	    <version>1.60</version>
+	    <scope>system</scope>
+		<systemPath>${project.basedir}/src/main/java/lib/jcommander-1.27.jar</systemPath>
 	</dependency>
   </dependencies>
   
