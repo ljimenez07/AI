@@ -16,7 +16,7 @@ public class GrabacionCasoDePrueba {
 	Conversacion miConversacion = null;
 	
 	public ArrayList<Salida> iniciarGrabacion(String xmlFrases){
-		temario = new TemarioDeLaRegresion("src/main/resources/conversacionesMuni.xml");
+		temario = new TemarioDeLaRegresion(xmlFrases);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = null ;
