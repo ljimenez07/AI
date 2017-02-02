@@ -152,19 +152,23 @@ public class EjecucionCasosDePrueba {
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
+					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(), 3, miconversacion);
 				}
 				if(salidasParaElCliente.equals(null)){
-					salidasParaElCliente = reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(),3,miconversacion);
-					if(salidasParaElCliente.equals(null)){
-						status = false;
-						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
-						break;
-					}
+					status = false;
+					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+					break;
 				}
 				else{
 					contadorSalidas = 0;
 	
-					MessageResponse response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
+					MessageResponse response = null;
+					try{
+						response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
+					}catch(Exception e){
+						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+						break;
+					}
 					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
 					String laEntidadQueTrajoLaBD = dialogo.getEntidades();
 					
@@ -268,9 +272,8 @@ public class EjecucionCasosDePrueba {
 				salida = miConversacion.analizarLaRespuestaConWatson(texto, true);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block	
-			}
-			if(salida.equals(null))
 				reintentarRespuestaAWatson(texto, maximo--, miConversacion);
+			}			
 		}
 		return salida;
 	}
