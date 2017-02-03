@@ -27,6 +27,8 @@ import com.ncubo.chatbot.partesDeLaConversacion.TemasPendientesDeAbordar;
 import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.db.ConsultaDao;
+import com.ncubo.email.Email;
+import com.ncubo.email.GeneradorDeEmails;
 import com.ncubo.estadisticas.Estadisticas;
 
 public class Conversacion {
@@ -44,6 +46,7 @@ public class Conversacion {
 	private final Constantes.ModoDeLaVariable modoDeResolucionDeResultadosFinales;
 	private Date fechaDelUltimoRegistroDeLaConversacion;
 	private final TemasPendientesDeAbordar temasPendientes;
+	private Email email;
 	
 	public Conversacion(Temario temario, Cliente participante, ConsultaDao consultaDao, Agente miAgente){
 		// Hacer lamdaba para agregar los participantes
@@ -62,6 +65,7 @@ public class Conversacion {
 		estadisticasTemasTratados = new Estadisticas(consultaDao);
 		miUltimaSalida = new ArrayList<>();
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
+		email = new Email();
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -493,49 +497,43 @@ public class Conversacion {
 	}
 	
 	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada){
-		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, false);
+		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, this.temaActual);
 	}
 	
 	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Tema tema){
-		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, false, tema);
+		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, tema);
 	}
 	
-	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Boolean estaEnWorkSpaceEspecifico){
-		extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(misSalidas, respuesta, idFraseActivada, estaEnWorkSpaceEspecifico, temaActual);
-	}
-	
-	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Boolean estaEnWorkSpaceEspecifico, Tema tema){
+	private void extraerOracionesAfirmarivasYPreguntasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada, Tema tema){
 		Pregunta miPregunta = null;
-		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta, estaEnWorkSpaceEspecifico);
+		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta);
 		if( ! idFraseActivada.equals("")){
 			
-			if(estaEnWorkSpaceEspecifico){
-				miPregunta = (Pregunta) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(idFraseActivada);
-				misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, temaActualDelWorkSpaceEspecifico, participante, modoDeResolucionDeResultadosFinales));
-			}else{
-				miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada);
-				misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales));
-				fraseActual = miPregunta;
-			}
+			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada);
+			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales));
+			fraseActual = miPregunta;
 			ponerComoYaTratado(miPregunta);
 		}
 	}
 	
-	private void agregarOracionesAfirmativasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, List<String> afirmativas, Respuesta respuesta, boolean estaEnWorkSpaceEspecifico){
+	private void agregarOracionesAfirmativasDeWorkspaceEspecifico(ArrayList<Salida> misSalidas, List<String> afirmativas, Respuesta respuesta){
 		Afirmacion miAfirmacion = null;
 		if(afirmativas != null && respuesta != null){
 			for(int index = 0; index < afirmativas.size(); index++){
-				if(estaEnWorkSpaceEspecifico){
-					miAfirmacion = (Afirmacion) this.temaActualDelWorkSpaceEspecifico.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
-						misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActualDelWorkSpaceEspecifico, participante, modoDeResolucionDeResultadosFinales));
+				if(afirmativas.get(index).equals("envioExitosoDeCorreo")){
+					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
+					if(this.enviarCorreo(email)){
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo");
+					}else{
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
 					}
 				}else{
 					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index));
-					if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
-						misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
-						fraseActual = miAfirmacion;
-					}
+				}
+				
+				if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
+					misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales));
+					fraseActual = miAfirmacion;
 				}
 				ponerComoYaTratado(miAfirmacion);
 			}
@@ -612,4 +610,13 @@ public class Conversacion {
 		else obtenerUnaFraseAfirmativa(frases);
 		return frase;
 	}
+	
+	public boolean enviarCorreo(String correos){
+		//String correos = "sgonzales@cecropiasolutions.com";
+		GeneradorDeEmails generador = new GeneradorDeEmails();
+		String body = generador.generarNuevoCorreo(agente.verMiHistorico().verHistorialDeLaConversacion());
+		String tittle = "Conversacion con el agente de la Muni - "+Calendar.getInstance().getTime();
+		return email.sendEmail(tittle, correos, body);
+	}
+	
 }
