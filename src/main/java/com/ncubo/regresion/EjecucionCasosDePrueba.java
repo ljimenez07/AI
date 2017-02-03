@@ -135,7 +135,7 @@ public class EjecucionCasosDePrueba {
 		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()));
 
 		Vector <String> observaciones = new Vector <String>();
-		observaciones.add("\nEjecución del caso: " + descripcion);
+		observaciones.add("\nEjecuciÃ³n del caso: " + descripcion);
 		
 		int contadorSalidas = 0;
 		boolean status = true;
@@ -156,7 +156,7 @@ public class EjecucionCasosDePrueba {
 				}
 				if(salidasParaElCliente.equals(null)){
 					status = false;
-					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+					observaciones.add("Problemas de comunicaciÃ³n con Watson. El caso es interrumpido");
 					break;
 				}
 				else{
@@ -166,7 +166,7 @@ public class EjecucionCasosDePrueba {
 					try{
 						response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
 					}catch(Exception e){
-						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+						observaciones.add("Problemas de comunicaciÃ³n con Watson. El caso es interrumpido");
 						break;
 					}
 					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
