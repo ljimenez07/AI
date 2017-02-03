@@ -38,6 +38,7 @@ public class GrabacionCasoDePrueba {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Problemas al enviar texto a Watson");
+			salidasParaElCliente = null;
 		}
 		return salidasParaElCliente;
 	}
