@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
@@ -124,7 +126,7 @@ public class Respuesta {
 		entendi = lasIntencionesEstanBien && lasEntidadesEstanBien;
 		
 		if(entendi){
-			miContexto = watsonRespuesta.getContext().toString();
+			miContexto = new JSONObject(watsonRespuesta.getContext()).toString();
 		}
 		
 		return entendi;

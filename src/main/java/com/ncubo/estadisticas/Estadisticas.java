@@ -41,7 +41,7 @@ public class Estadisticas
 	{
 		for(Entry<Tema, Integer> estadistica : detalles.entrySet()){
 			consultaDao.insertar( new Consulta(estadistica.getKey(), new Timestamp(new Date().getTime()), estadistica.getValue()) );
-			estadisticasPorConversacionDao.insertar(estadistica.getKey().obtenerNombre(), idSesion);
+			estadisticasPorConversacionDao.insertar(estadistica.getKey().getNombre(), idSesion);
 		}
 		detalles = new Hashtable<>();
 	}

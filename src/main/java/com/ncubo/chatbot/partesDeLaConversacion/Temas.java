@@ -10,7 +10,7 @@ public class Temas extends ArrayList<Tema>
 	    Tema resultado = null;
 		while(misFrases.hasNext()) {
 			Tema tema = (Tema) misFrases.next();
-			if (tema.obtenerNombre().equals(nombreTema))
+			if (tema.getNombre().equals(nombreTema))
 				return tema;
 		}
 		return resultado;

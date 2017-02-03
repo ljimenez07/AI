@@ -94,7 +94,7 @@ public class Salida implements Serializable{
 	
 	private boolean existeLaVineta(Vineta vineta){
 		for(Vineta miVineta: misVinetas){
-			if (miVineta.obtenerContenido().trim().equals(vineta.obtenerContenido().trim()))
+			if (miVineta.getContenido().trim().equals(vineta.getContenido().trim()))
 				return true;
 		}
 		return false;
@@ -179,8 +179,8 @@ public class Salida implements Serializable{
 			matcher = buscarExpresionRegular(miSonido.getTextoUsadoParaGenerarElSonido());
 		}else{
 			for(Vineta vineta:misVinetas)
-				 if(! vineta.obtenerContenido().isEmpty())
-					 matcher = buscarExpresionRegular(vineta.obtenerContenido());
+				 if(! vineta.getContenido().isEmpty())
+					 matcher = buscarExpresionRegular(vineta.getContenido());
 		}
 		
 		if(matcher != null){
@@ -222,8 +222,8 @@ public class Salida implements Serializable{
 		
 		for(Vineta vineta:misVinetas)
 			if(vineta != null){
-				if(hayExpresionRegularEnElTexto(vineta.obtenerContenido(), placeholder)){
-					String miVineta = vineta.obtenerContenido();
+				if(hayExpresionRegularEnElTexto(vineta.getContenido(), placeholder)){
+					String miVineta = vineta.getContenido();
 					miVineta = miVineta.replace(formatoDelPlaceholder, valorASustituir);
 					vineta.cambiarElContenido(miVineta);
 				}

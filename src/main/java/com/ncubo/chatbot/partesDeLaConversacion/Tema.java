@@ -47,23 +47,23 @@ public class Tema
 		return this;
 	}
 	
-	public String obtenerIntencionGeneralAlQuePertenece() {
+	public String getIntencionGeneralAlQuePertenece() {
 		return intencionGeneralAlQuePertenece;
 	}
 
-	public String obtenerIdTema(){
+	public String getIdTema(){
 		return idDelTema;
 	}
 	
-	public String obtenerNombre(){
+	public String getNombre(){
 		return nombre;
 	}
 	
-	public String obtenerDescripcion(){
+	public String getDescripcion(){
 		return descripcion;
 	}
 	
-	public String obtenerElNombreDelWorkspaceAlQuePertenece(){
+	public String getElNombreDelWorkspaceAlQuePertenece(){
 		return nombreDelWorkspaceAlQuePertenece;
 	}
 	
@@ -99,7 +99,7 @@ public class Tema
 		return dependencias.size() > 0;
 	}
 	
-	public Temas obtenerTodasLasDependencias(){
+	public Temas getTodasLasDependencias(){
 		return dependencias;
 	}
 	
@@ -125,20 +125,20 @@ public class Tema
 		}
 	}
 	
-	public Frase[] obtenerMisFrases(){
+	public Frase[] getMisFrases(){
 		return frases;
 	}
 	
-	public String obtenerTodasMisFrases(int id){
+	public String getTodasMisFrases(int id){
 		String resultado = "";
-		resultado += "IdTema: "+id+" - "+obtenerIdTema()+" => \n"; 
+		resultado += "IdTema: "+id+" - "+getIdTema()+" => \n"; 
 		for(int index = 0; index < frases.length; index ++){
 			resultado += frases[index].obtenerLaInformacionDeLaFrase()+"\n";
 		}
 		return resultado;
 	}
 	
-	public List<String> obtenerVariablesDeContextoQueElTemaOcupa(){
+	public List<String> getVariablesDeContextoQueElTemaOcupa(){
 		return variablesDeContextoQueElTemaOcupa;
 	}
 	

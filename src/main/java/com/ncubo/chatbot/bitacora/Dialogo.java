@@ -41,9 +41,9 @@ public class Dialogo implements Serializable{
 	public Dialogo(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
-		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).obtenerContenido();
+		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).getContenido();
 		if(miSalida.getTemaActual() != null)
-			this.idTemaQueUso = miSalida.getTemaActual().obtenerNombre();
+			this.idTemaQueUso = miSalida.getTemaActual().getNombre();
 		if(miSalida.getFraseActual() != null)
 			this.idFraseQueUso = miSalida.getFraseActual().obtenerIdDeLaFrase();
 		if(miSalida.obtenerLaRespuestaDeIBM() != null){
@@ -55,7 +55,7 @@ public class Dialogo implements Serializable{
 		  }
 		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();
 		if(miSalida.getTemaActual() != null)
-			this.intencion = miSalida.getTemaActual().obtenerIntencionGeneralAlQuePertenece();
+			this.intencion = miSalida.getTemaActual().getIntencionGeneralAlQuePertenece();
 		this.version = miSalida.getFraseActual().getVersion();
 		this.elTextoConPlaceholders = miSalida.getMiTextoConPlaceholder();
 	}

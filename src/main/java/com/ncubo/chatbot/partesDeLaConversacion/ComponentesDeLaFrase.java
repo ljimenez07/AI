@@ -75,8 +75,8 @@ public class ComponentesDeLaFrase{
 			matcher = buscarExpresionRegular(this.textoDeLaFrase);
 		}else if(! textoAUsarParaGenerarElAudio.isEmpty()){
 			matcher = buscarExpresionRegular(this.textoAUsarParaGenerarElAudio);
-		}else if(! vineta.obtenerContenido().isEmpty()){
-			matcher = buscarExpresionRegular(vineta.obtenerContenido());
+		}else if(! vineta.getContenido().isEmpty()){
+			matcher = buscarExpresionRegular(vineta.getContenido());
 		}
 		
 		if(matcher != null){
@@ -170,8 +170,8 @@ public class ComponentesDeLaFrase{
 		}
 		
 		if(vineta != null){
-			if(hayExpresionRegularEnElTexto(vineta.obtenerContenido(), placeholder)){
-				String miVineta = vineta.obtenerContenido();
+			if(hayExpresionRegularEnElTexto(vineta.getContenido(), placeholder)){
+				String miVineta = vineta.getContenido();
 				miVineta = miVineta.replace(formatoDelPlaceholder, valorASustituir);
 				vineta.cambiarElContenido(miVineta);
 			}

@@ -1,5 +1,7 @@
 package com.ncubo.niveles;
 
+import org.json.JSONObject;
+
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
@@ -16,7 +18,7 @@ public class NivelDetallado extends Nivel{
 	@Override
 	protected void cargarWorkSpace() {
 		miConversacionConElAgenteCognitivo = new ConversacionConWatson(miWorkSpace.getUsuarioIBM(), miWorkSpace.getContrasenaIBM(), miWorkSpace.getIdIBM());
-		String contexto = miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext().toString();
+		String contexto = new JSONObject(miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext()).toString();
 		miConversacionConElAgenteCognitivo.setElContextoConWatson(contexto);
 		
 		this.setName(miWorkSpace.getNombre());

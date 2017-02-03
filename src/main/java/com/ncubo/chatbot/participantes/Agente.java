@@ -7,8 +7,10 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ncubo.chatbot.bitacora.Dialogo;
@@ -242,9 +244,8 @@ public abstract class Agente extends Participante{
 			if( ! json_key.equals("system") && ! json_key.equals("conversation_id")){
 				try {
 					System.out.println("Respaldando: "+json_key);
-					misVariables.put(json_key, jsonObj.getString(json_key));
+					misVariables.put(json_key, jsonObj.get(json_key).toString());
 				} catch (JSONException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -354,8 +355,8 @@ public abstract class Agente extends Participante{
 
 		Respuesta respuesta = miTopico.hablarConWatson(null, respuestaDelCliente);
 		
-		String context = respuesta.messageResponse().getContext().toString();
-		miTopico.actualizarContexto(context);
+		String contexto = new JSONObject(respuesta.messageResponse().getContext()).toString();
+		miTopico.actualizarContexto(contexto);
 		
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 		borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);
@@ -369,15 +370,14 @@ public abstract class Agente extends Participante{
 	
 	public void borrarUnaVariableDelContexto(String nombreDeLaVariable){
 		String context = miTopico.obtenerElContexto();
-		JSONObject obj = null;
 		try {
-			obj = new JSONObject(context);
+			JSONObject obj = new JSONObject(context);
 			obj.remove(nombreDeLaVariable);
+			miTopico.actualizarContexto(obj.toString());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		miTopico.actualizarContexto(obj.toString());
 	}
 	
 	public String obtenerNodoActivado(MessageResponse response){

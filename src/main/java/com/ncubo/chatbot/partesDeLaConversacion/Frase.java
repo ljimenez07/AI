@@ -83,7 +83,7 @@ public abstract class Frase
         for(ComponentesDeLaFrase miFrase: misSinonimosDeLaFrase){
             if(miFrase.tienePlaceholders()){
                 resultado = new ComponentesDeLaFrase(miFrase.getTipoDeFrase(), miFrase.getTextoDeLaFrase(), 
-                		miFrase.getTextoAUsarParaGenerarElAudio(), miFrase.getVineta().obtenerContenido(), miFrase.getCondicion());
+                		miFrase.getTextoAUsarParaGenerarElAudio(), miFrase.getVineta().getContenido(), miFrase.getCondicion());
                 break;
             }
         }

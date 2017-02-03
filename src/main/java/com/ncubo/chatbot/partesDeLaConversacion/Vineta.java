@@ -17,7 +17,7 @@ public class Vineta {
 		this.tipoDeVineta = tipo;
 	}
 	
-	public String obtenerContenido(){
+	public String getContenido(){
 		return this.contenidoDeLaVineta;
 	}
 	
@@ -25,7 +25,7 @@ public class Vineta {
 		this.contenidoDeLaVineta = nuevoContenido;
 	}
 	
-	public String obtenerTipoDeVineta(){
+	public String getTipoDeVineta(){
 		return this.tipoDeVineta;
 	}
 }

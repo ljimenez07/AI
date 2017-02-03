@@ -57,7 +57,7 @@ public abstract class Temario
 	
 	public Tema buscarTema(String nombre){
 		for(Tema tema: temasDelDiscurso){
-			if(tema.obtenerNombre().equals(nombre)){
+			if(tema.getNombre().equals(nombre)){
 				return tema;
 			}
 		}
@@ -66,7 +66,7 @@ public abstract class Temario
 	
 	public Tema buscarTema(String nombreDelWorkspace, String nombreIntencionGeneral){
 		for(Tema tema: temasDelDiscurso){
-			if(tema.obtenerElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
+			if(tema.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
 				return tema;
 			}
 		}
@@ -75,7 +75,7 @@ public abstract class Temario
 	
 	public Tema buscarTemaPorLaIntencion(String nombreIntencionGeneral){
 		for(Tema tema: temasDelDiscurso){
-			if(tema.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
+			if(tema.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
 				return tema;
 			}
 		}
@@ -90,9 +90,9 @@ public abstract class Temario
 	public Tema proximoTemaATratar(Tema temaActual, Temas temasYaTratados, String nombreDelWorkspace, String nombreIntencionGeneral){
 		Collections.shuffle(temasDelDiscurso); // Desordenar el array
 		for(Tema tema: temasDelDiscurso){
-			if(tema.obtenerElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
+			if(tema.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){
 				if(temaActual != null){
-					if(! tema.obtenerNombre().equals(temaActual.obtenerNombre())){
+					if(! tema.getNombre().equals(temaActual.getNombre())){
 						if(temasYaTratados.size() > 0){
 							if( ! temasYaTratados.contains(tema)){
 								if(tema.buscarSiTodasLasDependenciasYaFueronTratadas(temasYaTratados)){
@@ -120,7 +120,7 @@ public abstract class Temario
 				}
 			}
 		}
-		if(temaActual.obtenerElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.obtenerIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
+		if(temaActual.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
 			return temaActual;
 		else
 			return null;
@@ -140,7 +140,7 @@ public abstract class Temario
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(String pathAGuardar, String ipPublica, int indexTema, int indexFrase, String nombreTema, String nombreDelArchivo){
 		try{
-			temasDelDiscurso.buscarUnTemaEspecifico(nombreTema).obtenerMisFrases()[indexTema].cargarElNombreDeUnSonidoEstaticoEnMemoria(indexFrase, nombreDelArchivo, pathAGuardar, ipPublica);
+			temasDelDiscurso.buscarUnTemaEspecifico(nombreTema).getMisFrases()[indexTema].cargarElNombreDeUnSonidoEstaticoEnMemoria(indexFrase, nombreDelArchivo, pathAGuardar, ipPublica);
 		}catch(Exception e){
 			System.out.println("Error al generar la fase del tema "+nombreTema);
 		}
@@ -155,7 +155,7 @@ public abstract class Temario
 		int contador = 0;
 		
 		for(Tema tema: temasDelDiscurso){
-			resultado += tema.obtenerTodasMisFrases(contador);
+			resultado += tema.getTodasMisFrases(contador);
 			contador ++;
 		}
 		return resultado;

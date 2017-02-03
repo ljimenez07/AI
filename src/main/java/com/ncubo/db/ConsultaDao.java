@@ -61,7 +61,7 @@ public class ConsultaDao
 	
 	public void insertar(Consulta consulta) throws ClassNotFoundException, SQLException
 	{
-		String queryDatos = "'" + consulta.getTema().obtenerIdTema()+ "'"
+		String queryDatos = "'" + consulta.getTema().getIdTema()+ "'"
 				+ ",'" + consulta.getFecha() + "'"
 				+ ",'" + consulta.getVecesConsultado() + "'";
 		String query = "INSERT INTO " + NOMBRE_TABLA

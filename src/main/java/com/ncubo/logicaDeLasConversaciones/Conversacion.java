@@ -209,7 +209,7 @@ public class Conversacion {
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
-					if(! temaActual.obtenerNombre().equals("preguntarPorOtraConsulta"))
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
 						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
 					
 					agente.cambiarANivelSuperior();
@@ -265,10 +265,10 @@ public class Conversacion {
 			agregarVariablesDeContextoDelClienteAWatson(temaActual);
 			
 			if (idFraseActivada.equals("")){ // Quiere decir que no hay ninguna pregunta en la salida
-				System.out.println("El proximo tema a tratar es: "+this.temaActual.obtenerIdTema());
+				System.out.println("El proximo tema a tratar es: "+this.temaActual.getIdTema());
 				
 				// Activar en el contexto el tema
-				agente.activarTemaEnElContextoDeWatson(this.temaActual.obtenerNombre());
+				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 				
 				// llamar a watson y ver que bloque se activo
 				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
@@ -299,7 +299,7 @@ public class Conversacion {
 					boolean esteTemaEstaPendiente = temaPrimitivo != null;
 					if( ! esteTemaEstaPendiente){
 						// Activar en el contexto el tema
-						agente.activarTemaEnElContextoDeWatson(temaNuevo.obtenerNombre());
+						agente.activarTemaEnElContextoDeWatson(temaNuevo.getNombre());
 						
 						// llamar a watson y ver que bloque se activo
 						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
@@ -319,7 +319,7 @@ public class Conversacion {
 								e.printStackTrace();
 							}
 							context = obj.toString();
-							if(! temaNuevo.obtenerNombre().equals("preguntarPorOtraConsulta")){
+							if(! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
 								TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
 								this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
 							}
@@ -336,7 +336,7 @@ public class Conversacion {
 		this.temaActual = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA);
 
 		// Activar en el contexto el tema
-		agente.activarTemaEnElContextoDeWatson(this.temaActual.obtenerNombre());
+		agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 		
 		// llamar a watson y ver que bloque se activo
 		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
@@ -379,7 +379,7 @@ public class Conversacion {
 		if(agente.hayIntencionNoAsociadaANingunWorkspace()){
 			
 			if (temaActual != null && fraseActual != null){
-				if(! temaActual.obtenerNombre().equals("preguntarPorOtraConsulta"))
+				if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
 					this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
 			}
 			
@@ -476,7 +476,7 @@ public class Conversacion {
 		if(tema == null){
 			return;
 		}
-		List<String> misValiables = tema.obtenerVariablesDeContextoQueElTemaOcupa();
+		List<String> misValiables = tema.getVariablesDeContextoQueElTemaOcupa();
 		if(! misValiables.isEmpty()){
 			for (String variable: misValiables){
 				if(variable.equals("estaLogueado")){
