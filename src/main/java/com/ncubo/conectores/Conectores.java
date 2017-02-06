@@ -22,9 +22,11 @@ public class Conectores {
 
 	private final static String BIBLIOTECA = Constantes.PATH_VARIABLES;
 	private final static ClassFinder finder = new ClassFinder(BIBLIOTECA);
-	private final static Class<?>[] libraries = finder.find();
+	private final Class<?>[] libraries;
 	
-	public Conectores(){}
+	public Conectores(){
+		libraries = finder.find();
+	}
 	
 	public boolean existeLaVariable(String valorDeLaVariable, TiposDeVariables tipoDeLaVariable){
 		boolean resultado = false;

@@ -515,6 +515,8 @@ public abstract class Contenido
 			return TiposDeVariables.NEGOCIO;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_USUARIO)){
 			return TiposDeVariables.USUARIO;
+		}else if(tipo.equals(Constantes.VARIABLE_TIPO_SISTEMA)){
+			return TiposDeVariables.SISTEMA;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_ENUM)){
 			return TiposDeVariables.ENUM;
 		}

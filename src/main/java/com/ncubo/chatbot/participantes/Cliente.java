@@ -101,7 +101,7 @@ public class Cliente extends Participante{
 		while(keys.hasMoreElements()){
 			String key = keys.nextElement();
 			Variable variable = variables.get(key);
-			if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.NEGOCIO) || variable.getTipoVariable().equals(Constantes.TiposDeVariables.CONTEXTO) || variable.getTipoVariable().equals(Constantes.TiposDeVariables.ENUM)){
+			if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.NEGOCIO) || variable.getTipoVariable().equals(Constantes.TiposDeVariables.SISTEMA) || variable.getTipoVariable().equals(Constantes.TiposDeVariables.ENUM)){
 				if(! misConectores.existeLaVariable(variable.getNombre(), variable.getTipoVariable())){ // TODO Obtener el nombre de la clase para instansear en el parser
 					throw new ChatException(String.format("La variable %s no existe en el sistema. Esta clase debe ser creada previamente.", variable.getNombre()));
 				}else{

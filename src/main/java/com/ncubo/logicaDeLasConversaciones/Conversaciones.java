@@ -15,7 +15,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
-import com.ncubo.chatbot.participantes.Usuario;
+import com.ncubo.chatbot.participantes.UsuarioDeLaConversacion;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
@@ -30,17 +30,18 @@ public class Conversaciones {
 	private static Temario miTemario;
 	private final Semaphore semaphore = new Semaphore(1);
 	private ConsultaDao consultaDao;
-	private final Conectores misConectores = new Conectores();
+	private final Conectores misConectores;
 	private HistoricosDeConversaciones historicoDeConversaciones;
 	private HiloParaBorrarConversacionesInactivas hiloParaBorrarConversacionesInactivas;
 	
-	public Conversaciones(){
+	public Conversaciones(Conectores conectores){
+		misConectores = conectores;
 		historicoDeConversaciones = new HistoricosDeConversaciones();
 		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas();
 		hiloParaBorrarConversacionesInactivas.start();
 	}
 	
-	private String crearUnaNuevoConversacion(Usuario usuario, AgenteDeLaConversacion agente) throws Exception{
+	private String crearUnaNuevoConversacion(UsuarioDeLaConversacion usuario, AgenteDeLaConversacion agente) throws Exception{
 		
 		String resultado = "";
 		Cliente cliente = null;
@@ -89,7 +90,7 @@ public class Conversaciones {
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgenteCognitivo(Usuario cliente, String textoDelCliente, AgenteDeLaConversacion agente) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, AgenteDeLaConversacion agente) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -137,7 +138,7 @@ public class Conversaciones {
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgenteCognitivo(Usuario cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -178,14 +179,14 @@ public class Conversaciones {
 		return misConversaciones.containsKey(idSesion);
 	}
 	
-	public ArrayList<Salida> inicializarConversacionConElAgente(Usuario cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> inicializarConversacionConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
 		if(textoDelCliente.isEmpty())
 			return misConversaciones.get(cliente.getIdSesion()).inicializarLaConversacion();
 		else
 			return hablarConElAjente(cliente, textoDelCliente);
 	}
 	
-	public ArrayList<Salida> hablarConElAjente(Usuario cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> hablarConElAjente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
 		ArrayList<Salida> resultado = null;
 		resultado = misConversaciones.get(cliente.getIdSesion()).analizarLaRespuestaConWatson(textoDelCliente, true);
 		return resultado;
