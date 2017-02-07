@@ -12,7 +12,7 @@ public class ConversacionesDeLaRegresion extends Conversaciones{
 	private TemarioDeLaRegresion temario;
 	
 	public ConversacionesDeLaRegresion(){
-		super(new Conectores());
+		super(new Conectores(), "test");
 	}
 	
 	public void inicializarConversaciones(String rutaDelTemario){

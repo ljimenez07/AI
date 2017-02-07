@@ -118,10 +118,10 @@ public class Tema
 		return sePuedeRepetir;
 	}
 	
-	public void generarAudiosEstaticos(String pathAGuardar, String ipPublica){
+	public void generarAudiosEstaticos(String idCliente, String pathAGuardar, String ipPublica){
 		for(int index = 0; index < frases.length; index ++){
 			System.out.println("Generando audios a la frase: "+frases[index].obtenerNombreDeLaFrase());
-			frases[index].generarAudiosEstaticos(pathAGuardar, ipPublica);
+			frases[index].generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
 		}
 	}
 	

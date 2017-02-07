@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
-import com.ncubo.chatbot.audiosXML.AudiosXML;
+import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
@@ -33,9 +33,11 @@ public class Conversaciones{
 	private final Conectores misConectores;
 	private HistoricosDeConversaciones historicoDeConversaciones;
 	private HiloParaBorrarConversacionesInactivas hiloParaBorrarConversacionesInactivas;
+	private final String idCliente;
 	
-	public Conversaciones(Conectores conectores){
-		misConectores = conectores;
+	public Conversaciones(Conectores conectores, String idCliente){
+		this.idCliente = idCliente;
+		this.misConectores = conectores;
 		historicoDeConversaciones = new HistoricosDeConversaciones();
 		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas();
 		hiloParaBorrarConversacionesInactivas.start();
@@ -195,14 +197,15 @@ public class Conversaciones{
 	public void generarAudiosEstaticos(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, String usuarioFTP, 
 			String contrasenaFTP, String hostFTP, int puetoFTP, String carpetaFTP, String url, String pathXMLAudios){
 		HiloParaGenerarAudiosEstaticos hilo = new HiloParaGenerarAudiosEstaticos(usuarioTTS, contrasenaTTS, vozTTS, pathAGuardar, 
-				usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, url, pathXMLAudios);
+				usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, url, pathXMLAudios, idCliente);
 		hilo.start();
 	}
 	
-	public void generarAudiosEstaticosDeUnTema(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpeta, int index, String url){
+	public void generarAudiosEstaticosDeUnTema(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, 
+			String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpeta, int index, String url, String idCliente){
 		TextToSpeechWatson.getInstance(usuarioTTS, contrasenaTTS, vozTTS, usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpeta, pathAGuardar, url);
 		System.out.println(String.format("El path a guardar los audios es %s y la url publica es %s", pathAGuardar, url));
-		miTemario.generarAudioEstaticosDeUnTema(pathAGuardar, url, index);
+		miTemario.generarAudioEstaticosDeUnTema(idCliente, pathAGuardar, url, index);
 		System.out.println("Se termino de generar audios estaticos de tema.");
 	}
 	
@@ -257,9 +260,10 @@ public class Conversaciones{
 		private String carpetaFTP;
 		private String urlAReproducir;
 		private String pathXMLAudios;
+		private String idCliente;
 		
 		public HiloParaGenerarAudiosEstaticos(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, 
-				String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpetaFTP, String url, String pathXMLAudios){
+				String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpetaFTP, String url, String pathXMLAudios, String idCliente){
 			this.usuarioTTS = usuarioTTS;
 			this.contrasenaTTS = contrasenaTTS;
 			this.vozTTS = vozTTS;
@@ -271,16 +275,17 @@ public class Conversaciones{
 			this.carpetaFTP = carpetaFTP;
 			this.urlAReproducir = url;
 			this.pathXMLAudios = pathXMLAudios;
+			this.idCliente = idCliente;
 		}
 		
 		public void run(){
 			TextToSpeechWatson.getInstance(usuarioTTS, contrasenaTTS, vozTTS, usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, pathAGuardar, urlAReproducir);
 			System.out.println(String.format("El path a guardar los audios es %s y la url publica es %s", pathAGuardar, urlAReproducir));
-			if (AudiosXML.getInstance().exiteElArchivoXMLDeAudios(this.pathXMLAudios)){
-				AudiosXML.getInstance().cargarLosNombresDeLosAudios();
+			if (AudiosXMLDeLosClientes.getInstance().exiteElArchivoXMLDeAudios(this.pathXMLAudios)){
+				AudiosXMLDeLosClientes.getInstance().cargarLosNombresDeLosAudios(idCliente, pathXMLAudios);
 			}
-			miTemario.generarAudioEstaticosDeTodasLasFrases(pathAGuardar, urlAReproducir);
-			AudiosXML.getInstance().guardarLosAudiosDeUnaFrase(miTemario.contenido());
+			miTemario.generarAudioEstaticosDeTodasLasFrases(idCliente, pathAGuardar, urlAReproducir);
+			AudiosXMLDeLosClientes.getInstance().guardarLosAudiosDeUnaFrase(idCliente, miTemario.contenido(), pathXMLAudios);
 			
 			System.out.println("Se termino de generar audios estaticos.");
 		}

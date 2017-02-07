@@ -126,16 +126,16 @@ public abstract class Temario
 			return null;
 	}
 	
-	public void generarAudioEstaticosDeTodasLasFrases(String pathAGuardar, String ipPublica){
+	public void generarAudioEstaticosDeTodasLasFrases(String idCliente, String pathAGuardar, String ipPublica){
 		ArrayList<Frase> misFrase = contenido.obtenerMiFrases();
 		for(int index = 0; index < misFrase.size(); index ++){
 			System.out.println("Generando audios de la frase: "+misFrase.get(index).obtenerNombreDeLaFrase());
-			misFrase.get(index).generarAudiosEstaticos(pathAGuardar, ipPublica);
+			misFrase.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
 		}
 	}
 	
-	public void generarAudioEstaticosDeUnTema(String pathAGuardar, String ipPublica, int index){
-		temasDelDiscurso.get(index).generarAudiosEstaticos(pathAGuardar, ipPublica);
+	public void generarAudioEstaticosDeUnTema(String idCliente, String pathAGuardar, String ipPublica, int index){
+		temasDelDiscurso.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
 	}
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(String pathAGuardar, String ipPublica, int indexTema, int indexFrase, String nombreTema, String nombreDelArchivo){
