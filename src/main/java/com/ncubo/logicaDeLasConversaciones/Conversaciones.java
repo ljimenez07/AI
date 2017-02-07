@@ -23,11 +23,11 @@ import com.ncubo.db.ConsultaDao;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-public class Conversaciones {
+public class Conversaciones{
 
-	private final static Hashtable<String, Conversacion> misConversaciones = new Hashtable<String, Conversacion>();
-	private final static Hashtable<String, Cliente> misClientes = new Hashtable<String, Cliente>();
-	private static Temario miTemario;
+	private Hashtable<String, Conversacion> misConversaciones = new Hashtable<String, Conversacion>();
+	private Hashtable<String, Cliente> misClientes = new Hashtable<String, Cliente>();
+	private Temario miTemario;
 	private final Semaphore semaphore = new Semaphore(1);
 	private ConsultaDao consultaDao;
 	private final Conectores misConectores;
