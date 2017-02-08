@@ -22,7 +22,7 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 	}
 	
 	@Override
-	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales){
+	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
 		misUltimosResultados.clear();
 		
 		Salida salida = null;
@@ -34,15 +34,15 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 	}
 	
 	@Override
-	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales) {
-		return volverAPreguntarUnaFraseConMeRindo(pregunta, respuesta, tema, false, cliente, modoDeResolucionDeResultadosFinales);
+	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+		return volverAPreguntarUnaFraseConMeRindo(pregunta, respuesta, tema, false, cliente, modoDeResolucionDeResultadosFinales, idCliente);
 	}
 	
 	@Override
-	public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales){
-		Salida salida = volverAPreguntarConMeRindo(pregunta, respuesta, tema, meRindo, false);
+	public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
+		Salida salida = volverAPreguntarConMeRindo(pregunta, respuesta, tema, meRindo, false, idCliente);
 	
-		salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true);
+		salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true, idCliente);
 		
 		this.agregarHistorico(salida);
 				

@@ -214,7 +214,7 @@ public class AudiosXML {
 		System.out.println("Frase del xml: " + textoDelAudio);
 		System.out.println("Audios de la frase del xml: " + audio);
 		ComponentesDeLaFrase miSinonimoDeLaFrase = new ComponentesDeLaFrase(tipoFrase, "", textoDelAudio, "", "");
-		miSinonimoDeLaFrase.setAudio("audio",new Sonido(audio, textoDelAudio));
+		miSinonimoDeLaFrase.setAudio("audio", new Sonido(audio, textoDelAudio));
 		misSinonimosDeLasConjunciones.add(miSinonimoDeLaFrase);
 	}
 

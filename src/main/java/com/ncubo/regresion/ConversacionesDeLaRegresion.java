@@ -6,13 +6,14 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.participantes.UsuarioDeLaConversacion;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.logicaDeLasConversaciones.Conversaciones;
+import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
 
 public class ConversacionesDeLaRegresion extends Conversaciones{
 
 	private TemarioDeLaRegresion temario;
 	
 	public ConversacionesDeLaRegresion(){
-		super(new Conectores(), "test");
+		super(new Conectores(), new InformacionDelCliente("test", "test", ""));
 	}
 	
 	public void inicializarConversaciones(String rutaDelTemario){

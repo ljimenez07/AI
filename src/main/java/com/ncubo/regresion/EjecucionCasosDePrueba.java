@@ -33,6 +33,7 @@ import com.ncubo.controller.FiltroDeConversaciones;
 import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
+import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
 
 public class EjecucionCasosDePrueba {
 
@@ -132,7 +133,8 @@ public class EjecucionCasosDePrueba {
 			// TODO Auto-generated catch block
 		}
 		
-		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()));
+		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
+		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()), informacionDelCliente);
 
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);

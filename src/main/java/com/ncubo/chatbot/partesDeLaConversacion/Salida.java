@@ -123,9 +123,9 @@ public class Salida implements Serializable{
 		return miSonido;
 	}
 	
-	public void setMiSonido(String textoParaReproducir){
-		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
-		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+	public void setMiSonido(String textoParaReproducir, String idCliente){
+		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true, idCliente);
+		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 		miSonido = new Sonido(miIp, textoParaReproducir);
 	}
 

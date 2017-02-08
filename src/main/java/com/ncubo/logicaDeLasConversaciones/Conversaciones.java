@@ -33,10 +33,10 @@ public class Conversaciones{
 	private final Conectores misConectores;
 	private HistoricosDeConversaciones historicoDeConversaciones;
 	private HiloParaBorrarConversacionesInactivas hiloParaBorrarConversacionesInactivas;
-	private final String idCliente;
+	private final InformacionDelCliente informacionDelCliente;
 	
-	public Conversaciones(Conectores conectores, String idCliente){
-		this.idCliente = idCliente;
+	public Conversaciones(Conectores conectores, InformacionDelCliente cliente){
+		this.informacionDelCliente = cliente;
 		this.misConectores = conectores;
 		historicoDeConversaciones = new HistoricosDeConversaciones();
 		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas();
@@ -65,7 +65,7 @@ public class Conversaciones{
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente);
+					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente, informacionDelCliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -76,7 +76,7 @@ public class Conversaciones{
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente);
+					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente, informacionDelCliente);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}
@@ -197,7 +197,7 @@ public class Conversaciones{
 	public void generarAudiosEstaticos(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, String usuarioFTP, 
 			String contrasenaFTP, String hostFTP, int puetoFTP, String carpetaFTP, String url, String pathXMLAudios){
 		HiloParaGenerarAudiosEstaticos hilo = new HiloParaGenerarAudiosEstaticos(usuarioTTS, contrasenaTTS, vozTTS, pathAGuardar, 
-				usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, url, pathXMLAudios, idCliente);
+				usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, url, pathXMLAudios, informacionDelCliente.getIdDelCliente());
 		hilo.start();
 	}
 	

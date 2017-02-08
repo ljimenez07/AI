@@ -12,6 +12,7 @@ import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
+import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
 
 public class Consola {
 
@@ -58,7 +59,8 @@ public class Consola {
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
-		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()));
+		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
+		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()), informacionDelCliente);
 		
 		String respuesta = "";
 		

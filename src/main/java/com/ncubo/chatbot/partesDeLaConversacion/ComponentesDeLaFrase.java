@@ -178,14 +178,15 @@ public class ComponentesDeLaFrase{
 		}
 	}
 	
-	public Sonido generarAudio(String texto){
-		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false);
-		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+	public Sonido generarAudio(String texto, String idCliente){
+		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false, idCliente);
+		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 		return new Sonido(miIp, texto);
 	}
-	public Sonido generarAudio(){
-		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(this.textoAUsarParaGenerarElAudio, false);
-		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+	
+	public Sonido generarAudio(String idCliente){
+		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(this.textoAUsarParaGenerarElAudio, false, idCliente);
+		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 		return new Sonido(miIp, this.textoAUsarParaGenerarElAudio);
 	}
 	

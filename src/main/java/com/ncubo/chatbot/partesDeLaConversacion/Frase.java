@@ -223,7 +223,6 @@ public abstract class Frase
     
     public void generarAudiosEstaticos(String idCliente, String pathAGuardar, String ipPublica){
         this.pathAGuardarLosAudiosTTS = pathAGuardar;
-        this.ipPublicaAMostrarLosAudioTTS = ipPublica;
         
         if (sePuedeDecirEnVozAlta()){
             int contadorSinonimos = 0;
@@ -232,12 +231,12 @@ public abstract class Frase
                     String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
                     String nombreDelArchivo = "";
                     if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoParaAudio)){
-                        nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false);
+                        nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false, idCliente);
                     }else{
                         nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, "audio", contadorSinonimos);
                         nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
                     }
-                    String miIp = ipPublica+nombreDelArchivo;
+                    String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;
                     miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
                 }
                 if(soloTieneEnum(miFrase)){
@@ -248,9 +247,7 @@ public abstract class Frase
         }
     }
     
-    
     public boolean generarAudioEnums(String idCliente, ComponentesDeLaFrase miFrase, String ipPublica){
-        
         int totalCombinaciones = 1;
         boolean generados = false; 
             
@@ -260,8 +257,8 @@ public abstract class Frase
             final List<Object> lista = new ArrayList<Object>();
             String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
             totalCombinaciones = totalCombinaciones * valores.length;
-        for(String valor: valores){	
-                    lista.add(valor);
+            for(String valor: valores){	
+            	lista.add(valor);
             }
             c.add(lista);
         }
@@ -282,12 +279,12 @@ public abstract class Frase
                 
                 String nombreDelArchivo = "";
                 if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio)){
-                    nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false);
+                    nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false, idCliente);
                 }else{
                     nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio);
                     nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
                 }
-                String miIp = ipPublica+nombreDelArchivo;
+                String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;
                 miFrase.setAudio(idAudio,new Sonido(miIp, textoAUsarParaGenerarAudio));
             }
         }
@@ -377,10 +374,6 @@ public abstract class Frase
     
     public String getPathAGuardarLosAudiosTTS() {
         return pathAGuardarLosAudiosTTS;
-    }
-
-    public String getIpPublicaAMostrarLosAudioTTS() {
-        return ipPublicaAMostrarLosAudioTTS;
     }
 
     public String obtenerLaInformacionDeLaFrase(){

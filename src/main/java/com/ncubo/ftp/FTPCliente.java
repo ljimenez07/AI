@@ -166,8 +166,7 @@ public class FTPCliente
 		}
 	}
 	
-	public void subirUnArchivoPorHilo(InputStream archivo, String pathDondeGuardar)
-	{
+	public void subirUnArchivoPorHilo(InputStream archivo, String pathDondeGuardar){
 		HiloParaSubirArchivosAlFTP hilo = new HiloParaSubirArchivosAlFTP(archivo, pathDondeGuardar);
 		hilo.start();
 	}

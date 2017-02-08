@@ -91,7 +91,7 @@ public class Participante{
 		return salida;
 	}
 	
-	public Salida decirUnaFraseDinamica(Frase frase, Respuesta respuesta, Tema tema, String datoAActualizar){
+	public Salida decirUnaFraseDinamica(Frase frase, Respuesta respuesta, Tema tema, String datoAActualizar, String idCliente){
 		Salida salida = new Salida();
 		String texto = "";
 		ComponentesDeLaFrase fraseADecir = null;
@@ -105,8 +105,8 @@ public class Participante{
 		if (formaDeManifestarseOral.esEnFormaOral()){
 			Sonido sonido = null;
 			
-			String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false);
-			String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+			String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(texto, false, idCliente);
+			String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 			sonido = new Sonido(miIp, texto);
 			
 			if (sonido != null)
@@ -134,11 +134,11 @@ public class Participante{
 		return salida;
 	}
 	
-	public Salida volverAPreguntar(Frase pregunta, Respuesta respuesta, Tema tema){
-		return volverAPreguntarConMeRindo(pregunta, respuesta, tema, false, true);
+	public Salida volverAPreguntar(Frase pregunta, Respuesta respuesta, Tema tema, String idCliente){
+		return volverAPreguntarConMeRindo(pregunta, respuesta, tema, false, true, idCliente);
 	}
 	
-	public Salida volverAPreguntarConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, boolean generarAudio){
+	public Salida volverAPreguntarConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, boolean generarAudio, String idCliente){
 		
 		Salida salida = new Salida();
 		ComponentesDeLaFrase resultado = null;
@@ -178,8 +178,8 @@ public class Participante{
 							textoParaReproducir = textoParaReproducir.replace("<br/>", " ");
 							String miIp = "";
 							if(generarAudio){
-								String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true);
-								miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+nombreDelArchivo;
+								String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true, idCliente);
+								miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 								
 							}
 							sonido = new Sonido(miIp, textoParaReproducir);

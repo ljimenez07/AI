@@ -29,7 +29,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	}
 	
 	@Override
-	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales){
+	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
 		misUltimosResultados.clear();
 		
 		Salida salida = null;
@@ -87,7 +87,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			if(frase.soloTieneEnum(miFraseADecir) && miFraseADecir.getAudio(idAudio) !=  null)
 				salida.escribir(miFraseADecir, respuesta, tema, frase, idAudio);
 			else{ 
-				miFraseADecir.setAudio("audio", miFraseADecir.generarAudio());
+				miFraseADecir.setAudio("audio", miFraseADecir.generarAudio(idCliente));
 				salida.escribir(miFraseADecir, respuesta, tema, frase);
 			}
 			salida.setMiTextoConPlaceholder(fraseConPlaceholder);
@@ -103,13 +103,13 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	}
 	
 	@Override
-	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales) {
-		return volverAPreguntarUnaFraseConMeRindo(pregunta, respuesta, tema, false, cliente, modoDeResolucionDeResultadosFinales);
+	public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+		return volverAPreguntarUnaFraseConMeRindo(pregunta, respuesta, tema, false, cliente, modoDeResolucionDeResultadosFinales, idCliente);
 	}
 	
 	@Override
-	public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales){
-		Salida salida = volverAPreguntarConMeRindo(pregunta, respuesta, tema, meRindo, false);
+	public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
+		Salida salida = volverAPreguntarConMeRindo(pregunta, respuesta, tema, meRindo, false, idCliente);
 	
 		// TODO Hay frases con plaseholders
 		if(salida.getMiTexto().contains("${")){
@@ -122,9 +122,9 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 					idAudio = idAudio + "-" + valorARetornar;
 				}
 			}
-			salida.setMiSonido(salida.getMiSonido().getTextoUsadoParaGenerarElSonido());
+			salida.setMiSonido(salida.getMiSonido().getTextoUsadoParaGenerarElSonido(), idCliente);
 		}else{
-			salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true);
+			salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true, idCliente);
 		}
 		
 		this.agregarHistorico(salida);

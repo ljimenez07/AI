@@ -74,7 +74,7 @@ public class TextToSpeechWatson
 	{
 		if(textToSpeechWatson == null)
 		{
-			throw new ChatException("No se a inicializado esta clase. Debe instanciar esta clase primero.");
+			throw new ChatException("No se a inicializado la clase 'TextToSpeechWatson'. Debe instanciar esta clase primero.");
 		}
 		return textToSpeechWatson;
 	}
@@ -98,13 +98,13 @@ public class TextToSpeechWatson
 		return in;
 	}
 	
-	public String getAudioToURL(String text, boolean esAudioDinamico)
+	public String getAudioToURL(String text, boolean esAudioDinamico, String idCliente)
 	{
 		UUID idOne = UUID.randomUUID();
 		String nombreDelArchivo = idOne + ".mp3";
 		nombreDelArchivo = nombreDelArchivo.replace("-", "");
 		
-		String pathFinal = this.pathAudios + "/" + nombreDelArchivo;
+		String pathFinal = this.pathAudios + idCliente+ "/" + nombreDelArchivo;
 		
 		InputStream in = null;
 		AudioFormat audioFormat = AudioFormat.WAV;
@@ -139,7 +139,7 @@ public class TextToSpeechWatson
 		return nombreDelArchivo;
 	}
 	
-	public String getAudioToURL(String text, boolean esAudioDinamico, String pathToTransferirAlFTP, String fileName)
+	public String getAudioToURL(String text, boolean esAudioDinamico, String pathToTransferirAlFTP, String fileName, String idCliente)
 	{
 		String nombreDelArchivo = fileName + ".mp3";
 		String pathFinal = pathToTransferirAlFTP + "/" + nombreDelArchivo;
