@@ -39,7 +39,7 @@ public class Conversaciones{
 		this.informacionDelCliente = cliente;
 		this.misConectores = conectores;
 		historicoDeConversaciones = new HistoricosDeConversaciones();
-		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas();
+		hiloParaBorrarConversacionesInactivas = new HiloParaBorrarConversacionesInactivas(informacionDelCliente);
 		hiloParaBorrarConversacionesInactivas.start();
 	}
 	
@@ -221,7 +221,11 @@ public class Conversaciones{
 	
 	private class HiloParaBorrarConversacionesInactivas extends Thread{
 		
-		public HiloParaBorrarConversacionesInactivas(){}
+		private InformacionDelCliente informacionDelCliente;
+		
+		public HiloParaBorrarConversacionesInactivas(InformacionDelCliente informacionDelCliente){
+			this.informacionDelCliente = informacionDelCliente;
+		}
 		
 		public void run(){
 			while(true){
@@ -233,7 +237,7 @@ public class Conversaciones{
 					long diff = fechaActual.getTime() - ultimoRegistro.getTime();
 					if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 3){ // Si es mayor de 3 dias hay q borrar
 						synchronized(misConversaciones){
-							borrarUnaConversacion(key,key);
+							borrarUnaConversacion(informacionDelCliente.getIdDelCliente(), key);
 						}
 					}
 				}

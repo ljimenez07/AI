@@ -19,7 +19,8 @@ public class ConsultaDao
 		FECHA("fecha"),
 		TEMA("nombreTema"),
 		VECES_CONSULTADO("vecesConsultado"),
-		TOTAL_CONSULTADO("TotalConsultado");
+		TOTAL_CONSULTADO("TotalConsultado"),
+		ID_CLIENTE("idCliente");
 		
 		private String nombre;
 		atributo(String nombre)
@@ -33,7 +34,7 @@ public class ConsultaDao
 		}
 	}
 	
-	public ArrayList<Consulta> obtener(String fechaDesde, String fechaHasta) throws ClassNotFoundException, SQLException
+	public ArrayList<Consulta> obtener(String fechaDesde, String fechaHasta, String idCliente) throws ClassNotFoundException, SQLException
 	{
 		ArrayList<Consulta> consultas = new ArrayList<Consulta>();
 		String query = "SELECT " 
@@ -51,7 +52,8 @@ public class ConsultaDao
 			consultas.add(new Consulta(
 					temario.buscarTema(rs.getString(atributo.ID_TEMA.toString())),
 					null,
-					rs.getInt(atributo.TOTAL_CONSULTADO.toString())
+					rs.getInt(atributo.TOTAL_CONSULTADO.toString()),
+					idCliente
 				));
 		}
 		
@@ -63,11 +65,14 @@ public class ConsultaDao
 	{
 		String queryDatos = "'" + consulta.getTema().getIdTema()+ "'"
 				+ ",'" + consulta.getFecha() + "'"
-				+ ",'" + consulta.getVecesConsultado() + "'";
+				+ ",'" + consulta.getVecesConsultado() + "'"
+				+ ",'" + consulta.getIdCliente() + "'";
+		
 		String query = "INSERT INTO " + NOMBRE_TABLA
 				 + "(" + atributo.ID_TEMA + ","
 				 + atributo.FECHA + ","
-				 + atributo.VECES_CONSULTADO + ")"
+				 + atributo.VECES_CONSULTADO + ","
+				 + atributo.ID_CLIENTE + ")"
 				 + " VALUES (" + queryDatos + ") "
 				 + " ON DUPLICATE KEY UPDATE " + atributo.VECES_CONSULTADO + " = " +atributo.VECES_CONSULTADO + " + " + consulta.getVecesConsultado();
 		

@@ -31,6 +31,7 @@ CREATE TABLE `bitacora_de_conversaciones` (
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `conversacion` longblob NOT NULL,
   `haSidoVerificado` bit(1) DEFAULT b'0',
+  `idCliente` varchar(45) CHARACTER SET latin1 NOT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=47 DEFAULT CHARSET=hp8;
 /*!40101 SET character_set_client = @saved_cs_client */;
@@ -50,6 +51,7 @@ CREATE TABLE `detalle_de_la_conversacion` (
   `intencion` varchar(45) DEFAULT NULL,
   `entidad` varchar(45) DEFAULT NULL,
   `idConversacion` int(11) DEFAULT NULL,
+  `idCliente` varchar(45) CHARACTER SET latin1 NOT NULL,
   UNIQUE KEY `FechaYFrase` (`fechaHora`,`frase`)
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 /*!40101 SET character_set_client = @saved_cs_client */;

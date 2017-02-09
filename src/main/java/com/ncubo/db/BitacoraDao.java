@@ -43,7 +43,7 @@ public class BitacoraDao
 	public int insertar(String idCliente, String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException
 	{
 		
-		String query = "INSERT INTO " + NOMBRE_TABLA_BITACORA + "(" + atributosDeLaBitacoraDao.ID_SESION + ", " + atributosDeLaBitacoraDao.ID_USARIO + ", " + atributosDeLaBitacoraDao.FECHA + ", " + atributosDeLaBitacoraDao.CONVERSACION + ") VALUES (?,?,?,?);";
+		String query = "INSERT INTO " + NOMBRE_TABLA_BITACORA + "(" + atributosDeLaBitacoraDao.ID_SESION + ", " + atributosDeLaBitacoraDao.ID_USARIO + ", " + atributosDeLaBitacoraDao.FECHA + ", " + atributosDeLaBitacoraDao.CONVERSACION + ", " + atributosDeLaBitacoraDao.ID_CLIENTE + ") VALUES (?,?,?,?,?);";
 		
 		int idConversacion = 0;
 		
@@ -57,6 +57,7 @@ public class BitacoraDao
 			stmt.setString(1, idSesion);
 			stmt.setString(2, idUsuarioenBA);
 			stmt.setTimestamp(3, miFechaActual);
+			
 			
 			ByteArrayOutputStream bos = new ByteArrayOutputStream();
 			try
@@ -72,6 +73,7 @@ public class BitacoraDao
 			}
 			byte[] data = bos.toByteArray();
 			stmt.setObject(4, data);
+			stmt.setString(5, idCliente);
 			stmt.executeUpdate();
 			
 			ResultSet rs = stmt.getGeneratedKeys(); // obtengo las ultimas

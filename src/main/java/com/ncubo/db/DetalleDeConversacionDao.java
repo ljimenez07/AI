@@ -55,7 +55,8 @@ public class DetalleDeConversacionDao {
 			stmt.setString(5, null);
 			stmt.setString(6, null);
 			stmt.setInt(7, idDeLaConversacion);
-
+			stmt.setString(8, idCliente);
+			
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();
