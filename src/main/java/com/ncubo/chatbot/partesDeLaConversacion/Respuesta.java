@@ -126,7 +126,11 @@ public class Respuesta {
 		entendi = lasIntencionesEstanBien && lasEntidadesEstanBien;
 		
 		if(entendi){
-			miContexto = new JSONObject(watsonRespuesta.getContext()).toString();
+			try{
+				miContexto = new JSONObject(watsonRespuesta.getContext()).toString();
+			}catch(Exception e){
+				entendi = false;
+			}
 		}
 		
 		return entendi;
