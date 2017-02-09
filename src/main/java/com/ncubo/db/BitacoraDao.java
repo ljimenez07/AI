@@ -25,7 +25,7 @@ public class BitacoraDao
 	
 	public enum atributosDeLaBitacoraDao
 	{
-		ID("id"), ID_SESION("id_sesion"), ID_USARIO("id_usuario"), FECHA("fecha"), CONVERSACION("conversacion"), HA_SIDO_VERIFICADO("haSidoVerificado");
+		ID("id"), ID_SESION("id_sesion"), ID_USARIO("id_usuario"), FECHA("fecha"), CONVERSACION("conversacion"), HA_SIDO_VERIFICADO("haSidoVerificado"),ID_CLIENTE("idCliente");
 		
 		private String nombre;
 		
@@ -40,7 +40,7 @@ public class BitacoraDao
 		}
 	}
 	
-	public int insertar(String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException
+	public int insertar(String idCliente, String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException
 	{
 		
 		String query = "INSERT INTO " + NOMBRE_TABLA_BITACORA + "(" + atributosDeLaBitacoraDao.ID_SESION + ", " + atributosDeLaBitacoraDao.ID_USARIO + ", " + atributosDeLaBitacoraDao.FECHA + ", " + atributosDeLaBitacoraDao.CONVERSACION + ") VALUES (?,?,?,?);";

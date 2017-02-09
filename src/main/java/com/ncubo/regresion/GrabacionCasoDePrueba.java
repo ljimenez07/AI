@@ -48,6 +48,6 @@ public class GrabacionCasoDePrueba {
 	
 	public int guardarConversacion(){
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME, Constantes.DB_USER, Constantes.DB_PASSWORD);
-		return miConversacion.obtenerAgente().guardarUnaConversacionEnLaDB("123", "Lis-Regresion");
+		return miConversacion.obtenerAgente().guardarUnaConversacionEnLaDB("regresion", "123", "Regresion");
 	}
 }

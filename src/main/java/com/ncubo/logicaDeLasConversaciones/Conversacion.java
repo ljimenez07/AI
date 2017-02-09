@@ -576,8 +576,8 @@ public class Conversacion {
 		}
 	}
 	
-	public void guardarEstadiscitas(String idSesion) throws ClassNotFoundException, SQLException{
-		estadisticasTemasTratados.guardarEstadiscitasEnBaseDeDatos(idSesion);
+	public void guardarEstadisticas(String idCliente, String idSesion) throws ClassNotFoundException, SQLException{
+		estadisticasTemasTratados.guardarEstadisticasEnBaseDeDatos(idCliente, idSesion);
 	}
 	
 	public Date obtenerLaFechaDelUltimoRegistroDeLaConversacion(){

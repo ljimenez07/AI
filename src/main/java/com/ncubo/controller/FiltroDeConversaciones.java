@@ -8,11 +8,11 @@ import com.ncubo.db.DetalleDeConversacionDao;
 public class FiltroDeConversaciones {
 
 	
-	public Iterator<LogDeLaConversacion> obtenerConversacionesEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> obtenerConversacionesEntreFechas(String fechaInicial, String fechaFinal, String idCliente) throws ClassNotFoundException{
 
 		DetalleDeConversacionDao detalle = new DetalleDeConversacionDao();
 		
-		return detalle.buscarConversacionesEntreFechas(fechaInicial, fechaFinal);
+		return detalle.buscarConversacionesEntreFechas(fechaInicial, fechaFinal, idCliente);
 	}
 
 	public Iterator<LogDeLaConversacion> obntenerLasConversacionesDeHoy() throws ClassNotFoundException{

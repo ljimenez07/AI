@@ -37,11 +37,11 @@ public class Estadisticas
 		return detalles;
 	}
 	
-	public void guardarEstadiscitasEnBaseDeDatos(String idSesion) throws ClassNotFoundException, SQLException
+	public void guardarEstadisticasEnBaseDeDatos(String idCliente, String idSesion) throws ClassNotFoundException, SQLException
 	{
 		for(Entry<Tema, Integer> estadistica : detalles.entrySet()){
 			consultaDao.insertar( new Consulta(estadistica.getKey(), new Timestamp(new Date().getTime()), estadistica.getValue()) );
-			estadisticasPorConversacionDao.insertar(estadistica.getKey().getNombre(), idSesion);
+			estadisticasPorConversacionDao.insertar(estadistica.getKey().getNombre(), idSesion, idCliente);
 		}
 		detalles = new Hashtable<>();
 	}

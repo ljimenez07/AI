@@ -16,8 +16,8 @@ public class EstadisticasPorConversacionDao {
 	public enum atributosDeLasEstadisticasPorConversacionDao
 	{
 		ID_TEMA("idTema"),
-		ID_CONVERSACION("idConversacion");
-		
+		ID_CONVERSACION("idConversacion"),
+		ID_CLIENTE("idCliente");
 		private String nombre;
 		atributosDeLasEstadisticasPorConversacionDao(String nombre)
 		{
@@ -30,16 +30,17 @@ public class EstadisticasPorConversacionDao {
 		}
 	}
 	
-	public void insertar(String idTema, String idConversacion) throws ClassNotFoundException, SQLException{
+	public void insertar(String idTema, String idConversacion, String idCliente) throws ClassNotFoundException, SQLException{
 		
 		String query = "INSERT INTO "+NOMBRE_TABLA_ESTADISTICAS_CONVERSACION
-				 + "("+atributosDeLasEstadisticasPorConversacionDao.ID_TEMA+", "+atributosDeLasEstadisticasPorConversacionDao.ID_CONVERSACION+") VALUES (?,?);";
+				 + "("+atributosDeLasEstadisticasPorConversacionDao.ID_TEMA+", "+atributosDeLasEstadisticasPorConversacionDao.ID_CONVERSACION+", "+atributosDeLasEstadisticasPorConversacionDao.ID_CLIENTE+") VALUES (?,?,?);";
 
 		Connection con = ConexionALaDB.getInstance().openConBD();
 
 		PreparedStatement stmt = con.prepareStatement(query);
 		stmt.setString(1, idTema);
 		stmt.setString(2, idConversacion);
+		stmt.setString(3, idCliente);
 		
 		stmt.executeUpdate();
 		

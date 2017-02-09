@@ -233,7 +233,7 @@ public class Conversaciones{
 					long diff = fechaActual.getTime() - ultimoRegistro.getTime();
 					if(TimeUnit.DAYS.convert(diff, TimeUnit.MILLISECONDS) > 3){ // Si es mayor de 3 dias hay q borrar
 						synchronized(misConversaciones){
-							borrarUnaConversacion(key);
+							borrarUnaConversacion(key,key);
 						}
 					}
 				}
@@ -291,15 +291,15 @@ public class Conversaciones{
 		}
 	}
 
-	public String borrarUnaConversacion(String idSesion){
+	public String borrarUnaConversacion(String idCliente, String idSesion){
 		historicoDeConversaciones.borrarElHistoricoDeUnaConversacion(idSesion, this.buscarUnClienteApartirDeLaSesion(idSesion));
 		
 		String resultado = "La conversacion con id "+idSesion+" no existe.";
 		if(existeLaConversacion(idSesion)){
 			synchronized(misConversaciones){
 				try {
-					misConversaciones.get(idSesion).guardarEstadiscitas(idSesion);
-					misConversaciones.get(idSesion).obtenerAgente().guardarUnaConversacionEnLaDB(idSesion, misConversaciones.get(idSesion).obtenerElParticipante().getMiNombre());
+					misConversaciones.get(idSesion).guardarEstadisticas(idCliente, idSesion);
+					misConversaciones.get(idSesion).obtenerAgente().guardarUnaConversacionEnLaDB(idCliente, idSesion, misConversaciones.get(idSesion).obtenerElParticipante().getMiNombre());
 				} catch (ClassNotFoundException | SQLException e) {
 					e.printStackTrace();
 				}
@@ -360,7 +360,7 @@ public class Conversaciones{
 				Cliente miCliente = misClientes.get(idCliente);
 				ArrayList<String> idsSeseiones = miCliente.getMisIdsDeSesiones();
 				for (String idSesion: idsSeseiones){
-					borrarUnaConversacion(idSesion);
+					borrarUnaConversacion(idCliente, idSesion);
 				}
 				miCliente.borrarTodosLosIdsDeSesiones();
 				resultado = "Las conversaciones del cliente "+idCliente+" se borraron exitosamente.";

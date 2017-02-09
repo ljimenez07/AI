@@ -19,10 +19,10 @@ public class DetalleDeConversacionDao {
 
 	private final String ULTIMA_HORA_DEL_DIA = " 23:59:59";
 
-	public void insertarDetalledeLaConversacion(Dialogo conversacion, int idDeLaConversacion, int idDeLaFraseGuardada) throws ClassNotFoundException
+	public void insertarDetalledeLaConversacion(String idCliente, Dialogo conversacion, int idDeLaConversacion, int idDeLaFraseGuardada) throws ClassNotFoundException
 	{
 		try{
-			String queryParaTablaDetalle = "INSERT IGNORE INTO detalle_de_la_conversacion (fechaHora, usuario, frase, fraseId, intencion, entidad, idConversacion) VALUES (?,?,?,?,?,?,?);";		
+			String queryParaTablaDetalle = "INSERT IGNORE INTO detalle_de_la_conversacion (fechaHora, usuario, frase, fraseId, intencion, entidad, idConversacion, idCliente) VALUES (?,?,?,?,?,?,?,?);";		
 			Connection con = ConexionALaDB.getInstance().openConBD();
 
 			Timestamp miFechaActual = new Timestamp(conversacion.getLaFechaEnQueSeCreo().getTime());
@@ -40,6 +40,7 @@ public class DetalleDeConversacionDao {
 				stmt.setString(5, conversacion.getIntencion());
 				stmt.setString(6, conversacion.getEntidades());
 				stmt.setInt(7, idDeLaConversacion);
+				stmt.setString(8, idCliente);
 				stmt.executeUpdate();
 			}
 
@@ -66,9 +67,9 @@ public class DetalleDeConversacionDao {
 
 	}
 
-	public Iterator<LogDeLaConversacion> buscarConversacionesEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> buscarConversacionesEntreFechas(String fechaInicial, String fechaFinal, String idCliente) throws ClassNotFoundException{
 
-		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ?;";
+		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ? and idCliente = '?';";
 
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
@@ -76,7 +77,8 @@ public class DetalleDeConversacionDao {
 
 			stmt.setString(1, fechaInicial);
 			stmt.setString(2, fechaFinal+ULTIMA_HORA_DEL_DIA);
-
+			stmt.setString(3, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 
 		} catch (SQLException e) {

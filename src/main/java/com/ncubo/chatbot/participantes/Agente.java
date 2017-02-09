@@ -82,12 +82,12 @@ public abstract class Agente extends Participante{
 		return miHistorico;
 	}
 	
-	public int guardarUnaConversacionEnLaDB(String idSesion, String idCliente){
+	public int guardarUnaConversacionEnLaDB(String idCliente, String idSesion, String idUsuario){
 		try {
-			int idDeLaConversacion = miBitacora.insertar(idSesion, idCliente, miHistorico);
+			int idDeLaConversacion = miBitacora.insertar(idCliente, idSesion, idUsuario, miHistorico);
 			for (Dialogo conversacion : miHistorico.verHistorialDeLaConversacion()) {
-				int idDeLaFraseGuardada = frasesDelFramework.insertarFrasesDevueltasPorElFramework( conversacion);
-				detalleDeLaConversacion.insertarDetalledeLaConversacion(conversacion, idDeLaConversacion, idDeLaFraseGuardada);
+				int idDeLaFraseGuardada = frasesDelFramework.insertarFrasesDevueltasPorElFramework(conversacion);
+				detalleDeLaConversacion.insertarDetalledeLaConversacion(idCliente, conversacion, idDeLaConversacion, idDeLaFraseGuardada);
 			}
 			miHistorico.limpiarHistorialALaConversacion();
 			
