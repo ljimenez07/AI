@@ -234,7 +234,7 @@ public abstract class Frase
                         nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false, idCliente);
                     }else{
                         nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, "audio", contadorSinonimos);
-                        nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
+                        nombreDelArchivo = nombreDelArchivo.replace(ipPublica+idCliente+"-", "");
                     }
                     String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;
                     miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
@@ -282,7 +282,7 @@ public abstract class Frase
                     nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false, idCliente);
                 }else{
                     nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio);
-                    nombreDelArchivo = nombreDelArchivo.replace(ipPublica, "");
+                    nombreDelArchivo = nombreDelArchivo.replace(ipPublica+idCliente+"-", "");
                 }
                 String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;
                 miFrase.setAudio(idAudio,new Sonido(miIp, textoAUsarParaGenerarAudio));

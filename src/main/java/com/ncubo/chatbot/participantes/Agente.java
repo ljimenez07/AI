@@ -111,9 +111,10 @@ public abstract class Agente extends Participante{
 	
 	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase){
 		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
+		
 		cambiarDeTemaForzosamente = false;
 		
-		lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuestaDelCliente);
+		lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
 		
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
@@ -133,15 +134,26 @@ public abstract class Agente extends Participante{
 				this.hayIntencionNoAsociadaANingunWorkspace = false;
 				hayQueEvaluarEnNivelSuperior = false;
 			}else{
-				System.out.println("Intencion no asociada a ningun workspace");
-				if (! intencionDelCliente.equals("")){
-					nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
+				if(lasDosUltimasIntencionesDeConfianza.size() >= 2){
+					nombreDeLaIntencionGeneralActiva = lasDosUltimasIntencionesDeConfianza.get(0).getIntent();
+					cambiarDeTema = true; // Buscar otro tema
+					
+					noEntendiLaUltimaRespuesta = false;
+					
+					abordarElTemaPorNOLoEntendi = false;
+					this.hayIntencionNoAsociadaANingunWorkspace = false;
+					hayQueEvaluarEnNivelSuperior = false;
 				}else{
-					nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
+					System.out.println("Intencion no asociada a ningun workspace");
+					if (! intencionDelCliente.equals("")){
+						nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
+					}else{
+						nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
+					}
+					hayIntencionNoAsociadaANingunWorkspace = true;
+					noEntendiLaUltimaRespuesta = true;
+					hayQueEvaluarEnNivelSuperior = true;
 				}
-				hayIntencionNoAsociadaANingunWorkspace = true;
-				noEntendiLaUltimaRespuesta = true;
-				hayQueEvaluarEnNivelSuperior = true;
 			}
 			
 		}catch(Exception e){
@@ -298,29 +310,34 @@ public abstract class Agente extends Participante{
 		return intencion;
 	}
 	
-	private ArrayList<Intent> determinarLasDosIntencionDeConfianzaEnUnWorkspace(String mensaje){
-		List<Intent> intenciones = llamarAWatson(mensaje).getIntents();
+	private ArrayList<Intent> determinarLasDosIntencionDeConfianzaEnUnWorkspace(List<Intent> intenciones){
+		
 		ArrayList<Intent> respuesta = new ArrayList<Intent>();
 		
-		Collections.sort(intenciones, new Comparator<Intent>() {
+		if(intenciones != null){
+			if(! intenciones.isEmpty() && intenciones.size() > 2){
+				
+				Collections.sort(intenciones, new Comparator<Intent>() {
 
-	        public int compare(Intent laPrimeraIntencion, Intent laSegundaIntencion) {
-	            return laSegundaIntencion.getConfidence().compareTo(laPrimeraIntencion.getConfidence());
-	        }
-	    });
-		
-		Double valorDeAmbas = intenciones.get(0).getConfidence() + intenciones.get(1).getConfidence();
-		if(valorDeAmbas >= 0.8 && intenciones.get(1).getConfidence() >= 0.3){
-			WorkSpace elPrimerWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(0).getIntent());
-			boolean seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace = elPrimerWorkSpace != null;
-			
-			WorkSpace elSegundoWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(1).getIntent());
-			boolean seEncontroLaSegundaIntencionAsociadaAUnWorkSpace = elSegundoWorkSpace != null;
-			
-			if(seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace && seEncontroLaSegundaIntencionAsociadaAUnWorkSpace){
-				respuesta.add(intenciones.get(0));
-				respuesta.add(intenciones.get(1));
-				System.out.println("HAY 2 INTENCIONES IMPORTANTES: 1- "+intenciones.get(0).getIntent()+"  2- "+intenciones.get(1).getIntent());
+			        public int compare(Intent laPrimeraIntencion, Intent laSegundaIntencion) {
+			            return laSegundaIntencion.getConfidence().compareTo(laPrimeraIntencion.getConfidence());
+			        }
+			    });
+				
+				Double valorDeAmbas = intenciones.get(0).getConfidence() + intenciones.get(1).getConfidence();
+				if(valorDeAmbas >= 0.8 && intenciones.get(1).getConfidence() >= 0.3){
+					WorkSpace elPrimerWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(0).getIntent());
+					boolean seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace = elPrimerWorkSpace != null;
+					
+					WorkSpace elSegundoWorkSpace = extraerUnWorkspaceConLaIntencion(intenciones.get(1).getIntent());
+					boolean seEncontroLaSegundaIntencionAsociadaAUnWorkSpace = elSegundoWorkSpace != null;
+					
+					if(seEncontroLaPrimeraIntencionAsociadaAUnWorkSpace && seEncontroLaSegundaIntencionAsociadaAUnWorkSpace){
+						respuesta.add(intenciones.get(0));
+						respuesta.add(intenciones.get(1));
+						System.out.println("HAY 2 INTENCIONES IMPORTANTES: 1- "+intenciones.get(0).getIntent()+"  2- "+intenciones.get(1).getIntent());
+					}
+				}
 			}
 		}
 		
