@@ -142,35 +142,29 @@ public class TextToSpeechWatson
 	public String getAudioToURL(String text, boolean esAudioDinamico, String pathToTransferirAlFTP, String fileName, String idCliente)
 	{
 		String nombreDelArchivo = fileName + ".mp3";
-		String pathFinal = pathToTransferirAlFTP + "/" + nombreDelArchivo;
+		String pathFinal = this.pathAudios + idCliente+ "/" + pathToTransferirAlFTP + "/" + nombreDelArchivo;
 		
 		InputStream in = null;
 		AudioFormat audioFormat = AudioFormat.WAV;
 		File temp = new File(System.getProperty("user.home") + "/audios-de-watson");
-		if(!temp.exists())
-		{
+		if(!temp.exists()){
 			temp.mkdir();
 			temp.deleteOnExit();
 		}
 		
-		try
-		{
+		try{
 			System.out.println("Generando audio al texto con Watson: " + text);
 			in = textService.synthesize(text, new Voice(voice, null, null), audioFormat).execute();
 			InputStream mp3InputStream = transformarAMp3(in, audioFormat.name().toLowerCase(), temp);
 			transferirAudiosAlFTP(esAudioDinamico, pathFinal, mp3InputStream);
-			
-		} catch(Exception e1)
-		{
+		} catch(Exception e1){
 			// throw new ChatException(String.format("Error debido a: %s",
 			// e1.getMessage()));
-			try
-			{
+			try{
 				in = textService.synthesize(text, new Voice(voice, null, null), audioFormat).execute();
 				InputStream mp3InputStream = transformarAMp3(in, audioFormat.name().toLowerCase(), temp);
 				transferirAudiosAlFTP(esAudioDinamico, pathFinal, mp3InputStream);
-			} catch(Exception e)
-			{
+			} catch(Exception e){
 				System.out.println("ERROR al transferir el audio: " + e.getMessage());
 			}
 		}
