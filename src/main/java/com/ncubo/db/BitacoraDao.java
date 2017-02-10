@@ -25,7 +25,7 @@ public class BitacoraDao
 	
 	public enum atributosDeLaBitacoraDao
 	{
-		ID("id"), ID_SESION("id_sesion"), ID_USARIO("id_usuario"), FECHA("fecha"), CONVERSACION("conversacion"), HA_SIDO_VERIFICADO("haSidoVerificado"),ID_CLIENTE("idCliente");
+		ID("id"), ID_SESION("idSesion"), ID_USUARIO("idUsuario"), FECHA("fecha"), CONVERSACION("conversacion"), HA_SIDO_VERIFICADO("haSidoVerificado"),ID_CLIENTE("idCliente");
 		
 		private String nombre;
 		
@@ -43,7 +43,7 @@ public class BitacoraDao
 	public int insertar(String idCliente, String idSesion, String idUsuarioenBA, LogDeLaConversacion historicoDeLaConversacion) throws ClassNotFoundException
 	{
 		
-		String query = "INSERT INTO " + NOMBRE_TABLA_BITACORA + "(" + atributosDeLaBitacoraDao.ID_SESION + ", " + atributosDeLaBitacoraDao.ID_USARIO + ", " + atributosDeLaBitacoraDao.FECHA + ", " + atributosDeLaBitacoraDao.CONVERSACION + ", " + atributosDeLaBitacoraDao.ID_CLIENTE + ") VALUES (?,?,?,?,?);";
+		String query = "INSERT INTO " + NOMBRE_TABLA_BITACORA + "(" + atributosDeLaBitacoraDao.ID_SESION + ", " + atributosDeLaBitacoraDao.ID_USUARIO + ", " + atributosDeLaBitacoraDao.FECHA + ", " + atributosDeLaBitacoraDao.CONVERSACION + ", " + atributosDeLaBitacoraDao.ID_CLIENTE + ") VALUES (?,?,?,?,?);";
 		
 		int idConversacion = 0;
 		
@@ -94,17 +94,19 @@ public class BitacoraDao
 		return idConversacion;
 	}
 	
-	public LogDeLaConversacion buscarUnaConversacion(String idSesion, String fecha) throws ClassNotFoundException, SQLException
+	public LogDeLaConversacion buscarUnaConversacion(String idSesion, String fecha, String idCliente) throws ClassNotFoundException, SQLException
 	{
 		LogDeLaConversacion resultado = null;
 		
-		String query = "select " + atributosDeLaBitacoraDao.CONVERSACION + " from " + NOMBRE_TABLA_BITACORA + " where " + atributosDeLaBitacoraDao.ID_SESION + " = ? and " + atributosDeLaBitacoraDao.FECHA + " = ?;";
+		String query = "select " + atributosDeLaBitacoraDao.CONVERSACION + " from " + NOMBRE_TABLA_BITACORA + " where " + atributosDeLaBitacoraDao.ID_SESION + " = ? and " + atributosDeLaBitacoraDao.FECHA + " = ? and " + atributosDeLaBitacoraDao.ID_CLIENTE + " = ?;" ;
+		
 		
 		Connection con = ConexionALaDB.getInstance().openConBD();
 		PreparedStatement stmt = con.prepareStatement(query);
 		
 		stmt.setString(1, idSesion);
 		stmt.setString(2, fecha);
+		stmt.setString(3, idCliente);
 		
 		ResultSet rs = stmt.executeQuery();
 		
@@ -176,7 +178,7 @@ public class BitacoraDao
 		return respuesta;
 	}
 	
-	private int obtenerIdDeLaBitacoraDeUnaConversacion(String idCliente, String idSesion, String fecha) throws ClassNotFoundException, SQLException
+	private int obtenerIdDeLaBitacoraDeUnaConversacion(String idUsuario, String idSesion, String fecha, String idCliente) throws ClassNotFoundException, SQLException
 	{
 		int resultado = 0;
 		
@@ -197,12 +199,12 @@ public class BitacoraDao
 		 * NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.HA_SIDO_VERIFICADO);
 		 */
 		String query = "";
-		if(idCliente.isEmpty())
+		if(idUsuario.isEmpty())
 		{
-			query = String.format("select %s FROM %s where %s = ? and %s = ?;", atributosDeLaBitacoraDao.ID, NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.ID_SESION, atributosDeLaBitacoraDao.FECHA);
+			query = String.format("select %s FROM %s where %s = ? and %s = ? and %s = ?;", atributosDeLaBitacoraDao.ID, NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.ID_SESION, atributosDeLaBitacoraDao.FECHA, atributosDeLaBitacoraDao.ID_CLIENTE);
 		} else
 		{
-			query = String.format("select %s FROM %s where %s = ? and %s = ? and %s = ?;", atributosDeLaBitacoraDao.ID, NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.ID_SESION, atributosDeLaBitacoraDao.FECHA, atributosDeLaBitacoraDao.ID_USARIO);
+			query = String.format("select %s FROM %s where %s = ? and %s = ? and %s = ? and %s = ?;", atributosDeLaBitacoraDao.ID, NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.ID_SESION, atributosDeLaBitacoraDao.FECHA, atributosDeLaBitacoraDao.ID_USUARIO, atributosDeLaBitacoraDao.ID_CLIENTE);
 		}
 		
 		Connection con = ConexionALaDB.getInstance().openConBD();
@@ -210,7 +212,12 @@ public class BitacoraDao
 		
 		stmt.setString(1, idSesion);
 		stmt.setString(2, fecha);
-		if(!idCliente.isEmpty())
+		if(!idUsuario.isEmpty())
+		{
+			stmt.setString(3, idUsuario);
+			stmt.setString(4, idCliente);
+		}
+		else
 		{
 			stmt.setString(3, idCliente);
 		}
@@ -225,14 +232,14 @@ public class BitacoraDao
 		return resultado;
 	}
 	
-	public String cambiarDeEstadoAVerificadoDeLaConversacion(String idCliente, String idSesion, String fecha) throws ClassNotFoundException, SQLException
+	public String cambiarDeEstadoAVerificadoDeLaConversacion(String idUsuario, String idSesion, String fecha, String idCliente) throws ClassNotFoundException, SQLException
 	{
 		// update bitacora_de_conversaciones set haSidoVerificado = 1 where id =
 		// 126;
 		
 		try
 		{
-			int idBitacoraConversacion = obtenerIdDeLaBitacoraDeUnaConversacion(idCliente, idSesion, fecha);
+			int idBitacoraConversacion = obtenerIdDeLaBitacoraDeUnaConversacion(idUsuario, idSesion, fecha, idCliente);
 			String query = String.format("update %s set %s = 1 where id = ?;", NOMBRE_TABLA_BITACORA, atributosDeLaBitacoraDao.HA_SIDO_VERIFICADO);
 			
 			Connection con = ConexionALaDB.getInstance().openConBD();

@@ -11,10 +11,10 @@ import com.ncubo.db.BitacoraDao;
 
 public class ConversacionController {
 
-	public LogDeLaConversacion obtenerUnaConversacion(String idSession, String fechaConHora) throws ClassNotFoundException, SQLException, IOException{
+	public LogDeLaConversacion obtenerUnaConversacion(String idSession, String fechaConHora, String idCliente) throws ClassNotFoundException, SQLException, IOException{
 		
 		BitacoraDao bitacora = new BitacoraDao();
-		LogDeLaConversacion conversacionEspecifica = bitacora.buscarUnaConversacion(idSession, fechaConHora);
+		LogDeLaConversacion conversacionEspecifica = bitacora.buscarUnaConversacion(idSession, fechaConHora, idCliente);
 	
 		return conversacionEspecifica;
 	}

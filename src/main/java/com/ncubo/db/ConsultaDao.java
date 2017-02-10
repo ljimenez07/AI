@@ -42,6 +42,7 @@ public class ConsultaDao
 				+ "SUM(" + atributo.VECES_CONSULTADO + ") as '" + atributo.TOTAL_CONSULTADO + "'"
 				+ " FROM " + NOMBRE_TABLA
 				+ " WHERE " + atributo.FECHA + " BETWEEN '" + fechaDesde + "' AND '" + fechaHasta + "'" 
+				+ " AND " + atributo.ID_CLIENTE + " = '" + idCliente +"'"
 				+ " group by " + atributo.ID_TEMA + " ;";
 
 		Connection con = ConexionALaDB.getInstance().openConBD();

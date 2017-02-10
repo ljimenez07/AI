@@ -30,7 +30,7 @@ public class DetalleDeConversacionDao {
 			PreparedStatement stmt = con.prepareStatement(queryParaTablaDetalle);
 
 			boolean elClienteDijoAlgo = conversacion.getLoQueDijoElParticipante() !="";
-			if (elClienteDijoAlgo && !conversacion.getIntencion().equals(Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA)) 
+			if (elClienteDijoAlgo) 
 			{
 				stmt = con.prepareStatement(queryParaTablaDetalle);
 				stmt.setTimestamp(1, miFechaActual);
@@ -63,14 +63,11 @@ public class DetalleDeConversacionDao {
 		}finally{
 
 		}
-
-
-
 	}
 
 	public Iterator<LogDeLaConversacion> buscarConversacionesEntreFechas(String fechaInicial, String fechaFinal, String idCliente) throws ClassNotFoundException{
 
-		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ? and idCliente = '?';";
+		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ? and idCliente = ?;";
 
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
@@ -91,19 +88,20 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public Iterator<LogDeLaConversacion> buscarConversacionesDeHoy() throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeHoy(String idCliente) throws ClassNotFoundException{
 		Date fecha = new Date( );
 		SimpleDateFormat formato = new SimpleDateFormat ("yyyy-MM-dd");
 
 		try{
-			String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ?;";
+			String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE FECHA BETWEEN ? and ? and idCliente = ?;";
 
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(queryParaObtenerIndices);
 
 			stmt.setString(1, formato.format(fecha));
 			stmt.setString(2, formato.format(fecha)+ULTIMA_HORA_DEL_DIA);
-
+			stmt.setString(3, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -111,16 +109,17 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuario(String idUsuario) throws ClassNotFoundException{
+	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuario(String idUsuario, String idCliente) throws ClassNotFoundException{
 
-		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = ?;";
+		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = ? and idCliente = ?;";
 
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(queryParaObtenerIndices);
 
 			stmt.setString(1, idUsuario);
-
+			stmt.setString(2, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -128,14 +127,14 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuarioAnonimo() throws ClassNotFoundException{
+	public  Iterator<LogDeLaConversacion> buscarConversacionesPorUsuarioAnonimo(String idCliente) throws ClassNotFoundException{
 
-		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = '';";
+		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = '' and idCliente = ?;";
 
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(queryParaObtenerIndices);
-
+			stmt.setString(1, idCliente);
 
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
@@ -144,9 +143,9 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosEspecificosEntreFechas(String idUsuario, String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosEspecificosEntreFechas(String idUsuario, String fechaInicial, String fechaFinal, String idCliente) throws ClassNotFoundException{
 
-		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = ? and FECHA between ? and ?;";
+		String queryParaObtenerIndices = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = ? and FECHA between ? and ? and idCliente = ?;";
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(queryParaObtenerIndices);
@@ -154,7 +153,8 @@ public class DetalleDeConversacionDao {
 			stmt.setString(1, idUsuario);
 			stmt.setString(2, fechaInicial);
 			stmt.setString(3, fechaFinal+ULTIMA_HORA_DEL_DIA);
-
+			stmt.setString(4, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -162,16 +162,17 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosAnonimosEntreFechas(String fechaInicial, String fechaFinal) throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> buscarConversacionesDeUsuariosAnonimosEntreFechas(String fechaInicial, String fechaFinal, String idCliente) throws ClassNotFoundException{
 
-		String query = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = '' and FECHA between ? and ?;";
+		String query = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario = '' and FECHA between ? and ? and idCliente = ?;";
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(query);
 
 			stmt.setString(1, fechaInicial);
 			stmt.setString(2, fechaFinal+ULTIMA_HORA_DEL_DIA);
-
+			stmt.setString(3, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -179,13 +180,14 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public Iterator<LogDeLaConversacion> buscarLasConversacionesDeTodosLosUsuariosNoAnonimos() throws ClassNotFoundException{
+	public Iterator<LogDeLaConversacion> buscarLasConversacionesDeTodosLosUsuariosNoAnonimos(String idCliente) throws ClassNotFoundException{
 
-		String query = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario != '';";
+		String query = "SELECT id FROM bitacora_de_conversaciones WHERE id_usuario != '' and idCliente = ?;";
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(query);
-
+			stmt.setString(1, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -193,9 +195,9 @@ public class DetalleDeConversacionDao {
 		return null;
 	}
 
-	public Iterator<LogDeLaConversacion> buscarTodasLasConversaciones() throws ClassNotFoundException {
+	public Iterator<LogDeLaConversacion> buscarTodasLasConversaciones(String idCliente) throws ClassNotFoundException {
 
-		String query = "SELECT id FROM bitacora_de_conversaciones;";
+		String query = "SELECT id FROM bitacora_de_conversaciones where idCliente = ?;";
 
 		Connection con;
 
@@ -203,7 +205,8 @@ public class DetalleDeConversacionDao {
 			con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt;
 			stmt = con.prepareStatement(query);
-
+			stmt.setString(1, idCliente);
+			
 			return recorrerResultadoDelQuery(stmt, con);
 		} catch (SQLException e) {
 			e.printStackTrace();

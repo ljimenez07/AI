@@ -414,14 +414,14 @@ public class Conversaciones{
 		return misClientes.get(idCliente);
 	}
 	
-	public String verElHistoricoDeLaConversacion(String idSesion, String fecha){
+	public String verElHistoricoDeLaConversacion(String idSesion, String fecha, String idCliente){
 		LogDeLaConversacion miHistorico = null;
 		
 		if(existeLaConversacion(idSesion)){
 			miHistorico = misConversaciones.get(idSesion).obtenerAgente().verMiHistorico();
 		}else{
 			try {
-				miHistorico = historicoDeConversaciones.obtenerMiBitacoraDeBD().buscarUnaConversacion(idSesion, fecha);
+				miHistorico = historicoDeConversaciones.obtenerMiBitacoraDeBD().buscarUnaConversacion(idSesion, fecha, idCliente);
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

@@ -171,16 +171,16 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			if(placeholder.getTipoDePlaceholder().equals(TiposDeVariables.ENUM)){
 				String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
 				//Lista miListaDeSinonimos = new Lista();
-				String comando = String.format("%s = Lista();", placeholder.getNombreDelPlaceholder());
+				String comando = String.format("%s = Lista();", "lista");
 				ejecutarParametroEnElParser(cliente, comando);
 				
 				for(String valor: valores){
 					//miListaDeSinonimos.guardarObjeto(new Hilera(valor));
-					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", placeholder.getNombreDelPlaceholder(), valor);
+					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", valor);
 					ejecutarParametroEnElParser(cliente, comando);
 				}
 				
-				ejecutarParametroEnElParser(cliente, placeholder.getNombreDelPlaceholder(), placeholder.getNombreDelPlaceholder());
+				ejecutarParametroEnElParser(cliente, placeholder.getNombreDelPlaceholder(), "lista");
 			}
 			
 			String comando = "x = "+placeholder.getNombreDelPlaceholder()+Constantes.VARIABLE+".agregarParametros("+Constantes.INSTANCEA_PARAMETROS+");";

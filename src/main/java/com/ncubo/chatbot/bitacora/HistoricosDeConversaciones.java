@@ -76,10 +76,10 @@ public class HistoricosDeConversaciones {
 		return miBitacora;
 	}
 	
-	public String buscarConversacionesQueNoHanSidoVerificadasPorTema(String idTema) throws ClassNotFoundException, SQLException{
+	public String buscarConversacionesQueNoHanSidoVerificadasPorTema(String idTema, String idCliente) throws ClassNotFoundException, SQLException{
 		JSONArray resultado = new JSONArray();
 
-		ArrayList<String> idSesiones = estadisticasPorConversacion.buscarConversacionesQueNoHanSidoVerificadasPorTema(idTema);
+		ArrayList<String> idSesiones = estadisticasPorConversacion.buscarConversacionesQueNoHanSidoVerificadasPorTema(idTema, idCliente);
 		for (String idSesion: idSesiones){
 			resultado.put(idSesion);
 		}
@@ -87,7 +87,7 @@ public class HistoricosDeConversaciones {
 		return resultado.toString();
 	}
 	
-	public String cambiarDeEstadoAVerificadoDeLaConversacion(String idCliente, String idSesion, String fecha) throws ClassNotFoundException, SQLException{
-		return miBitacora.cambiarDeEstadoAVerificadoDeLaConversacion(idCliente, idSesion, fecha);
+	public String cambiarDeEstadoAVerificadoDeLaConversacion(String idUsuario, String idSesion, String fecha, String idCliente) throws ClassNotFoundException, SQLException{
+		return miBitacora.cambiarDeEstadoAVerificadoDeLaConversacion(idUsuario, idSesion, fecha, idCliente);
 	}
 }
