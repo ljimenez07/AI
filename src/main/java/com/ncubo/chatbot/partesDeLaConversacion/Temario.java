@@ -64,6 +64,16 @@ public abstract class Temario
 		return null;
 	}
 	
+	public Tema buscarTemaPorId(String id){
+		for(Tema tema: temasDelDiscurso){
+			if(tema.getIdTema().equals(id)){
+				return tema;
+			}
+		}
+		return null;
+	}
+	
+	
 	public Tema buscarTema(String nombreDelWorkspace, String nombreIntencionGeneral){
 		for(Tema tema: temasDelDiscurso){
 			if(tema.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && tema.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral)){

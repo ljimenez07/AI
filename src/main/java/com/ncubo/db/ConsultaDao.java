@@ -51,7 +51,7 @@ public class ConsultaDao
 		while (rs.next())
 		{
 			consultas.add(new Consulta(
-					temario.buscarTema(rs.getString(atributo.ID_TEMA.toString())),
+					temario.buscarTemaPorId(rs.getString(atributo.ID_TEMA.toString())),
 					null,
 					rs.getInt(atributo.TOTAL_CONSULTADO.toString()),
 					idCliente
