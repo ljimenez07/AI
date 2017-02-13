@@ -8,7 +8,6 @@ import java.util.Map;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.db.BitacoraDao;
 
-
 public class ConversacionController {
 
 	public LogDeLaConversacion obtenerUnaConversacion(String idSession, String fechaConHora, String idCliente) throws ClassNotFoundException, SQLException, IOException{

@@ -131,7 +131,7 @@ public class BitacoraDao
 
 	public ArrayList<String> obtenerIdsDeSesionDeBitacoras() throws SQLException, ClassNotFoundException
 	{
-		String query = "SELECT " + atributosDeLaBitacoraDao.ID_SESION + " FROM " + NOMBRE_TABLA_BITACORA + ";";
+		String query = "SELECT " + atributosDeLaBitacoraDao.ID_SESION + " FROM " + NOMBRE_TABLA_BITACORA + " GROUP BY " + atributosDeLaBitacoraDao.ID_SESION + ";";
 		
 		Connection con = ConexionALaDB.getInstance().openConBD();
 		PreparedStatement stmt = con.prepareStatement(query);
