@@ -93,12 +93,12 @@ public class Conversacion {
 		
 		Saludo saludoGeneral = (Saludo) this.temario.extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnSaludo);
 		misSalidas.add(agente.decirUnaFrase(saludoGeneral, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-		ponerComoYaTratado(saludoGeneral);
+		ponerComoYaTratado(this.temaActual, saludoGeneral);
 		
 		Pregunta queQuiere = (Pregunta) this.temario.extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
 		misSalidas.add(agente.decirUnaFrase(queQuiere, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		
-		ponerComoYaTratado(queQuiere);
+		ponerComoYaTratado(this.temaActual, queQuiere);
 		miUltimaSalida = misSalidas;
 		
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
@@ -121,7 +121,7 @@ public class Conversacion {
 				String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
 				Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.temario.contenido().frase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(errorDeComunicacionConWatson);
+				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 			}else{
 				String idFraseActivada = respuesta.obtenerFraseActivada();
 				if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta)){
@@ -279,11 +279,11 @@ public class Conversacion {
 				System.out.println("Id de la frase a decir: "+idFraseActivada);
 				extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
 			}
-			
+			/*
 			Tema temaSaludo = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
 			Tema temaDespedida = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_DESPEDIDA);
 			if( (! this.temaActual.equals(temaSaludo)) && (! this.temaActual.equals(temaDespedida)))
-				ponerComoYaTratado(this.temaActual);
+				ponerComoYaTratado(this.temaActual);*/
 		}else{ // No entiendo
 			decirTemaNoEntendi(misSalidas, respuesta);
 			agente.cambiarANivelSuperior();
@@ -347,7 +347,6 @@ public class Conversacion {
 		System.out.println("Id de la frase a decir: "+idFraseActivada);
 		extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada, this.temaActual);
 		
-		ponerComoYaTratado(this.temaActual);
 		agente.yaNoCambiarANivelSuperior();
 	}
 	
@@ -355,7 +354,6 @@ public class Conversacion {
 		decirFraseRecordatoria(misSalidas, respuesta);
 		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		agente.yaNoCambiarANivelSuperior();
-		ponerComoYaTratado(temaActual);
 	}
 	
 	private void decirFraseRecordatoria(ArrayList<Salida> misSalidas, Respuesta respuesta){
@@ -374,7 +372,7 @@ public class Conversacion {
 		
 		Pregunta fueraDeContexto = (Pregunta) this.temario.frase(nombreFrase);
 		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-		ponerComoYaTratado(miTema);
+		ponerComoYaTratado(miTema, fueraDeContexto);
 	}
 	
 	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta) throws Exception{
@@ -394,11 +392,11 @@ public class Conversacion {
 
 				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(saludar);
+				ponerComoYaTratado(miTema, saludar);
 				
 				Pregunta queQuiere = (Pregunta) this.temario.extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(queQuiere);
+				ponerComoYaTratado(temaActual, queQuiere);
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
@@ -409,7 +407,7 @@ public class Conversacion {
 				
 				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(saludar);
+				ponerComoYaTratado(miTema, saludar);
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
@@ -420,7 +418,7 @@ public class Conversacion {
 				
 				Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(miTema);
+				ponerComoYaTratado(miTema, fueraDeContexto);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				decirTemaNoEntendi(misSalidas, respuesta);
@@ -433,7 +431,7 @@ public class Conversacion {
 				Pregunta despistar = (Pregunta) this.temario.frase(nombreFrase);
 				
 				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(despistar);
+				ponerComoYaTratado(miTema, despistar);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
 				System.out.println("Quiere repetir  ...");
@@ -456,7 +454,7 @@ public class Conversacion {
 				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_AGRADECIMIENTO);
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(queQuiere);
+				ponerComoYaTratado(miTema, queQuiere);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
 				System.out.println("Quiere saber que hago ...");							
@@ -465,7 +463,7 @@ public class Conversacion {
 				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR);
 				Afirmacion queQuiere = (Afirmacion) this.temario.frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(queQuiere);
+				ponerComoYaTratado(miTema, queQuiere);
 			}
 			
 			return true;
@@ -514,7 +512,7 @@ public class Conversacion {
 			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada);
 			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 			fraseActual = miPregunta;
-			ponerComoYaTratado(miPregunta);
+			ponerComoYaTratado(tema, miPregunta);
 		}
 	}
 	
@@ -537,7 +535,7 @@ public class Conversacion {
 					misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					fraseActual = miAfirmacion;
 				}
-				ponerComoYaTratado(miAfirmacion);
+				ponerComoYaTratado(this.temaActual, miAfirmacion);
 			}
 		}
 	}
@@ -555,24 +553,19 @@ public class Conversacion {
 		return resultado;
 	}
 	
-	private void ponerComoYaTratado(Frase frase){
-		
-		if ( ! hilo.existeTema(temaActual)){ //si quiere que solo lo cuente una vez
-			estadisticasTemasTratados.darSeguimiento(temaActual);
-		}
-		hilo.ponerComoDichoEsta(frase);
-	}
-	
-	private void ponerComoYaTratado(Tema tema){
-		
-		if ( ! hilo.existeTema(tema)){ //si quiere que solo lo cuente una vez
-			estadisticasTemasTratados.darSeguimiento(tema);
+	private void ponerComoYaTratado(Tema tema, Frase frase){
+		if(tema != null){
+			if ( ! hilo.existeTema(tema)){ //si quiere que solo lo cuente una vez
+				estadisticasTemasTratados.darSeguimiento(tema);
+			}
 		}
 		
-		if(tema.sePuedeRepetir()){
-			hilo.ponerComoDichoEste(tema);
-		}else{
-			hilo.noPuedoRepetir(tema);
+		if(frase != null){
+			if(tema.sePuedeRepetir()){
+				hilo.ponerComoDichoEste(tema);
+			}else{
+				hilo.noPuedoRepetir(tema);
+			}
 		}
 	}
 	
