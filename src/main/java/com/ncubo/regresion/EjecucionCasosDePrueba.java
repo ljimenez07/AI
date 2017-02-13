@@ -141,6 +141,8 @@ public class EjecucionCasosDePrueba {
 		
 		int contadorSalidas = 0;
 		boolean status = true;
+		String ultimoMensajeDeParticipante = "";
+		
 		ArrayList<Salida> salidasParaElCliente = miconversacion.inicializarLaConversacion();
 		LogDeLaConversacion conversacion = new LogDeLaConversacion();
 		try {
@@ -149,8 +151,9 @@ public class EjecucionCasosDePrueba {
 			System.out.println("Problema al traer la conversacion de la base de datos");
 		}
 		for(Dialogo dialogo: conversacion.verHistorialDeLaConversacion()){
-			if(!dialogo.getLoQueDijoElParticipante().equals(""))
+			if(!dialogo.getLoQueDijoElParticipante().equals("") && !dialogo.getLoQueDijoElParticipante().equals(ultimoMensajeDeParticipante))
 			{
+				ultimoMensajeDeParticipante = dialogo.getLoQueDijoElParticipante();
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
@@ -158,7 +161,7 @@ public class EjecucionCasosDePrueba {
 				}
 				if(salidasParaElCliente.equals(null)){
 					status = false;
-					observaciones.add("Problemas de comunicaciÃ³n con Watson. El caso es interrumpido");
+					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
 					break;
 				}
 				else{
@@ -227,7 +230,7 @@ public class EjecucionCasosDePrueba {
 					}
 				}
 			}
-			else{
+			if(!dialogo.getElTextoQueDijoElFramework().equals("")){
 				if(salidasParaElCliente.size()<=contadorSalidas){
 					observaciones.add("El caso tiene esta respuesta adicional: "+ dialogo.getElTextoQueDijoElFramework());
 					status = false;

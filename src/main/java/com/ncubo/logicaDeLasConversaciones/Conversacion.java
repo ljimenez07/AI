@@ -355,7 +355,7 @@ public class Conversacion {
 		decirFraseRecordatoria(misSalidas, respuesta);
 		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		agente.yaNoCambiarANivelSuperior();
-		ponerComoYaTratado(temaActual);
+		//ponerComoYaTratado(temaActual);
 	}
 	
 	private void decirFraseRecordatoria(ArrayList<Salida> misSalidas, Respuesta respuesta){

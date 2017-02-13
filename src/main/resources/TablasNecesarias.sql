@@ -26,8 +26,8 @@ DROP TABLE IF EXISTS `bitacora_de_conversaciones`;
 /*!40101 SET character_set_client = utf8 */;
 CREATE TABLE `bitacora_de_conversaciones` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `id_sesion` varchar(100) CHARACTER SET latin1 NOT NULL,
-  `id_usuario` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
+  `idSesion` varchar(100) CHARACTER SET latin1 NOT NULL,
+  `idUsuario` varchar(100) CHARACTER SET latin1 DEFAULT NULL,
   `fecha` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   `conversacion` longblob NOT NULL,
   `haSidoVerificado` bit(1) DEFAULT b'0',
