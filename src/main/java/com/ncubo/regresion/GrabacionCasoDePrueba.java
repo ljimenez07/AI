@@ -1,6 +1,17 @@
 package com.ncubo.regresion;
 
+import java.io.File;
 import java.util.ArrayList;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -46,8 +57,46 @@ public class GrabacionCasoDePrueba {
 		return salidasParaElCliente;
 	}
 	
-	public int guardarConversacion(){
+	public int guardarConversacion(String xmlCasos, String descripcionDelCaso){
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME, Constantes.DB_USER, Constantes.DB_PASSWORD);
-		return miConversacion.obtenerAgente().guardarUnaConversacionEnLaDB("regresion", "123", "Regresion");
+		int id = miConversacion.obtenerAgente().guardarUnaConversacionEnLaDB("regresion", "123", "Regresion");
+		
+		File file = new File(xmlCasos);
+
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder;
+		Document doc = null;
+		try
+		{
+			dBuilder = dbFactory.newDocumentBuilder();
+			doc = dBuilder.parse(file);
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+			return id;
+		}
+		
+		Element root = doc.getDocumentElement();
+		root.normalize();
+		Element nodoCasosDePrueba = (Element)doc.getElementsByTagName("casosDePrueba").item(0);
+		Element casoOriginal = (Element)nodoCasosDePrueba.getElementsByTagName("caso").item(0);
+		Element caso = (Element) doc.importNode(casoOriginal, true);
+		caso.setAttribute("descripcion", descripcionDelCaso);
+		caso.setAttribute("idConversacion", String.valueOf(id));
+		nodoCasosDePrueba.appendChild(caso);
+		
+		try
+		{
+			TransformerFactory transformerFactory = TransformerFactory.newInstance();
+			Transformer transformer = transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(doc);
+			StreamResult result = new StreamResult(new File(xmlCasos));
+			transformer.transform(source, result);
+		} catch(Exception e)
+		{
+			e.printStackTrace();
+		}
+		
+		return id;
 	}
 }
