@@ -141,7 +141,6 @@ public class EjecucionCasosDePrueba {
 		
 		int contadorSalidas = 0;
 		boolean status = true;
-		String ultimoMensajeDeParticipante = "";
 		
 		ArrayList<Salida> salidasParaElCliente = miconversacion.inicializarLaConversacion();
 		LogDeLaConversacion conversacion = new LogDeLaConversacion();
@@ -151,9 +150,8 @@ public class EjecucionCasosDePrueba {
 			System.out.println("Problema al traer la conversacion de la base de datos");
 		}
 		for(Dialogo dialogo: conversacion.verHistorialDeLaConversacion()){
-			if(!dialogo.getLoQueDijoElParticipante().equals("") && !dialogo.getLoQueDijoElParticipante().equals(ultimoMensajeDeParticipante))
+			if(!dialogo.getLoQueDijoElParticipante().equals(""))
 			{
-				ultimoMensajeDeParticipante = dialogo.getLoQueDijoElParticipante();
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
@@ -171,7 +169,7 @@ public class EjecucionCasosDePrueba {
 					try{
 						response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
 					}catch(Exception e){
-						observaciones.add("Problemas de comunicaciÃ³n con Watson. El caso es interrumpido");
+						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
 						break;
 					}
 					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
@@ -194,7 +192,7 @@ public class EjecucionCasosDePrueba {
 							{
 	
 								String laEntidadQueTrajoWatson = listaDeEntidadesDeWatson.get(i).getEntity();
-								boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith("sys-");
+								boolean seTrataDeUnSys = laEntidadQueTrajoWatson.startsWith(Constantes.ENTIDAD_SYS);
 	
 								if (seTrataDeUnSys) 
 								{

@@ -178,7 +178,7 @@ public class Conversacion {
 			volverlARetomarUnTema(misSalidas, respuesta);
 		}else{
 			if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && esModoConsulta && respuesta.seTerminoElTema() && 
-					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta"))
+					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta")&& ! existeLaFraseEnLasSalidas(misSalidas, obtenerUnaFraseDespedida(Constantes.FRASES_INTENCION_DESPEDIDA)))
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 		}
 		
@@ -399,7 +399,7 @@ public class Conversacion {
 				
 				Pregunta queQuiere = (Pregunta) this.temario.extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(temaActual, queQuiere);
+				//ponerComoYaTratado(temaActual, queQuiere);
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
