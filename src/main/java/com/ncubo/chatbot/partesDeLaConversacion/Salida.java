@@ -239,4 +239,12 @@ public class Salida implements Serializable{
 			}
 		return tieneSoloEnum;
 	}
+	
+	public void setMiFecha(Date fecha){
+		this.miFecha = fecha;
+	}
+	
+	public Date getMiFecha(){
+		return this.miFecha;
+	}
 }

@@ -53,7 +53,7 @@ public class Dialogo implements Serializable{
 		  if(!listaEntidades.isEmpty())
 		   this.entidades = procesarEntidades(listaEntidades);
 		  }
-		this.laFechaEnQueSeCreo = Calendar.getInstance().getTime();
+		this.laFechaEnQueSeCreo = miSalida.getMiFecha();
 		if(miSalida.getTemaActual() != null)
 			this.intencion = miSalida.getTemaActual().getIntencionGeneralAlQuePertenece();
 		this.version = miSalida.getFraseActual().getVersion();
