@@ -1,0 +1,1155 @@
+<?xml version="1.0"?>
+<!DOCTYPE xml>
+<conversaciones modo="PRUEBA">
+	<temario id="1234" nombre="Temario General">
+		<conversacion id="a8848013380345cd9a38b0de2e356490" nombre="saludoGeneral">
+			<tipo>saludo</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Hola soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>¡Hola soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>¡Buenos días, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>¡Buenos días, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<soloSi><![CDATA[hora < 12]]></soloSi>
+				</frase>
+				<frase>
+					<texto>¡Buenas tardes, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>¡Buenas tardes, soy Sofía su asesora virtual! Estoy disponible para brindarle información sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<soloSi><![CDATA[hora >= 12 && hora < 18]]></soloSi>
+				</frase>
+			</frases>
+		</conversacion>
+
+		<conversacion id="3747fca8205b4db289f5719a7ffe88d5" nombre="saludar">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Hola!</texto>
+					<sonido>¡Hola!</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>¡Hola soy Sofía su asesora virtual!</texto>
+					<sonido>¡Hola soy Sofía su asesora virtual!</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>¡Buenos días, soy Sofía su asesora virtual!</texto>
+					<sonido>¡Buenos días, soy Sofía su asesora virtual!</sonido>
+					<vineta></vineta>
+					<soloSi><![CDATA[hora < 10]]></soloSi>
+				</frase>
+				<frase>
+					<texto>¡Buenas tardes, soy Sofía su asesora virtual!</texto>
+					<sonido>¡Buenas tardes, soy Sofía su asesora virtual!</sonido>
+					<vineta></vineta>
+					<soloSi><![CDATA[hora >= 12 && hora < 16]]></soloSi>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+			<condiciones>
+				<condicion operador="and" tipo="intencion">saludos</condicion>
+			</condiciones>
+		</conversacion>
+		
+		<conversacion id="0e23b458f94847db9d94184a3fb01f1e" nombre="saludoPreguntar">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>4</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¿Cómo le puedo ayudar hoy?</texto>
+					<sonido>¿Cómo le puedo ayudar hoy?</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>¿En qué le puedo ayudar?</texto>
+					<sonido>¿En qué le puedo ayudar?</sonido>
+					<vineta></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="e1788f007e7844bfbed80ac7caff58ea" nombre="preguntarPorOtraConsulta">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>2</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¿Hay algo más con lo que le pueda ayudar?</texto>
+					<sonido>¿Hay algo más con lo que le pueda ayudar?</sonido>
+					<vineta><![CDATA[¿Hay algo más con lo que le pueda ayudar? <br/><br/> <center> 
+	<button id="miBoton" class="button" onClick="showAndroidToast('si')"><img src="http://138.94.58.158:7870/like.png" style="width:40px;height:40px;"/></button> 
+	<button id="miBoton" class="button" onClick="showAndroidToast('no')"><img src="http://138.94.58.158:7870/dislike.png" style="width:40px;height:40px;"/></button> 
+	</center>]]></vineta>
+				</frase>
+				<frase>
+					<texto>¿Puedo ayudarle con algo más?</texto>
+					<sonido>¿Puedo ayudarle con algo más?</sonido>
+					<vineta><![CDATA[¿Puedo ayudarle con algo más? <br/><br/> <center> 
+	<button id="miBoton" class="button" onClick="showAndroidToast('si')"><img src="http://138.94.58.158:7870/like.png" style="width:40px;height:40px;"/></button> 
+	<button id="miBoton" class="button" onClick="showAndroidToast('no')"><img src="http://138.94.58.158:7870/dislike.png" style="width:40px;height:40px;"/></button> 
+	</center>]]></vineta>
+				</frase>
+				<frase>
+					<texto>¿Algo más en lo que pueda ayudarle?</texto>
+					<sonido>¿Algo más en lo que pueda ayudarle?</sonido>
+					<vineta><![CDATA[¿Algo más en lo que pueda ayudarle? <br/><br/> <center> <input id="miBoton" type="button" value="Sí" class="button" onClick="showAndroidToast('si')" /> <input id="miBoton" type="button" value="No" class="button" onClick="showAndroidToast('no')" /> </center>]]></vineta>
+				</frase>
+				<frase>
+					<texto>¿Tiene alguna consulta adicional?</texto>
+					<sonido>¿Tiene alguna consulta adicional?</sonido>
+					<vineta></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="784df23948a747999048e012fd52c4a4" nombre="quiereHacerOtraConsulta">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>5</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Muy bien, ¿qué información necesita?</texto>
+					<sonido>Muy bien, ¿qué información necesita?</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>Claro, dime ¿cómo le puedo ayudar?</texto>
+					<sonido>Claro, dime ¿cómo le puedo ayudar?</sonido>
+					<vineta></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="939770c8f24d4a16b9e83f5027de2ee3" nombre="noQuiereHacerOtraConsulta">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Fue un placer ayudarle, ¡que pase un feliz día!. Hasta luego.</texto>
+					<sonido>Fue un placer ayudarle, ¡que pase un feliz día!. Hasta luego.</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>Fue un gusto servirle, recuerde que le podemos atender las 24 horas del día. Hasta luego.</texto>
+					<sonido>Fue un gusto servirle, recuerde que le podemos atender las 24 horas del día. Hasta luego.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="524dcb6e6b0547518d2340e91d0d7715" nombre="despedida">
+			<tipo>despedida</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Perfecto! Ha sido un placer haber aclarado sus consultas y recuerde que le puedo atender las 24 horas del día. Espero poder servirle pronto.  ¡Hasta luego!</texto>
+					<sonido>¡Perfecto! Ha sido un placer haber aclarado sus consultas y recuerde que le puedo atender las 24 horas del día. Espero poder servirle pronto.  ¡Hasta luego!</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+			<condiciones>
+				<condicion operador="and" tipo="intencion">despedidas</condicion>
+			</condiciones>
+		</conversacion>
+		
+		<conversacion id="b473dcf02c314ae6b7499325510aae77" nombre="fueraDeContextoGeneral">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Aún no estoy entrenada para responder eso, pero por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>Aún no estoy entrenada para responder eso, pero por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<vineta><![CDATA[Aún no estoy entrenada para responder eso, pero por el momento puedo responder sus consultas sobre <span class="cosasImportantes">patentes, impuestos municipales, consulta de saldo de servicios de agua y basura</span>.]]></vineta>
+				</frase>
+				<frase>
+					<texto>Eso no es de mi conocimiento, pero le puedo ayudar con sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>Eso no es de mi conocimiento, pero le puedo ayudar con sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<vineta><![CDATA[Eso no es de mi conocimiento, pero le puedo ayudar con sus consultas sobre <span class="cosasImportantes">patentes, impuestos municipales, consulta de saldo de servicios de agua y basura</span>.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+			<condiciones>
+				<condicion operador="and" tipo="intencion">out_of_scope</condicion>
+			</condiciones>
+		</conversacion>
+		
+		<conversacion id="49b45b54979840b49a77f23286d6a21c" nombre="responderAgradecimiento">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Es un placer ayudarle.</texto>
+					<sonido>Es un placer ayudarle.</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>Es un placer servirle.</texto>
+					<sonido>Es un placer servirle.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="17a5f60ed768488ba1566c82978bc13f" nombre="noEntendi">		
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>		
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>		
+			<frases>		
+				<frase>
+					<texto>Lo siento, no entendí. ¿En qué le puedo ayudar?</texto>
+					<sonido>Lo siento, no entendí. ¿En qué le puedo ayudar?</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>Creo que no entendí. ¿En que le gustaría que le ayude?</texto>
+					<sonido>Creo que no entendí. ¿En que le gustaría que le ayude?</sonido>
+					<vineta></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>		
+			<vinetas></vinetas>		
+		</conversacion>
+		
+		<conversacion id="2bc684f4596140a4ac7c532e81c7c51e" nombre="errorDeComunicacionConWatson">				
+			<tipo>afirmativa</tipo>		
+			<mandatoria>true</mandatoria>				
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>		
+			<frases>				
+				<frase>
+					<texto>Discúlpeme, pero en este momento no puedo responderle, por favor inténtelo más tarde.</texto>
+					<sonido>Discúlpeme, pero en este momento no puedo responderle, por favor inténtelo más tarde.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>				
+			<vinetas></vinetas>				
+		</conversacion>
+		
+		<conversacion id="49b3c406fd6842878c10ac56426f1058" nombre="despistar">				
+			<tipo>pregunta</tipo>		
+			<mandatoria>true</mandatoria>				
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>
+			<frases>	
+				<frase>
+					<texto>Entiendo, ¿En que más le puedo ayudar?</texto>
+					<sonido>Entiendo, ¿En que más le puedo ayudar?</sonido>
+					<vineta><![CDATA[<img src="http://emojipedia-us.s3.amazonaws.com/cache/75/e6/75e67ae041ac8091914d2dfb7eb338e1.png" class="imagen-del-chat" />]]></vineta>
+				</frase>
+			</frases>				
+			<vinetas></vinetas>				
+		</conversacion>
+		
+		<conversacion id="962497c8a6e94ac895ce050990cec281" nombre="leyDeclaracionBienesInmuebles">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Correcto!, de acuerdo con la Ley 7509 y 7729, cada cinco años debe presentar su declaración de ${sinonimosBienesInmuebles}.</texto>
+					<sonido>¡Correcto!, de acuerdo con la Ley 7509 y 7729, cada cinco años debe presentar su declaración de ${sinonimosBienesInmuebles}.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="c4308c5615c940cb86da7dff3c700df1" nombre="leyDeclaracionPatentes">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Con gusto! De acuerdo con el Artículo 6 de la Ley 8824, todos los años, a más tardar el 31 de diciembre se debe hacer la presentación de la declaración. Recuerde que la declaración jurada es de sus ingresos brutos, y con  base en esa información, la Municipalidad calculará el impuesto a pagar.</texto>
+					<sonido>¡Con gusto! De acuerdo con el Artículo 6 de la Ley 8824, todos los años, a más tardar el 31 de diciembre se debe hacer la presentación de la declaración. Recuerde que la declaración jurada es de sus ingresos brutos, y con  base en esa información, la Municipalidad calculará el impuesto a pagar.</sonido>
+					<vineta><![CDATA[<div class="negrita">¡Con gusto!</div> <br/> De acuerdo con el <span class="cosasImportantes">Artículo 6 de la Ley 8824</span>, todos los años, a más tardar el <span class="cosasImportantes">31 de diciembre</span> se debe hacer la presentación de la declaración. Recuerde que la declaración jurada es de sus ingresos brutos, y con  base en esa información, la Municipalidad calculará el impuesto a pagar.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="a9301fae537d4e17a04ed459a58093e2" nombre="cualDeclaracion">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>5</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¿Necesita la declaración de ${sinonimosBienesInmuebles} o la declaración de patentes?</texto>
+					<sonido>¿Necesita la declaración de ${sinonimosBienesInmuebles} o la declaración de patentes?</sonido>
+					<vineta><![CDATA[¿Necesita la declaración de ${sinonimosBienesInmuebles} o la declaración de patentes? <br/><br/> <center> <input id="miBoton" type="button" value="Bienes Inmuebles" class="button" onClick="showAndroidToast('de bienes inmuebles')" /> <input id="miBoton" type="button" value="Patentes" class="button" onClick="showAndroidToast('de patentes')" /> </center>]]></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="049a38b4fe3b42dbb71844b9c30d3feb" nombre="pedirIdentificacion">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>3</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Con gusto puedo verificarlo. Pero primero necesito que me indique su número de identificación. ¡Por favor!</texto>
+					<sonido>Con gusto puedo verificarlo. Pero primero necesito que me indique su número de identificación. ¡Por favor!</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>¿Me puede dar su número de cédula?</texto>
+					<sonido>¿Me puede dar su número de cédula?</sonido>
+					<vineta></vineta>
+				</frase>
+				<impertinente>
+					<texto>No logro comprenderle. ¿Me puede dar su número de cédula?</texto>
+					<sonido>No logro comprenderle. ¿Me puede dar su número de cédula?</sonido>
+					<vineta></vineta>
+				</impertinente>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="1950b7ce6cf14c00b29a38b384d92ed3" nombre="cuandoPresentarDeclaracionBienesInmuebles">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Gracias! Le comento que en su caso  el próximo año le corresponde hacer la presentación de ${sinonimosBienesInmuebles}.</texto>
+					<sonido>¡Gracias! Le comento que en su caso  el próximo año le corresponde hacer la presentación de ${sinonimosBienesInmuebles}.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="02c5663eefb0495e81ac895991b23dac" nombre="cuandoPagarDeclaracionPatentes">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Las patentes municipales se cancelan por adelantado y las fechas de pago son trimestrales:  Primer trimestre: Vence el 31 de diciembre del año anterior. Segundo trimestre: Vence el 31 de marzo del año en curso. Tercer trimestre: Vence el 30 de junio del año en curso. Cuarto trimestre: Vence el 30 de setiembre del año en curso.</texto>
+					<sonido>Las patentes municipales se cancelan por adelantado y las fechas de pago son trimestrales:  Primer trimestre: Vence el 31 de diciembre del año anterior. Segundo trimestre: Vence el 31 de marzo del año en curso. Tercer trimestre: Vence el 30 de junio del año en curso. Cuarto trimestre: Vence el 30 de setiembre del año en curso.</sonido>
+					<vineta><![CDATA[Las patentes municipales se cancelan por adelantado y las fechas de pago son trimestrales: <br/> <br/>  <span class="negrita">Primer trimestre:</span> Vence el 31 de diciembre del año anterior. <br/><br/> <span class="negrita">Segundo trimestre:</span> Vence el 31 de marzo del año en curso. <br/><br/> <span class="negrita">Tercer trimestre:</span> Vence el 30 de junio del año en curso. <br/><br/> <span class="negrita">Cuarto trimestre:</span> Vence el 30 de setiembre del año en curso.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="3d0646e845ca481a9d8984fa2d903851" nombre="exoneracionBienesInmuebles">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Claro que sí!  Y el trámite es muy sencillo. Permítame explicarle que el requisito primordial es que usted tenga una única propiedad registrada a su nombre en todo el país. Si cumple con eso entonces sólo debe hacer la solicitud de exoneración en nuestra municipalidad entre los meses de enero a marzo. Además, traer certificación de bien único del Registro Público de la Propiedad con menos de un  mes de expedida y con los derechos cancelados y una copia de la  cédula de identidad de los propietarios. Le comento que esa exoneración se aplica inmediatamente y se le brinda saldo pendiente en ese momento.</texto>
+					<sonido>¡Claro que sí!  Y el trámite es muy sencillo. Permítame explicarle que el requisito primordial es que usted tenga una única propiedad registrada a su nombre en todo el país. Si cumple con eso entonces sólo debe hacer la solicitud de exoneración en nuestra municipalidad entre los meses de enero a marzo. Además, traer certificación de bien único del Registro Público de la Propiedad con menos de un  mes de expedida y con los derechos cancelados y una copia de la  cédula de identidad de los propietarios. Le comento que esa exoneración se aplica inmediatamente y se le brinda saldo pendiente en ese momento.</sonido>
+					<vineta><![CDATA[<span class="negrita">¡Claro que sí!</span> Y el trámite es muy sencillo. <br/><br/> Permítame explicarle que el requisito primordial es que usted tenga una <span class="cosasImportantes">única propiedad registrada a su nombre</span> en todo el país. Si cumple con eso entonces sólo debe hacer la solicitud de exoneración en nuestra municipalidad entre los meses de enero a marzo. <br/> <br/> Además, <span class="cosasImportantes">traer certificación</span> de bien único del Registro Público de la Propiedad con menos de un  mes de expedida y con los derechos cancelados y una copia de la  cédula de identidad de los propietarios. <br/><br/> Le comento que esa exoneración se aplica inmediatamente y se le brinda saldo pendiente en ese momento.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="c34af4c491474802a9acba2ecdb99f6c" nombre="noPuedePagar">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Le recuerdo que se puede solicitar un arreglo de pago en el Departamento de Cobros. Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</texto>
+					<sonido>Le recuerdo que se puede solicitar un arreglo de pago en el Departamento de Cobros. Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="dc451b99f8ad4fa0a9320d5b6e3b3417" nombre="arregloPago">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</texto>
+					<sonido>Para formalizarlo sólo debe presentarse con su cédula y traer la cuarta parte de la deuda. En caso de requerir un arreglo mayor, debe solicitar cita con el Director Tributario ubicado en el primer piso de la Municipalidad.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="44b9cd17bb134794b1c515e4f9bf37e8" nombre="pedirNIS">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>3</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Me puede dar su número NIS, por favor.</texto>
+					<sonido>Me puede dar su número NIS, por favor.</sonido>
+					<vineta></vineta>
+				</frase>
+				<impertinente>
+					<texto>No logro comprenderle. Me puede dar su número NIS, por favor.</texto>
+					<sonido>No logro comprenderle. Me puede dar su número NIS, por favor.</sonido>
+					<vineta></vineta>
+				</impertinente>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="91528b681e6641358794abc7d476a30c" nombre="saldoAgua">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<variables>
+				<variable nombre="sinonimosSaldo" tipo="Enum">
+					<valores>
+						<valor>monto</valor>
+						<valor>saldo</valor>
+						<valor>monto pendiente</valor>
+						<valor>saldo adeudado</valor>
+						<valor>pago</valor>
+					</valores>
+				<roles>
+					<rol>ventas</rol>
+				</roles>
+				</variable>
+			</variables>
+			
+			<frases>
+				<frase>
+					<texto>¡Muchas gracias! El ${sinonimosSaldo} de su recibo por consumo de agua es de: ${saldoAgua} colones y vence el día de mañana. Recuerde cancelar a tiempo para evitar que el servicio sea suspendido.</texto>
+					<sonido></sonido>
+					<vineta><![CDATA[<div class="negrita">¡Muchas gracias!</div> <br/> El ${sinonimosSaldo} de su recibo por consumo de agua es de <span class="dinero">${saldoAgua} colones*</span> y vence el día de mañana. <br/> <br/>*Recuerde cancelar a tiempo para evitar que el servicio sea suspendido.]]></vineta>
+				</frase>
+				<frase>
+					<texto>¡Muchas gracias! Su cuenta se encuentra al día y no presenta deudas pendientes por consumo de agua.</texto>
+					<sonido></sonido>
+					<vineta><![CDATA[<div class="negrita">¡Muchas gracias!</div> <br/> Su cuenta se encuentra <span class="cosasImportantes">al día</span> y no presenta deudas pendientes por consumo de agua.]]></vineta>
+					<soloSi><![CDATA[saldoAgua == 0]]></soloSi>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="7ede05bebd9942c1be3795adaf144f5a" nombre="dondePagar">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Puede venir a nuestras oficinas frente al parque central, o bien, hacer su pago en las cajas de cualquiera de los bancos del sistema nacional.</texto>
+					<sonido>Puede venir a nuestras oficinas frente al parque central, o bien, hacer su pago en las cajas de cualquiera de los bancos del sistema nacional.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="b459da45b4174a9f82163ac45cc4aa4e" nombre="saldoBasura">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¡Muchas gracias! De acuerdo con nuestros datos tienes dos meses adeudados por concepto de recolección de basura, y el monto actual es de 8,698 colones.  Ese dato incluye los intereses moratorios acumulados al día de hoy.</texto>
+					<sonido>¡Muchas gracias! De acuerdo con nuestros datos tienes dos meses adeudados por concepto de recolección de basura, y el monto actual es de 8,698 colones.  Ese dato incluye los intereses moratorios acumulados al día de hoy.</sonido>
+					<vineta><![CDATA[<div class="negrita">¡Muchas gracias!</div> <br/> De acuerdo con nuestros datos tienes dos meses adeudados por concepto de recolección de basura, y el monto actual es de <span class="dinero">8,698 colones*</span>.  <br/> <br/>*Ese dato incluye los intereses moratorios acumulados al día de hoy.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="b2d36b8d1deb4df0ad96618342e32617" nombre="horarioOficinas">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Nuestras oficinas están abiertas de Lunes a Viernes de 8 de la mañana a 4 de la tarde. Sin embargo, el servicio de recaudación (Cajas) tiene horario en esos mismos días, de 7 de la mañana a 5 de la tarde. Además, los Sábados, de 7 a 11 de la mañana.</texto>
+					<sonido>Nuestras oficinas están abiertas de Lunes a Viernes de 8 de la mañana a 4 de la tarde. Sin embargo, el servicio de recaudación (Cajas) tiene horario en esos mismos días, de 7 de la mañana a 5 de la tarde. Además, los Sábados, de 7 a 11 de la mañana.</sonido>
+					<vineta><![CDATA[Nuestras oficinas están abiertas de <span class="cosasImportantes">Lunes a Viernes de 8 de la mañana a 4 de la tarde</span>. <br/> <br/> Sin embargo, el servicio de recaudación (Cajas) tiene horario en esos mismos días, de 7 de la mañana a 5 de la tarde. Además, los Sábados, de 7 a 11 de la mañana.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="516ab506be704a96a67d97a47ed1e1b0" nombre="cualServicio">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>5</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¿Sobre cuál servicio quiere conocer el saldo? ¿Agua o basura?</texto>
+					<sonido>¿Sobre cuál servicio quiere conocer el saldo? ¿Agua o basura?</sonido>
+					<vineta><![CDATA[¿Sobre cuál servicio quiere conocer el saldo? <br/><br/> <center> <input id="miBoton" type="button" value="Agua" class="button" onClick="showAndroidToast('agua')" /> <input id="miBoton" type="button" value="Basura" class="button" onClick="showAndroidToast('basura')" /> </center>]]></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="72333257449a489c9a7cbe4d90508ae0" nombre="conjuncionRepetirFrase">				
+			<tipo>afirmativa</tipo>		
+			<mandatoria>true</mandatoria>				
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>
+			<frases>	
+				<frase>
+					<texto>Lo que dije fue que</texto>
+					<sonido>Lo que dije fue que</sonido>
+					<vineta></vineta>
+				</frase>
+				<frase>
+					<texto>Esto fue lo que dije</texto>
+					<sonido>Esto fue lo que dije</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>				
+			<vinetas></vinetas>				
+		</conversacion>
+		
+		<conversacion id="d32308b336af4cdaa6e30c1e10f053d7" nombre="queEsPatente">				
+			<tipo>afirmativa</tipo>		
+			<mandatoria>true</mandatoria>				
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>
+			<frases>	
+				<frase>
+					<texto>Es un permiso brindado por la municipalidad en el que se indica que el negocio cumple con la exigencias legales que le permiten operar en la ciudad o país.</texto>
+					<sonido>Es un permiso brindado por la municipalidad en el que se indica que el negocio cumple con la exigencias legales que le permiten operar en la ciudad o país.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>				
+			<vinetas></vinetas>				
+		</conversacion>
+		
+		<conversacion id="b6958639fa5e470c9f4f237beb1a0bd4" nombre="queEsBienInmueble">				
+			<tipo>afirmativa</tipo>		
+			<mandatoria>true</mandatoria>				
+			<enVozAlta>true</enVozAlta>	
+			<version>1</version>
+			<frases>	
+				<frase>
+					<texto>Son aquellos bienes considerados bienes raíces, por estar unidos íntimamente, física o jurídicamente, al terreno. Por ejemplo las casas, lotes, parcelas, urbanizadas o no, naves industriales, entre otros.</texto>
+					<sonido>Son aquellos bienes considerados bienes raíces, por estar unidos íntimamente, física o jurídicamente, al terreno. Por ejemplo las casas, lotes, parcelas, urbanizadas o no, naves industriales, entre otros.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>				
+			<vinetas></vinetas>				
+		</conversacion>
+		
+		<conversacion id="b71a457b9bae449eb0ed51350b1c5a96" nombre="conceptoCualServicio">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<intentosFallidos>5</intentosFallidos>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>¿Se refiere a un bien inmueble o a una patente?</texto>
+					<sonido>¿Se refiere a un bien inmueble o a una patente?</sonido>
+					<vineta></vineta>
+				</frase>
+				<meRindo>
+					<texto>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 22 23 45 55</texto>
+					<sonido>Lo siento, no entendí. Para mayor información puedes consultar en nuestro número telefónico: 2 2 2 3 4 5 5 5</sonido>
+					<vineta></vineta>
+				</meRindo>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="17d2ff74348d4e929c300760f81e383f" nombre="noExoneracionParaPatentes">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Lo siento! Sólo las cooperativas se encuentran exentas del pago de dicho impuesto sobre su actividad principal definida en su objeto social, no así sobre actividades secundarias que realice.</texto>
+					<sonido>Lo siento! Sólo las cooperativas se encuentran exentas del pago de dicho impuesto sobre su actividad principal definida en su objeto social, no así sobre actividades secundarias que realice.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="f26a466fffae406a95691d309d5a9ea2" nombre="arregloPagoPatentes">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Puede presentarse en el Departamento de Patentes a solicitar su arreglo, aportando el 20% de la deuda total.</texto>
+					<sonido>Puede presentarse en el Departamento de Patentes a solicitar su arreglo, aportando el 20% de la deuda total.</sonido>
+					<vineta></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="d0b67da729fa4efabbc8b9485447bfdf" nombre="quePuedoResponder">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</texto>
+					<sonido>Por el momento puedo responder sus consultas sobre patentes, impuestos municipales, consulta de saldo de servicios de agua y basura.</sonido>
+					<vineta><![CDATA[Por el momento puedo responder sus consultas sobre <span class="cosasImportantes">patentes, impuestos municipales, consulta de saldo de servicios de agua y basura</span>.]]></vineta>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="d0b67da729fa43fab3c83b9445447bfd" nombre="recordatorTemasPendientes">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Okey! Y tenemos pendiente algo más.</texto>
+				</frase>
+				<frase>
+					<texto>Muy bien!, pero recuerdo que querías información sobre otro tema.</texto>
+				</frase>
+				<frase>
+					<texto>Hey! Creo que tenía que darte otro dato.</texto>
+				</frase>
+				<frase>
+					<texto>Entiendo que tenemos pendiente conversar sobre algo más. Ya recuerdo!</texto>
+				</frase>
+				<frase>
+					<texto>Ajá! Recuerdo que estábamos hablando sobre otro tema.</texto>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="d0b67da729fa43fab3c83b9445447b45" nombre="preguntarPorCorreo">
+			<tipo>pregunta</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Claro, dime ¿cuál es su correo electrónico?</texto>
+				</frase>
+				<frase>
+					<texto>¿Cuál es su correo electrónico?</texto>
+				</frase>
+				<frase>
+					<texto>¿Cuál es su e-mail?</texto>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="d0b67da729fa43fab3c83b9445447b45" nombre="envioExitosoDeCorreo">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Esta conversación fue enviada exitosamente a su correo</texto>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<conversacion id="d0b67da729fa43fab3c83b9445447b45" nombre="envioFallidoDeCorreo">
+			<tipo>afirmativa</tipo>
+			<mandatoria>true</mandatoria>
+			<enVozAlta>true</enVozAlta>
+			<version>1</version>
+			<frases>
+				<frase>
+					<texto>Esta conversación no pudo ser enviada a su correo</texto>
+				</frase>
+			</frases>
+			<vinetas></vinetas>
+		</conversacion>
+		
+		<temas>
+			<tema>
+				<idDelTema>11ea6dd7df4149fa8d88bd8e51af412c</idDelTema>
+				<nombreDelTema>saludo</nombreDelTema>
+				<descripcionDelTema>Saludo</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>saludos</idDeLaIntencionGeneral>
+				<frases>
+					<frase>saludoGeneral</frase>
+					<frase>saludar</frase>
+					<frase>saludoPreguntar</frase>
+				</frases>
+				<dependencias>
+					<dependencia></dependencia>
+				</dependencias>
+			</tema>
+			<tema>
+				<idDelTema>3e8927c4df304d0bb91b01f80b17820a</idDelTema>
+				<nombreDelTema>fueraDeContexto</nombreDelTema>
+				<descripcionDelTema>Fuera de contexto</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>out_of_scope</idDeLaIntencionGeneral>
+				<frases>
+					<frase>fueraDeContextoGeneral</frase>
+					<frase>despistar</frase>
+					<frase>conjuncionRepetirFrase</frase>
+					<frase>errorDeComunicacionConWatson</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>eb819267dcad401c94162818fa83b313</idDelTema>
+				<nombreDelTema>noEntendi</nombreDelTema>
+				<descripcionDelTema>No entendí</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>noEntendi</idDeLaIntencionGeneral>
+				<frases>
+					<frase>noEntendi</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>370d9bdf5e9b4443b029bfaa73c33289</idDelTema>
+				<nombreDelTema>despedida</nombreDelTema>
+				<descripcionDelTema>Despedida</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>despedidas</idDeLaIntencionGeneral>
+				<frases>
+					<frase>despedida</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>c543b3bfb5484e76b0e4d3e0f08a70f4</idDelTema>
+				<nombreDelTema>presentarDeclaracion</nombreDelTema>
+				<descripcionDelTema>Declaración de los bienes inmuebles</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>presentar_declaracion</idDeLaIntencionGeneral>
+				<frases>
+					<frase>leyDeclaracionBienesInmuebles</frase>
+					<frase>leyDeclaracionPatentes</frase>
+					<frase>cualDeclaracion</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>fa7190015b1845e8b7309fda07ca1179</idDelTema>
+				<nombreDelTema>cuandoPresentar</nombreDelTema>
+				<descripcionDelTema>Cuando presentar la declaración de los bienes inmuebles</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>cuando_presentar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>cuandoPresentarDeclaracionBienesInmuebles</frase>
+					<frase>pedirIdentificacion</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>7560e2ca82dc4b70af2e5f2504a551ca</idDelTema>
+				<nombreDelTema>cuandoPagar</nombreDelTema>
+				<descripcionDelTema>Cuando pagar la declaración de patentes</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>cuando_pagar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>cuandoPagarDeclaracionPatentes</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>b92a52aee4bd4fddb4faba90315ecd6e</idDelTema>
+				<nombreDelTema>noPuedePagar</nombreDelTema>
+				<descripcionDelTema>No tiene el dinero para hacer el pago</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>no_tengo_para_pagar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>noPuedePagar</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>4c73565166f24daab70368ef5d07260d</idDelTema>
+				<nombreDelTema>arregloPago</nombreDelTema>
+				<descripcionDelTema>Arreglo de pago</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>arreglo_pago</idDeLaIntencionGeneral>
+				<frases>
+					<frase>arregloPago</frase>
+					<frase>arregloPagoPatentes</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>0082febac7ea40f98031d1f085aaa889</idDelTema>
+				<nombreDelTema>pedirExoneracion</nombreDelTema>
+				<descripcionDelTema>Exoneración del pago de declaración de bienes inmuebles</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>pedir_exoneracion</idDeLaIntencionGeneral>
+				<frases>
+					<frase>exoneracionBienesInmuebles</frase>
+					<frase>noExoneracionParaPatentes</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>21f88324356c4483af269de6fa27f76c</idDelTema>
+				<nombreDelTema>quePuedenPreguntar</nombreDelTema>
+				<descripcionDelTema>Listado de temas que cubre el chatbot</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>que_pueden_preguntar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>quePuedoResponder</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>29290ff795af4f729a97e6054bc77f86</idDelTema>
+				<nombreDelTema>cuantoPagar</nombreDelTema>
+				<descripcionDelTema>Pago de agua o basura</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>cuanto_pagar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>pedirNIS</frase>
+					<frase>pedirIdentificacion</frase>
+					<frase>saldoAgua</frase>
+					<frase>saldoBasura</frase>
+					<frase>cualServicio</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>5d91432785dd4d688b29b86694592507</idDelTema>
+				<nombreDelTema>dondePagar</nombreDelTema>
+				<descripcionDelTema>Donde realizar los pagos</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>donde_pagar</idDeLaIntencionGeneral>
+				<frases>
+					<frase>dondePagar</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>9bcb01dd7058449cb49fa3d18387bedc</idDelTema>
+				<nombreDelTema>saberHorarios</nombreDelTema>
+				<descripcionDelTema>Horario de oficinas</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>saber_horarios</idDeLaIntencionGeneral>
+				<frases>
+					<frase>horarioOficinas</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>cbcc943c18624b23ae8d7ce23083879e</idDelTema>
+				<nombreDelTema>quiereAgradecer</nombreDelTema>
+				<descripcionDelTema>Agradecimiento</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>agradecimiento</idDeLaIntencionGeneral>
+				<frases>
+					<frase>responderAgradecimiento</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>b130177608bd409381c7748b71ab4001</idDelTema>
+				<nombreDelTema>queEs</nombreDelTema>
+				<descripcionDelTema>¿Qué es un bien inmueble/patente?</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>que_es</idDeLaIntencionGeneral>
+				<frases>
+					<frase>queEsPatente</frase>
+					<frase>queEsBienInmueble</frase>
+					<frase>conceptoCualServicio</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>b130177608bd409381c8848b71ab4001</idDelTema>
+				<nombreDelTema>preguntarPorCorreo</nombreDelTema>
+				<descripcionDelTema>Enviar conversacion al correo electrónico</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>enviar_email</idDeLaIntencionGeneral>
+				<frases>
+					<frase>preguntarPorCorreo</frase>
+					<frase>envioExitosoDeCorreo</frase>
+					<frase>envioFallidoDeCorreo</frase>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+			<tema>
+				<idDelTema>61c13ecc35df4af2b045db19f00c09f3</idDelTema>
+				<nombreDelTema>preguntarPorOtraConsulta</nombreDelTema>
+				<descripcionDelTema>Preguntar si quiere hacer otra consulta</descripcionDelTema>
+				<nombreWorkspace>DMuni</nombreWorkspace>
+				<sePuedeRepetir>true</sePuedeRepetir>
+				<idDeLaIntencionGeneral>preguntarPorOtraConsulta</idDeLaIntencionGeneral>
+				<frases>
+					<frase>preguntarPorOtraConsulta</frase>
+					<frase>quiereHacerOtraConsulta</frase>
+					<frase>noQuiereHacerOtraConsulta</frase>
+				</frases>
+				<dependencias></dependencias>
+			</tema>
+		</temas>
+		
+		<workspaces user="7ac03153-e23f-42d3-bca6-916ed217fc3b" pass="DLYiraZJBuZH">
+			<workspace nombreDelTopico="consultasBasicas" idIBM="3d789f22-f4c4-4941-b933-511dedd61c9d" intencionesParaSerReferenciado="cuando_pagar,presentar_declaracion,pedir_exoneracion,cuanto_pagar,cuando_presentar,saber_horarios,arreglo_pago,no_tengo_para_pagar,donde_pagar,que_es,enviar_email">DMuni</workspace>
+		</workspaces>
+		
+	</temario>
+	
+	<conjunciones>
+		<conjuncion id="349cd753906144c1a7129994585e7619" nombre="conjuncion1">Discúlpeme, pero no le entiendo.</conjuncion>
+		<conjuncion id="264cc5b1e24f4e578ba0674ae7bd19b2" nombre="conjuncion2">No logro comprenderle.</conjuncion>
+	</conjunciones>
+	
+	<variablesDeAmbiente>
+		<variable nombre="nombreCliente" tipo="Usuario">
+			<roles>
+				<rol>ventas</rol>
+				<rol>marketing</rol>
+				<rol>call-center</rol>
+			</roles>
+		</variable>
+		<variable nombre="saldoAgua" tipo="Negocio">
+			<roles>
+				<rol>ventas</rol>
+				<rol>marketing</rol>
+				<rol>call-center</rol>
+			</roles>
+		</variable>
+		<variable nombre="hora" tipo="Sistema">
+			<roles>
+				<rol>ventas</rol>
+				<rol>marketing</rol>
+				<rol>call-center</rol>
+			</roles>
+		</variable>
+		<variable nombre="valorNIS" tipo="Contexto">
+			<roles>
+				<rol>ventas</rol>
+				<rol>marketing</rol>
+				<rol>call-center</rol>
+			</roles>
+		</variable>
+		<variable nombre="sinonimosBienesInmuebles" tipo="Enum">
+			<valores>
+				<valor>bienes inmuebles</valor>
+				<valor>impuestos territoriales</valor>
+			</valores>
+			<roles>
+				<rol>ventas</rol>
+			</roles>
+		</variable>
+	</variablesDeAmbiente>
+	
+	<intencionesNoReferenciadas>
+		<intencion tipo="saludo" id="saludos">
+			<frases>
+				<frase>saludar</frase>
+				<frase>saludoPreguntar</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="despedida" id="despedidas">
+			<frases>
+				<frase>despedida</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="noEntendi" id="noEntendi">
+			<frases>
+				<frase>noEntendi</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="fueraDeContexto" id="out_of_scope">
+			<frases>
+				<frase>fueraDeContextoGeneral</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="despistador" id="despistar">
+			<frases>
+				<frase>despistar</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="errorConWatson" id="erorConWatson">
+			<frases>
+				<frase>errorDeComunicacionConWatson</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="repetirUltima" id="repetir_ultima">
+			<frases>
+				<frase>conjuncionRepetirFrase</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="agradecimiento" id="agradecimiento">
+			<frases>
+				<frase>responderAgradecimiento</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="quePuedenPreguntar" id="que_pueden_preguntar">
+			<frases>
+				<frase>quePuedoResponder</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="preguntarPorOtraConsulta" id="preguntarPorOtraConsulta">
+			<frases>
+				<frase>preguntarPorOtraConsulta</frase>
+			</frases>
+		</intencion>
+		<intencion tipo="recordatorTemasPendientes" id="recordatorTemasPendientes">
+			<frases>
+				<frase>recordatorTemasPendientes</frase>
+			</frases>
+		</intencion>
+	</intencionesNoReferenciadas>
+	
+</conversaciones>
