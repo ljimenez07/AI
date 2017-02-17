@@ -558,14 +558,16 @@ public class Conversacion {
 			if ( ! hilo.existeTema(tema)){ //si quiere que solo lo cuente una vez
 				estadisticasTemasTratados.darSeguimiento(tema);
 			}
-		}
-		
-		if(frase != null){
+			
 			if(tema.sePuedeRepetir()){
 				hilo.ponerComoDichoEste(tema);
 			}else{
 				hilo.noPuedoRepetir(tema);
 			}
+		}
+		
+		if(frase != null){
+			hilo.ponerComoDichoEsta(frase);
 		}
 	}
 	
