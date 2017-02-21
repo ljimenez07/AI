@@ -96,9 +96,6 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		if(salida == null){
 			salida = this.decir(frase, respuesta, tema);
 		}
-		
-		this.agregarHistorico(salida);
-		
 		return salida;
 	}
 	
@@ -126,9 +123,6 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		}else{
 			salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true, idCliente);
 		}
-		
-		this.agregarHistorico(salida);
-				
 		return salida;
 	}
 	

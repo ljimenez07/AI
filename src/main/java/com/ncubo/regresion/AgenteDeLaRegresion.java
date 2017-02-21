@@ -28,8 +28,6 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 		Salida salida = null;
 		salida = this.decir(frase, respuesta, tema);
 		
-		this.agregarHistorico(salida);
-		
 		return salida;
 	}
 	
@@ -43,8 +41,6 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 		Salida salida = volverAPreguntarConMeRindo(pregunta, respuesta, tema, meRindo, false, idCliente);
 	
 		salida = this.volverAPreguntarConMeRindo(salida.getFraseActual(), respuesta, tema, meRindo, true, idCliente);
-		
-		this.agregarHistorico(salida);
 				
 		return salida;
 	}

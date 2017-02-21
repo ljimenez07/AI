@@ -5,10 +5,8 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
@@ -49,7 +47,7 @@ public class Conversacion {
 	private final TemasPendientesDeAbordar temasPendientes;
 	private Email email;
 	private final InformacionDelCliente informacionDelCliente;
-	
+
 	public Conversacion(TemariosDeUnCliente temarios, Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
@@ -101,9 +99,12 @@ public class Conversacion {
 		misSalidas.add(agente.decirUnaFrase(queQuiere, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		
 		ponerComoYaTratado(this.temaActual, queQuiere);
+		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
+		
+		misSalidas = agregarSalidasAlHistorico(misSalidas, fechaDelUltimoRegistroDeLaConversacion);
+		
 		miUltimaSalida = misSalidas;
 		
-		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		
 		agente.cambiarANivelSuperior();
 		
@@ -179,7 +180,7 @@ public class Conversacion {
 			volverlARetomarUnTema(misSalidas, respuesta);
 		}else{
 			if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && esModoConsulta && respuesta.seTerminoElTema() && 
-					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta"))
+					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta")&& ! existeLaFraseEnLasSalidas(misSalidas, obtenerUnaFraseDespedida(Constantes.FRASES_INTENCION_DESPEDIDA)))
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 		}
 		
@@ -188,6 +189,8 @@ public class Conversacion {
 		}
 		
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
+		misSalidas = agregarSalidasAlHistorico(misSalidas, fechaDelUltimoRegistroDeLaConversacion);
+		
 		miUltimaSalida = misSalidas;
 		
 		return misSalidas;
@@ -398,7 +401,7 @@ public class Conversacion {
 				
 				Pregunta queQuiere = (Pregunta) this.temario.extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(temaActual, queQuiere);
+				//ponerComoYaTratado(temaActual, queQuiere);
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
@@ -618,4 +621,11 @@ public class Conversacion {
 		return email.sendEmail(tittle, correos, body);
 	}
 	
+	private ArrayList<Salida> agregarSalidasAlHistorico(ArrayList<Salida> misSalidas, Date fecha){
+		for(Salida salida:misSalidas){
+			salida.setMiFecha(fecha);
+			agente.verMiHistorico().agregarHistorialALaConversacion(salida);
+		}
+		return misSalidas;
+	}
 }
