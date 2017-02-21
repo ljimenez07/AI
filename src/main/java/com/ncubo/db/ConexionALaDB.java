@@ -25,9 +25,9 @@ public class ConexionALaDB {
 		if(miConexion == null){
 			miConexion = new ConexionALaDB(url, nombre, usuario, clave);
 		}
+		
 		return miConexion;
 	}
-	
 	public static ConexionALaDB getInstance(){
 		return miConexion;
 	}
@@ -39,7 +39,14 @@ public class ConexionALaDB {
 		return conector;
 	}
 	
-	public void closeConBD() throws SQLException{
-		conector.close();
+	public void closeConBD()
+	{
+		try
+		{
+			conector.close();
+		} catch(SQLException e)
+		{
+			e.printStackTrace();
+		}
 	}
 }
