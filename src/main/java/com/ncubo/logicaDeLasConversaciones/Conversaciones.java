@@ -27,7 +27,7 @@ public class Conversaciones{
 
 	private Hashtable<String, Conversacion> misConversaciones = new Hashtable<String, Conversacion>();
 	private Hashtable<String, Cliente> misClientes = new Hashtable<String, Cliente>();
-	private Temario miTemario;
+	private TemariosDeUnCliente misTemarios;
 	private final Semaphore semaphore = new Semaphore(1);
 	private ConsultaDao consultaDao;
 	private final Conectores misConectores;
@@ -65,7 +65,7 @@ public class Conversaciones{
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(misTemarios, cliente, consultaDao, agente, informacionDelCliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -76,7 +76,7 @@ public class Conversaciones{
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(miTemario, cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(misTemarios, cliente, consultaDao, agente, informacionDelCliente);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}
@@ -201,7 +201,7 @@ public class Conversaciones{
 		hilo.start();
 	}
 	
-	public void generarAudiosEstaticosDeUnTema(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, 
+	/*public void generarAudiosEstaticosDeUnTema(String usuarioTTS, String contrasenaTTS, String vozTTS, String pathAGuardar, 
 			String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpeta, int index, String url, String idCliente){
 		TextToSpeechWatson.getInstance(usuarioTTS, contrasenaTTS, vozTTS, usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpeta, pathAGuardar, url);
 		System.out.println(String.format("El path a guardar los audios es %s y la url publica es %s", pathAGuardar, url));
@@ -217,7 +217,7 @@ public class Conversaciones{
 	
 	public String verMiTemario(){
 		return miTemario.verMiTemario();
-	}
+	}*/
 	
 	private class HiloParaBorrarConversacionesInactivas extends Thread{
 		
@@ -288,8 +288,8 @@ public class Conversaciones{
 			if (AudiosXMLDeLosClientes.getInstance().exiteElArchivoXMLDeAudios(this.pathXMLAudios)){
 				AudiosXMLDeLosClientes.getInstance().cargarLosNombresDeLosAudios(idCliente, pathXMLAudios);
 			}
-			miTemario.generarAudioEstaticosDeTodasLasFrases(idCliente, pathAGuardar, urlAReproducir);
-			AudiosXMLDeLosClientes.getInstance().guardarLosAudiosDeUnaFrase(idCliente, miTemario.contenido(), pathXMLAudios);
+			misTemarios.generarAudioEstaticosDeTodasLasFrases(idCliente, pathAGuardar, urlAReproducir);
+			AudiosXMLDeLosClientes.getInstance().guardarLosAudiosDeUnaFrase(idCliente, misTemarios, pathXMLAudios);
 			
 			System.out.println("Se termino de generar audios estaticos.");
 		}
@@ -398,11 +398,11 @@ public class Conversaciones{
 		return resultado;
 	}
 	
-	public void inicializar(String pathXML, Temario temario) {
+	public void inicializar(String pathXML, TemariosDeUnCliente temarios) {
 		consultaDao = new ConsultaDao();
 		System.out.println("El path xml es: "+pathXML);
-		miTemario = temario;
-		consultaDao.establecerTemario(miTemario);
+		misTemarios = temarios;
+		consultaDao.establecerTemario(misTemarios);
 	}
 	
 	public ConsultaDao obtenerConsultaDao(){

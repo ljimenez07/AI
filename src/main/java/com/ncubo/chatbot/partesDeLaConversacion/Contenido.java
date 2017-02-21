@@ -14,13 +14,18 @@ public class Contenido
 	//private ArrayList<Intencion> intenciones = new ArrayList<Intencion>();
 	private final ArrayList<WorkSpace> miWorkSpaces;
 	private final Hashtable<String, DependenciasDeLaFrase> misDependencias;
+	private final String idContenido;
+	private final String nombreDelContenido;
 	
-	public Contenido(ModoDeLaVariable modoDeTrabajo, ArrayList<Tema> misTemas, ArrayList<Frase> frases, ArrayList<WorkSpace> miWorkSpaces, Hashtable<String, DependenciasDeLaFrase> misDependencias){
+	public Contenido(ModoDeLaVariable modoDeTrabajo, ArrayList<Tema> misTemas, ArrayList<Frase> frases, 
+			ArrayList<WorkSpace> miWorkSpaces, Hashtable<String, DependenciasDeLaFrase> misDependencias, String idContenido, String nombreDelContenido){
 		this.modoDeTrabajo = modoDeTrabajo;
 		this.misTemas = misTemas;
 		this.frases = frases;
 		this.miWorkSpaces = miWorkSpaces;
 		this.misDependencias = misDependencias;
+		this.idContenido = idContenido;
+		this.nombreDelContenido = nombreDelContenido;
 	}
 	
 	public Frase frase(String nombreDeLaFrase){
@@ -54,6 +59,14 @@ public class Contenido
 	
 	public ArrayList<Frase> obtenerMiFrases(){
 		return frases;
+	}
+	
+	public String getIdContenido() {
+		return idContenido;
+	}
+
+	public String getNombreDelContenido() {
+		return nombreDelContenido;
 	}
 	
 	public static void main(String argv[]) {

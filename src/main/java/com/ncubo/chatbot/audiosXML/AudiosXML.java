@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -24,6 +25,8 @@ import com.ncubo.chatbot.partesDeLaConversacion.ComponentesDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
+import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class AudiosXML {
 
@@ -86,13 +89,25 @@ public class AudiosXML {
 		return resultado;
 	}
 	
-	public void guardarLosAudiosDeUnaFrase(Contenido miContenido){
+	public void guardarLosAudiosDeUnaFrase(TemariosDeUnCliente temarios){
 		
 		crearElArchivo();
 		
-		ArrayList<Frase> misFrases = miContenido.obtenerMiFrases();
-		for(int index = 0; index < misFrases.size(); index ++){
-			escribirUnaFrase(misFrases.get(index));
+		Iterator<TemarioDelCliente> misTemarios = temarios.obtenerLosTemariosDelCliente();
+		while(misTemarios.hasNext()){
+			TemarioDelCliente temario = misTemarios.next();
+			Contenido miContenido = temario.contenido();
+			
+			Element temarioXML = doc.createElement("temario");
+			temarioXML.setAttribute("id", miContenido.getIdContenido());
+			temarioXML.setAttribute("nombre", miContenido.getNombreDelContenido());
+			
+			ArrayList<Frase> misFrases = miContenido.obtenerMiFrases();
+			for(int index = 0; index < misFrases.size(); index ++){
+				escribirUnaFrase(misFrases.get(index), temarioXML);
+			}
+			
+			rootElement.appendChild(temarioXML);
 		}
 		
 		guardarElArchivoADisco();
@@ -218,7 +233,7 @@ public class AudiosXML {
 		misSinonimosDeLasConjunciones.add(miSinonimoDeLaFrase);
 	}
 
-	public void escribirUnaFrase(Frase miFrase){
+	public void escribirUnaFrase(Frase miFrase, Element temarioXML){
 		
 		Element conversacion = doc.createElement("conversacion");
 		conversacion.setAttribute("nombre", miFrase.obtenerNombreDeLaFrase());
@@ -236,9 +251,8 @@ public class AudiosXML {
 					empName.appendChild(doc.createTextNode(audios.get(llave).getTextoUsadoParaGenerarElSonido()));
 					try{
 						empName.setAttribute("audio", audios.get(llave).url());
-	
 					}catch(Exception e){
-						empName.setAttribute("audio", "test.mp3");
+						empName.setAttribute("audio", "audioDinamico.mp3");
 					}
 					frases.appendChild(empName);
 				}
@@ -256,7 +270,7 @@ public class AudiosXML {
 			}
 		}
 		conversacion.appendChild(frases);
-		rootElement.appendChild(conversacion);
+		temarioXML.appendChild(conversacion);
 	}
 	
 	private void guardarElArchivoADisco(){

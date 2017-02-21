@@ -224,6 +224,10 @@ public abstract class CargadorDeContenido {
 				Node nodoDelTemario = temarios.item(contadorDeTemarios);
 				System.out.println("\nCurrent Element :" + nodoDelTemario.getNodeName());
 				
+				Element eElementDelTemario = (Element) nodoDelTemario;
+				String idDelTemario = eElementDelTemario.getAttribute("id");
+				String nombreDelTemario = eElementDelTemario.getAttribute("nombre");
+				
 				// WorkSpaces
 				ArrayList<WorkSpace> miWorkSpaces = new ArrayList<>();
 				try{
@@ -425,7 +429,7 @@ public abstract class CargadorDeContenido {
 					throw new ChatException("Error cargando los temas "+e.getMessage());
 				}
 				
-				Contenido contenido = new Contenido(modoDeTrabajo, temasDelDiscurso, lasFrases, miWorkSpaces, misDependencias);
+				Contenido contenido = new Contenido(modoDeTrabajo, temasDelDiscurso, lasFrases, miWorkSpaces, misDependencias, idDelTemario, nombreDelTemario);
 				misContenidos.add(contenido);
 			}
 			

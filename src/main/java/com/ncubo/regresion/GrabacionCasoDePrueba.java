@@ -20,15 +20,16 @@ import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class GrabacionCasoDePrueba {
 
 	ArrayList<Salida> salidasParaElCliente = new ArrayList<>();
-	TemarioDeLaRegresion temario = null;
+	TemariosDeUnCliente temario = null;
 	Conversacion miConversacion = null;
 	
 	public ArrayList<Salida> iniciarGrabacion(String xmlFrases){
-		temario = new TemarioDeLaRegresion(xmlFrases);
+		temario = new TemariosDeUnCliente(xmlFrases);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = null ;
@@ -40,7 +41,7 @@ public class GrabacionCasoDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		miConversacion = new Conversacion(temario, cliente, consultaDao, new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()), informacionDelCliente);
+		miConversacion = new Conversacion(temario, cliente, consultaDao, new AgenteDeLaRegresion(temario.getMiWorkSpaces()), informacionDelCliente);
 		
 		return salidasParaElCliente = miConversacion.inicializarLaConversacion();
 	}

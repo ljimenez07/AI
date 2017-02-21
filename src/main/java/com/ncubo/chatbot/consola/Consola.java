@@ -13,10 +13,12 @@ import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class Consola {
 
-	private static Temario temarioDePrueba;
+	private static TemariosDeUnCliente temarioDePrueba;
 	
 	public Consola(){}
 	
@@ -55,12 +57,12 @@ public class Consola {
 	public static void main(String argv[]) throws Exception {
 		Consola main = new Consola();
 		
-		temarioDePrueba = new TemarioDePruebas(Constantes.PATH_ARCHIVO_DE_CONFIGURACION_BA);
+		temarioDePrueba = new TemariosDeUnCliente("src/main/resources/conversacionesMuni1.xml");
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.contenido().getMiWorkSpaces()), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(temarioDePrueba, cliente, consultaDao, new AgenteDePrueba(temarioDePrueba.getMiWorkSpaces()), informacionDelCliente);
 		
 		String respuesta = "";
 		

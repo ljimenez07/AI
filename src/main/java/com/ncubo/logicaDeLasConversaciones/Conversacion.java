@@ -36,6 +36,7 @@ public class Conversacion {
 	//private Participantes participantes;
 	private Cliente participante;
 	private HiloDeLaConversacion hilo; // Mantiene el contexto, osea todas las intenciones y entidades, sabe que se dijo 
+	private TemariosDeUnCliente temarios;
 	private Temario temario;
 	private Agente agente;
 	private Tema temaActual = null;
@@ -49,13 +50,13 @@ public class Conversacion {
 	private Email email;
 	private final InformacionDelCliente informacionDelCliente;
 	
-	public Conversacion(Temario temario, Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
+	public Conversacion(TemariosDeUnCliente temarios, Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
 		temasPendientes = new TemasPendientesDeAbordar();
 		this.participante = participante;
-		this.modoDeResolucionDeResultadosFinales = temario.contenido().obtenerModoDeTrabajo();
+		this.modoDeResolucionDeResultadosFinales = temarios.extraerUnTemario(0).contenido().obtenerModoDeTrabajo();
 		//this.agente = new Agente(temario.contenido().getMiWorkSpaces());
 		this.agente = miAgente;
 		this.agente.manifestarseEnFormaOral();
@@ -63,11 +64,12 @@ public class Conversacion {
 		
 		this.hilo = new HiloDeLaConversacion();
 		//this.participantes.agregar(agente).agregar(participante);
-		this.temario = temario;
+		this.temarios = temarios;
 		estadisticasTemasTratados = new Estadisticas(consultaDao);
 		miUltimaSalida = new ArrayList<>();
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		email = new Email();
+		temario = temarios.get(0);
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -558,14 +560,16 @@ public class Conversacion {
 			if ( ! hilo.existeTema(tema)){ //si quiere que solo lo cuente una vez
 				estadisticasTemasTratados.darSeguimiento(tema);
 			}
-		}
-		
-		if(frase != null){
+			
 			if(tema.sePuedeRepetir()){
 				hilo.ponerComoDichoEste(tema);
 			}else{
 				hilo.noPuedoRepetir(tema);
 			}
+		}
+		
+		if(frase != null){
+			hilo.ponerComoDichoEsta(frase);
 		}
 	}
 	

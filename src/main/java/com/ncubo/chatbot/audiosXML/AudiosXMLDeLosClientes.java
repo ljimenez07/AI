@@ -2,8 +2,11 @@ package com.ncubo.chatbot.audiosXML;
 
 import java.io.File;
 import java.util.Hashtable;
+import java.util.Iterator;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
+import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class AudiosXMLDeLosClientes {
 	
@@ -31,12 +34,13 @@ public class AudiosXMLDeLosClientes {
 		audiosDeLosClientes.put(idCliente, audios);
 	}
 	
-	public void guardarLosAudiosDeUnaFrase(String idCliente, Contenido miContenido, String archivoDeAudios){
+	public void guardarLosAudiosDeUnaFrase(String idCliente, TemariosDeUnCliente temarios, String archivoDeAudios){
+		
 		if(existeElCliente(idCliente)){
-			audiosDeLosClientes.get(idCliente).guardarLosAudiosDeUnaFrase(miContenido);
+			audiosDeLosClientes.get(idCliente).guardarLosAudiosDeUnaFrase(temarios);
 		}else{
 			AudiosXML audios = new AudiosXML(archivoDeAudios);
-			audios.guardarLosAudiosDeUnaFrase(miContenido);
+			audios.guardarLosAudiosDeUnaFrase(temarios);
 			audiosDeLosClientes.put(idCliente, audios);
 		}
 	}
