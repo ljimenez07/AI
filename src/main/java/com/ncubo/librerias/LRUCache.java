@@ -23,6 +23,7 @@ public class LRUCache
 			establecerHead(valorPorRetornar);
 			return valorPorRetornar.getValor();
 		}
+		
 		return null;
 	}
 
@@ -46,9 +47,12 @@ public class LRUCache
 			end = n.getPrevio();
 		}
 		
-		if (map.size() >= capacity)
-		{
-			map.remove(end.getKey());
+		synchronized(map){
+			if (map.size() >= capacity)
+			{
+				if(end != null)
+					map.remove(end.getKey());
+			}
 		}
 	}
 
@@ -82,7 +86,9 @@ public class LRUCache
 			Nodo created = new Nodo(key, value);
 			if (map.size() >= capacity)
 			{
-				map.remove(end.getKey());
+				synchronized(map){
+					map.remove(end.getKey());
+				}
 				remover(end);
 				establecerHead(created);
 			}
@@ -90,9 +96,10 @@ public class LRUCache
 			{
 				establecerHead(created);
 			}
-
-			map.put(key, created);
+			
+			synchronized(map){
+				map.put(key, created);
+			}
 		}
 	}
-
 }

@@ -30,7 +30,7 @@ public class TemariosDeUnCliente extends ArrayList<TemarioDelCliente>{
 	}
 	
 	private void agregarTemario(TemarioDelCliente temario){
-		if(existeElTemario(temario)){
+		if(!existeElTemario(temario)){
 			this.add(temario);
 		}
 	}

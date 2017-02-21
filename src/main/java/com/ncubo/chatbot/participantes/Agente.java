@@ -372,8 +372,12 @@ public abstract class Agente extends Participante{
 
 		Respuesta respuesta = miTopico.hablarConWatson(null, respuestaDelCliente);
 		
-		String contexto = new JSONObject(respuesta.messageResponse().getContext()).toString();
-		miTopico.actualizarContexto(contexto);
+		try{
+			String contexto = new JSONObject(respuesta.messageResponse().getContext()).toString();
+			miTopico.actualizarContexto(contexto);
+		}catch(Exception e){
+			System.out.println(String.format("Error al extraer el contexto de watson: %s", e.getStackTrace().toString()));
+		}
 		
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 		borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);

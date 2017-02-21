@@ -279,10 +279,19 @@ public class Conversacion {
 				
 				// llamar a watson y ver que bloque se activo
 				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-				idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 				
-				System.out.println("Id de la frase a decir: "+idFraseActivada);
-				extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.temario.contenido().frase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+				}else{
+					idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+					
+					System.out.println("Id de la frase a decir: "+idFraseActivada);
+					extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+				}
+
 			}
 			/*
 			Tema temaSaludo = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
@@ -310,27 +319,30 @@ public class Conversacion {
 						
 						// llamar a watson y ver que bloque se activo
 						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-						String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 						
-						if( ! idFraseActivada.isEmpty()){
-							System.out.println("Id de la frase a recordar: "+idFraseActivada);
-							Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
+						if ( ! respuesta.hayProblemasEnLaComunicacionConWatson()){
+							String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 							
-							String context = respuesta.messageResponse().getContext().toString();
-							JSONObject obj = null;
-							try {
-								obj = new JSONObject(context);
-								obj.remove(Constantes.NODO_ACTIVADO);
-							} catch (JSONException e) {
-								// TODO Auto-generated catch block
-								e.printStackTrace();
+							if( ! idFraseActivada.isEmpty()){
+								System.out.println("Id de la frase a recordar: "+idFraseActivada);
+								Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
+								
+								String context = respuesta.messageResponse().getContext().toString();
+								JSONObject obj = null;
+								try {
+									obj = new JSONObject(context);
+									obj.remove(Constantes.NODO_ACTIVADO);
+								} catch (JSONException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
+								context = obj.toString();
+								if(! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
+									TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
+									this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
+								}
+								agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 							}
-							context = obj.toString();
-							if(! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
-								TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
-								this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
-							}
-							agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 						}
 					}
 				}
@@ -347,10 +359,17 @@ public class Conversacion {
 		
 		// llamar a watson y ver que bloque se activo
 		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-		String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 		
-		System.out.println("Id de la frase a decir: "+idFraseActivada);
-		extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada, this.temaActual);
+		if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+			String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+			Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.temario.contenido().frase(nombreFrase);
+			misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+			ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+		}else{
+			String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+			System.out.println("Id de la frase a decir: "+idFraseActivada);
+			extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada, this.temaActual);
+		}
 		
 		agente.yaNoCambiarANivelSuperior();
 	}

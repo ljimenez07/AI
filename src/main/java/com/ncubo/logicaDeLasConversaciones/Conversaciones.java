@@ -370,6 +370,8 @@ public class Conversaciones{
 				resultado = "Las conversaciones del cliente "+idCliente+" se borraron exitosamente.";
 			}
 		}
+		
+		System.out.println(resultado);
 		return resultado;
 	}
 	
