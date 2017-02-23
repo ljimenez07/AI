@@ -1,6 +1,5 @@
 package com.ncubo.regresion;
 
-import java.util.ArrayList;
 import java.util.Hashtable;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
@@ -9,7 +8,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
-import com.ncubo.chatbot.watson.WorkSpace;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 
@@ -17,8 +16,8 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 	
  	public AgenteDeLaRegresion(){}
 	
-	public AgenteDeLaRegresion(ArrayList<WorkSpace> miWorkSpaces){
-		super(miWorkSpaces);
+	public AgenteDeLaRegresion(TemariosDeUnCliente temarios){
+		super(temarios);
 	}
 	
 	@Override

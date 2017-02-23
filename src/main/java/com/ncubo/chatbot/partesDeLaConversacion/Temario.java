@@ -142,12 +142,12 @@ public abstract class Temario
 		ArrayList<Frase> misFrase = contenido.obtenerMiFrases();
 		for(int index = 0; index < misFrase.size(); index ++){
 			System.out.println("Generando audios de la frase: "+misFrase.get(index).obtenerNombreDeLaFrase());
-			misFrase.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
+			misFrase.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica, contenido.getIdContenido());
 		}
 	}
 	
 	public void generarAudioEstaticosDeUnTema(String idCliente, String pathAGuardar, String ipPublica, int index){
-		temasDelDiscurso.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
+		temasDelDiscurso.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica, contenido.getIdContenido());
 	}
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(String pathAGuardar, String ipPublica, int indexTema, int indexFrase, String nombreTema, String nombreDelArchivo){

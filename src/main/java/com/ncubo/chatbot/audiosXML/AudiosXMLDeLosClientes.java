@@ -58,24 +58,24 @@ public class AudiosXMLDeLosClientes {
 		}
 	}
 	
-	public boolean hayQueGenerarAudios(String idCliente, String nombreDeLaFrase, String textoDeLaFrase){
+	public boolean hayQueGenerarAudios(String idCliente, String nombreDeLaFrase, String textoDeLaFrase, String idTemario){
 		if(existeElCliente(idCliente)){
-			return audiosDeLosClientes.get(idCliente).hayQueGenerarAudios(nombreDeLaFrase, textoDeLaFrase);
+			return audiosDeLosClientes.get(idCliente).hayQueGenerarAudios(nombreDeLaFrase, textoDeLaFrase, idTemario);
 		}else{
 			return true;
 		}
 	}
 	
-	public String obtenerUnAudioDeLaFrase(String idCliente, String nombreDeLaFrase, String idAudio, int posicion){
+	public String obtenerUnAudioDeLaFrase(String idCliente, String nombreDeLaFrase, String idAudio, int posicion, String idTemario){
 		if(existeElCliente(idCliente)){
-			return audiosDeLosClientes.get(idCliente).obtenerUnAudioDeLaFrase(nombreDeLaFrase, idAudio, posicion);
+			return audiosDeLosClientes.get(idCliente).obtenerUnAudioDeLaFrase(nombreDeLaFrase, idAudio, posicion, idTemario);
 		}
 		return "";
 	}
 	
-	public String obtenerUnAudioDeLaFrase(String idCliente, String nombreDeLaFrase, String idAudio){
+	public String obtenerUnAudioDeLaFrase(String idCliente, String nombreDeLaFrase, String idAudio, String idTemario){
 		if(existeElCliente(idCliente)){
-			return audiosDeLosClientes.get(idCliente).obtenerUnAudioDeLaFrase(nombreDeLaFrase, idAudio);
+			return audiosDeLosClientes.get(idCliente).obtenerUnAudioDeLaFrase(nombreDeLaFrase, idAudio, idTemario);
 		}
 		return "";
 	}

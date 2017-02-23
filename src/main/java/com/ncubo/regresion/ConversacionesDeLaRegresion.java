@@ -26,7 +26,7 @@ public class ConversacionesDeLaRegresion extends Conversaciones{
 		if(this.existeLaConversacion(cliente.getIdSesion())){
 			return this.conversarConElAgenteCognitivo(cliente, textoDelCliente);
 		}else{
-			AgenteDeLaRegresion agente = new AgenteDeLaRegresion(temario.getMiWorkSpaces());
+			AgenteDeLaRegresion agente = new AgenteDeLaRegresion(temario);
 			return this.conversarConElAgenteCognitivo(cliente, textoDelCliente, agente);
 		}
 	}

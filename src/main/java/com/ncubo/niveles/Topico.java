@@ -3,14 +3,17 @@ package com.ncubo.niveles;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.watson.WorkSpace;
+import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
 
 public class Topico {
 
 	private NivelSuperior hiloDelNivelSuperior;
 	private NivelDetallado hiloDelNivelDetallado;
-	
-	public Topico(WorkSpace misWorkSpaces){
-		crearHilosDeLosNiveles(misWorkSpaces);
+	private final TemarioDelCliente miTemario;
+
+	public Topico(TemarioDelCliente temario){
+		this.miTemario = temario;
+		crearHilosDeLosNiveles(this.miTemario.contenido().getMiWorkSpaces().get(0));
 	}
 	
 	private void crearHilosDeLosNiveles(WorkSpace workspace){
@@ -20,7 +23,6 @@ public class Topico {
 		
 		hiloDelNivelDetallado = new NivelDetallado(workspace);
 		hiloDelNivelDetallado.start();
-		
 	}
 	
 	public void detenerTodosLosNiveles(){
@@ -53,16 +55,11 @@ public class Topico {
 		hiloDelNivelDetallado.reiniciarContexto();
 	}
 	
-	private void dormirPrueba(int tiempo){
-		try {
-			Thread.sleep (tiempo);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public TemarioDelCliente getMiTemario() {
+		return miTemario;
 	}
 	
-	public static void main (String[] args) throws InterruptedException {
+	/*public static void main (String[] args) throws InterruptedException {
 		
 		WorkSpace workSpace = new WorkSpace("37db1761-b00b-422e-a912-bca0e93d87d4", "enZ5tpEeGWUH", "99edd6c7-981b-488e-895d-0139e22c7028", "general", "DMuni", "");
 		
@@ -79,5 +76,5 @@ public class Topico {
 		respuesta = topico.hablarConWatson(null, "Quiero pagar el agua");
 		
 		topico.detenerTodosLosNiveles();
-	}
+	}*/
 }

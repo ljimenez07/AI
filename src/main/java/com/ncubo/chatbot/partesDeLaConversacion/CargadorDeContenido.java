@@ -232,7 +232,7 @@ public abstract class CargadorDeContenido {
 				ArrayList<WorkSpace> miWorkSpaces = new ArrayList<>();
 				try{
 					System.out.println("\nCargando los workspaces ...\n");
-					NodeList workspaces = doc.getElementsByTagName("workspaces");
+					NodeList workspaces = eElementDelTemario.getElementsByTagName("workspaces");
 					Node workspacesNode = workspaces.item(0);
 					Element workspacesElement = (Element) workspacesNode;
 					String user = workspacesElement.getAttribute("user");
@@ -255,7 +255,7 @@ public abstract class CargadorDeContenido {
 				
 				// Conversaciones
 				ArrayList<Frase> lasFrases = new ArrayList<>();
-				NodeList conversaciones = doc.getElementsByTagName("conversacion");
+				NodeList conversaciones = eElementDelTemario.getElementsByTagName("conversacion");
 				System.out.println("\nCargando las frases ...\n");
 				for (int temp = 0; temp < conversaciones.getLength(); temp++) {
 
@@ -369,7 +369,7 @@ public abstract class CargadorDeContenido {
 				Hashtable<String, DependenciasDeLaFrase> misDependencias = new Hashtable<>();
 				try{
 					System.out.println("\nCargando los temas ...\n");
-					NodeList temas = doc.getElementsByTagName("temas");
+					NodeList temas = eElementDelTemario.getElementsByTagName("temas");
 					Node temasNode = temas.item(0);
 					Element temasElement = (Element) temasNode;
 					NodeList tema = temasElement.getElementsByTagName("tema");

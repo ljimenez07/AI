@@ -35,11 +35,11 @@ public class AudiosXML {
 	private DocumentBuilder docBuilder = null;
 	private Document doc = null;
 	private Element rootElement = null;
-	private Hashtable<String, ContenidoDeAudios> misFrases;
+	private Hashtable<String, Hashtable<String, ContenidoDeAudios>> misTemarios;
 	
 	public AudiosXML(String archivoDeAudios){
 		this.archivoDeAudios = archivoDeAudios;
-		misFrases = new Hashtable<String, ContenidoDeAudios>();
+		misTemarios = new Hashtable<String, Hashtable<String, ContenidoDeAudios>>();
 	}
 	
 	private void crearElArchivo(){
@@ -113,16 +113,20 @@ public class AudiosXML {
 		guardarElArchivoADisco();
 	}
 	
-	private boolean existeLaFrase(String nombreDeLaFrase){
-		return misFrases.containsKey(nombreDeLaFrase);
+	private boolean existeLaFrase(String nombreDeLaFrase, String idTemario){
+	
+		if (misTemarios.containsKey(idTemario))
+			return misTemarios.get(idTemario).containsKey(nombreDeLaFrase);
+		else
+			return false;
 	}
 	
 	
-	public boolean hayQueGenerarAudios(String nombreDeLaFrase, String textoDeLaFrase){
+	public boolean hayQueGenerarAudios(String nombreDeLaFrase, String textoDeLaFrase, String idTemario){
 		try{
-			if(existeLaFrase(nombreDeLaFrase)){
+			if(existeLaFrase(nombreDeLaFrase, idTemario)){
 				textoDeLaFrase = textoDeLaFrase.trim();
-				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
+				for(ComponentesDeLaFrase miFrase: misTemarios.get(idTemario).get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
 					String miTexto = miFrase.getTextoAUsarParaGenerarElAudio().trim();
 					if(textoDeLaFrase.equals(miTexto))
 						return false;	
@@ -137,11 +141,11 @@ public class AudiosXML {
 		
 	}
 
-	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio, int posicion){
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String idAudio, int posicion, String idTemario){
 		String resultado = "";
 		try{
-			if(existeLaFrase(nombreDeLaFrase)){
-				ArrayList<ComponentesDeLaFrase> misSinonimos = misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase();
+			if(existeLaFrase(nombreDeLaFrase, idTemario)){
+				ArrayList<ComponentesDeLaFrase> misSinonimos = misTemarios.get(idTemario).get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase();
 				resultado = misSinonimos.get(posicion).getAudio(idAudio).url();
 			}
 		}catch(Exception e){
@@ -150,11 +154,11 @@ public class AudiosXML {
 		return resultado;
 	}
 	
-	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String textoAudio){
+	public String obtenerUnAudioDeLaFrase(String nombreDeLaFrase, String textoAudio, String idTemario){
 		String resultado = "";
 		try{
-			if(existeLaFrase(nombreDeLaFrase)){
-				for(ComponentesDeLaFrase miFrase: misFrases.get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
+			if(existeLaFrase(nombreDeLaFrase, idTemario)){
+				for(ComponentesDeLaFrase miFrase: misTemarios.get(idTemario).get(nombreDeLaFrase).obtenerMisSinonimosDeLaFrase()){
 					Hashtable<String, Sonido> audios = miFrase.getAudios();
 					Enumeration<String> llaves = audios.keys();
 					while (llaves.hasMoreElements()) {
@@ -171,33 +175,47 @@ public class AudiosXML {
 	}
 	
 	public void cargarLosNombresDeLosAudios(){
-		misFrases.clear();
+		misTemarios.clear();
 		
 		try{
 			DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 			DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 			Document doc = dBuilder.parse(archivoDeAudios);
-
 			doc.getDocumentElement().normalize();
-			NodeList conversaciones = doc.getElementsByTagName("conversacion");
-			System.out.println("\nCargando las frases ...\n");
-
-			for (int temp = 0; temp < conversaciones.getLength(); temp++) {
-				Node nNode = conversaciones.item(temp);
-				System.out.println("\nCurrent Element :" + nNode.getNodeName());
-				if (nNode.getNodeType() == Node.ELEMENT_NODE) {
-					Element eElement = (Element) nNode;
-					String nombreDeLaFrase = eElement.getAttribute("nombre");
-					System.out.println("Nombre : " + nombreDeLaFrase);
-					
-					Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
-					ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
-					obtenerFrasesPorTipo(misSinonimosDeLasConjunciones, frases);
-					
-					ContenidoDeAudios miFrase = new ContenidoDeAudios(nombreDeLaFrase, misSinonimosDeLasConjunciones);
-					misFrases.put(nombreDeLaFrase, miFrase);
+			
+			NodeList temarios = doc.getElementsByTagName("temario");
+			System.out.println("\nCargando los temarios ...\n");
+			for (int contadorDeTemarios = 0; contadorDeTemarios < temarios.getLength(); contadorDeTemarios++) {
+				Node nodoDelTemario = temarios.item(contadorDeTemarios);
+				System.out.println("\nCurrent Element :" + nodoDelTemario.getNodeName());
+				
+				Element eElementDelTemario = (Element) nodoDelTemario;
+				String idDelTemario = eElementDelTemario.getAttribute("id");
+				
+				NodeList conversaciones = eElementDelTemario.getElementsByTagName("conversacion");
+				System.out.println("\nCargando las frases ...\n");
+				Hashtable<String, ContenidoDeAudios> misFrases = new Hashtable<String, ContenidoDeAudios>();
+				
+				for (int temp = 0; temp < conversaciones.getLength(); temp++) {
+					Node nNode = conversaciones.item(temp);
+					System.out.println("\nCurrent Element :" + nNode.getNodeName());
+					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
+						Element eElement = (Element) nNode;
+						String nombreDeLaFrase = eElement.getAttribute("nombre");
+						System.out.println("Nombre : " + nombreDeLaFrase);
+						
+						Element frases = (Element) eElement.getElementsByTagName("frases").item(0);
+						ArrayList<ComponentesDeLaFrase> misSinonimosDeLasConjunciones = new ArrayList<ComponentesDeLaFrase>();
+						obtenerFrasesPorTipo(misSinonimosDeLasConjunciones, frases);
+						
+						ContenidoDeAudios miFrase = new ContenidoDeAudios(nombreDeLaFrase, misSinonimosDeLasConjunciones);
+						misFrases.put(nombreDeLaFrase, miFrase);
+					}
 				}
+				misTemarios.put(idDelTemario, misFrases);
 			}
+			
+			
 		}catch(Exception e){
 			System.out.println("Error en el archivo de audios: "+e.getMessage());
 		}
@@ -233,7 +251,7 @@ public class AudiosXML {
 		misSinonimosDeLasConjunciones.add(miSinonimoDeLaFrase);
 	}
 
-	public void escribirUnaFrase(Frase miFrase, Element temarioXML){
+	private void escribirUnaFrase(Frase miFrase, Element temarioXML){
 		
 		Element conversacion = doc.createElement("conversacion");
 		conversacion.setAttribute("nombre", miFrase.obtenerNombreDeLaFrase());

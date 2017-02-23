@@ -65,7 +65,7 @@ public class Conversaciones{
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					Conversacion coversacion = new Conversacion(misTemarios, cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -76,7 +76,7 @@ public class Conversaciones{
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(misTemarios, cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}

@@ -17,6 +17,7 @@ import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
+import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -25,12 +26,17 @@ import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.db.BitacoraDao;
 import com.ncubo.db.DetalleDeConversacionDao;
 import com.ncubo.db.FrasesDao;
+import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 import com.ncubo.niveles.Topico;
+import com.ncubo.niveles.Topicos;
 
 public abstract class Agente extends Participante{
 
-	private final ArrayList<WorkSpace> misWorkSpaces;
+	//private final ArrayList<WorkSpace> misWorkSpaces;
 	private Topico miTopico;
+	private TemariosDeUnCliente misTemarios;
+	private Topicos misTopicos;
 	private String nombreDeWorkspaceActual;
 	private String nombreDeLaIntencionGeneralActiva;
 	private boolean hayQueEvaluarEnNivelSuperior;
@@ -47,10 +53,11 @@ public abstract class Agente extends Participante{
 	private FrasesDao frasesDelFramework;
 	private ArrayList<Intent> lasDosUltimasIntencionesDeConfianza;
 	
-	public Agente(ArrayList<WorkSpace> miWorkSpaces){
+	public Agente(TemariosDeUnCliente temarios){
 		this.noEntendiLaUltimaRespuesta = true;
 		this.hayQueEvaluarEnNivelSuperior = true;
-		this.misWorkSpaces = miWorkSpaces;
+		//this.misWorkSpaces = miWorkSpaces;
+		this.misTemarios = temarios;
 		this.nombreDeLaIntencionGeneralActiva = "";
 		this.numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		this.hayIntencionNoAsociadaANingunWorkspace = false;
@@ -62,7 +69,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public Agente(){
-		misWorkSpaces = null;
+		//misWorkSpaces = null;
 		miBitacora = new BitacoraDao();
 		detalleDeLaConversacion = new DetalleDeConversacionDao();
 		frasesDelFramework = new FrasesDao();
@@ -70,8 +77,22 @@ public abstract class Agente extends Participante{
 	}
 	
 	private void inicializarContextos(){
-		miTopico = new Topico(misWorkSpaces.get(0));
-		nombreDeWorkspaceActual = misWorkSpaces.get(0).getNombre();
+		
+		misTopicos = new Topicos();
+		Iterator<TemarioDelCliente> temarios = this.misTemarios.obtenerLosTemariosDelCliente();
+		while(temarios.hasNext()){
+			TemarioDelCliente temario = temarios.next();
+			misTopicos.agregarUnTopicoEnElTop(new Topico(temario));
+		}
+		miTopico = misTopicos.obtenerElTopicoPorDefecto();
+		if(miTopico == null)
+			throw new ChatException("No existe un topico por defecto");
+		
+		nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
+	}
+	
+	public TemarioDelCliente obtenerTemario(){
+		return miTopico.getMiTemario();
 	}
 	
 	public MessageResponse llamarAWatson(String mensaje){
@@ -80,6 +101,13 @@ public abstract class Agente extends Participante{
 	
 	public LogDeLaConversacion verMiHistorico(){
 		return miHistorico;
+	}
+	
+	public void cambiarAlTopicoPorDefecto(){
+		misTopicos.agregarUnTopicoEnElTop(miTopico);
+		miTopico = misTopicos.obtenerElTopicoPorDefecto();
+		if(miTopico == null)
+			throw new ChatException("No existe un topico por defecto");
 	}
 	
 	public int guardarUnaConversacionEnLaDB(String idCliente, String idSesion, String idUsuario){
@@ -119,6 +147,23 @@ public abstract class Agente extends Participante{
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 			WorkSpace workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
+			
+			if(workspace == null ){ // && intencionDelCliente.equals("")
+				Topico topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
+				
+				if(topico != null){
+					misTopicos.agregarUnTopicoEnElTop(miTopico);
+					miTopico = topico;
+					nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
+				}
+				
+				respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
+				lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
+				
+				intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
+				workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
+			}
+			
 			if(workspace != null && ! intencionDelCliente.equals("")){
 				nombreDeLaIntencionGeneralActiva = intencionDelCliente;
 				cambiarDeTema = true; // Buscar otro tema
@@ -131,8 +176,14 @@ public abstract class Agente extends Participante{
 				}
 
 				abordarElTemaPorNOLoEntendi = false;
-				this.hayIntencionNoAsociadaANingunWorkspace = false;
-				hayQueEvaluarEnNivelSuperior = false;
+				if(miTopico.getMiTemario().contenido().getNombreDelContenido().equals("Temario General")){
+					this.hayIntencionNoAsociadaANingunWorkspace = true;
+					hayQueEvaluarEnNivelSuperior = true;
+				}
+				else{
+					this.hayIntencionNoAsociadaANingunWorkspace = false;
+					hayQueEvaluarEnNivelSuperior = false;
+				}
 			}else{
 				if(lasDosUltimasIntencionesDeConfianza.size() >= 2){
 					nombreDeLaIntencionGeneralActiva = lasDosUltimasIntencionesDeConfianza.get(0).getIntent();
@@ -279,7 +330,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	private WorkSpace extraerUnWorkspaceConLaIntencion(String nombreDeLaIntencion){
-		for(WorkSpace workspace: misWorkSpaces){
+		for(WorkSpace workspace: miTopico.getMiTemario().contenido().getMiWorkSpaces()){
 			if(workspace.tieneLaIntencion(nombreDeLaIntencion)){
 				return workspace;
 			}
