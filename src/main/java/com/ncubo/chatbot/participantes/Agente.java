@@ -35,6 +35,7 @@ public abstract class Agente extends Participante{
 
 	//private final ArrayList<WorkSpace> misWorkSpaces;
 	private Topico miTopico;
+	private Topico miUltimoTopico;
 	private TemariosDeUnCliente misTemarios;
 	private Topicos misTopicos;
 	private String nombreDeWorkspaceActual;
@@ -85,6 +86,7 @@ public abstract class Agente extends Participante{
 			misTopicos.agregarUnTopicoEnElTop(new Topico(temario));
 		}
 		miTopico = misTopicos.obtenerElTopicoPorDefecto();
+		miUltimoTopico = miTopico;
 		if(miTopico == null)
 			throw new ChatException("No existe un topico por defecto");
 		
@@ -104,6 +106,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void cambiarAlTopicoPorDefecto(){
+		miUltimoTopico = miTopico;
 		misTopicos.agregarUnTopicoEnElTop(miTopico);
 		miTopico = misTopicos.obtenerElTopicoPorDefecto();
 		if(miTopico == null)
@@ -152,6 +155,7 @@ public abstract class Agente extends Participante{
 				Topico topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
 				
 				if(topico != null){
+					miUltimoTopico = miTopico;
 					misTopicos.agregarUnTopicoEnElTop(miTopico);
 					miTopico = topico;
 					nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
@@ -348,16 +352,20 @@ public abstract class Agente extends Participante{
 	}
 	
 	private Intent determinarLaIntencionDeConfianzaEnUnWorkspace(String mensaje){
-		List<Intent> intenciones = llamarAWatson(mensaje).getIntents();
 		Intent intencion = null;
-		double confidence = 0;
 		
-		for(int index = 0; index < intenciones.size(); index ++){
-			if(intenciones.get(index).getConfidence() > confidence){
-				confidence = intenciones.get(index).getConfidence();
-				intencion = intenciones.get(index);
+		try{
+			List<Intent> intenciones = llamarAWatson(mensaje).getIntents();
+			double confidence = 0;
+			
+			for(int index = 0; index < intenciones.size(); index ++){
+				if(intenciones.get(index).getConfidence() > confidence){
+					confidence = intenciones.get(index).getConfidence();
+					intencion = intenciones.get(index);
+				}
 			}
-		}
+		}catch(Exception e){}
+		
 		return intencion;
 	}
 	
@@ -529,6 +537,19 @@ public abstract class Agente extends Participante{
 		ArrayList<Intent> misIntencionesDeConfianza = (ArrayList<Intent>) lasDosUltimasIntencionesDeConfianza.clone();
 		lasDosUltimasIntencionesDeConfianza.clear();
 		return misIntencionesDeConfianza;
+	}
+	
+	public Topico getMiUltimoTopico() {
+		return miUltimoTopico;
+	}
+	
+	public Topico getMiTopico() {
+		return miTopico;
+	}
+
+	public void setMiTopico(Topico miTopico) {
+		this.miUltimoTopico = miTopico;
+		this.miTopico = miTopico;
 	}
 	
 	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);

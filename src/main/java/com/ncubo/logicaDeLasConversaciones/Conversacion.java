@@ -133,6 +133,7 @@ public class Conversacion {
 						TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 						this.temaActual = temaPendiente.getTemaActual();
 						this.fraseActual = temaPendiente.getFraseActual();
+						agente.setMiTopico(temaPendiente.getMiTopico());
 						agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
 						volverlARetomarUnTema(misSalidas, respuesta);
 					}
@@ -144,6 +145,7 @@ public class Conversacion {
 				TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 				this.temaActual = temaPendiente.getTemaActual();
 				this.fraseActual = temaPendiente.getFraseActual();
+				agente.setMiTopico(temaPendiente.getMiTopico());
 				agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
 				volverlARetomarUnTema(misSalidas, respuesta);
 			}else{
@@ -162,6 +164,7 @@ public class Conversacion {
 							TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 							this.temaActual = temaPendiente.getTemaActual();
 							this.fraseActual = temaPendiente.getFraseActual();
+							agente.setMiTopico(temaPendiente.getMiTopico());
 							agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
 							volverlARetomarUnTema(misSalidas, respuesta);
 						}
@@ -175,6 +178,7 @@ public class Conversacion {
 			TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 			this.temaActual = temaPendiente.getTemaActual();
 			this.fraseActual = temaPendiente.getFraseActual();
+			agente.setMiTopico(temaPendiente.getMiTopico());
 			agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
 			volverlARetomarUnTema(misSalidas, respuesta);
 		}else{
@@ -216,7 +220,7 @@ public class Conversacion {
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
 					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
-						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
 					
 					agente.cambiarANivelSuperior();
 					respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);
@@ -345,7 +349,7 @@ public class Conversacion {
 								}
 								context = obj.toString();
 								if(! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
-									TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context);
+									TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context, agente.getMiUltimoTopico());
 									this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
 								}
 								agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
@@ -411,7 +415,7 @@ public class Conversacion {
 			
 			if (temaActual != null && fraseActual != null){
 				if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
-					this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.obtenerMiUltimoContexto()));
+					this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
 			}
 			
 			Tema miTema = null;
