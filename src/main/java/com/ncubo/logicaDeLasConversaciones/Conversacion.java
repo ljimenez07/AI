@@ -219,8 +219,9 @@ public class Conversacion {
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
-					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
-						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
+					if(temaActual != null)
+						if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
+							this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
 					
 					agente.cambiarANivelSuperior();
 					respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);

@@ -155,17 +155,18 @@ public abstract class Agente extends Participante{
 				Topico topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
 				
 				if(topico != null){
+					System.out.println("Cambiando al WORKSPACE: "+topico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre());
 					miUltimoTopico = miTopico;
 					misTopicos.agregarUnTopicoEnElTop(miTopico);
 					miTopico = topico;
 					nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
+					
+					respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
+					lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
+					
+					intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
+					workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
 				}
-				
-				respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
-				lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
-				
-				intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
-				workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
 			}
 			
 			if(workspace != null && ! intencionDelCliente.equals("")){
@@ -200,14 +201,15 @@ public abstract class Agente extends Participante{
 					hayQueEvaluarEnNivelSuperior = false;
 				}else{
 					System.out.println("Intencion no asociada a ningun workspace");
-					if (! intencionDelCliente.equals("")){
+					if (! intencionDelCliente.equals("") && workspace != null){
 						nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
 					}else{
 						nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
 					}
-					hayIntencionNoAsociadaANingunWorkspace = true;
+					
+					hayIntencionNoAsociadaANingunWorkspace = false;
 					noEntendiLaUltimaRespuesta = true;
-					hayQueEvaluarEnNivelSuperior = true;
+					hayQueEvaluarEnNivelSuperior = false;
 				}
 			}
 			
@@ -548,7 +550,7 @@ public abstract class Agente extends Participante{
 	}
 
 	public void setMiTopico(Topico miTopico) {
-		this.miUltimoTopico = miTopico;
+		this.miUltimoTopico = this.miTopico;
 		this.miTopico = miTopico;
 	}
 	

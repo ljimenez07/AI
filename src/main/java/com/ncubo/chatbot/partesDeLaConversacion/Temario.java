@@ -132,10 +132,11 @@ public abstract class Temario
 				}
 			}
 		}
-		if(temaActual.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
-			return temaActual;
-		else
-			return null;
+		if(temaActual != null){
+			if(temaActual.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
+				return temaActual;
+		}
+		return null;
 	}
 	
 	public void generarAudioEstaticosDeTodasLasFrases(String idCliente, String pathAGuardar, String ipPublica){

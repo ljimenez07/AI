@@ -17,7 +17,7 @@ public class TemariosDeUnCliente extends ArrayList<TemarioDelCliente>{
 	}
 	
 	private void cargarLosTemariosDelCliente(){
-		if(contenidoDelCliente !=null){
+		if(contenidoDelCliente != null){
 			ArrayList<Contenido> contenidos = contenidoDelCliente.obtenerMisContenidos();
 			for(Contenido contenido: contenidos){
 				agregarTemario(new TemarioDelCliente(contenido));
