@@ -5,9 +5,13 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
+import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
 import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
@@ -28,6 +32,13 @@ import com.ncubo.db.ConsultaDao;
 import com.ncubo.email.Email;
 import com.ncubo.email.GeneradorDeEmails;
 import com.ncubo.estadisticas.Estadisticas;
+import com.ncubo.retrieve_and_rank.v1.model.RankResult;
+import com.ncubo.retrieve_and_rank.v1.model.SolrResult;
+import com.ncubo.retrieve_and_rank.v1.model.SolrResults;
+import com.ncubo.retrieve_and_rank.v1.payload.QueryRequestPayload;
+import com.ncubo.retrieve_and_rank.v1.payload.QueryResponsePayload;
+import com.ncubo.retrieve_and_rank.v1.utils.HttpSolrClientUtils;
+import com.ncubo.retrieve_and_rank.v1.utils.SolrUtils;
 
 public class Conversacion {
 
@@ -46,7 +57,9 @@ public class Conversacion {
 	private final TemasPendientesDeAbordar temasPendientes;
 	private Email email;
 	private final InformacionDelCliente informacionDelCliente;
-
+	private static HttpSolrClient solrClient;
+	private static RetrieveAndRank service = new RetrieveAndRank(); 
+	
 	public Conversacion(Temario temario, Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
@@ -125,7 +138,7 @@ public class Conversacion {
 				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 			}else{
 				String idFraseActivada = respuesta.obtenerFraseActivada();
-				if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta)){
+				if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta,respuestaDelCliente)){
 					respuesta = analizarResultadosDelAgente(misSalidas, idFraseActivada, respuesta, respuestaDelCliente);
 				}else{
 					if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes()){
@@ -149,7 +162,7 @@ public class Conversacion {
 				agente.cambiarANivelSuperior();
 				respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);
 				if(esModoConsulta){
-					if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta)){
+					if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta, respuestaDelCliente)){
 						String idFraseActivada = respuesta.obtenerFraseActivada();
 						if(misSalidas.isEmpty()){
 							respuesta = analizarResultadosDelAgente(misSalidas, idFraseActivada, respuesta, respuestaDelCliente);
@@ -182,9 +195,13 @@ public class Conversacion {
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 		}
 		
+		
 		if(misSalidas.isEmpty()){
-			decirTemaNoEntendi(misSalidas, respuesta);
+			misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+			if(misSalidas.isEmpty())
+		     decirTemaNoEntendi(misSalidas, respuesta);
 		}
+		
 		
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		misSalidas = agregarSalidasAlHistorico(misSalidas, fechaDelUltimoRegistroDeLaConversacion);
@@ -246,6 +263,7 @@ public class Conversacion {
 	}
 	
 	private boolean existeLaFraseEnLasSalidas(ArrayList<Salida> misSalidas, String idNombeFrase){
+		if(!misSalidas.isEmpty())
 		for(Salida miSalida: misSalidas){
 			if(miSalida.getFraseActual().obtenerNombreDeLaFrase().equals(idNombeFrase))
 				return true;
@@ -378,7 +396,7 @@ public class Conversacion {
 		ponerComoYaTratado(miTema, fueraDeContexto);
 	}
 	
-	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta) throws Exception{
+	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta, String respuestaDelCliente) throws Exception{
 		if(agente.hayIntencionNoAsociadaANingunWorkspace()){
 			
 			if (temaActual != null && fraseActual != null){
@@ -415,27 +433,33 @@ public class Conversacion {
 				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_FUERA_DE_CONTEXTO)){
-				System.out.println("Esta fuera de contexto ...");
-				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
-				String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
-				
-				Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
-				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(miTema, fueraDeContexto);
-				
+				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+				if(misSalidas.isEmpty()){
+					System.out.println("Esta fuera de contexto ...");
+					miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
+					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
+					
+					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(miTema, fueraDeContexto);
+				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
-				decirTemaNoEntendi(misSalidas, respuesta);
+				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+				if(misSalidas.isEmpty())
+					decirTemaNoEntendi(misSalidas, respuesta);
 
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
-				System.out.println("Quiere despistar  ...");
-				miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
-				String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
-				
-				Pregunta despistar = (Pregunta) this.temario.frase(nombreFrase);
-				
-				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(miTema, despistar);
-				
+				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+				if(misSalidas.isEmpty()){
+					System.out.println("Quiere despistar  ...");
+					miTema = this.temario.buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
+					String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
+					
+					Pregunta despistar = (Pregunta) this.temario.frase(nombreFrase);
+					
+					misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(miTema, despistar);
+				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
 				System.out.println("Quiere repetir  ...");
 				String idFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_REPETIR);
@@ -623,5 +647,54 @@ public class Conversacion {
 			agente.verMiHistorico().agregarHistorialALaConversacion(salida);
 		}
 		return misSalidas;
+	}
+	
+	private ArrayList<Salida> analizarRespuestaRetrieveAndRank(String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
+		
+		RetrieveAndRank service = new RetrieveAndRank();
+		service.setUsernameAndPassword("54a9c7bf-35b4-4fce-883c-a3fcec76766c", "TEd3SxPfJIhg");
+		solrClient = getSolrClient("https://gateway.watsonplatform.net/retrieve-and-rank/api", "54a9c7bf-35b4-4fce-883c-a3fcec76766c", "TEd3SxPfJIhg");
+		SolrUtils solrUtils = new SolrUtils(solrClient, null, "MuniCurridabat", "1eec74x28-rank-1076");
+		QueryRequestPayload body = new QueryRequestPayload();
+		body.setQuery(respuestaDelCliente);
+		
+		QueryResponsePayload queryResponse = new QueryResponsePayload();
+	      
+		queryResponse.setQuery(body.getQuery());
+
+	      SolrResults rankedResults = solrUtils.search(body, true);
+	      queryResponse.setRankedResults(rankedResults.getResult());
+
+
+	      // 1. Collects all the documents ids to retrieve the title and body in a single query
+	      ArrayList<String> idsOfDocsToRetrieve = new ArrayList<>();
+
+	      for (RankResult answer : queryResponse.getRankedResults()) {
+	        idsOfDocsToRetrieve.add(answer.getAnswerId());
+	        answer.setSolrRank(rankedResults.getIds().indexOf(answer.getAnswerId()));
+	      }
+
+	      // 2. Query Solr to retrieve document title and body
+	      Map<String, SolrResult> idsToDocs = solrUtils.getDocumentsByIds(idsOfDocsToRetrieve);
+
+
+	      // 3. Update the queryResponse with the body and title
+	      for (RankResult answer : queryResponse.getRankedResults()) {
+	        answer.setBody(idsToDocs.get(answer.getAnswerId()).getBody());
+	        answer.setTitle(idsToDocs.get(answer.getAnswerId()).getTitle());
+	      }
+	     
+	      double confianza = 0.50;
+	      System.out.println("Respuesta de Retrieve and Rank:"   +queryResponse.getRankedResults().get(0).getScore());
+	     if(queryResponse.getRankedResults().get(0).getScore()>confianza) {
+	    	 Salida salida = new Salida();
+	    	 Frase frase = new Afirmacion(0, "retrieveAndRank", "retrieveAndRank", null , null, 1, null);
+	    	 salida.escribir(queryResponse.getRankedResults().get(0).getBody(), respuesta, temaActual, frase);
+	    	 misSalidas.add(salida);
+	     }
+	   return misSalidas;
+	}
+	private static HttpSolrClient getSolrClient(String uri, String username, String password) {
+	    return new HttpSolrClient(service.getSolrUrl("sc8c9e54f8_07a5_4944_887d_612ab2b50749"), HttpSolrClientUtils.createHttpClient(uri, username, password));
 	}
 }

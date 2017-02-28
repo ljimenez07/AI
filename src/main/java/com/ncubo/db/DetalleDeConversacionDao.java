@@ -48,8 +48,10 @@ public class DetalleDeConversacionDao {
 			stmt.setTimestamp(1, miFechaActual);
 			stmt.setString(2, "Chatbot");
 
-			if(conversacion.getElTextoConPlaceholders().isEmpty())
+			if(conversacion.getElTextoConPlaceholders().isEmpty()&& idDeLaFraseGuardada > 0)
 				stmt.setString(3, null);
+			else if(idDeLaFraseGuardada == 0)
+				stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 			else stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 			stmt.setInt(4, idDeLaFraseGuardada);
 			stmt.setString(5, null);

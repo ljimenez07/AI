@@ -41,7 +41,8 @@ public class Dialogo implements Serializable{
 	public Dialogo(Salida miSalida){
 		this.elTextoQueDijoElFramework = miSalida.getMiTexto();
 		this.elAudioQueDijoElFramework = miSalida.getMiSonido().url();
-		this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).getContenido();
+		if(miSalida.getMisVinetas().size() > 0)
+			this.laVinetaQueMostroElFramework = miSalida.getMisVinetas().get(0).getContenido();
 		if(miSalida.getTemaActual() != null)
 			this.idTemaQueUso = miSalida.getTemaActual().getNombre();
 		if(miSalida.getFraseActual() != null)
