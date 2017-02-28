@@ -20,7 +20,11 @@ public class Topicos {
 	}
 	
 	private boolean existeElTopico(Topico topico){
-		return misTopicos.contains(topico);
+		for(Topico miTopico: misTopicos){
+			if(miTopico.getMiTemario().contenido().getIdContenido().equals(topico.getMiTemario().contenido().getIdContenido()))
+				return true;
+		}
+		return false;
 	}
 	
 	public boolean hayTopicos(){
@@ -98,6 +102,7 @@ public class Topicos {
 		
 		return null;
 	}
+	
 	public Topico buscarElTopicoDeMayorConfienza(Frase frase, String textoDelUsuario){ // TODO Se hace mas complicado cuando quiero realizar mas de una intencion que estan en diferentes workspaces (quiero pagar el agua y hacer una declaracion)
 		int cantidadTeTopicos = misTopicos.size();
 		Topico resultado = null;

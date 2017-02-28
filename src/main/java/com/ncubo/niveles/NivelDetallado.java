@@ -49,6 +49,7 @@ public class NivelDetallado extends Nivel{
 
 	@Override
 	public void actualizarContexto(String contexto) {
+		this.miUlTimoContexto = obtenerElContexto();
 		miConversacionConElAgenteCognitivo.setElContextoConWatson(contexto);
 	}
 
@@ -59,7 +60,7 @@ public class NivelDetallado extends Nivel{
 
 	@Override
 	public void reiniciarContexto() {
-		this.miUlTimoContexto = miConversacionConElAgenteCognitivo.getElContextoConWatson();
+		this.miUlTimoContexto = obtenerElContexto();
 		cargarWorkSpace();
 	}
 
