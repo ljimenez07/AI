@@ -150,8 +150,9 @@ public abstract class Agente extends Participante{
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 			WorkSpace workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
+			boolean hayQueReiniciarContexto = true;
 			
-			if(workspace == null ){ // && intencionDelCliente.equals("")
+			if(workspace == null){ // && intencionDelCliente.equals("")
 				Topico topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
 				
 				if(topico != null){
@@ -166,12 +167,14 @@ public abstract class Agente extends Participante{
 					
 					intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 					workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
+					hayQueReiniciarContexto = false;
 				}
 			}
 			
 			if(workspace != null && ! intencionDelCliente.equals("")){
 				nombreDeLaIntencionGeneralActiva = intencionDelCliente;
 				cambiarDeTema = true; // Buscar otro tema
+				nombreDeWorkspaceActual = workspace.getNombre();
 				if(pareceQueQuiereCambiarDeTemaForzosamente){
 					cambiarDeTemaForzosamente = true;
 					pareceQueQuiereCambiarDeTemaForzosamente = false;
@@ -188,6 +191,9 @@ public abstract class Agente extends Participante{
 				else{
 					this.hayIntencionNoAsociadaANingunWorkspace = false;
 					hayQueEvaluarEnNivelSuperior = false;
+					if(hayQueReiniciarContexto){
+						this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+					}
 				}
 			}else{
 				if(lasDosUltimasIntencionesDeConfianza.size() >= 2){
@@ -199,6 +205,9 @@ public abstract class Agente extends Participante{
 					abordarElTemaPorNOLoEntendi = false;
 					this.hayIntencionNoAsociadaANingunWorkspace = false;
 					hayQueEvaluarEnNivelSuperior = false;
+					if(hayQueReiniciarContexto){
+						this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+					}
 				}else{
 					System.out.println("Intencion no asociada a ningun workspace");
 					if (! intencionDelCliente.equals("") && workspace != null){
@@ -212,6 +221,8 @@ public abstract class Agente extends Participante{
 					hayQueEvaluarEnNivelSuperior = false;
 				}
 			}
+			
+			
 			
 		}catch(Exception e){
 			System.out.println("No hay ninguna intencion real o de confianza");
@@ -239,12 +250,13 @@ public abstract class Agente extends Participante{
 			Intent miIntencion = this.determinarLaIntencionGeneral(respuestaDelCliente);
 			if(elClienteQuiereCambiarDeIntencionGeneral(miIntencion)){
 				System.out.println("Se requiere cambiar a NIVER SUPERIOR ...");
-				this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+				//WorkSpace workspace = extraerUnWorkspaceConLaIntencion(miIntencion.getIntent());
+				//this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 				cambiarANivelSuperior();
 				if( ! respuesta.seTerminoElTema()){
 					pareceQueQuiereCambiarDeTemaForzosamente = true;
 				}
-				nombreDeLaIntencionGeneralActiva = miIntencion.getIntent();
+				
 				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
 				cambiarDeTema = true;
 			}else{
@@ -266,9 +278,9 @@ public abstract class Agente extends Participante{
 					String laIntencion = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 					if( ! laIntencion.equals("")){
 						borrarUnaVariableDelContexto(Constantes.ID_TEMA); // Solo se borra el id cuando el tema termina
-						if(! laIntencion.equals("afirmacion")){ // TODO Esto no deberia ir aca
+						/*if(! laIntencion.equals("afirmacion")){ // TODO Esto no deberia ir aca
 							nombreDeLaIntencionGeneralActiva = laIntencion;
-						}
+						}*/
 						seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 					}
 				}
@@ -550,8 +562,12 @@ public abstract class Agente extends Participante{
 	}
 
 	public void setMiTopico(Topico miTopico) {
-		this.miUltimoTopico = this.miTopico;
-		this.miTopico = miTopico;
+		if( ! miTopico.getMiTemario().contenido().getIdContenido().equals(this.miTopico.getMiTemario().contenido().getIdContenido())){
+			this.miUltimoTopico = this.miTopico;
+			misTopicos.agregarUnTopicoEnElTop(this.miTopico);
+			misTopicos.agregarUnTopicoEnElTop(miTopico);
+			this.miTopico = misTopicos.extraerElSiquienteTopico();
+		}
 	}
 	
 	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);
