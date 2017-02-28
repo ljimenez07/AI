@@ -16,8 +16,13 @@ public class Conjunciones {
 		return conjunciones;
 	}
 	
+	private boolean existeLaConjuncion(Conjuncion conjuncion){
+		return misConjunciones.contains(conjuncion);
+	}
+	
 	public void agregarConjuncion(Conjuncion conjuncion){
-		misConjunciones.add(conjuncion);
+		if(! existeLaConjuncion(conjuncion))
+			misConjunciones.add(conjuncion);
 	}
 	
 	public Conjuncion obtenerUnaConjuncion(){

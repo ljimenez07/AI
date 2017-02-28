@@ -34,10 +34,11 @@ import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class EjecucionCasosDePrueba {
 
-	private static Temario temario;
+	private static TemariosDeUnCliente temario;
 
 	private static ConversacionesDeLaRegresion misConversaciones = new ConversacionesDeLaRegresion();
 	
@@ -46,7 +47,7 @@ public class EjecucionCasosDePrueba {
 	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite) throws Exception{
 		
 		resultados.clear();
-		temario = new TemarioDeLaRegresion(xmlFrases); //xml de conversaciones
+		temario = new TemariosDeUnCliente(xmlFrases); //xml de conversaciones
 		
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME , Constantes.DB_USER,Constantes.DB_PASSWORD);
 		
@@ -134,7 +135,7 @@ public class EjecucionCasosDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(temario, cliente, consultaDao,new AgenteDeLaRegresion(temario.contenido().getMiWorkSpaces()), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente);
 
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);

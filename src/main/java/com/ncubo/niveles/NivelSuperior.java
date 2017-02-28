@@ -16,8 +16,25 @@ public class NivelSuperior extends Nivel{
 	
 	@Override
 	protected void cargarWorkSpace() {
-		miConversacionConElAgenteCognitivo = new ConversacionConWatson(miWorkSpace.getUsuarioIBM(), miWorkSpace.getContrasenaIBM(), miWorkSpace.getIdIBM());
-		String contexto = new JSONObject(miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext()).toString();
+		miConversacionConElAgenteCognitivo = new ConversacionConWatson(miWorkSpace.getUsuarioIBM(), miWorkSpace.getContrasenaIBM(), miWorkSpace.getIdIBM());		
+		String contexto = "";
+		try{
+			contexto = miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext().toString();
+		}catch (Exception e){
+			try{
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException exception) {}
+				contexto = miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext().toString();
+			}catch (Exception e1){
+				try{
+					try {
+						Thread.sleep(500);
+					} catch (InterruptedException exception1) {}
+					contexto = miConversacionConElAgenteCognitivo.enviarMSG("", null).getContext().toString();
+				}catch (Exception e2){}
+			}
+		}
 		miConversacionConElAgenteCognitivo.setElContextoConWatson(contexto);
 		
 		this.setName(miWorkSpace.getNombre());

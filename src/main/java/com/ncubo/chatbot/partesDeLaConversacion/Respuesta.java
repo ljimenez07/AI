@@ -70,12 +70,23 @@ public class Respuesta {
 		// Si la respuesta fue pobre o de baja confianza hay que confirmar
 		this.loQueElClienteDijo = texto;
 		watsonRespuesta = this.miConversacion.enviarAWatson(texto, this.miContexto);
+		
 		if (watsonRespuesta == null){
-			System.out.println("ERROR EN LA COMUNICACION CON WATSON");
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e) {}
+			System.out.println("ERROR EN LA COMUNICACION CON WATSON USANDO 'CONVERSATION'. SE VA A VOLVER INTENTAR");
 			watsonRespuesta = this.miConversacion.enviarAWatson(texto, this.miContexto);
 			if (watsonRespuesta == null){
-				System.out.println("ERROR EN LA COMUNICACION CON WATSON");
-				hayProblemasEnLaComunicacionConWatson = true;
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {}
+				System.out.println("ERROR EN LA COMUNICACION CON WATSON USANDO 'CONVERSATION'. SE VA A VOLVER INTENTAR");
+				watsonRespuesta = this.miConversacion.enviarAWatson(texto, this.miContexto);
+				if (watsonRespuesta == null){
+					System.out.println("Error en la comunicacion con watson usando 'Conversation'. No se pudo responder al texto: "+texto);
+					hayProblemasEnLaComunicacionConWatson = true;
+				}
 			}
 		}
 		

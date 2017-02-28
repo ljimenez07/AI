@@ -14,10 +14,12 @@ public abstract class Temario
 	private final Contenido contenido;
 	private ArrayList<Intenciones> intenciones = new ArrayList<Intenciones>();
 	private ArrayList<Entidades> entidades = new ArrayList<Entidades>();
+	private ArrayList<Frase> frases = new ArrayList<Frase>();
 	
-	protected Temario(String pathXML){
+	protected Temario(Contenido contenido){
 		temasDelDiscurso = new Temas();
-		contenido = cargarContenido(pathXML);
+		//contenido = cargarContenido(pathXML);
+		this.contenido = contenido;
 		cargarTemario(temasDelDiscurso);
 		valirQueLasDependenciasEstenEnLosTemas();
 		cargarDependencias(temasDelDiscurso);
@@ -33,7 +35,7 @@ public abstract class Temario
 		
 	protected abstract void cargarIntenciones(List<Intenciones> intenciones);
 	
-	protected abstract Contenido cargarContenido(String path);
+	//protected abstract Contenido cargarContenido(String path);
 	
 	public Contenido contenido(){
 		return contenido;
@@ -130,22 +132,23 @@ public abstract class Temario
 				}
 			}
 		}
-		if(temaActual.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
-			return temaActual;
-		else
-			return null;
+		if(temaActual != null){
+			if(temaActual.getElNombreDelWorkspaceAlQuePertenece().equals(nombreDelWorkspace) && temaActual.getIntencionGeneralAlQuePertenece().equals(nombreIntencionGeneral))
+				return temaActual;
+		}
+		return null;
 	}
 	
 	public void generarAudioEstaticosDeTodasLasFrases(String idCliente, String pathAGuardar, String ipPublica){
 		ArrayList<Frase> misFrase = contenido.obtenerMiFrases();
 		for(int index = 0; index < misFrase.size(); index ++){
 			System.out.println("Generando audios de la frase: "+misFrase.get(index).obtenerNombreDeLaFrase());
-			misFrase.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
+			misFrase.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica, contenido.getIdContenido());
 		}
 	}
 	
 	public void generarAudioEstaticosDeUnTema(String idCliente, String pathAGuardar, String ipPublica, int index){
-		temasDelDiscurso.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica);
+		temasDelDiscurso.get(index).generarAudiosEstaticos(idCliente, pathAGuardar, ipPublica, contenido.getIdContenido());
 	}
 	
 	public void cargarElNombreDeUnSonidoEstaticoEnMemoria(String pathAGuardar, String ipPublica, int indexTema, int indexFrase, String nombreTema, String nombreDelArchivo){

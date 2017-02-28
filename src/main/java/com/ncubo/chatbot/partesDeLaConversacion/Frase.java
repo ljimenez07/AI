@@ -221,7 +221,7 @@ public abstract class Frase
         return resultado;
     }
     
-    public void generarAudiosEstaticos(String idCliente, String pathAGuardar, String ipPublica){
+    public void generarAudiosEstaticos(String idCliente, String pathAGuardar, String ipPublica, String idTemario){
         this.pathAGuardarLosAudiosTTS = pathAGuardar;
         
         if (sePuedeDecirEnVozAlta()){
@@ -230,24 +230,24 @@ public abstract class Frase
                 if(miFrase.esEstatica()){
                     String textoParaAudio = miFrase.getTextoAUsarParaGenerarElAudio();
                     String nombreDelArchivo = "";
-                    if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoParaAudio)){
+                    if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoParaAudio, idTemario)){
                         nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaAudio, false, idCliente);
                     }else{
-                        nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, "audio", contadorSinonimos);
+                        nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, "audio", contadorSinonimos, idTemario);
                         nombreDelArchivo = nombreDelArchivo.replace(ipPublica+idCliente+"-", "");
                     }
                     String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;
                     miFrase.setAudio("audio",new Sonido(miIp, textoParaAudio));
                 }
                 if(soloTieneEnum(miFrase)){
-                    generarAudioEnums(idCliente, miFrase, ipPublica);	
+                    generarAudioEnums(idCliente, miFrase, ipPublica, idTemario);	
                 }
                 contadorSinonimos++;
             }
         }
     }
     
-    public boolean generarAudioEnums(String idCliente, ComponentesDeLaFrase miFrase, String ipPublica){
+    public boolean generarAudioEnums(String idCliente, ComponentesDeLaFrase miFrase, String ipPublica, String idTemario){
         int totalCombinaciones = 1;
         boolean generados = false; 
             
@@ -278,10 +278,10 @@ public abstract class Frase
                 }
                 
                 String nombreDelArchivo = "";
-                if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio)){
+                if(AudiosXMLDeLosClientes.getInstance().hayQueGenerarAudios(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio, idTemario)){
                     nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoAUsarParaGenerarAudio, false, idCliente);
                 }else{
-                    nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio);
+                    nombreDelArchivo = AudiosXMLDeLosClientes.getInstance().obtenerUnAudioDeLaFrase(idCliente, this.nombreDeLaFrase, textoAUsarParaGenerarAudio, idTemario);
                     nombreDelArchivo = nombreDelArchivo.replace(ipPublica+idCliente+"-", "");
                 }
                 String miIp = ipPublica+idCliente+"-"+nombreDelArchivo;

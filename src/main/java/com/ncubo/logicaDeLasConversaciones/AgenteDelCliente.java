@@ -24,8 +24,8 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	
  	public AgenteDelCliente(){}
 	
-	public AgenteDelCliente(ArrayList<WorkSpace> miWorkSpaces){
-		super(miWorkSpaces);
+	public AgenteDelCliente(TemariosDeUnCliente temarios){
+		super(temarios);
 	}
 	
 	@Override

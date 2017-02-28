@@ -7,11 +7,12 @@ import java.util.ArrayList;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.data.Consulta;
+import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class ConsultaDao
 {
 	private final String NOMBRE_TABLA = "estadistica_tema";
-	private Temario temario;
+	private TemariosDeUnCliente temarios;
 	
 	private enum atributo
 	{
@@ -51,7 +52,7 @@ public class ConsultaDao
 		while (rs.next())
 		{
 			consultas.add(new Consulta(
-					temario.buscarTemaPorId(rs.getString(atributo.ID_TEMA.toString())),
+					temarios.buscarTemaPorId(rs.getString(atributo.ID_TEMA.toString())),
 					null,
 					rs.getInt(atributo.TOTAL_CONSULTADO.toString()),
 					idCliente
@@ -82,8 +83,8 @@ public class ConsultaDao
 		ConexionALaDB.getInstance().closeConBD();
 	}
 
-	public void establecerTemario(Temario temario) {
-		this.temario = temario;
+	public void establecerTemario(TemariosDeUnCliente temarios) {
+		this.temarios = temarios;
 	}
 	
 }

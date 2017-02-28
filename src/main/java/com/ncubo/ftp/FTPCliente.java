@@ -137,13 +137,20 @@ public class FTPCliente
 		ftpClient.login(usuario, password);
 		ftpClient.changeWorkingDirectory(carpeta);
 		
+		int returnCode = ftpClient.getReplyCode();
+		if (returnCode == 550)
+		{
+			ftpClient.makeDirectory(carpeta);
+			ftpClient.changeWorkingDirectory(carpeta);
+		}
+		
 		String[] directorio = pathDondeGuardar.split("/");
 		String nombreArchivo = directorio[directorio.length-1];
 		
 		for(int i = 0 ; i < directorio.length - 1 ; i++)
 		{
 			ftpClient.changeWorkingDirectory(directorio[i]);
-			int returnCode = ftpClient.getReplyCode();
+			returnCode = ftpClient.getReplyCode();
 			if (returnCode == 550)
 			{
 				ftpClient.makeDirectory(directorio[i]);
@@ -151,22 +158,32 @@ public class FTPCliente
 			}
 		}
 		
-		try
-		{
+		try{
 			ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
 			ftpClient.enterLocalPassiveMode();
-			ftpClient.storeFile(nombreArchivo, archivo);
-		}catch (Exception e){
-			System.out.println("Error al transferir al FTP: "+e.getMessage());
-			ftpClient.storeFile(nombreArchivo, archivo);
-		}
-		finally
-		{
+			boolean done = ftpClient.storeFile(nombreArchivo, archivo);
 			archivo.close();
+			if (done) {
+                System.out.println(String.format("- El archivo %s fue enviado exitosamente.", nombreArchivo));
+            }
+		}catch (Exception ex){
+			System.out.println("Error al transferir al FTP: "+ex.getMessage());
+			ex.printStackTrace();
+		}
+		finally{
+			try {
+                if (ftpClient.isConnected()) {
+                    ftpClient.logout();
+                    ftpClient.disconnect();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
 		}
 	}
 	
-	public void subirUnArchivoPorHilo(InputStream archivo, String pathDondeGuardar){
+	public void subirUnArchivoPorHilo(InputStream archivo, String pathDondeGuardar)
+	{
 		HiloParaSubirArchivosAlFTP hilo = new HiloParaSubirArchivosAlFTP(archivo, pathDondeGuardar);
 		hilo.start();
 	}
@@ -205,7 +222,7 @@ public class FTPCliente
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Termin� de subir el archivo");
+			System.out.println("Se termino de subir el archivo.");
 		}
 	}
 	
