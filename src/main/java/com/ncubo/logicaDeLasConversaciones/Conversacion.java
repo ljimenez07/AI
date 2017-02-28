@@ -248,11 +248,15 @@ public class Conversacion {
 				else{
 					// Verificar que fue lo que paso	
 					System.out.println("No entendi la ultima pregunta");
-					if(fraseActual.esMandatorio()){
+					if(fraseActual != null && fraseActual.esMandatorio()){
 						misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					}else{
-						temaActual = null;
-						fraseActual = null;
+						misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+						if(misSalidas.isEmpty()){
+							temaActual = null;
+							fraseActual = null;
+						}
+						
 					}
 				}
 			}
@@ -469,12 +473,12 @@ public class Conversacion {
 				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 				if(misSalidas.isEmpty()){
 					System.out.println("Esta fuera de contexto ...");
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
-				String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
-				
-				Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
-				misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(miTema, fueraDeContexto);
+					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
+					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
+					
+					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(miTema, fueraDeContexto);
 				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
@@ -485,13 +489,13 @@ public class Conversacion {
 				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 				if(misSalidas.isEmpty()){
 					System.out.println("Quiere despistar  ...");
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
-				String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
-				
-				Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
-				
-				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-				ponerComoYaTratado(miTema, despistar);
+					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
+					String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
+					
+					Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
+					
+					misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(miTema, despistar);
 				
 				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
