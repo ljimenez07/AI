@@ -272,11 +272,13 @@ public class Conversacion {
 				else{
 					// Verificar que fue lo que paso	
 					System.out.println("No entendi la ultima pregunta");
-					if(fraseActual.esMandatorio()){
-						misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-					}else{
-						temaActual = null;
-						fraseActual = null;	
+					if(fraseActual != null){
+						if(fraseActual.esMandatorio()){
+							misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+						}else{
+							temaActual = null;
+							fraseActual = null;	
+						}
 					}
 				}
 			}
