@@ -61,7 +61,13 @@ public class Conversacion {
 	private static HttpSolrClient solrClient;
 	private static RetrieveAndRank service = new RetrieveAndRank(); 
 	
-	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
+	private String userRetrieveAndRank;
+	private String passwordRetrieveAndRank;
+	private String collectionName;
+	private String clusterId;
+	private String rankerId;
+	
+	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, String user, String password, String cluster, String collection, String ranker){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
@@ -80,6 +86,11 @@ public class Conversacion {
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		email = new Email();
 		//temario = temarios.get(0);
+		this.userRetrieveAndRank = user;
+		this.passwordRetrieveAndRank = password;
+		this.collectionName = collection;
+		this.rankerId = ranker;
+		this.clusterId = cluster;
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -202,9 +213,22 @@ public class Conversacion {
 		
 		
 		if(misSalidas.isEmpty()){
-			misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+			analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 			if(misSalidas.isEmpty())
 		     decirTemaNoEntendi(misSalidas, respuesta);
+			else{
+				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
+				
+				// llamar a watson y ver que bloque se activo
+				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+				
+				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+				}
+			}
 		}
 		
 		
@@ -248,15 +272,11 @@ public class Conversacion {
 				else{
 					// Verificar que fue lo que paso	
 					System.out.println("No entendi la ultima pregunta");
-					if(fraseActual != null && fraseActual.esMandatorio()){
+					if(fraseActual.esMandatorio()){
 						misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					}else{
-						misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
-						if(misSalidas.isEmpty()){
-							temaActual = null;
-							fraseActual = null;
-						}
-						
+						temaActual = null;
+						fraseActual = null;	
 					}
 				}
 			}
@@ -470,7 +490,7 @@ public class Conversacion {
 				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_FUERA_DE_CONTEXTO)){
-				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+				analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 				if(misSalidas.isEmpty()){
 					System.out.println("Esta fuera de contexto ...");
 					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
@@ -479,25 +499,43 @@ public class Conversacion {
 					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
 					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(miTema, fueraDeContexto);
+				}else{
+					// llamar a watson y ver que bloque se activo
+					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+					
+					if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+						String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+						Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
+						misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+						ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+					}
 				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 				if(misSalidas.isEmpty())
 					decirTemaNoEntendi(misSalidas, respuesta);
+				else{
+					// llamar a watson y ver que bloque se activo
+					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+					
+					if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+						String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+						Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
+						misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+						ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+					}
+				}
 
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
-				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
-				if(misSalidas.isEmpty()){
-					System.out.println("Quiere despistar  ...");
-					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
-					String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
-					
-					Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
-					
-					misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-					ponerComoYaTratado(miTema, despistar);
+				System.out.println("Quiere despistar  ...");
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
+				String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
 				
-				}
+				Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
+				
+				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				ponerComoYaTratado(miTema, despistar);
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
 				System.out.println("Quiere repetir  ...");
 				String idFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_REPETIR);
@@ -690,51 +728,56 @@ public class Conversacion {
 	}
 	
 	private ArrayList<Salida> analizarRespuestaRetrieveAndRank(String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
+		try{
+			RetrieveAndRank service = new RetrieveAndRank();
+			service.setUsernameAndPassword(userRetrieveAndRank, passwordRetrieveAndRank);
+			solrClient = getSolrClient("https://gateway.watsonplatform.net/retrieve-and-rank/api", userRetrieveAndRank, passwordRetrieveAndRank);
+			SolrUtils solrUtils = new SolrUtils(solrClient, null, collectionName, rankerId);
+			QueryRequestPayload body = new QueryRequestPayload();
+			body.setQuery(respuestaDelCliente);
+			
+			QueryResponsePayload queryResponse = new QueryResponsePayload();
+		      
+			queryResponse.setQuery(body.getQuery());
+
+		      SolrResults rankedResults = solrUtils.search(body, true);
+		      queryResponse.setRankedResults(rankedResults.getResult());
+
+
+		      // 1. Collects all the documents ids to retrieve the title and body in a single query
+		      ArrayList<String> idsOfDocsToRetrieve = new ArrayList<>();
+
+		      for (RankResult answer : queryResponse.getRankedResults()) {
+		        idsOfDocsToRetrieve.add(answer.getAnswerId());
+		        answer.setSolrRank(rankedResults.getIds().indexOf(answer.getAnswerId()));
+		      }
+
+		      // 2. Query Solr to retrieve document title and body
+		      Map<String, SolrResult> idsToDocs = solrUtils.getDocumentsByIds(idsOfDocsToRetrieve);
+
+
+		      // 3. Update the queryResponse with the body and title
+		      for (RankResult answer : queryResponse.getRankedResults()) {
+		        answer.setBody(idsToDocs.get(answer.getAnswerId()).getBody());
+		        answer.setTitle(idsToDocs.get(answer.getAnswerId()).getTitle());
+		      }
+		     
+		      double confianza = 0.50;
+		      System.out.println("Respuesta de Retrieve and Rank:"   +queryResponse.getRankedResults().get(0).getScore());
+		     if(queryResponse.getRankedResults().get(0).getScore()>confianza) {
+		    	 Salida salida = new Salida();
+		    	 String[] titulo = queryResponse.getRankedResults().get(0).getTitle().split("-");
+		    	 Frase frase = new Afirmacion(1, titulo[0], "retrieveAndRank", null , null, 1, null);
+		    	 salida.escribir(queryResponse.getRankedResults().get(0).getBody(), respuesta, temaActual, frase);
+		    	 misSalidas.add(salida);
+		     }
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
 		
-		RetrieveAndRank service = new RetrieveAndRank();
-		service.setUsernameAndPassword("54a9c7bf-35b4-4fce-883c-a3fcec76766c", "TEd3SxPfJIhg");
-		solrClient = getSolrClient("https://gateway.watsonplatform.net/retrieve-and-rank/api", "54a9c7bf-35b4-4fce-883c-a3fcec76766c", "TEd3SxPfJIhg");
-		SolrUtils solrUtils = new SolrUtils(solrClient, null, "MuniCurridabat", "1eec74x28-rank-1076");
-		QueryRequestPayload body = new QueryRequestPayload();
-		body.setQuery(respuestaDelCliente);
-		
-		QueryResponsePayload queryResponse = new QueryResponsePayload();
-	      
-		queryResponse.setQuery(body.getQuery());
-
-	      SolrResults rankedResults = solrUtils.search(body, true);
-	      queryResponse.setRankedResults(rankedResults.getResult());
-
-
-	      // 1. Collects all the documents ids to retrieve the title and body in a single query
-	      ArrayList<String> idsOfDocsToRetrieve = new ArrayList<>();
-
-	      for (RankResult answer : queryResponse.getRankedResults()) {
-	        idsOfDocsToRetrieve.add(answer.getAnswerId());
-	        answer.setSolrRank(rankedResults.getIds().indexOf(answer.getAnswerId()));
-	      }
-
-	      // 2. Query Solr to retrieve document title and body
-	      Map<String, SolrResult> idsToDocs = solrUtils.getDocumentsByIds(idsOfDocsToRetrieve);
-
-
-	      // 3. Update the queryResponse with the body and title
-	      for (RankResult answer : queryResponse.getRankedResults()) {
-	        answer.setBody(idsToDocs.get(answer.getAnswerId()).getBody());
-	        answer.setTitle(idsToDocs.get(answer.getAnswerId()).getTitle());
-	      }
-	     
-	      double confianza = 0.50;
-	      System.out.println("Respuesta de Retrieve and Rank:"   +queryResponse.getRankedResults().get(0).getScore());
-	     if(queryResponse.getRankedResults().get(0).getScore()>confianza) {
-	    	 Salida salida = new Salida();
-	    	 Frase frase = new Afirmacion(0, "retrieveAndRank", "retrieveAndRank", null , null, 1, null);
-	    	 salida.escribir(queryResponse.getRankedResults().get(0).getBody(), respuesta, temaActual, frase);
-	    	 misSalidas.add(salida);
-	     }
 	   return misSalidas;
 	}
-	private static HttpSolrClient getSolrClient(String uri, String username, String password) {
-	    return new HttpSolrClient(service.getSolrUrl("sc8c9e54f8_07a5_4944_887d_612ab2b50749"), HttpSolrClientUtils.createHttpClient(uri, username, password));
+	private HttpSolrClient getSolrClient(String uri, String username, String password) {
+	    return new HttpSolrClient(service.getSolrUrl(clusterId), HttpSolrClientUtils.createHttpClient(uri, username, password));
 	}
 }

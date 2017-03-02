@@ -28,7 +28,7 @@ public class GrabacionCasoDePrueba {
 	TemariosDeUnCliente temario = null;
 	Conversacion miConversacion = null;
 	
-	public ArrayList<Salida> iniciarGrabacion(String xmlFrases){
+	public ArrayList<Salida> iniciarGrabacion(String xmlFrases, String user, String password, String cluster, String collection, String ranker){
 		temario = new TemariosDeUnCliente(xmlFrases);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
@@ -41,7 +41,7 @@ public class GrabacionCasoDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDeLaRegresion(temario), informacionDelCliente);
+		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDeLaRegresion(temario), informacionDelCliente, user, password, cluster, collection, ranker);
 		
 		return salidasParaElCliente = miConversacion.inicializarLaConversacion();
 	}

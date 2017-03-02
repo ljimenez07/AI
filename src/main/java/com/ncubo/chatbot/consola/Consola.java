@@ -62,7 +62,7 @@ public class Consola {
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao, new AgenteDePrueba(temarioDePrueba), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao, new AgenteDePrueba(temarioDePrueba), informacionDelCliente,"54a9c7bf-35b4-4fce-883c-a3fcec76766c","TEd3SxPfJIhg","sc8c9e54f8_07a5_4944_887d_612ab2b50749","MuniCurridabat","1eec74x28-rank-1076" );
 		
 		String respuesta = "";
 		

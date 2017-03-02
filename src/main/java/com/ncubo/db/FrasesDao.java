@@ -17,8 +17,6 @@ public class FrasesDao {
 		String queryParaNoRepetirFrases = "SELECT id from frases WHERE idfrase = ? and version = ?";
 		String queryParaTablaFrases = "INSERT INTO frases (idfrase, version, frase) VALUES (?,?,?);";
 		int idDeLaFraseGuardada = 0;
-		if( conversacion.getIdFraseQueUso().equals("retrieveAndRank"))
-			return idDeLaFraseGuardada;
 		try{
 			Connection con = ConexionALaDB.getInstance().openConBD();
 
@@ -43,8 +41,7 @@ public class FrasesDao {
 			if(conversacion.getElTextoConPlaceholders().isEmpty())
 				stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 			else stmt.setString(3, conversacion.getElTextoConPlaceholders());
-			//stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
-
+			
 			stmt.executeUpdate();
 
 			ResultSet rs=stmt.getGeneratedKeys(); //obtengo las ultimas llaves generadas

@@ -9,10 +9,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
-import com.ncubo.chatbot.configuracion.Constantes;
 
 
 public class DetalleDeConversacionDao {
@@ -48,10 +46,8 @@ public class DetalleDeConversacionDao {
 			stmt.setTimestamp(1, miFechaActual);
 			stmt.setString(2, "Chatbot");
 
-			if(conversacion.getElTextoConPlaceholders().isEmpty()&& idDeLaFraseGuardada > 0)
+			if(conversacion.getElTextoConPlaceholders().isEmpty())
 				stmt.setString(3, null);
-			else if(idDeLaFraseGuardada == 0)
-				stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 			else stmt.setString(3, conversacion.getElTextoQueDijoElFramework());
 			stmt.setInt(4, idDeLaFraseGuardada);
 			stmt.setString(5, null);

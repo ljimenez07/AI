@@ -44,7 +44,7 @@ public class EjecucionCasosDePrueba {
 	
 	private static ArrayList<Resultado> resultados = new ArrayList<Resultado>();
 	
-	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite) throws Exception{
+	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite, String user, String password, String cluster, String collection, String ranker) throws Exception{
 		
 		resultados.clear();
 		temario = new TemariosDeUnCliente(xmlFrases); //xml de conversaciones
@@ -69,7 +69,7 @@ public class EjecucionCasosDePrueba {
 			int idConversacion = Integer.parseInt(casoDePrueba.getAttribute("idConversacion"));
 			String descripcion = casoDePrueba.getAttribute("descripcion");
 			
-			correrUnCaso(idConversacion, descripcion);
+			correrUnCaso(idConversacion, descripcion, user, password, cluster, collection, ranker);
 		}
 		
 		correrTestNG(xmlTestNG, nombreSuite);
@@ -122,7 +122,7 @@ public class EjecucionCasosDePrueba {
 		runner.run();
 	}
 
-	public boolean correrUnCaso(int idConversacion, String descripcion){
+	public boolean correrUnCaso(int idConversacion, String descripcion, String user, String password, String cluster, String collection, String ranker){
 		
 		ConsultaDao consultaDao = new ConsultaDao();
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
@@ -135,10 +135,10 @@ public class EjecucionCasosDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente, user, password, cluster, collection, ranker);
 
 		Vector <String> observaciones = new Vector <String>();
-		observaciones.add("\nEjecuciÃ³n del caso: " + descripcion);
+		observaciones.add("\nEjecución del caso: " + descripcion);
 		
 		int contadorSalidas = 0;
 		boolean status = true;

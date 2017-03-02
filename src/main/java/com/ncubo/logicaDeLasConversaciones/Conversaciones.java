@@ -43,7 +43,7 @@ public class Conversaciones{
 		hiloParaBorrarConversacionesInactivas.start();
 	}
 	
-	private String crearUnaNuevoConversacion(UsuarioDeLaConversacion usuario, AgenteDeLaConversacion agente) throws Exception{
+	private String crearUnaNuevoConversacion(UsuarioDeLaConversacion usuario, AgenteDeLaConversacion agente, String user, String password, String cluster, String collection, String ranker) throws Exception{
 		
 		String resultado = "";
 		Cliente cliente = null;
@@ -65,7 +65,7 @@ public class Conversaciones{
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, user, password, cluster, collection, ranker);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -76,7 +76,7 @@ public class Conversaciones{
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, user, password, cluster, collection, ranker);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}
@@ -92,7 +92,7 @@ public class Conversaciones{
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, AgenteDeLaConversacion agente) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, AgenteDeLaConversacion agente, String user, String password, String cluster, String collection, String ranker) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -114,7 +114,7 @@ public class Conversaciones{
 			}else{ // Crear un nuevo Cliente y asociarle una conversacion
 
 				semaphore.acquire(); //Sección crítica a proteger
-				crearUnaNuevoConversacion(cliente, agente);
+				crearUnaNuevoConversacion(cliente, agente, user, password, cluster, collection, ranker);
 				semaphore.release();
 				
 				resultado = hablarConElAjente(cliente, textoDelCliente);
@@ -129,7 +129,7 @@ public class Conversaciones{
 				if(existeLaConversacion(cliente.getIdSesion())){
 					resultado = hablarConElAjente(cliente, textoDelCliente);
 				}else{ // Crear una nueva conversacion
-					crearUnaNuevoConversacion(cliente, agente);
+					crearUnaNuevoConversacion(cliente, agente, user, password, cluster, collection, ranker);
 					resultado = inicializarConversacionConElAgente(cliente, textoDelCliente);
 				}
 			}else{
