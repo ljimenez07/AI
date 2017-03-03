@@ -16,6 +16,7 @@ import com.ibm.watson.developer_cloud.conversation.v1.model.MessageResponse;
 import com.ibm.watson.developer_cloud.service.exception.BadRequestException;
 import com.ibm.watson.developer_cloud.service.exception.InternalServerErrorException;
 import com.ibm.watson.developer_cloud.service.exception.UnauthorizedException;
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.parser.Operador;
 import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
@@ -27,7 +28,7 @@ public class ConversacionConWatson {
 	private String usuario;
 	private String contrasena;
 	private String idConversacion;
-	private final static String FECHA_VERSION_WATSON = "2016-09-20";
+	private final static String FECHA_VERSION_WATSON = "2017-02-03";
 	private String contextoConWatson;
 
 	public ConversacionConWatson(String usuario, String contrasena, String idConversacion) {
@@ -188,25 +189,28 @@ public class ConversacionConWatson {
 		this.contextoConWatson = contexto;
 	}
 	
-	/*public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception {
 
-		ConversationWatson myConversation = new ConversationWatson(Constantes.WATSON_CONVERSATION_USER, 
+		ConversacionConWatson myConversation = new ConversacionConWatson(Constantes.WATSON_CONVERSATION_USER, 
 				Constantes.WATSON_CONVERSATION_PASS, Constantes.WATSON_CONVERSATION_ID);
-		MessageResponse result = myConversation.enviarMSG("Hello!", null);
+		
+	    String context = "{system={dialog_request_counter=2.0, dialog_stack=[{dialog_node=root}], dialog_turn_counter=2.0, dialog_in_progress=true}, idTema=preguntarPorOtraConsulta, conversation_id=3ddb0766-1e77-46b0-afe0-19fdc2cd4dbd, nodo=preguntarPorOtraConsulta}";
+
+		MessageResponse result = myConversation.enviarAWatson("Hola", context);
 		myConversation.getMSJ(result.toString());
 		//myConversation.probablesIntenciones(result);
 		//myConversation.getEntities(result.toString());
 		//myConversation.entidadesQueWatsonIdentifico(result);
-		String context = myConversation.activarTemaEnElContextoDeWatson(result.getContext().toString(), "quiereEnCondominio");
+		/*String context = myConversation.activarTemaEnElContextoDeWatson(result.getContext().toString(), "quiereEnCondominio");
 		result = myConversation.enviarAWatson("", context);
 		
 		result = myConversation.enviarMSG("rent a car", result.getContext());
 		
 		result = myConversation.enviarMSG("yes", result.getContext());
-		result = myConversation.enviarMSG("yes", result.getContext());
+		result = myConversation.enviarMSG("yes", result.getContext());*/
 		
 		//result = myConversation.enviarMSG("Estoy buscondo un lote", null);
 		//result = myConversation.getMSJ(result);
 		//System.out.println(result);
-	}*/
+	}
 }

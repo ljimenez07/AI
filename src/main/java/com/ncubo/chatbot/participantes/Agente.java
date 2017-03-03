@@ -8,6 +8,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -157,6 +158,10 @@ public abstract class Agente extends Participante{
 				
 				if(topico != null){
 					System.out.println("Cambiando al WORKSPACE: "+topico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre());
+					if(frase != null)
+						if(frase.obtenerNombreDeLaFrase().contains("preguntarPorOtraConsulta"))
+							inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
+					
 					miUltimoTopico = miTopico;
 					misTopicos.agregarUnTopicoEnElTop(miTopico);
 					miTopico = topico;
@@ -195,6 +200,7 @@ public abstract class Agente extends Participante{
 						this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 					}
 				}
+				numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 			}else{
 				if(lasDosUltimasIntencionesDeConfianza.size() >= 2){
 					nombreDeLaIntencionGeneralActiva = lasDosUltimasIntencionesDeConfianza.get(0).getIntent();
@@ -287,6 +293,7 @@ public abstract class Agente extends Participante{
 			}
 			numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 		}
+		
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 	    borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);
 	    borrarUnaVariableDelContexto(Constantes.ORACIONES_AFIRMATIVAS);
@@ -424,12 +431,27 @@ public abstract class Agente extends Participante{
 	
 	public void activarValiableEnElContextoDeWatson(String nombre, String valor){
 		String context = miTopico.obtenerElContexto();
-
+		
 		System.out.println(context);
 		JSONObject obj = null;
 		try {
-			obj = new JSONObject(context);
-			obj.put(nombre, valor);
+			if(nombre.contains("dialog_node")){
+				obj = new JSONObject(context);
+				JSONObject obj1 = new JSONObject(obj.getString("system"));
+				JSONArray obj2 = new JSONArray(obj1.getString("dialog_stack"));
+				System.out.println(obj2);
+				for (int contador = 0; contador < obj2.length(); contador ++){
+					if(obj2.getJSONObject(contador).getString(nombre) != null)
+						obj2.getJSONObject(contador).put(nombre, valor);
+				}
+				obj1 = obj1.put("dialog_stack", obj2);
+				obj = obj.put("system", obj1);;
+				System.out.println(obj);
+			}else{
+				obj = new JSONObject(context);
+				obj.put(nombre, valor);
+			}
+			
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -437,19 +459,21 @@ public abstract class Agente extends Participante{
 		miTopico.actualizarContexto(obj.toString());
 	}
 	
-	public Respuesta inicializarTemaEnWatson(String respuestaDelCliente){
-		return inicializarTemaEnWatsonWorkspaceEspecifico(respuestaDelCliente);
-	}
-	
-	public Respuesta inicializarTemaEnWatsonWorkspaceEspecifico(String respuestaDelCliente){
+	public Respuesta inicializarTemaEnWatson(String respuestaDelCliente, Respuesta respuesta, boolean reiniciarElWorkspace){
 
-		Respuesta respuesta = miTopico.hablarConWatson(null, respuestaDelCliente);
-		
-		try{
-			String contexto = new JSONObject(respuesta.messageResponse().getContext()).toString();
-			miTopico.actualizarContexto(contexto);
-		}catch(Exception e){
-			System.out.println(String.format("Error al extraer el contexto de watson: %s", e.getStackTrace().toString()));
+		Respuesta miRespuesta = respuesta;
+		if(reiniciarElWorkspace){
+			miRespuesta = miTopico.hablarConWatson(null, respuestaDelCliente);
+			
+			try{
+				String contexto = new JSONObject(miRespuesta.messageResponse().getContext()).toString();
+				miTopico.actualizarContexto(contexto);
+			}catch(Exception e){
+				System.out.println(String.format("Error al extraer el contexto de watson: %s", e.getStackTrace().toString()));
+			}
+				
+		}else{
+			activarValiableEnElContextoDeWatson("dialog_node", "root");
 		}
 		
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
@@ -459,7 +483,7 @@ public abstract class Agente extends Participante{
 		borrarUnaVariableDelContexto(Constantes.TERMINO_EL_TEMA);
 		borrarUnaVariableDelContexto(Constantes.CAMBIAR_INTENCION);
 		
-		return respuesta;
+		return miRespuesta;
 	}
 	
 	public void borrarUnaVariableDelContexto(String nombreDeLaVariable){
@@ -576,4 +600,31 @@ public abstract class Agente extends Participante{
 	
 	public abstract Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);
 	
+	public static void main(String argv[]) throws Exception {
+		Agente agente = new Agente() {
+			
+			@Override
+			public Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo,
+					Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente,
+					ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+			
+			@Override
+			public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente,
+					ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+		};
+		
+		agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
+	} 
 }
