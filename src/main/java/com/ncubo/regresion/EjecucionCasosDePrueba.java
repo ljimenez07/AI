@@ -15,9 +15,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.codehaus.groovy.antlr.treewalker.NodeAsHTMLPrinter;
 import org.testng.TestNG;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -44,7 +46,7 @@ public class EjecucionCasosDePrueba {
 	
 	private static ArrayList<Resultado> resultados = new ArrayList<Resultado>();
 	
-	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite, String user, String password, String cluster, String collection, String ranker) throws Exception{
+	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite) throws Exception{
 		
 		resultados.clear();
 		temario = new TemariosDeUnCliente(xmlFrases); //xml de conversaciones
@@ -52,6 +54,32 @@ public class EjecucionCasosDePrueba {
 		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME , Constantes.DB_USER,Constantes.DB_PASSWORD);
 		
 		misConversaciones.inicializarConversaciones(xmlFrases);
+		
+		String user = "", password = "", cluster = "", collection = "", ranker = "";
+		File retrieveAndRank = new File(xmlTestNG);
+
+		DocumentBuilderFactory dbFactory1 = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder1 = dbFactory1.newDocumentBuilder();
+		Document doc1 = dBuilder1.parse(retrieveAndRank);
+
+		doc1.getDocumentElement().normalize();
+		Element nodoSuite = (Element)doc1.getElementsByTagName("suite").item(0);
+		NodeList listaDeParametros = nodoSuite.getElementsByTagName("parameter");
+		
+		for (int x=0; x<listaDeParametros.getLength(); x++)
+		{
+			NamedNodeMap atributos = listaDeParametros.item(x).getAttributes();
+			if(atributos.getNamedItem("name").getNodeValue().equals("userRetrieveAndRank"))
+				user = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("passwordRetrieveAndRank"))
+				password = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("clusterId"))
+				cluster = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("collectionName"))
+				collection = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("rankerId"))
+				ranker = atributos.getNamedItem("value").getNodeValue();
+		}
 		
 		File file = new File(xmlCasos);
 

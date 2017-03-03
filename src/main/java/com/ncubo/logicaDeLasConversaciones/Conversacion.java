@@ -23,12 +23,14 @@ import com.ncubo.chatbot.partesDeLaConversacion.Pregunta;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Saludo;
+import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.partesDeLaConversacion.TemaPendiente;
 import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.partesDeLaConversacion.TemasPendientesDeAbordar;
 import com.ncubo.chatbot.participantes.Agente;
 import com.ncubo.chatbot.participantes.Cliente;
+import com.ncubo.chatbot.watson.TextToSpeechWatson;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.email.Email;
 import com.ncubo.email.GeneradorDeEmails;
@@ -513,7 +515,7 @@ public class Conversacion {
 					}
 				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
-				misSalidas = analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+				analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 				if(misSalidas.isEmpty())
 					decirTemaNoEntendi(misSalidas, respuesta);
 				else{
@@ -769,8 +771,13 @@ public class Conversacion {
 		     if(queryResponse.getRankedResults().get(0).getScore()>confianza) {
 		    	 Salida salida = new Salida();
 		    	 String[] titulo = queryResponse.getRankedResults().get(0).getTitle().split("-");
-		    	 Frase frase = new Afirmacion(1, titulo[0], "retrieveAndRank", null , null, 1, null);
+		    	 Frase frase = new Afirmacion(1, titulo[0], "retrieveAndRank", null , null, 1, null);	
 		    	 salida.escribir(queryResponse.getRankedResults().get(0).getBody(), respuesta, temaActual, frase);
+		    	 try{
+		    		 salida.setMiSonido(queryResponse.getRankedResults().get(0).getBody(), informacionDelCliente.getIdDelCliente());
+		    	 }catch(Exception | Error error){
+		    		 System.out.println(error.getMessage());
+		    	 }
 		    	 misSalidas.add(salida);
 		     }
 		}catch(Exception e){

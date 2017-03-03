@@ -1,10 +1,12 @@
 package com.ncubo.regresion;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -12,6 +14,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -28,13 +33,51 @@ public class GrabacionCasoDePrueba {
 	TemariosDeUnCliente temario = null;
 	Conversacion miConversacion = null;
 	
-	public ArrayList<Salida> iniciarGrabacion(String xmlFrases, String user, String password, String cluster, String collection, String ranker){
+	public ArrayList<Salida> iniciarGrabacion(String xmlFrases, String xmlTestNG){
 		temario = new TemariosDeUnCliente(xmlFrases);
 		ConsultaDao consultaDao = new ConsultaDao();
 		
 		Cliente cliente = null ;
+		String user = "", password = "", cluster = "", collection = "", ranker = "";
+		File retrieveAndRank = new File(xmlTestNG);
+
+		DocumentBuilderFactory dbFactory1 = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder1 = null;
 		try {
-			cliente = new Cliente("Ricky", "123456");
+			dBuilder1 = dbFactory1.newDocumentBuilder();
+		} catch (ParserConfigurationException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		Document doc1 = null;
+		try {
+			doc1 = dBuilder1.parse(retrieveAndRank);
+		} catch (SAXException | IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+		doc1.getDocumentElement().normalize();
+		Element nodoSuite = (Element)doc1.getElementsByTagName("suite").item(0);
+		NodeList listaDeParametros = nodoSuite.getElementsByTagName("parameter");
+		
+		for (int x=0; x<listaDeParametros.getLength(); x++)
+		{
+			NamedNodeMap atributos = listaDeParametros.item(x).getAttributes();
+			if(atributos.getNamedItem("name").getNodeValue().equals("userRetrieveAndRank"))
+				user = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("passwordRetrieveAndRank"))
+				password = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("clusterId"))
+				cluster = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("collectionName"))
+				collection = atributos.getNamedItem("value").getNodeValue();
+			if(atributos.getNamedItem("name").getNodeValue().equals("rankerId"))
+				ranker = atributos.getNamedItem("value").getNodeValue();
+		}
+		
+		try {
+			cliente = new Cliente("regresion", "123456");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Problemas al iniciar el cliente");
