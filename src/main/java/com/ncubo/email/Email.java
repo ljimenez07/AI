@@ -2,8 +2,6 @@ package com.ncubo.email;
 
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.PasswordAuthentication;

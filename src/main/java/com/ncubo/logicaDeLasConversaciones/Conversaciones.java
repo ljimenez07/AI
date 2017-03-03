@@ -12,7 +12,6 @@ import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
-import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.chatbot.participantes.UsuarioDeLaConversacion;

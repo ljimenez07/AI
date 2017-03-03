@@ -2,10 +2,6 @@ package com.ncubo.chatbot.audiosXML;
 
 import java.io.File;
 import java.util.Hashtable;
-import java.util.Iterator;
-
-import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
-import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
 import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class AudiosXMLDeLosClientes {
@@ -80,7 +76,4 @@ public class AudiosXMLDeLosClientes {
 		return "";
 	}
 	
-	public static void main(String argv[]) {
-		AudiosXMLDeLosClientes file = new AudiosXMLDeLosClientes();
-	}
 }

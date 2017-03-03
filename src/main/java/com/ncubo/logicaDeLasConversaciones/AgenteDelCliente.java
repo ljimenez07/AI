@@ -16,7 +16,6 @@ import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
-import com.ncubo.chatbot.watson.WorkSpace;
 
 public class AgenteDelCliente extends AgenteDeLaConversacion{
 
