@@ -15,7 +15,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.codehaus.groovy.antlr.treewalker.NodeAsHTMLPrinter;
 import org.testng.TestNG;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,7 +28,6 @@ import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
-import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.controller.FiltroDeConversaciones;
 import com.ncubo.db.ConexionALaDB;

@@ -4,16 +4,12 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
-import com.ncubo.chatbot.partesDeLaConversacion.Temario;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConsultaDao;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
-import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
 import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 
 public class Consola {

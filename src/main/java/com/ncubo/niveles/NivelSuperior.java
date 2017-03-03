@@ -1,7 +1,5 @@
 package com.ncubo.niveles;
 
-import org.json.JSONObject;
-
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
