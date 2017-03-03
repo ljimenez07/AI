@@ -203,7 +203,7 @@ public class Conversacion {
 			}
 		}
 		
-		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && (respuesta.seTerminoElTema() || seActivoElRetrieveAndRank)){ // TODO Sacar un tema top de la Pila
+		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && respuesta.seTerminoElTema()){ // TODO Sacar un tema top de la Pila
 			TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 			this.temaActual = temaPendiente.getTemaActual();
 			this.fraseActual = temaPendiente.getFraseActual();
@@ -217,12 +217,7 @@ public class Conversacion {
 		}
 		
 		if(misSalidas.isEmpty()){
-			analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
-			if(misSalidas.isEmpty())
-				decirTemaNoEntendi(misSalidas, respuesta);
-			else{
-				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
-			}
+			decirTemaNoEntendi(misSalidas, respuesta);
 		}
 		
 		
@@ -268,11 +263,11 @@ public class Conversacion {
 					System.out.println("No entendi la ultima pregunta");
 					if(fraseActual != null){
 						if(fraseActual.esMandatorio()){
-							analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+							//analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 							if(misSalidas.isEmpty())
 								misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 							else{
-								seActivoElRetrieveAndRank = true;
+								//seActivoElRetrieveAndRank = true;
 								if(temaActual != null){
 									if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
 										this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiTopico()));
@@ -496,28 +491,16 @@ public class Conversacion {
 				temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_FUERA_DE_CONTEXTO)){
-				analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
-				if(misSalidas.isEmpty()){
-					System.out.println("Esta fuera de contexto ...");
+				System.out.println("Esta fuera de contexto ...");
 					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
 					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
 					
 					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
 					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(miTema, fueraDeContexto);
-				}else{
-					seActivoElRetrieveAndRank = true;
-				}
+				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
-				analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
-				if(misSalidas.isEmpty())
-					decirTemaNoEntendi(misSalidas, respuesta);
-				else{
-					// llamar a watson y ver que bloque se activo
-					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
-					seActivoElRetrieveAndRank = true;
-				}
-
+				decirTemaNoEntendi(misSalidas, respuesta);
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
 				System.out.println("Quiere despistar  ...");
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
