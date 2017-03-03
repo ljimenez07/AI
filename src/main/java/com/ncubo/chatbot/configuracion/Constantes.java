@@ -6,9 +6,9 @@ public class Constantes {
 	public enum TiposDeVariables{ CONTEXTO, USUARIO, NEGOCIO, ENUM, SISTEMA }
 	
 	// Watson IBM f63e42df-1405-4ea7-8bff-7556a2586828
-	public static String WATSON_CONVERSATION_ID = "8af4d07d-d2b5-4a32-804c-6a0e2749ffed";
-	public static String WATSON_CONVERSATION_USER = "bb9bd2e7-d63f-490c-b5d6-32f026a4c646";
-	public static String WATSON_CONVERSATION_PASS = "Tvm3ZJzX2vab";
+	public static String WATSON_CONVERSATION_ID = "3d789f22-f4c4-4941-b933-511dedd61c9d";
+	public static String WATSON_CONVERSATION_USER = "7ac03153-e23f-42d3-bca6-916ed217fc3b";
+	public static String WATSON_CONVERSATION_PASS = "DLYiraZJBuZH";
 	public static double WATSON_CONVERSATION_CONFIDENCE = 0.55;
 	
 	public static String WATSON_USER_TEXT_SPEECH = "8f1ec844-f8ad-4303-9293-3da7192c5b59";

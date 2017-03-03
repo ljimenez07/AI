@@ -68,8 +68,10 @@ public class Conversacion {
 	private String collectionName;
 	private String clusterId;
 	private String rankerId;
+	private boolean seActivoElRetrieveAndRank = false;
 	
-	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, String user, String password, String cluster, String collection, String ranker){
+	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, 
+			String user, String password, String cluster, String collection, String ranker){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
@@ -139,6 +141,7 @@ public class Conversacion {
 	public ArrayList<Salida> analizarLaRespuestaConWatson(String respuestaDelCliente, boolean esModoConsulta) throws Exception{
 		ArrayList<Salida> misSalidas = new ArrayList<Salida>();
 		Respuesta respuesta = null;
+		seActivoElRetrieveAndRank = false;
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
@@ -200,7 +203,7 @@ public class Conversacion {
 			}
 		}
 		
-		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && respuesta.seTerminoElTema()){ // TODO Sacar un tema top de la Pila
+		if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && temasPendientes.hayTemasPendientes() && (respuesta.seTerminoElTema() || seActivoElRetrieveAndRank)){ // TODO Sacar un tema top de la Pila
 			TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
 			this.temaActual = temaPendiente.getTemaActual();
 			this.fraseActual = temaPendiente.getFraseActual();
@@ -213,23 +216,12 @@ public class Conversacion {
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
 		}
 		
-		
 		if(misSalidas.isEmpty()){
 			analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
 			if(misSalidas.isEmpty())
-		     decirTemaNoEntendi(misSalidas, respuesta);
+				decirTemaNoEntendi(misSalidas, respuesta);
 			else{
 				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
-				
-				// llamar a watson y ver que bloque se activo
-				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-				
-				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
-					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
-				}
 			}
 		}
 		
@@ -276,7 +268,21 @@ public class Conversacion {
 					System.out.println("No entendi la ultima pregunta");
 					if(fraseActual != null){
 						if(fraseActual.esMandatorio()){
-							misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+							analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
+							if(misSalidas.isEmpty())
+								misSalidas.add(agente.volverAPreguntarUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+							else{
+								seActivoElRetrieveAndRank = true;
+								if(temaActual != null){
+									if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
+										this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiTopico()));
+									else{
+										decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
+									}
+								}else{
+									decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
+								}
+							}
 						}else{
 							temaActual = null;
 							fraseActual = null;	
@@ -336,7 +342,7 @@ public class Conversacion {
 				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 				
 				// llamar a watson y ver que bloque se activo
-				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
 				
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
@@ -345,17 +351,11 @@ public class Conversacion {
 					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 				}else{
 					idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
-					
 					System.out.println("Id de la frase a decir: "+idFraseActivada);
 					extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
 				}
 
 			}
-			/*
-			Tema temaSaludo = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
-			Tema temaDespedida = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPEDIDA);
-			if( (! this.temaActual.equals(temaSaludo)) && (! this.temaActual.equals(temaDespedida)))
-				ponerComoYaTratado(this.temaActual);*/
 		}else{ // No entiendo
 			decirTemaNoEntendi(misSalidas, respuesta);
 			agente.cambiarANivelSuperior();
@@ -376,7 +376,7 @@ public class Conversacion {
 						agente.activarTemaEnElContextoDeWatson(temaNuevo.getNombre());
 						
 						// llamar a watson y ver que bloque se activo
-						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, null, true);
 						
 						if ( ! respuesta.hayProblemasEnLaComunicacionConWatson()){
 							String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -412,11 +412,13 @@ public class Conversacion {
 		System.out.println("Se va a preguntar por otra cosa ...");							
 		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA);
 
+		agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
+		
 		// Activar en el contexto el tema
 		agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 		
 		// llamar a watson y ver que bloque se activo
-		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
+		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
 		
 		if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 			String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
@@ -504,15 +506,7 @@ public class Conversacion {
 					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(miTema, fueraDeContexto);
 				}else{
-					// llamar a watson y ver que bloque se activo
-					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-					
-					if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-						String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
-						Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-						misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-						ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
-					}
+					seActivoElRetrieveAndRank = true;
 				}
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
 				analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
@@ -520,14 +514,8 @@ public class Conversacion {
 					decirTemaNoEntendi(misSalidas, respuesta);
 				else{
 					// llamar a watson y ver que bloque se activo
-					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente);
-					
-					if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-						String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
-						Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-						misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
-						ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
-					}
+					respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
+					seActivoElRetrieveAndRank = true;
 				}
 
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
