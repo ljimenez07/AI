@@ -3,13 +3,13 @@ package com.ncubo.chatbot.google;
 import java.io.File;
 import java.io.IOException;
 
-public class SST {
+public class STT {
 
 	private Recognizer recognizer;
 	private static String API_KEY = "AIzaSyAokCeQz5sIPaCwsqk6IUKQpfU_tshQJ-o";
 	private int maxNumOfResponses = 4;
 	
-	public SST(){
+	public STT(){
 	    recognizer = new Recognizer(Recognizer.Languages.SPANISH_SPAIN, API_KEY);
 	}
 	
@@ -23,7 +23,6 @@ public class SST {
 		FlacEncoder flacEncoder = new FlacEncoder();
 	    flacEncoder.convertWaveToFlac(file, archivoDeAudio);
 	    
-	    
 		try {
 			response = recognizer.getRecognizedDataForFlac(archivoDeAudio, maxNumOfResponses, 24000);
 			resultado = response.getResponse ();
@@ -35,9 +34,19 @@ public class SST {
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			try {
+				response = recognizer.getRecognizedDataForFlac(archivoDeAudio, maxNumOfResponses, 24000);
+				resultado = response.getResponse ();
+				System.out.println ("Google Response: " + resultado);
+				System.out.println ("Google is " + Double.parseDouble (response.getConfidence ()) * 100 + "% confident in" + " the reply");
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
 		}
+		
+		file.delete();
+		archivoDeAudio.delete();
 		
 		return resultado;
 	}
@@ -45,7 +54,7 @@ public class SST {
 	public static void main (String[]args) {
 		
 	    File file = new File ("src/main/resources/test_es.wav");
-		SST stt = new SST();
+		STT stt = new STT();
 		stt.convertirDeAudioATexto(file);
 	}
 	

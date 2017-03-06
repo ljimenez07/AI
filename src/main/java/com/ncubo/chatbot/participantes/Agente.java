@@ -87,7 +87,7 @@ public abstract class Agente extends Participante{
 			misTopicos.agregarUnTopicoEnElTop(new Topico(temario));
 		}
 		miTopico = misTopicos.obtenerElTopicoPorDefecto();
-		miUltimoTopico = miTopico;
+		miUltimoTopico = miTopico.clone();
 		if(miTopico == null)
 			throw new ChatException("No existe un topico por defecto");
 		
@@ -107,7 +107,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public void cambiarAlTopicoPorDefecto(){
-		miUltimoTopico = miTopico;
+		miUltimoTopico = miTopico.clone();
 		misTopicos.agregarUnTopicoEnElTop(miTopico);
 		miTopico = misTopicos.obtenerElTopicoPorDefecto();
 		if(miTopico == null)
@@ -151,10 +151,10 @@ public abstract class Agente extends Participante{
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 			WorkSpace workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
-			boolean hayQueReiniciarContexto = true;
+			Topico topico = null;
 			
 			if(workspace == null){ // && intencionDelCliente.equals("")
-				Topico topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
+				topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
 				
 				if(topico != null){
 					System.out.println("Cambiando al WORKSPACE: "+topico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre());
@@ -162,7 +162,7 @@ public abstract class Agente extends Participante{
 						if(frase.obtenerNombreDeLaFrase().contains("preguntarPorOtraConsulta"))
 							inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
 					
-					miUltimoTopico = miTopico;
+					miUltimoTopico = miTopico.clone();
 					misTopicos.agregarUnTopicoEnElTop(miTopico);
 					miTopico = topico;
 					nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
@@ -172,7 +172,6 @@ public abstract class Agente extends Participante{
 					
 					intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
 					workspace = extraerUnWorkspaceConLaIntencion(intencionDelCliente);
-					hayQueReiniciarContexto = false;
 				}
 			}
 			
@@ -184,6 +183,8 @@ public abstract class Agente extends Participante{
 					cambiarDeTemaForzosamente = true;
 					pareceQueQuiereCambiarDeTemaForzosamente = false;
 					noEntendiLaUltimaRespuesta = true;
+					if(topico == null && ! miUltimoTopico.getMiTemario().contenido().getIdContenido().contains(miTopico.getMiTemario().contenido().getIdContenido()))
+						miUltimoTopico = miTopico.clone();
 				}else{
 					noEntendiLaUltimaRespuesta = false;
 				}
@@ -196,9 +197,6 @@ public abstract class Agente extends Participante{
 				else{
 					this.hayIntencionNoAsociadaANingunWorkspace = false;
 					hayQueEvaluarEnNivelSuperior = false;
-					if(hayQueReiniciarContexto){
-						this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
-					}
 				}
 				numeroDeIntentosActualesEnRepetirUnaPregunta = 0;
 			}else{
@@ -211,9 +209,6 @@ public abstract class Agente extends Participante{
 					abordarElTemaPorNOLoEntendi = false;
 					this.hayIntencionNoAsociadaANingunWorkspace = false;
 					hayQueEvaluarEnNivelSuperior = false;
-					if(hayQueReiniciarContexto){
-						this.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
-					}
 				}else{
 					System.out.println("Intencion no asociada a ningun workspace");
 					if (! intencionDelCliente.equals("") && workspace != null){
@@ -587,7 +582,7 @@ public abstract class Agente extends Participante{
 
 	public void setMiTopico(Topico miTopico) {
 		if( ! miTopico.getMiTemario().contenido().getIdContenido().equals(this.miTopico.getMiTemario().contenido().getIdContenido())){
-			this.miUltimoTopico = this.miTopico;
+			this.miUltimoTopico = this.miTopico.clone();
 			misTopicos.agregarUnTopicoEnElTop(this.miTopico);
 			misTopicos.agregarUnTopicoEnElTop(miTopico);
 			this.miTopico = misTopicos.extraerElSiquienteTopico();

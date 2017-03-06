@@ -109,6 +109,17 @@
 		<artifactId>httpclient</artifactId>
 		<version>4.3.6</version>
 	</dependency>
+	<dependency>
+      <groupId>net.sourceforge.javaflacencoder</groupId>
+      <artifactId>java-flac-encoder</artifactId>
+      <version>0.3.7</version>
+    </dependency>
+     <dependency>
+		<groupId>de.huxhorn.sulky</groupId>
+		<artifactId>de.huxhorn.sulky.3rdparty.jlayer</artifactId>
+		<scope>compile</scope>
+		<version>1.0</version>
+	</dependency>
   </dependencies>
   
   <build>

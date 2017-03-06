@@ -63,7 +63,6 @@ public class Conversacion {
 	private String collectionName;
 	private String clusterId;
 	private String rankerId;
-	private boolean seActivoElRetrieveAndRank = false;
 	
 	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, 
 			String user, String password, String cluster, String collection, String ranker){
@@ -136,7 +135,6 @@ public class Conversacion {
 	public ArrayList<Salida> analizarLaRespuestaConWatson(String respuestaDelCliente, boolean esModoConsulta) throws Exception{
 		ArrayList<Salida> misSalidas = new ArrayList<Salida>();
 		Respuesta respuesta = null;
-		seActivoElRetrieveAndRank = false;
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
@@ -330,6 +328,7 @@ public class Conversacion {
 				
 				// Activar en el contexto el tema
 				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
+				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 				
 				// llamar a watson y ver que bloque se activo
 				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
@@ -752,6 +751,7 @@ public class Conversacion {
 		
 	   return misSalidas;
 	}
+	
 	private HttpSolrClient getSolrClient(String uri, String username, String password) {
 	    return new HttpSolrClient(service.getSolrUrl(clusterId), HttpSolrClientUtils.createHttpClient(uri, username, password));
 	}
