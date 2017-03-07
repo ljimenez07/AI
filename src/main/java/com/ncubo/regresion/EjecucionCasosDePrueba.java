@@ -53,31 +53,6 @@ public class EjecucionCasosDePrueba {
 		
 		misConversaciones.inicializarConversaciones(xmlFrases);
 		
-		String user = "", password = "", cluster = "", collection = "", ranker = "";
-		File retrieveAndRank = new File(xmlTestNG);
-
-		DocumentBuilderFactory dbFactory1 = DocumentBuilderFactory.newInstance();
-		DocumentBuilder dBuilder1 = dbFactory1.newDocumentBuilder();
-		Document doc1 = dBuilder1.parse(retrieveAndRank);
-
-		doc1.getDocumentElement().normalize();
-		Element nodoSuite = (Element)doc1.getElementsByTagName("suite").item(0);
-		NodeList listaDeParametros = nodoSuite.getElementsByTagName("parameter");
-		
-		for (int x=0; x<listaDeParametros.getLength(); x++)
-		{
-			NamedNodeMap atributos = listaDeParametros.item(x).getAttributes();
-			if(atributos.getNamedItem("name").getNodeValue().equals("userRetrieveAndRank"))
-				user = atributos.getNamedItem("value").getNodeValue();
-			if(atributos.getNamedItem("name").getNodeValue().equals("passwordRetrieveAndRank"))
-				password = atributos.getNamedItem("value").getNodeValue();
-			if(atributos.getNamedItem("name").getNodeValue().equals("clusterId"))
-				cluster = atributos.getNamedItem("value").getNodeValue();
-			if(atributos.getNamedItem("name").getNodeValue().equals("collectionName"))
-				collection = atributos.getNamedItem("value").getNodeValue();
-			if(atributos.getNamedItem("name").getNodeValue().equals("rankerId"))
-				ranker = atributos.getNamedItem("value").getNodeValue();
-		}
 		
 		File file = new File(xmlCasos);
 
@@ -95,7 +70,7 @@ public class EjecucionCasosDePrueba {
 			int idConversacion = Integer.parseInt(casoDePrueba.getAttribute("idConversacion"));
 			String descripcion = casoDePrueba.getAttribute("descripcion");
 			
-			correrUnCaso(idConversacion, descripcion, user, password, cluster, collection, ranker);
+			correrUnCaso(idConversacion, descripcion);
 		}
 		
 		correrTestNG(xmlTestNG, nombreSuite);
@@ -148,7 +123,7 @@ public class EjecucionCasosDePrueba {
 		runner.run();
 	}
 
-	public boolean correrUnCaso(int idConversacion, String descripcion, String user, String password, String cluster, String collection, String ranker){
+	public boolean correrUnCaso(int idConversacion, String descripcion){
 		
 		ConsultaDao consultaDao = new ConsultaDao();
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
@@ -161,7 +136,7 @@ public class EjecucionCasosDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente, user, password, cluster, collection, ranker);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente);
 
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);

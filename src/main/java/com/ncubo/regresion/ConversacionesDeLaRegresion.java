@@ -22,12 +22,12 @@ public class ConversacionesDeLaRegresion extends Conversaciones{
 		this.inicializar(rutaDelTemario, temario);
 	}
 	
-	public ArrayList<Salida> conversarConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente, String user, String password, String cluster, String collection, String ranker) throws Exception{
+	public ArrayList<Salida> conversarConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
 		if(this.existeLaConversacion(cliente.getIdSesion())){
 			return this.conversarConElAgenteCognitivo(cliente, textoDelCliente);
 		}else{
 			AgenteDeLaRegresion agente = new AgenteDeLaRegresion(temario);
-			return this.conversarConElAgenteCognitivo(cliente, textoDelCliente, agente, user, password, cluster, collection, ranker);
+			return this.conversarConElAgenteCognitivo(cliente, textoDelCliente, agente);
 		}
 	}
 }

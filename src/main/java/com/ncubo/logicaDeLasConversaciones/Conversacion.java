@@ -63,10 +63,8 @@ public class Conversacion {
 	private String collectionName;
 	private String clusterId;
 	private String rankerId;
-	private boolean seActivoElRetrieveAndRank = false;
 	
-	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, 
-			String user, String password, String cluster, String collection, String ranker){
+	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
@@ -85,11 +83,6 @@ public class Conversacion {
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		email = new Email();
 		//temario = temarios.get(0);
-		this.userRetrieveAndRank = user;
-		this.passwordRetrieveAndRank = password;
-		this.collectionName = collection;
-		this.rankerId = ranker;
-		this.clusterId = cluster;
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -136,7 +129,6 @@ public class Conversacion {
 	public ArrayList<Salida> analizarLaRespuestaConWatson(String respuestaDelCliente, boolean esModoConsulta) throws Exception{
 		ArrayList<Salida> misSalidas = new ArrayList<Salida>();
 		Respuesta respuesta = null;
-		seActivoElRetrieveAndRank = false;
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
