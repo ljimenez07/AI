@@ -26,8 +26,7 @@ import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.EncoderException;
 import it.sauronsoftware.jave.EncodingAttributes;
 
-public class TextToSpeechWatson
-{
+public class TextToSpeechWatson{
 	
 	// private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	private TextToSpeech textService;

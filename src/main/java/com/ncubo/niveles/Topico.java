@@ -5,7 +5,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
 
-public class Topico {
+public class Topico implements Cloneable{
 
 	private NivelSuperior hiloDelNivelSuperior;
 	private NivelDetallado hiloDelNivelDetallado;
@@ -58,6 +58,15 @@ public class Topico {
 	public TemarioDelCliente getMiTemario() {
 		return miTemario;
 	}
+	
+	public Topico clone() {
+        try {
+            return (Topico) super.clone();
+        } catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+            throw new RuntimeException();
+        }
+    }
 	
 	/*public static void main (String[] args) throws InterruptedException {
 		

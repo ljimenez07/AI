@@ -322,6 +322,7 @@ public class Conversacion {
 				
 				// Activar en el contexto el tema
 				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
+				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 				
 				// llamar a watson y ver que bloque se activo
 				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
@@ -744,6 +745,7 @@ public class Conversacion {
 		
 	   return misSalidas;
 	}
+	
 	private HttpSolrClient getSolrClient(String uri, String username, String password) {
 	    return new HttpSolrClient(service.getSolrUrl(clusterId), HttpSolrClientUtils.createHttpClient(uri, username, password));
 	}
