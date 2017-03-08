@@ -146,7 +146,11 @@ public abstract class Agente extends Participante{
 		
 		cambiarDeTemaForzosamente = false;
 		
-		lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
+		try{
+			lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
+		}catch(Exception e){
+			lasDosUltimasIntencionesDeConfianza = new ArrayList<>();
+		}
 		
 		try{ // TODO Buscar si hay mas de una intension de peso ALTO
 			String intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
@@ -211,13 +215,14 @@ public abstract class Agente extends Participante{
 					hayQueEvaluarEnNivelSuperior = false;
 				}else{
 					System.out.println("Intencion no asociada a ningun workspace");
+					hayIntencionNoAsociadaANingunWorkspace = false;
 					if (! intencionDelCliente.equals("") && workspace != null){
 						nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
 					}else{
 						nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
+						hayIntencionNoAsociadaANingunWorkspace = true;
 					}
 					
-					hayIntencionNoAsociadaANingunWorkspace = false;
 					noEntendiLaUltimaRespuesta = true;
 					hayQueEvaluarEnNivelSuperior = false;
 				}
