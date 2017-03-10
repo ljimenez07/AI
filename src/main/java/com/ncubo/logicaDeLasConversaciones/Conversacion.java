@@ -445,10 +445,10 @@ public class Conversacion {
 	private boolean verificarIntencionNoAsociadaANingunWorkspace(ArrayList<Salida> misSalidas, Respuesta respuesta, String respuestaDelCliente) throws Exception{
 		if(agente.hayIntencionNoAsociadaANingunWorkspace()){
 			
-			if (temaActual != null && fraseActual != null){
+			/*if (temaActual != null && fraseActual != null){
 				if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
 					this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
-			}
+			}*/
 			
 			Tema miTema = null;
 			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_SALUDAR)){

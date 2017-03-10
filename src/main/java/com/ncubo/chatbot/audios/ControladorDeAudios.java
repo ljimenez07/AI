@@ -1,33 +1,64 @@
 package com.ncubo.chatbot.audios;
 
+import java.io.Closeable;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.sound.sampled.AudioFileFormat.Type;
+
+import org.apache.commons.io.IOUtils;
+
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+import com.ncubo.caches.CacheDeAudios;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.google.STTGoogle;
 import com.ncubo.chatbot.watson.SpeechToTextWatson;
+import com.ncubo.ftp.FTPCliente;
 
 public class ControladorDeAudios {
 
-	public ControladorDeAudios(){}
+	private FTPCliente ftp;
+	private String pathAudios;
 	
-	public String transformarAudioATexto(File inputstream, String cualAPI){
-		if(cualAPI.contains(Constantes.API_GOOGLE)){
-			STTGoogle stt = new STTGoogle();
-			return stt.convertirDeAudioATexto(inputstream);
-		}
-		else{
-			return SpeechToTextWatson.getInstance().transformAudio(inputstream);
-		}
+	public ControladorDeAudios(String usuarioFTP, String contrasenaFTP, String hostFTP, int puetoFTP, String carpeta, String path){
+		this.ftp = new FTPCliente(usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpeta);
+		this.pathAudios = path;
 	}
 	
-	public String transformarAudioMp3AWavYLuegoATexto(File inputStreamMp3, File inputStreamWav, String cualAPI){
+	public String transformarAudioATexto(File inputstream, String cualAPI, String idCliente){
+		
+		String resultado = "";
+		String pathFinal = this.pathAudios + idCliente+ "/" + inputstream.getName();
+		
+		if(cualAPI.contains(Constantes.API_GOOGLE)){
+			STTGoogle stt = new STTGoogle();
+			resultado = stt.convertirDeAudioATexto(inputstream);
+		}
+		else{
+			resultado = SpeechToTextWatson.getInstance().transformAudio(inputstream);
+		}
+		
+		try {
+			transferirAudiosAlFTP(pathFinal, new FileInputStream(inputstream));
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return resultado;
+	}
+	
+	public String transformarAudioMp3AWavYLuegoATexto(File inputStreamMp3, File inputStreamWav, String cualAPI, String idCliente){
 		
 		try {
 			mp3ToWav(inputStreamMp3, inputStreamWav);
@@ -66,10 +97,17 @@ public class ControladorDeAudios {
 	    AudioSystem.write(converted, Type.WAVE, wavData);
 	}
 	
-	public static void main(String argv[]) throws Exception {
+	private void transferirAudiosAlFTP(String pathFinal, InputStream in) throws IOException{
+		if(in != null){
+			ftp.subirUnArchivoPorHilo(in, pathFinal);
+		}
+	}
+	
+	
+	/*public static void main(String argv[]) throws Exception {
 		ControladorDeAudios audios = new ControladorDeAudios();
 		File mp3 = new File("C:/Users/SergioAlberto/Documents/SergioGQ/Ncubo/ProyectosAI/AgenteCognitivo/AgenteCognitivo/CognitiveAgent/src/main/webapp/uploads/test_file.mp3");
 		File wav = new File("C:/Users/SergioAlberto/Documents/SergioGQ/Ncubo/ProyectosAI/AgenteCognitivo/AgenteCognitivo/CognitiveAgent/src/main/webapp/uploads/test_file.wav");
 		audios.mp3ToWav(mp3, wav);
-	}
+	}*/
 }

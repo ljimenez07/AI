@@ -49,7 +49,6 @@ public class STTGoogle {
 			}
 		}
 		
-		file.delete();
 		archivoDeAudio.delete();
 		
 		return resultado;

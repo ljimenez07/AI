@@ -241,8 +241,6 @@ public class TextToSpeechWatson{
 		attrs.setAudioAttributes(audio);
 		Encoder encoder = new Encoder(new CustomFFMPEGLocator());
 		
-		
-		
 		try {
 			encoder.encode(archivoOriginal, archivoMp3, attrs);
 		} catch (IllegalArgumentException | EncoderException e) {

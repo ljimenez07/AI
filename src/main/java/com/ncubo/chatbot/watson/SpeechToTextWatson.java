@@ -83,7 +83,7 @@ public class SpeechToTextWatson{
 			}
 		}
 		
-		inputstream.delete();
+		//inputstream.delete();
 		
 		return resultado;
 	}

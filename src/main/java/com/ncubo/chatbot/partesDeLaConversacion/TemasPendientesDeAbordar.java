@@ -13,7 +13,8 @@ public class TemasPendientesDeAbordar {
 	}
 	
 	private boolean existeElTema(TemaPendiente tema){
-		return temasPendientes.contains(tema);
+		TemaPendiente miTema = buscarUnTemaPendiente(tema.getTemaActual());
+		return miTema != null;
 	}
 	
 	public boolean hayTemasPendientes(){
@@ -21,16 +22,12 @@ public class TemasPendientesDeAbordar {
 	}
 	
 	public void agregarUnTema(TemaPendiente tema){
-		TemaPendiente miTema = buscarUnTemaPendiente(tema.getTemaActual());
-		boolean elTemaNoHaSidoAgregado = miTema != null;
-		if ( ! existeElTema(tema) && elTemaNoHaSidoAgregado){
+		if ( ! existeElTema(tema)){
 			temasPendientes.push(tema); // Agregar al top de la pila
 		}
 		else{
-			if(! elTemaNoHaSidoAgregado)
-				temasPendientes.remove(miTema); // Eliminar el tema y moverlo al top
-			else
-				temasPendientes.remove(tema); 
+			TemaPendiente miTema = buscarUnTemaPendiente(tema.getTemaActual());
+			temasPendientes.remove(miTema); // Eliminar el tema y moverlo al top
 			temasPendientes.push(tema);
 		}
 	}
@@ -57,7 +54,7 @@ public class TemasPendientesDeAbordar {
 	public TemaPendiente buscarUnTemaPendiente(Tema tema){
 		for(Iterator<TemaPendiente> itr = temasPendientes.iterator(); itr.hasNext();)  {
 			TemaPendiente miTema = (TemaPendiente) itr.next();
-			if(miTema.getTemaActual().equals(tema))
+			if(miTema.getTemaActual().getIdTema().equals(tema.getIdTema()))
 				return miTema;
 		}
 		return null;
