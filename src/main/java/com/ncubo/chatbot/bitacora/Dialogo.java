@@ -1,6 +1,7 @@
 package com.ncubo.chatbot.bitacora;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -49,9 +50,13 @@ public class Dialogo implements Serializable{
 		if(miSalida.obtenerLaRespuestaDeIBM() != null){
 			this.loQueDijoElParticipante = miSalida.obtenerLaRespuestaDeIBM().loQueElClienteDijoFue();
 			MessageResponse response = miSalida.obtenerLaRespuestaDeIBM().messageResponse();
-			List<Entity> listaEntidades = response.getEntities();
+			List<Entity> listaEntidades = new ArrayList<Entity>();
+			try{
+				listaEntidades = response.getEntities();
+			}catch(Exception e){}
+			
 		  if(!listaEntidades.isEmpty())
-		   this.entidades = procesarEntidades(listaEntidades);
+			  this.entidades = procesarEntidades(listaEntidades);
 		  }
 		this.laFechaEnQueSeCreo = miSalida.getMiFecha();
 		if(miSalida.getTemaActual() != null)

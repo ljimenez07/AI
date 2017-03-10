@@ -495,5 +495,6 @@ public class Constantes {
             "</body>\n" +
             "</html>";
 
-	
+	public static String API_WATSON = "watson";
+	public static String API_GOOGLE = "google";
 }

@@ -3,14 +3,18 @@ package com.ncubo.chatbot.google;
 import java.io.File;
 import java.io.IOException;
 
-public class STT {
+public class STTGoogle {
 
 	private Recognizer recognizer;
 	private static String API_KEY = "AIzaSyAokCeQz5sIPaCwsqk6IUKQpfU_tshQJ-o";
 	private int maxNumOfResponses = 4;
 	
-	public STT(){
+	public STTGoogle(){
 	    recognizer = new Recognizer(Recognizer.Languages.SPANISH_SPAIN, API_KEY);
+	}
+	
+	public STTGoogle(String apiKey){
+	    recognizer = new Recognizer(Recognizer.Languages.SPANISH_SPAIN, apiKey);
 	}
 	
 	public String convertirDeAudioATexto(File file){
@@ -54,7 +58,7 @@ public class STT {
 	public static void main (String[]args) {
 		
 	    File file = new File ("src/main/resources/test_es.wav");
-		STT stt = new STT();
+		STTGoogle stt = new STTGoogle();
 		stt.convertirDeAudioATexto(file);
 	}
 	
