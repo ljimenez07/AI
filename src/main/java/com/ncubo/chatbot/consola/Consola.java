@@ -58,7 +58,7 @@ public class Consola {
 		
 		Cliente cliente = new Cliente("Ricky", "123456", new Conectores());
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao, new AgenteDePrueba(temarioDePrueba), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao, new AgenteDePrueba(temarioDePrueba), informacionDelCliente, temarioDePrueba.obtenerIntenciones());
 		
 		String respuesta = "";
 		

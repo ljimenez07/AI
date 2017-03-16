@@ -47,7 +47,7 @@ public class GrabacionCasoDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDeLaRegresion(temario), informacionDelCliente);
+		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDeLaRegresion(temario), informacionDelCliente, temario.obtenerIntenciones());
 		
 		return salidasParaElCliente = miConversacion.inicializarLaConversacion();
 	}

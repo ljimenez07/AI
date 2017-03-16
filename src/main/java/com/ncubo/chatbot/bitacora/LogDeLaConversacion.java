@@ -16,7 +16,11 @@ public class LogDeLaConversacion implements Serializable{
 	public LogDeLaConversacion(){}
 	
 	public void agregarHistorialALaConversacion(Salida miSalida){
-		historico.add(new Dialogo(miSalida));
+		try{
+			historico.add(new Dialogo(miSalida));
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
 	}
 	
 	public void limpiarHistorialALaConversacion(){

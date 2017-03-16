@@ -19,7 +19,7 @@ public class ConversacionesDeLaRegresion extends Conversaciones{
 	
 	public void inicializarConversaciones(String rutaDelTemario){
 		temario = new TemariosDeUnCliente(rutaDelTemario);
-		this.inicializar(rutaDelTemario, temario);
+		this.inicializar(rutaDelTemario, temario, temario.obtenerIntenciones());
 	}
 	
 	public ArrayList<Salida> conversarConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{

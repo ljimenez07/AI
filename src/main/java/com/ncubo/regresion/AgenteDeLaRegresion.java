@@ -13,11 +13,13 @@ import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
 public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 
 	private Hashtable<String, String> misUltimosResultados = new Hashtable<>();
+	private TemariosDeUnCliente temariosDelCliente;
 	
  	public AgenteDeLaRegresion(){}
 	
 	public AgenteDeLaRegresion(TemariosDeUnCliente temarios){
 		super(temarios);
+		temariosDelCliente = temarios;
 	}
 	
 	@Override
@@ -25,7 +27,7 @@ public class AgenteDeLaRegresion extends AgenteDeLaConversacion{
 		misUltimosResultados.clear();
 		
 		Salida salida = null;
-		salida = this.decir(frase, respuesta, tema);
+		salida = this.decir(frase, respuesta, tema,temariosDelCliente.obtenerIntenciones().getINTENCION_DESPEDIDA());
 		
 		return salida;
 	}

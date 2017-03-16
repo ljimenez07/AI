@@ -94,8 +94,8 @@ public abstract class Temario
 		return null;
 	}
 	
-	public Frase extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase caracteristica){
-		Tema miSaludo = buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
+	public Frase extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase caracteristica, String intencionSaludar){
+		Tema miSaludo = buscarTemaPorLaIntencion(intencionSaludar);
 		return miSaludo.buscarUnaFraseCon(caracteristica);
 	}
 	

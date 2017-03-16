@@ -53,7 +53,7 @@ public class Participante{
 		formaDeManifestarseVisual = Manifestarse.EnFormaVisual;
 	}
 	
-	public Salida decir(Frase frase, Respuesta respuesta, Tema tema){
+	public Salida decir(Frase frase, Respuesta respuesta, Tema tema, String intencionDespedida){
 		Salida salida = new Salida();
 		ComponentesDeLaFrase fraseADecir = null;
 		
@@ -81,7 +81,7 @@ public class Participante{
 		}
 		
 		try{
-			if(respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre().equals(Constantes.INTENCION_DESPEDIDA)){
+			if(respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre().equals(intencionDespedida)){
 				salida.cambiarSeTerminoElChat(true);
 			}
 		}catch(Exception e){
@@ -91,7 +91,7 @@ public class Participante{
 		return salida;
 	}
 	
-	public Salida decirUnaFraseDinamica(Frase frase, Respuesta respuesta, Tema tema, String datoAActualizar, String idCliente){
+	public Salida decirUnaFraseDinamica(Frase frase, Respuesta respuesta, Tema tema, String datoAActualizar, String idCliente, String intencionDespedida){
 		Salida salida = new Salida();
 		String texto = "";
 		ComponentesDeLaFrase fraseADecir = null;
@@ -124,7 +124,7 @@ public class Participante{
 		}
 		
 		try{
-			if(respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre().equals(Constantes.INTENCION_DESPEDIDA)){
+			if(respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre().equals(intencionDespedida)){
 				salida.cambiarSeTerminoElChat(true);
 			}
 		}catch(Exception e){

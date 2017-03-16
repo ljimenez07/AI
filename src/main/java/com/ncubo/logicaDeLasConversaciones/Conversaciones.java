@@ -11,6 +11,7 @@ import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
+import com.ncubo.chatbot.partesDeLaConversacion.IntencionesNoReferenciadas;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
@@ -33,6 +34,7 @@ public class Conversaciones{
 	private HistoricosDeConversaciones historicoDeConversaciones;
 	private HiloParaBorrarConversacionesInactivas hiloParaBorrarConversacionesInactivas;
 	private final InformacionDelCliente informacionDelCliente;
+	private IntencionesNoReferenciadas intencionesNoReferenciadas;
 	
 	public Conversaciones(Conectores conectores, InformacionDelCliente cliente){
 		this.informacionDelCliente = cliente;
@@ -64,7 +66,7 @@ public class Conversaciones{
 					coversacion.cambiarParticipante(cliente);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}else{
-					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, intencionesNoReferenciadas);
 					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
 			}
@@ -75,7 +77,7 @@ public class Conversaciones{
 			if (! usuario.getIdSesion().equals("")){
 				if( ! existeLaConversacion(usuario.getIdSesion())){
 					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente);
+					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, intencionesNoReferenciadas);
 					synchronized(misConversaciones){
 						misConversaciones.put(usuario.getIdSesion(), coversacion);
 					}
@@ -399,11 +401,12 @@ public class Conversaciones{
 		return resultado;
 	}
 	
-	public void inicializar(String pathXML, TemariosDeUnCliente temarios) {
+	public void inicializar(String pathXML, TemariosDeUnCliente temarios, IntencionesNoReferenciadas intenciones) {
 		consultaDao = new ConsultaDao();
 		System.out.println("El path xml es: "+pathXML);
 		misTemarios = temarios;
 		consultaDao.establecerTemario(misTemarios);
+		intencionesNoReferenciadas = intenciones;
 	}
 	
 	public ConsultaDao obtenerConsultaDao(){

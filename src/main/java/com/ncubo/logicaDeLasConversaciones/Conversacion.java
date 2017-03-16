@@ -18,6 +18,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Despedida;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.HiloDeLaConversacion;
+import com.ncubo.chatbot.partesDeLaConversacion.IntencionesNoReferenciadas;
 import com.ncubo.chatbot.partesDeLaConversacion.Pregunta;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -64,7 +65,9 @@ public class Conversacion {
 	private String clusterId;
 	private String rankerId;
 	
-	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente){
+	private IntencionesNoReferenciadas intencionesNoReferenciadas;
+	
+	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, IntencionesNoReferenciadas intenciones){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
@@ -83,6 +86,7 @@ public class Conversacion {
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		email = new Email();
 		//temario = temarios.get(0);
+		intencionesNoReferenciadas = intenciones;
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -104,13 +108,13 @@ public class Conversacion {
 		System.out.println("Iniciar conversacion ...");
 		System.out.println("");
 		
-		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
+		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 		
-		Saludo saludoGeneral = (Saludo) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnSaludo);
+		Saludo saludoGeneral = (Saludo) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnSaludo,intencionesNoReferenciadas.getINTENCION_SALUDAR());
 		misSalidas.add(agente.decirUnaFrase(saludoGeneral, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		ponerComoYaTratado(this.temaActual, saludoGeneral);
 		
-		Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
+		Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
 		misSalidas.add(agente.decirUnaFrase(queQuiere, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		
 		ponerComoYaTratado(this.temaActual, queQuiere);
@@ -132,11 +136,11 @@ public class Conversacion {
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
-			respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);
+			respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
 			this.hilo.agregarUnaRespuesta(respuesta);
 	
 			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-				String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 				Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
@@ -166,7 +170,7 @@ public class Conversacion {
 				volverlARetomarUnTema(misSalidas, respuesta);
 			}else{
 				agente.cambiarANivelSuperior();
-				respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);
+				respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
 				if(esModoConsulta){
 					if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta, respuestaDelCliente)){
 						String idFraseActivada = respuesta.obtenerFraseActivada();
@@ -241,7 +245,7 @@ public class Conversacion {
 							this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
 					
 					agente.cambiarANivelSuperior();
-					respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual);
+					respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
 					
 					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta); 
 				}
@@ -328,7 +332,7 @@ public class Conversacion {
 				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
 				
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
 					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
@@ -393,7 +397,7 @@ public class Conversacion {
 	
 	private void decirTemaPreguntarPorOtraCosa(ArrayList<Salida> misSalidas, Respuesta respuesta, String respuestaDelCliente){
 		System.out.println("Se va a preguntar por otra cosa ...");							
-		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA);
+		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_PREGUNTAR_POR_OTRA_CONSULTA());
 
 		agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
 		
@@ -404,7 +408,7 @@ public class Conversacion {
 		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
 		
 		if (respuesta.hayProblemasEnLaComunicacionConWatson()){
-			String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_ERROR_CON_WATSON);
+			String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 			Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
 			misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 			ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
@@ -425,7 +429,7 @@ public class Conversacion {
 	
 	private void decirFraseRecordatoria(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		System.out.println("Frase recordatoria ...");
-		String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_RECORDAR_TEMAS);
+		String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_RECORDAR_TEMAS());
 		
 		Afirmacion fraseRecordatoria = (Afirmacion) this.agente.obtenerTemario().frase(nombreFrase);
 		misSalidas.add(agente.decirUnaFrase(fraseRecordatoria, respuesta, null, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
@@ -434,8 +438,8 @@ public class Conversacion {
 	
 	private void decirTemaNoEntendi(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		System.out.println("No entendi bien ...");
-		Tema miTema = this.agente.obtenerTemario().buscarTema(Constantes.INTENCION_NO_ENTIENDO);
-		String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_NO_ENTIENDO);
+		Tema miTema = this.agente.obtenerTemario().buscarTema(intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+		String nombreFrase = obtenerUnaFraseTipoPregunta(intencionesNoReferenciadas.getFRASES_INTENCION_NO_ENTIENDO());
 		
 		Pregunta fueraDeContexto = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
 		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
@@ -451,26 +455,26 @@ public class Conversacion {
 			}*/
 			
 			Tema miTema = null;
-			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_SALUDAR)){
+			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_SALUDAR())){
 				System.out.println("Quiere saludar ...");
 				
-				String saludo = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_SALUDAR);
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_SALUDAR);
+				String saludo = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_SALUDAR());
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 
 				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, saludar);
 				
-				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta);
+				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				//ponerComoYaTratado(temaActual, queQuiere);
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPEDIDA)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_DESPEDIDA())){
 				System.out.println("Quiere despedirse ...");
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPEDIDA);
-				String nombreFrase = obtenerUnaFraseDespedida(Constantes.FRASES_INTENCION_DESPEDIDA);
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_DESPEDIDA());
+				String nombreFrase = obtenerUnaFraseDespedida(intencionesNoReferenciadas.getFRASES_INTENCION_DESPEDIDA());
 				
 				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
@@ -478,30 +482,30 @@ public class Conversacion {
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_FUERA_DE_CONTEXTO)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO())){
 				System.out.println("Esta fuera de contexto ...");
-					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_FUERA_DE_CONTEXTO);
-					String nombreFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO);
+					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO());
+					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
 					
 					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
 					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(miTema, fueraDeContexto);
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_NO_ENTIENDO)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO())){
 				decirTemaNoEntendi(misSalidas, respuesta);
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_DESPISTADOR)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_DESPISTADOR())){
 				System.out.println("Quiere despistar  ...");
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_DESPISTADOR);
-				String nombreFrase = obtenerUnaFraseTipoPregunta(Constantes.FRASES_INTENCION_DESPISTADOR);
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_DESPISTADOR());
+				String nombreFrase = obtenerUnaFraseTipoPregunta(intencionesNoReferenciadas.getFRASES_INTENCION_DESPISTADOR());
 				
 				Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
 				
 				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, despistar);
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_REPETIR_ULTIMA_FRASE)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_REPETIR_ULTIMA_FRASE())){
 				System.out.println("Quiere repetir  ...");
-				String idFrase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_REPETIR);
+				String idFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_REPETIR());
 				
 				Afirmacion conjuncion = (Afirmacion) this.agente.obtenerTemario().frase(idFrase);
 
@@ -513,20 +517,20 @@ public class Conversacion {
 	
 				//temasPendientes.borrarLosTemasPendientes();
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_AGRADECIMIENTO)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_AGRADECIMIENTO())){
 				System.out.println("Esta agradeciendo ...");							
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_AGRADECIMIENTO);
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_AGRADECIMIENTO());
 
-				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_AGRADECIMIENTO);
+				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_AGRADECIMIENTO());
 				Afirmacion queQuiere = (Afirmacion) this.agente.obtenerTemario().frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, queQuiere);
 				
-			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR)){
+			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_QUE_PUEDEN_PREGUNTAR())){
 				System.out.println("Quiere saber que hago ...");							
-				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR);
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_QUE_PUEDEN_PREGUNTAR());
 
-				String frase = obtenerUnaFraseAfirmativa(Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR);
+				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_QUE_PUEDEN_PREGUNTAR());
 				Afirmacion queQuiere = (Afirmacion) this.agente.obtenerTemario().frase(frase);
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, queQuiere);

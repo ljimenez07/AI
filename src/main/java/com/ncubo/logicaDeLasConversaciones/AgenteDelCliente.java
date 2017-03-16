@@ -20,11 +20,12 @@ import com.ncubo.chatbot.participantes.Cliente;
 public class AgenteDelCliente extends AgenteDeLaConversacion{
 
 	private Hashtable<String, String> misUltimosResultados = new Hashtable<>();
-	
+	private TemariosDeUnCliente temariosDelCliente;
  	public AgenteDelCliente(){}
 	
 	public AgenteDelCliente(TemariosDeUnCliente temarios){
 		super(temarios);
+		temariosDelCliente = temarios;
 	}
 	
 	@Override
@@ -93,7 +94,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		}
 		
 		if(salida == null){
-			salida = this.decir(frase, respuesta, tema);
+			salida = this.decir(frase, respuesta, tema, temariosDelCliente.obtenerIntenciones().getINTENCION_DESPEDIDA());
 		}
 		return salida;
 	}

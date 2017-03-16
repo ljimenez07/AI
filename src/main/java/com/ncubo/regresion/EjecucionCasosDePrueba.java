@@ -136,7 +136,7 @@ public class EjecucionCasosDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente);
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente, temario.obtenerIntenciones());
 
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);

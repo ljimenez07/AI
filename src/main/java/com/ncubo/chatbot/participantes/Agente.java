@@ -131,17 +131,17 @@ public abstract class Agente extends Participante{
 		}
 	}
 	
-	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase){
+	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
 		Respuesta respuesta = null;
 		if(hayQueEvaluarEnNivelSuperior){
-			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase);
+			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase, intencionNoEntiendo);
 		}else{
-			respuesta = analizarRespuesta(respuestaDelCliente, frase);
+			respuesta = analizarRespuesta(respuestaDelCliente, frase, intencionNoEntiendo);
 		}
 		return respuesta;
 	}
 	
-	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase){
+	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
 		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
 		
 		cambiarDeTemaForzosamente = false;
@@ -219,7 +219,7 @@ public abstract class Agente extends Participante{
 					if (! intencionDelCliente.equals("") && workspace != null){
 						nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
 					}else{
-						nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
+						nombreDeLaIntencionGeneralActiva = intencionNoEntiendo;
 						hayIntencionNoAsociadaANingunWorkspace = true;
 					}
 					
@@ -232,7 +232,7 @@ public abstract class Agente extends Participante{
 			
 		}catch(Exception e){
 			System.out.println("No hay ninguna intencion real o de confianza");
-			nombreDeLaIntencionGeneralActiva = Constantes.INTENCION_NO_ENTIENDO;
+			nombreDeLaIntencionGeneralActiva = intencionNoEntiendo;
 			hayIntencionNoAsociadaANingunWorkspace = true;
 			noEntendiLaUltimaRespuesta = true;
 		}
@@ -240,7 +240,7 @@ public abstract class Agente extends Participante{
 		return respuesta;
 	}
 	
-	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase){
+	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
 		Respuesta respuesta = miTopico.hablarConWatson(frase, respuestaDelCliente);
 		cambiarDeTemaForzosamente = false;
 		hayIntencionNoAsociadaANingunWorkspace = false;
@@ -263,7 +263,7 @@ public abstract class Agente extends Participante{
 					pareceQueQuiereCambiarDeTemaForzosamente = true;
 				}
 				
-				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase); // General
+				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase, intencionNoEntiendo); // General
 				cambiarDeTema = true;
 			}else{
 				if(frase.esMandatorio()){	

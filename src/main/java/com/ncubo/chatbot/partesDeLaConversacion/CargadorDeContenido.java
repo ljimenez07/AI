@@ -31,6 +31,7 @@ public abstract class CargadorDeContenido {
 	private ModoDeLaVariable modoDeTrabajo;
 	private ArrayList<Contenido> misContenidos;
 	private String pathFileXML;
+	private IntencionesNoReferenciadas intencionesYFrases;
 	
 	protected CargadorDeContenido(String path) {
 		pathFileXML = path;
@@ -109,6 +110,7 @@ public abstract class CargadorDeContenido {
 			
 			// Intenciones No Referenciadas
 			try{
+				intencionesYFrases = new IntencionesNoReferenciadas();
 				System.out.println("\nCargando las intenciones No Referenciadas ...\n");
 				NodeList variables = doc.getElementsByTagName("intencionesNoReferenciadas");
 				Node variablesNode = variables.item(0);
@@ -137,47 +139,47 @@ public abstract class CargadorDeContenido {
 					}
 					
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_SALUDAR)){
-						Constantes.INTENCION_SALUDAR = id;
-						Constantes.FRASES_INTENCION_SALUDAR = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_SALUDAR(id);
+						intencionesYFrases.setFRASES_INTENCION_SALUDAR(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_DESPEDIDA)){
-						Constantes.INTENCION_DESPEDIDA = id;
-						Constantes.FRASES_INTENCION_DESPEDIDA = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_DESPEDIDA(id);
+						intencionesYFrases.setFRASES_INTENCION_DESPEDIDA(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_DESPISTADOR)){
-						Constantes.INTENCION_DESPISTADOR = id;
-						Constantes.FRASES_INTENCION_DESPISTADOR = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_DESPISTADOR(id);
+						intencionesYFrases.setFRASES_INTENCION_DESPISTADOR(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_ERROR_CON_WATSON)){
-						Constantes.INTENCION_ERROR_CON_WATSON = id;
-						Constantes.FRASES_INTENCION_ERROR_CON_WATSON = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_ERROR_CON_WATSON(id);
+						intencionesYFrases.setFRASES_INTENCION_ERROR_CON_WATSON(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_FUERA_DE_CONTEXTO)){
-						Constantes.INTENCION_FUERA_DE_CONTEXTO = id;
-						Constantes.FRASES_INTENCION_FUERA_DE_CONTEXTO = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_FUERA_DE_CONTEXTO(id);
+						intencionesYFrases.setFRASES_INTENCION_FUERA_DE_CONTEXTO(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_NO_ENTIENDO)){
-						Constantes.INTENCION_NO_ENTIENDO = id;
-						Constantes.FRASES_INTENCION_NO_ENTIENDO = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_NO_ENTIENDO(id);
+						intencionesYFrases.setFRASES_INTENCION_NO_ENTIENDO(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_REPETIR_ULTIMA_FRASE)){
-						Constantes.INTENCION_REPETIR_ULTIMA_FRASE = id;
-						Constantes.FRASES_INTENCION_REPETIR = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_REPETIR_ULTIMA_FRASE(id);
+						intencionesYFrases.setFRASES_INTENCION_REPETIR(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_AGRADECIMIENTO)){
-						Constantes.INTENCION_AGRADECIMIENTO = id;
-						Constantes.FRASES_INTENCION_AGRADECIMIENTO = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_AGRADECIMIENTO(id);
+						intencionesYFrases.setFRASES_INTENCION_AGRADECIMIENTO(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_QUE_PUEDEN_PREGUNTAR)){
-						Constantes.INTENCION_QUE_PUEDEN_PREGUNTAR = id;
-						Constantes.FRASES_INTENCION_QUE_PUEDEN_PREGUNTAR = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_QUE_PUEDEN_PREGUNTAR(id);
+						intencionesYFrases.setFRASES_INTENCION_QUE_PUEDEN_PREGUNTAR(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA)){
-						Constantes.INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = id;
-						Constantes.FRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA = frasesDeIntenciones;
+						intencionesYFrases.setINTENCION_PREGUNTAR_POR_OTRA_CONSULTA(id);
+						intencionesYFrases.setFRASES_INTENCION_PREGUNTAR_POR_OTRA_CONSULTA(frasesDeIntenciones);
 					}
 					if(tipoValor.equals(Constantes.TIPO_INTENCION_RECORDAR_TEMA)){
-						Constantes.FRASES_INTENCION_RECORDAR_TEMAS = frasesDeIntenciones;
+						intencionesYFrases.setFRASES_INTENCION_RECORDAR_TEMAS(frasesDeIntenciones);
 					}
 				}
 			}catch(Exception e){
@@ -442,6 +444,10 @@ public abstract class CargadorDeContenido {
 
 	public ArrayList<Contenido> obtenerMisContenidos(){
 		return misContenidos;
+	}
+	
+	public IntencionesNoReferenciadas obtenerIntencionesNoReferenciadas(){
+		return intencionesYFrases;
 	}
 	
 	public Frase frase(ArrayList<Frase> frases, String nombreDeLaFrase){

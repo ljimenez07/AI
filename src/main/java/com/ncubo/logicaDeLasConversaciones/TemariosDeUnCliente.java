@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Contenido;
+import com.ncubo.chatbot.partesDeLaConversacion.IntencionesNoReferenciadas;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.WorkSpace;
 
 public class TemariosDeUnCliente extends ArrayList<TemarioDelCliente>{
 	
 	private ContenidoDelCliente contenidoDelCliente;
+	private IntencionesNoReferenciadas intencionesNoReferenciadas;
 	
 	public TemariosDeUnCliente(String pathXML){
 		contenidoDelCliente = new ContenidoDelCliente(pathXML);
@@ -22,7 +24,12 @@ public class TemariosDeUnCliente extends ArrayList<TemarioDelCliente>{
 			for(Contenido contenido: contenidos){
 				agregarTemario(new TemarioDelCliente(contenido));
 			}
+			intencionesNoReferenciadas = contenidoDelCliente.obtenerIntencionesNoReferenciadas();
 		}
+	}
+	
+	public IntencionesNoReferenciadas obtenerIntenciones(){
+		return intencionesNoReferenciadas;
 	}
 	
 	private boolean existeElTemario(TemarioDelCliente temario){
