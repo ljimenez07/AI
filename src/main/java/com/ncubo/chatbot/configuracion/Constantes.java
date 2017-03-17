@@ -112,7 +112,7 @@ public class Constantes {
 	// Email
 	public static String EMAIL_USER = "server.arts@gmail.com";
 	public static String EMAIL_PASS = "sruxxdbpfzwhkxrn";
-	public static String EMAIL_PROJECT_NAME = "LogicaDeConversaciones";
+	public static String EMAIL_PROJECT_NAME = "Ncubo";
 	public static String EMAIL_IMAGE_LOGO = "http://devs.ncubo.com:7870/logo.png";
 	public static String EMAIL_IMAGE_FOOTER = "http://devs.ncubo.com:7870/footerimg.png";
 	public static String EMAIL_COLOR_BASE = "#48a1b4";

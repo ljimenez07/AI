@@ -597,6 +597,15 @@ public class Conversacion {
 					}else{
 						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
 					}
+				}
+				if(respuesta.obtenerElementoDelContextoDeWatson("enviarRequisitos").equals("true"))
+				{
+					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
+					if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo");
+					}else{
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
+					}
 				}else{
 					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index));
 				}
@@ -685,6 +694,14 @@ public class Conversacion {
 		String tittle = "Conversacion con el agente de la Muni - "+Calendar.getInstance().getTime();
 		return email.sendEmail(tittle, correos, body);
 	}
+	
+	public boolean enviarRequisitosCorreo(String correo, String requisitos){
+		Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos);
+		String body = miAfirmacion.texto().getTextoDeLaFrase();
+		String tittle = temaActual.getDescripcion()+"-"+Calendar.getInstance().getTime();;
+		return email.sendEmail(tittle, correo, body);
+	}
+	
 	
 	private ArrayList<Salida> agregarSalidasAlHistorico(ArrayList<Salida> misSalidas, Date fecha){
 		for(Salida salida:misSalidas){
