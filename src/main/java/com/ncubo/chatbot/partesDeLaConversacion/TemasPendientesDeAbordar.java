@@ -46,7 +46,7 @@ public class TemasPendientesDeAbordar {
 	public void borrarUnTemaPendiente(TemaPendiente tema){
 		for(Iterator<TemaPendiente> itr = temasPendientes.iterator(); itr.hasNext();)  {
 			TemaPendiente miTema = (TemaPendiente) itr.next();
-			if(miTema.getTemaActual().equals(tema))
+			if(miTema.getTemaActual().getIdTema().equals(tema.getTemaActual().getIdTema()))
 				temasPendientes.remove(tema);
 		}
 	}
