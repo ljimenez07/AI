@@ -32,6 +32,7 @@ import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.controller.FiltroDeConversaciones;
 import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
+import com.ncubo.logicaDeLasConversaciones.AgenteDelCliente;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
 import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
@@ -136,7 +137,7 @@ public class EjecucionCasosDePrueba {
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDeLaRegresion(temario), informacionDelCliente, temario.obtenerIntenciones());
+		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones());
 
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);

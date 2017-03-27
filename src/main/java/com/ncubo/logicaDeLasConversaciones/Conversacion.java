@@ -597,7 +597,7 @@ public class Conversacion {
 						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
 					}
 				}
-				if(respuesta.obtenerElementoDelContextoDeWatson("enviarRequisitos").equals("true"))
+				if(respuesta.obtenerElementoDelContextoDeWatson("enviarInfoAlCorreo").equals("true"))
 				{
 					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
 					if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
