@@ -211,7 +211,6 @@ public class Conversacion {
 			decirTemaNoEntendi(misSalidas, respuesta);
 		}
 		
-		
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
 		misSalidas = agregarSalidasAlHistorico(misSalidas, fechaDelUltimoRegistroDeLaConversacion);
 		

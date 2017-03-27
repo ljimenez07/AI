@@ -3,7 +3,9 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.ncubo.chatbot.bloquesDeLasFrases.BloquesDelTema;
 import com.ncubo.chatbot.exceptiones.ChatException;
+import com.ncubo.chatbot.watson.Intencion;
 
 public class Tema
 {
@@ -13,11 +15,13 @@ public class Tema
 	private final String nombre;
 	private final String descripcion;
 	private final String nombreDelWorkspaceAlQuePertenece;
-	private final String intencionGeneralAlQuePertenece;
+	private final Intencion intencionGeneralAlQuePertenece;
 	private final boolean sePuedeRepetir;
 	private final List<String> variablesDeContextoQueElTemaOcupa;
+	private final List<Intencion> intencionesDelTema;
+	private final BloquesDelTema bloquesDelTema;
 	
-	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, String idDeLaIntencionGeneral, Frase... frases){
+	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, Intencion idDeLaIntencionGeneral, List<Intencion> intencionesDelTema, BloquesDelTema bloquesDelTema, Frase... frases){
 		this.idDelTema = idDelTema;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -27,9 +31,11 @@ public class Tema
 		this.frases = frases;
 		this.dependencias = new Temas();
 		this.variablesDeContextoQueElTemaOcupa = new ArrayList<>();
+		this.intencionesDelTema = intencionesDelTema;
+		this.bloquesDelTema = bloquesDelTema;
 	}
 	
-	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, String idDeLaIntencionGeneral, List<String> variables, Frase... frases){
+	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, Intencion idDeLaIntencionGeneral, List<String> variables, List<Intencion> intencionesDelTema, BloquesDelTema bloquesDelTema, Frase... frases){
 		this.idDelTema = idDelTema;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -39,16 +45,17 @@ public class Tema
 		this.frases = frases;
 		this.dependencias = new Temas();
 		this.variablesDeContextoQueElTemaOcupa = variables;
+		this.intencionesDelTema = intencionesDelTema;
+		this.bloquesDelTema = bloquesDelTema;
 	}
 	
-	public Tema dependeDe(Tema otroTema)
-	{
+	public Tema dependeDe(Tema otroTema){
 		dependencias.add(otroTema);
 		return this;
 	}
 	
 	public String getIntencionGeneralAlQuePertenece() {
-		return intencionGeneralAlQuePertenece;
+		return intencionGeneralAlQuePertenece.getNombre();
 	}
 
 	public String getIdTema(){

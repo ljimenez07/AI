@@ -409,7 +409,7 @@ public abstract class CargadorDeContenido {
 						}
 						
 						Tema temaACargar = new Tema(idDelTema, nombreDelTema, descripcionDelTema, nombreWorkspace, 
-								Boolean.parseBoolean(sePuedeRepetir), idDeLaIntencionGeneral, frasesACargar);
+								Boolean.parseBoolean(sePuedeRepetir), new Intencion(idDeLaIntencionGeneral), null, null, frasesACargar);
 						temasDelDiscurso.add(temaACargar);
 						
 						// Dependencias
