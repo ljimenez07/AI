@@ -3,6 +3,9 @@ package com.ncubo.logicaDeLasConversaciones;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.List;
+
+import com.ibm.watson.developer_cloud.conversation.v1.model.Entity;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
@@ -31,10 +34,11 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	@Override
 	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
 		misUltimosResultados.clear();
-		
+		ComponentesDeLaFrase miFraseADecir = null;
 		Salida salida = null;
 		if(frase.hayFrasesConCondicion()){
 			ArrayList<ComponentesDeLaFrase> misFrases = frase.extraerFrasesConCondicion();
+			
 			// TODO Evaluar si tiene plaseholders
 			for(ComponentesDeLaFrase miFrase: misFrases){
 				String comando = "";
@@ -61,6 +65,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 					if(cliente.evaluarCondicion(comando).contains("true")){
 						salida = new Salida();
 						salida.escribir(miFrase, respuesta, tema, frase);
+						miFraseADecir = miFrase;
 						break; // Para que ya no siga evaluando mas
 					}
 				} catch (Exception e) {
@@ -70,11 +75,12 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		}
 		
 		// TODO Hay frases con plaseholders
-		if(frase.hayFrasesConPlaceholders() && salida == null){
+		if(frase.hayFrasesConPlaceholders()){
 			salida = new Salida();
 			String idAudio = "";
 			
-			final ComponentesDeLaFrase miFraseADecir = frase.extraerFraseSinonimoConPlaceholders();
+			if(miFraseADecir == null)
+				miFraseADecir = frase.extraerFraseSinonimoConPlaceholders();
 			String fraseConPlaceholder = miFraseADecir.getTextoDeLaFrase();
 			
 			for(Placeholder placeholder: miFraseADecir.obtenerLosPlaceholders()){
@@ -156,6 +162,17 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		return valorARetornar;
 	}
 	
+	private String procesarEntidadSysNumber (List<Entity> lista){
+		  String entidades = "";
+
+		 for(Entity record: lista){
+		          if(record.getEntity().equals("sys-number"))
+		        	return record.getValue();
+		      }
+		 
+		 return entidades;
+	}
+	
 	private void agregarTodosLosParametrosALasVariablesDeAmbiente(Respuesta respuesta, Cliente cliente, ArrayList<Placeholder> plaseholders){
 		
 		actualizarTodasLasVariablesDeContexto(respuesta, cliente);
@@ -164,11 +181,14 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		for(Placeholder placeholder: plaseholders){
 			if(placeholder.getTipoDePlaceholder().equals(TiposDeVariables.ENUM)){
 				String[] valores = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(placeholder.getNombreDelPlaceholder()).getValorDeLaVariable();
+				
 				//Lista miListaDeSinonimos = new Lista();
 				String comando = String.format("%s = Lista();", "lista");
 				ejecutarParametroEnElParser(cliente, comando);
 				
 				for(String valor: valores){
+					if(valor.equals("sys-number"))
+						valor = procesarEntidadSysNumber(respuesta.messageResponse().getEntities());
 					//miListaDeSinonimos.guardarObjeto(new Hilera(valor));
 					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", valor);
 					ejecutarParametroEnElParser(cliente, comando);
@@ -197,6 +217,10 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.CONTEXTO)){
 				try{
 					String nis = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
+					if(nis.equals(""))
+						nis = variable.getValorDeLaVariable()[0];
+					if(nis.equals("sys-number"))
+						nis = procesarEntidadSysNumber(respuesta.messageResponse().getEntities());
 					String comando = String.format("%s = Lista();", "lista");
 					ejecutarParametroEnElParser(cliente, comando);
 					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", nis);
