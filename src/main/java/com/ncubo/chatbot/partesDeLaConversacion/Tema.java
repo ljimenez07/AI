@@ -1,9 +1,11 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import com.ncubo.chatbot.bloquesDeLasFrases.BloquesDelTema;
+import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.Intencion;
 
@@ -49,6 +51,14 @@ public class Tema
 		this.bloquesDelTema = bloquesDelTema;
 	}
 	
+	public boolean elTemaTieneBloques(){
+		return bloquesDelTema.elTemaTieneBloques();
+	}
+	
+	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual){
+		return bloquesDelTema.buscarSiguienteBloqueADecir(bloquesYaConcluidos, bloqueActual);
+	}
+	
 	public Tema dependeDe(Tema otroTema){
 		dependencias.add(otroTema);
 		return this;
@@ -74,7 +84,7 @@ public class Tema
 		return nombreDelWorkspaceAlQuePertenece;
 	}
 	
-	public Frase buscarUnaFrase(String nombreDeLaFrase){
+	public Frase buscarUnaFrase(String nombreDeLaFrase, FrasesDelBloque bloque){
 		Frase resultado = null;
 		for(int index = 0; index < frases.length; index ++){
 			if(frases[index].obtenerNombreDeLaFrase().equals(nombreDeLaFrase.trim())){
@@ -82,6 +92,11 @@ public class Tema
 				break;
 			}
 		}
+		
+		if(resultado == null && bloque != null){
+			resultado = bloque.buscarUnaFrase(nombreDeLaFrase);
+		}
+		
 		if(resultado != null){
 			return resultado;
 		}

@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
+import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
 import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
@@ -49,6 +50,7 @@ public class Conversacion {
 	private Agente agente;
 	private Tema temaActual = null;
 	private Frase fraseActual = null;
+	private FrasesDelBloque frasesDelBloqueActual = null;
 	private Estadisticas estadisticasTemasTratados;
 	private ArrayList<Salida> miUltimaSalida;
 	private final Constantes.ModoDeLaVariable modoDeResolucionDeResultadosFinales;
@@ -224,6 +226,7 @@ public class Conversacion {
 			agente.yaNoSeTieneQueAbordarElTema();
 			misSalidas.add(agente.volverAPreguntarUnaFraseConMeRindo(fraseActual, respuesta, temaActual, true, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 			temaActual = null;
+			frasesDelBloqueActual = null;
 		}else{
 			if (agente.entendiLaUltimaPregunta()){
 				idFraseActivada = respuesta.obtenerFraseActivada();
@@ -231,10 +234,13 @@ public class Conversacion {
 				
 				if(agente.hayQueCambiarDeTema() && misSalidas.isEmpty()){// Hay que buscar un nuevo tema y no he dicho nada aun
 					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
-					if(respuesta.seTerminoElTema())
+					if(respuesta.seTerminoElTema()){
 						temaActual = null;
+						frasesDelBloqueActual = null;
+					}
 				}else if(agente.hayQueCambiarDeTema() && ! misSalidas.isEmpty()){
 					temaActual = null;
+					frasesDelBloqueActual = null;
 					agente.cambiarANivelSuperior();
 				}
 			}else{ 
@@ -271,6 +277,7 @@ public class Conversacion {
 						}else{
 							temaActual = null;
 							fraseActual = null;	
+							frasesDelBloqueActual = null;
 						}
 					}
 				}
@@ -324,6 +331,14 @@ public class Conversacion {
 				System.out.println("El proximo tema a tratar es: "+this.temaActual.getIdTema());
 				
 				// Activar en el contexto el tema
+				if(temaActual.elTemaTieneBloques()){
+					FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
+					if(bloqueADecir != null){
+						frasesDelBloqueActual = bloqueADecir;
+						agente.activarTemaEnElContextoDeWatson(frasesDelBloqueActual.getIdDelBloque());
+					}
+				}
+				
 				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 				
@@ -369,7 +384,7 @@ public class Conversacion {
 							
 							if( ! idFraseActivada.isEmpty()){
 								System.out.println("Id de la frase a recordar: "+idFraseActivada);
-								Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada);
+								Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
 								
 								String context = respuesta.messageResponse().getContext().toString();
 								JSONObject obj = null;
@@ -460,7 +475,7 @@ public class Conversacion {
 				String saludo = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_SALUDAR());
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 
-				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo);
+				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, saludar);
 				
@@ -475,7 +490,7 @@ public class Conversacion {
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_DESPEDIDA());
 				String nombreFrase = obtenerUnaFraseDespedida(intencionesNoReferenciadas.getFRASES_INTENCION_DESPEDIDA());
 				
-				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase);
+				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
 				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 				ponerComoYaTratado(miTema, saludar);
 				
@@ -486,7 +501,7 @@ public class Conversacion {
 					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO());
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
 					
-					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase);
+					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
 					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 					ponerComoYaTratado(miTema, fueraDeContexto);
 				
@@ -578,7 +593,7 @@ public class Conversacion {
 		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta);
 		if( ! idFraseActivada.equals("")){
 			
-			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada);
+			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
 			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 			fraseActual = miPregunta;
 			ponerComoYaTratado(tema, miPregunta);
@@ -592,21 +607,21 @@ public class Conversacion {
 				if(afirmativas.get(index).equals("envioExitosoDeCorreo")){
 					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
 					if(this.enviarCorreo(email)){
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo");
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
 					}else{
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
 					}
 				}
 				if(respuesta.obtenerElementoDelContextoDeWatson("enviarInfoAlCorreo").equals("true"))
 				{
 					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
 					if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo");
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
 					}else{
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo");
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
 					}
 				}else{
-					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index));
+					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index), frasesDelBloqueActual);
 				}
 				
 				if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
@@ -695,12 +710,11 @@ public class Conversacion {
 	}
 	
 	public boolean enviarRequisitosCorreo(String correo, String requisitos){
-		Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos);
+		Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos, frasesDelBloqueActual);
 		String body = miAfirmacion.texto().getTextoDeLaFrase();
 		String tittle = temaActual.getDescripcion()+"-"+Calendar.getInstance().getTime();;
 		return email.sendEmail(tittle, correo, body);
 	}
-	
 	
 	private ArrayList<Salida> agregarSalidasAlHistorico(ArrayList<Salida> misSalidas, Date fecha){
 		for(Salida salida:misSalidas){

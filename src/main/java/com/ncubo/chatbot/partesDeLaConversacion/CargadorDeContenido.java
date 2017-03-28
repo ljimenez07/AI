@@ -3,6 +3,7 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -12,6 +13,8 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.ncubo.chatbot.bloquesDeLasFrases.BloquesDelTema;
+import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
@@ -376,6 +379,9 @@ public abstract class CargadorDeContenido {
 					Element temasElement = (Element) temasNode;
 					NodeList tema = temasElement.getElementsByTagName("tema");
 					for (int temp = 0; temp < tema.getLength(); temp++) {
+						BloquesDelTema bloquesDelTema = new BloquesDelTema();
+						List<Intencion> intencionesDelTema = new ArrayList<>();
+						
 						Node nNode = tema.item(temp);
 						Element eElement = (Element) nNode;
 						
@@ -397,6 +403,54 @@ public abstract class CargadorDeContenido {
 						String idDeLaIntencionGeneral = eElement.getElementsByTagName("idDeLaIntencionGeneral").item(0).getTextContent();
 						System.out.println("idDeLaIntencionGeneral : " + idDeLaIntencionGeneral);
 						
+						try{
+							String intenciones = eElement.getElementsByTagName("intencionesDelTema").item(0).getTextContent();
+							System.out.println("intencionesDelTema : " + intenciones);
+							String[] misItencioes = intenciones.split(",");
+							for(int contador=0; contador < misItencioes.length; contador ++){
+								intencionesDelTema.add(new Intencion(misItencioes[contador]));
+							}
+							
+							// Bloques
+							NodeList bloques = eElement.getElementsByTagName("bloques");
+							Node bloquesNode = bloques.item(0);
+							Element bloquesElement = (Element) bloquesNode;
+							NodeList bloque = bloquesElement.getElementsByTagName("bloque");
+							for (int index = 0; index < bloque.getLength(); index++) {
+								Node nNodeBloque = bloque.item(index);
+								Element eElementBloque = (Element) nNodeBloque;
+								
+								String idDelBloque = eElementBloque.getAttribute("id");
+								String idsDeBloquesDependientes = eElementBloque.getAttribute("dependencias");
+								FrasesDelBloque miBloque = new FrasesDelBloque(idDelBloque);
+		
+								NodeList frase = eElementBloque.getElementsByTagName("frase");
+								for (int indexFrase = 0; indexFrase < frase.getLength(); indexFrase++) {
+									System.out.println(frase.item(indexFrase).getTextContent());
+									miBloque.agregarFrase(this.frase(lasFrases, frase.item(index).getTextContent()));
+								}
+								
+								if( ! idsDeBloquesDependientes.isEmpty()){
+									String[] misDependendiasDeBloques = idsDeBloquesDependientes.split(",");
+									for(int contador = 0; contador < misDependendiasDeBloques.length; contador ++){
+										FrasesDelBloque bloqueDependiente = bloquesDelTema.buscarUnBloque(misDependendiasDeBloques[contador]);
+										boolean elBloqueExiste = bloqueDependiente != null;
+										if(elBloqueExiste){
+											miBloque.agregarDependencia(bloqueDependiente);
+										}else{
+											throw new ChatException(String.format("El bloque %s, en el tema %s, no ha sido agregado previamente", misDependendiasDeBloques[contador], idDelTema));
+										}
+									}
+								}
+								
+								if( ! bloquesDelTema.agregarBloque(miBloque)){
+									throw new ChatException(String.format("El bloque %s, en el tema %s, no pudo ser agregado, verifique los ids que no esten repetidos", idDelBloque, idDelTema));
+								}
+							}
+						}catch(Exception e){
+							//throw new ChatException(e.getMessage());
+						}
+						
 						// Frases
 						NodeList frases = eElement.getElementsByTagName("frases");
 						Node frasesNode = frases.item(0);
@@ -409,7 +463,7 @@ public abstract class CargadorDeContenido {
 						}
 						
 						Tema temaACargar = new Tema(idDelTema, nombreDelTema, descripcionDelTema, nombreWorkspace, 
-								Boolean.parseBoolean(sePuedeRepetir), new Intencion(idDeLaIntencionGeneral), null, null, frasesACargar);
+								Boolean.parseBoolean(sePuedeRepetir), new Intencion(idDeLaIntencionGeneral), intencionesDelTema, bloquesDelTema, frasesACargar);
 						temasDelDiscurso.add(temaACargar);
 						
 						// Dependencias

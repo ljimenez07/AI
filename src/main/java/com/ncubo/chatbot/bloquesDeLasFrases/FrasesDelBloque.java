@@ -23,4 +23,30 @@ public class FrasesDelBloque extends Bloque{
 		misDependencias.add(bloque);
 	}
 	
+	public boolean tieneDependencias(){
+		return ! misDependencias.isEmpty();
+	}
+	
+	public Frase buscarUnaFrase(String nombreDeLaFrase){
+		Frase resultado = null;
+		for(int index = 0; index < misFrases.size(); index ++){
+			if(misFrases.get(index).obtenerNombreDeLaFrase().equals(nombreDeLaFrase.trim())){
+				resultado = misFrases.get(index);
+				break;
+			}
+		}
+		return resultado;
+	}
+	
+	public boolean todasLasDependenciasFueronConcluidas(BloquesDelTema bloquesYaConcluidos){
+		for(Bloque bloque: misDependencias){
+			FrasesDelBloque bloqueDependiente = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
+			boolean elBloqueYaFueConcluido = bloqueDependiente != null;
+			if( ! elBloqueYaFueConcluido){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 }
