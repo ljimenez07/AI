@@ -427,7 +427,7 @@ public abstract class CargadorDeContenido {
 								NodeList frase = eElementBloque.getElementsByTagName("frase");
 								for (int indexFrase = 0; indexFrase < frase.getLength(); indexFrase++) {
 									System.out.println(frase.item(indexFrase).getTextContent());
-									miBloque.agregarFrase(this.frase(lasFrases, frase.item(index).getTextContent()));
+									miBloque.agregarFrase(this.frase(lasFrases, frase.item(indexFrase).getTextContent()));
 								}
 								
 								if( ! idsDeBloquesDependientes.isEmpty()){

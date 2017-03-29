@@ -51,12 +51,12 @@ public class Constantes {
 	// Agente
 	public static String WORKSPACE_GENERAL = "general";
 	public static String ANYTHING_ELSE = "anyThingElse";
-	public static String CAMBIAR_INTENCION = "cambiarIntencion";
+	public static String TERMINO_BLOQUE = "terminoBloque";
 	public static String NODO_ACTIVADO = "nodo";
 	public static String TERMINO_EL_TEMA = "terminoTema";
 	public static String ORACIONES_AFIRMATIVAS = "oracionesAfirmativas";
-	public static String CAMBIAR_A_GENERAL = "cambiarAGeneral";
 	public static String ID_TEMA = "idTema";
+	public static String ID_BLOQUE = "idBloque";
 	public static int MAXIMO_DE_INTENTOS_OPCIONALES = 4; // Sino se aborda el tema
 	
 	// Tipos de intenciones

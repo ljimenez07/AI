@@ -297,9 +297,8 @@ public abstract class Agente extends Participante{
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 	    borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);
 	    borrarUnaVariableDelContexto(Constantes.ORACIONES_AFIRMATIVAS);
-	    borrarUnaVariableDelContexto(Constantes.CAMBIAR_A_GENERAL);
 	    borrarUnaVariableDelContexto(Constantes.TERMINO_EL_TEMA);
-		borrarUnaVariableDelContexto(Constantes.CAMBIAR_INTENCION);
+		borrarUnaVariableDelContexto(Constantes.TERMINO_BLOQUE);
 		
 		return respuesta;
 	}
@@ -479,9 +478,8 @@ public abstract class Agente extends Participante{
 		borrarUnaVariableDelContexto(Constantes.ANYTHING_ELSE);
 		borrarUnaVariableDelContexto(Constantes.NODO_ACTIVADO);
 		borrarUnaVariableDelContexto(Constantes.ORACIONES_AFIRMATIVAS);
-		borrarUnaVariableDelContexto(Constantes.CAMBIAR_A_GENERAL);
 		borrarUnaVariableDelContexto(Constantes.TERMINO_EL_TEMA);
-		borrarUnaVariableDelContexto(Constantes.CAMBIAR_INTENCION);
+		borrarUnaVariableDelContexto(Constantes.TERMINO_BLOQUE);
 		
 		return miRespuesta;
 	}

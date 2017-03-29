@@ -285,7 +285,7 @@ public class Conversaciones{
 		
 		public void run(){
 			TextToSpeechWatson.getInstance(usuarioTTS, contrasenaTTS, vozTTS, usuarioFTP, contrasenaFTP, hostFTP, puetoFTP, carpetaFTP, pathAGuardar, urlAReproducir);
-			System.out.println(String.format("El path a guardar los audios es %s y la url publica es %s", pathAGuardar, urlAReproducir));
+			System.out.println(String.format("El path a guardar los audios es '%s' y la url publica es '%s'", pathAGuardar, urlAReproducir));
 			if (AudiosXMLDeLosClientes.getInstance().exiteElArchivoXMLDeAudios(this.pathXMLAudios)){
 				AudiosXMLDeLosClientes.getInstance().cargarLosNombresDeLosAudios(idCliente, pathXMLAudios);
 			}

@@ -232,16 +232,26 @@ public class Conversacion {
 				idFraseActivada = respuesta.obtenerFraseActivada();
 				extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
 				
-				if(agente.hayQueCambiarDeTema() && misSalidas.isEmpty()){// Hay que buscar un nuevo tema y no he dicho nada aun
-					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
+				if(agente.hayQueCambiarDeTema()){
+					hilo.limpiarLosBloquesConcluidosDelTemaActual();
+					if(misSalidas.isEmpty()){// Hay que buscar un nuevo tema y no he dicho nada aun
+						respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
+						if(respuesta.seTerminoElTema()){
+							temaActual = null;
+							frasesDelBloqueActual = null;
+						}
+					}else{
+						temaActual = null;
+						frasesDelBloqueActual = null;
+						agente.cambiarANivelSuperior();
+					}
+				}else if(respuesta.seTerminoElBloque() & frasesDelBloqueActual != null){
+					hilo.agregarBloqueConcluido(frasesDelBloqueActual);
+					respuesta = cambiarDeBloque(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
 					if(respuesta.seTerminoElTema()){
 						temaActual = null;
 						frasesDelBloqueActual = null;
 					}
-				}else if(agente.hayQueCambiarDeTema() && ! misSalidas.isEmpty()){
-					temaActual = null;
-					frasesDelBloqueActual = null;
-					agente.cambiarANivelSuperior();
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
@@ -311,6 +321,33 @@ public class Conversacion {
 		return false;
 	}
 	
+	private Respuesta cambiarDeBloque(String idFraseActivada, String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
+		FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
+		if(bloqueADecir != null){
+			frasesDelBloqueActual = bloqueADecir;
+			agente.activarValiableEnElContextoDeWatson(Constantes.ID_BLOQUE, frasesDelBloqueActual.getIdDelBloque());
+			
+			agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
+			agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
+			
+			// llamar a watson y ver que bloque se activo
+			respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+			
+			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
+				Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
+				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+			}else{
+				idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+				System.out.println("Id de la frase a decir: "+idFraseActivada);
+				extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+			}
+		}
+		
+		return respuesta;
+	}
+	
 	private Respuesta cambiarDeTema(String idFraseActivada, String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
 		String laIntencion = agente.obtenerNombreDeLaIntencionGeneralActiva();
 		agregarUnSegundoTemaImportanteADecirComoPendiente(laIntencion, respuestaDelCliente);
@@ -335,7 +372,7 @@ public class Conversacion {
 					FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
 					if(bloqueADecir != null){
 						frasesDelBloqueActual = bloqueADecir;
-						agente.activarTemaEnElContextoDeWatson(frasesDelBloqueActual.getIdDelBloque());
+						agente.activarValiableEnElContextoDeWatson(Constantes.ID_BLOQUE, frasesDelBloqueActual.getIdDelBloque());
 					}
 				}
 				

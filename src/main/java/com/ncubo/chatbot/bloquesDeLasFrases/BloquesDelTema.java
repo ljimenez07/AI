@@ -3,8 +3,6 @@ package com.ncubo.chatbot.bloquesDeLasFrases;
 import java.util.ArrayList;
 import java.util.Collections;
 
-import com.ncubo.chatbot.partesDeLaConversacion.Tema;
-
 public class BloquesDelTema {
 
 	private final ArrayList<FrasesDelBloque> misBloques;
