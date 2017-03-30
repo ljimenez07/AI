@@ -16,7 +16,9 @@ import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Placeholder;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
+import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
 import com.ncubo.chatbot.partesDeLaConversacion.Tema;
+import com.ncubo.chatbot.partesDeLaConversacion.Vineta;
 import com.ncubo.chatbot.participantes.AgenteDeLaConversacion;
 import com.ncubo.chatbot.participantes.Cliente;
 
@@ -36,6 +38,8 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		misUltimosResultados.clear();
 		ComponentesDeLaFrase miFraseADecir = null;
 		Salida salida = null;
+		if(!frase.hayFrasesConCondicion()&&!frase.hayFrasesConPlaceholders())
+			actualizarTodasLasVariablesDeContexto(respuesta,cliente);
 		if(frase.hayFrasesConCondicion()){
 			ArrayList<ComponentesDeLaFrase> misFrases = frase.extraerFrasesConCondicion();
 			
@@ -81,20 +85,39 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			
 			if(miFraseADecir == null)
 				miFraseADecir = frase.extraerFraseSinonimoConPlaceholders();
+			String texto = miFraseADecir.getTextoDeLaFrase();
+			String audio = miFraseADecir.getTextoAUsarParaGenerarElAudio();
+			Vineta vineta = null;
 			String fraseConPlaceholder = miFraseADecir.getTextoDeLaFrase();
-			
 			for(Placeholder placeholder: miFraseADecir.obtenerLosPlaceholders()){
 				String valorARetornar = evaluarUnPlaceholder(respuesta, cliente, placeholder, miFraseADecir.obtenerLosPlaceholders(), modoDeResolucionDeResultadosFinales);
 				if( ! valorARetornar.isEmpty()){
-					miFraseADecir.sustituirPlaceholder(placeholder, valorARetornar.toString());
+					
+					String formatoDelPlaceholder = String.format("${%s}", placeholder.getNombreDelPlaceholder());
+					if(miFraseADecir.hayExpresionRegularEnElTexto(texto, placeholder)){
+						texto =  texto.replace(formatoDelPlaceholder, valorARetornar);
+					}
+					
+					if(miFraseADecir.hayExpresionRegularEnElTexto(audio, placeholder)){
+						audio = audio.replace(formatoDelPlaceholder, valorARetornar);
+					}
+					
+					if(vineta != null){
+						if(miFraseADecir.hayExpresionRegularEnElTexto(miFraseADecir.getVineta().getContenido(), placeholder)){
+							vineta = miFraseADecir.getVineta();
+							String contenido = vineta.getContenido().replace(formatoDelPlaceholder, valorARetornar);
+							vineta.cambiarElContenido(contenido);
+						
+						}
+					}
 					idAudio = idAudio + "-" + valorARetornar;
 				}
 			}
 			if(frase.soloTieneEnum(miFraseADecir) && miFraseADecir.getAudio(idAudio) !=  null)
-				salida.escribir(miFraseADecir, respuesta, tema, frase, idAudio);
+				salida.escribir(miFraseADecir, respuesta, tema, frase, idAudio,texto, vineta);
 			else{ 
-				miFraseADecir.setAudio("audio", miFraseADecir.generarAudio(idCliente));
-				salida.escribir(miFraseADecir, respuesta, tema, frase);
+				Sonido sonido = miFraseADecir.generarAudio(audio, idCliente);
+				salida.escribir(texto, sonido, respuesta, tema, frase,vineta);
 			}
 			salida.setMiTextoConPlaceholder(fraseConPlaceholder);
 		}
@@ -135,34 +158,30 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	private String evaluarUnPlaceholder(Respuesta respuesta, Cliente cliente, Placeholder plaseholder, ArrayList<Placeholder> plaseholders, ModoDeLaVariable modoDeResolucionDeResultadosFinales){
 		String valorARetornar = "";
 		
-		if(misUltimosResultados.containsKey(plaseholder.getNombreDelPlaceholder())){
-			valorARetornar = misUltimosResultados.get(plaseholder.getNombreDelPlaceholder());
+		agregarTodosLosParametrosALasVariablesDeAmbiente(respuesta, cliente, plaseholders);
+		
+		// Ejecutar el valor usando el parser
+		String comando = "";
+		if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.PRUEBA)){
+			comando = String.format("x = %s%s.cambiarModoPrueba(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
 		}else{
-			agregarTodosLosParametrosALasVariablesDeAmbiente(respuesta, cliente, plaseholders);
-			
-			// Ejecutar el valor usando el parser
-			String comando = "";
-			if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.PRUEBA)){
-				comando = String.format("x = %s%s.cambiarModoPrueba(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
-			}else{
-				comando = String.format("x = %s%s.cambiarModoReal(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
-			}
-			comando += String.format("%s = %s%s.evaluar(); show %s;", plaseholder.getNombreDelPlaceholder(),plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE ,plaseholder.getNombreDelPlaceholder());
-
-			try {
-				valorARetornar = cliente.evaluarCondicion(comando).trim().replace("\"", "");
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			
-			if( ! valorARetornar.isEmpty())
-				misUltimosResultados.put(plaseholder.getNombreDelPlaceholder(), valorARetornar);
+			comando = String.format("x = %s%s.cambiarModoReal(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
 		}
+		comando += String.format("%s = %s%s.evaluar(); show %s;", plaseholder.getNombreDelPlaceholder(),plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE ,plaseholder.getNombreDelPlaceholder());
+
+		try {
+			valorARetornar = cliente.evaluarCondicion(comando).trim().replace("\"", "");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		if( ! valorARetornar.isEmpty())
+			misUltimosResultados.put(plaseholder.getNombreDelPlaceholder(), valorARetornar);
 		
 		return valorARetornar;
 	}
 	
-	private String procesarEntidadSysNumber (List<Entity> lista){
+	private String procesarEntidadSys (List<Entity> lista, String entidad){
 		  String entidades = "";
 
 		 for(Entity record: lista){
@@ -187,8 +206,8 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 				ejecutarParametroEnElParser(cliente, comando);
 				
 				for(String valor: valores){
-					if(valor.equals("sys-number"))
-						valor = procesarEntidadSysNumber(respuesta.messageResponse().getEntities());
+					if(valor.startsWith("sys-"))
+						valor = procesarEntidadSys(respuesta.messageResponse().getEntities(),valor);
 					//miListaDeSinonimos.guardarObjeto(new Hilera(valor));
 					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", valor);
 					ejecutarParametroEnElParser(cliente, comando);
@@ -216,20 +235,32 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			Variable variable = variables.get(key);
 			if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.CONTEXTO)){
 				try{
-					String nis = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
-					if(nis.equals(""))
-						nis = variable.getValorDeLaVariable()[0];
-					if(nis.equals("sys-number"))
-						nis = procesarEntidadSysNumber(respuesta.messageResponse().getEntities());
-					String comando = String.format("%s = Lista();", "lista");
-					ejecutarParametroEnElParser(cliente, comando);
-					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", nis);
-					ejecutarParametroEnElParser(cliente, comando);
 					
-					ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+					String nis = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
+					
+					if(nis.startsWith("sys-")&&variable.getValorDeLaVariable()[0].equals("") || nis.equals("actualizarSysNumber"))
+					{
+						nis = procesarEntidadSys(respuesta.messageResponse().getEntities(), nis);
+					}
+					if(nis.equals("")&&!variable.getValorDeLaVariable()[0].equals("")){
+						String comando = String.format("%s = Lista();", "lista");
+						ejecutarParametroEnElParser(cliente, comando);
+						comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", variable.getValorDeLaVariable()[0]);
+						ejecutarParametroEnElParser(cliente, comando);
+						
+						ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+					}
+					if(!nis.equals("")&&!nis.startsWith("sys-")){
+						String comando = String.format("%s = Lista();", "lista");
+						ejecutarParametroEnElParser(cliente, comando);
+						comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", nis);
+						ejecutarParametroEnElParser(cliente, comando);
+						
+						ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+						variable.setValorDeLaVariable(new String[]{nis}); 
+					}	
 				}catch(Exception e){}
 			}
 		}
 	}
-	
 }

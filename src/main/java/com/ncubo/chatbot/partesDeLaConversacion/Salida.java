@@ -64,12 +64,14 @@ public class Salida implements Serializable{
 		//System.out.println(vineta.url());
 	} 
 	
-	public void escribir(String texto, Sonido sonido, Respuesta respuesta, Tema tema, Frase frase){
+	public void escribir(String texto, Sonido sonido, Respuesta respuesta, Tema tema, Frase frase, Vineta vineta){
 		this.miTexto = texto;
 		this.miSonido = sonido;
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
+		if(vineta != null && ! existeLaVineta(vineta))
+			this.misVinetas.add(vineta);
 	}	
 	
 	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase, String keyAudio){
@@ -77,6 +79,16 @@ public class Salida implements Serializable{
 		this.miSonido = miFrase.getAudio(keyAudio);
 		if(miFrase.getVineta() != null && ! existeLaVineta(miFrase.getVineta()))
 			this.misVinetas.add(miFrase.getVineta());
+		this.miRespuesta = respuesta;
+		this.temaActual = tema;
+		this.fraseActual = frase;
+	}
+	
+	public void escribir(ComponentesDeLaFrase miFrase, Respuesta respuesta, Tema tema, Frase frase, String keyAudio, String texto, Vineta vineta){
+		this.miTexto = texto;
+		this.miSonido = miFrase.getAudio(keyAudio);
+		if(vineta != null && ! existeLaVineta(vineta))
+			this.misVinetas.add(vineta);
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
