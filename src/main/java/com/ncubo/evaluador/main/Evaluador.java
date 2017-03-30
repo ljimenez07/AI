@@ -63,7 +63,7 @@ public class Evaluador {
 	public static void main(String[] args) throws Exception
     {
 		Evaluador evaluador = new Evaluador();
-		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016;");
+		evaluador.crearContexto("a = 10;b = 5; f = 23/11/2016; esPersonaFisica = 'false de true';");
 		//evaluador.crearContexto("lista = Lista();");
 		System.out.println(evaluador.ejecutaComando("a = (a+1)/2; show a;").trim());
 		//System.out.println(evaluador.ejecutaComando("show hora.horaActual() >= 12 && hora.horaActual() < 18;").trim());
@@ -79,6 +79,7 @@ public class Evaluador {
 		//System.out.println(evaluador.ejecutaComando("leGustaLosHoteles = 'Oscar Orlando Pagoaca Argueta'; show leGustaLosHoteles;").trim());
 		//System.out.println(evaluador.ejecutaComando("hora = 13;").trim());
 		//System.out.println(evaluador.ejecutaComando("x = hora > 12 && hora < 18; show x;").trim());
+		System.out.println(evaluador.ejecutaComando("show esPersonaFisica == 'false de true';").trim());
 		System.out.println(evaluador.buscarVariablesEstaticasEnElComando("x = hora > 12 && hora < 18; show x; c = 12; show c;"));
     }
 }

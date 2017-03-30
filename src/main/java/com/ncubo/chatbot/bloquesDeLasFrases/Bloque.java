@@ -16,6 +16,7 @@ public class Bloque {
 	public Bloque(String idDelBloque, String condicion){
 		this.idDelBloque = idDelBloque;
 		this.condicion = condicion;
+		verificarExistenciaDeLasVariables();
 	}
 	
 	public String getIdDelBloque() {
@@ -26,7 +27,7 @@ public class Bloque {
 		return condicion;
 	}
 
-	/*private void verificarExistenciaDeLasVariables(){
+	private void verificarExistenciaDeLasVariables(){
 		System.out.println("Verificar variables ...");
 	
 		if( ! condicion.isEmpty()){
@@ -41,13 +42,14 @@ public class Bloque {
 				e.printStackTrace();
 			}
 			if(variables != null && ! variables.isEmpty()){
-				ArrayList<Placeholder> misPlaceholdersEnLaCondicion = buscarPlaceholdersEnLaCondicion(variables);
-				for(Placeholder placeholder: misPlaceholdersEnLaCondicion){
-					if(! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(placeholder.getNombreDelPlaceholder()))
-						throw new ChatException(String.format("La variable %s no existe en el sistema.", placeholder.getNombreDelPlaceholder()));
+				for(String key: variables){
+					if(! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(key)){
+						System.err.println(String.format("La variable %s, en el bloque %s, no existe en el sistema.", key, this.idDelBloque));
+						System.exit(0);
+					}
 				}
 			}
 		}
-	}*/
-	
+	}
+		
 }

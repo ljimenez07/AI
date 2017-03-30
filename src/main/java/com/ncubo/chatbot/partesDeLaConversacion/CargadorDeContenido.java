@@ -444,13 +444,15 @@ public abstract class CargadorDeContenido {
 										if(elBloqueExiste){
 											miBloque.agregarDependencia(bloqueDependiente);
 										}else{
-											throw new ChatException(String.format("El bloque %s, en el tema %s, no ha sido agregado previamente", misDependendiasDeBloques[contador], idDelTema));
+											System.err.println(String.format("El bloque %s, en el tema %s, no ha sido agregado previamente", misDependendiasDeBloques[contador], idDelTema));
+											System.exit(0);
 										}
 									}
 								}
 								
 								if( ! bloquesDelTema.agregarBloque(miBloque)){
-									throw new ChatException(String.format("El bloque %s, en el tema %s, no pudo ser agregado, verifique los ids que no esten repetidos", idDelBloque, idDelTema));
+									System.err.println(String.format("El bloque %s, en el tema %s, no pudo ser agregado, verifique los ids que no esten repetidos", idDelBloque, idDelTema));
+									System.exit(0);
 								}
 							}
 						}catch(Exception e){

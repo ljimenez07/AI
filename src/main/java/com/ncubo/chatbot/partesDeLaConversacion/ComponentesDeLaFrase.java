@@ -115,9 +115,6 @@ public class ComponentesDeLaFrase{
 	
 	public ArrayList<Placeholder> buscarPlaceholdersEnLaCondicion(ArrayList<String> variablesEstaticas){
 		ArrayList<Placeholder> misPlaceholders = new ArrayList<>();
-		//Matcher matcher = buscarExpresionRegular(this.condicion);	
-		//while (matcher.find()){
-	    //    String key = matcher.group(1);
 		for(String key: variablesEstaticas){
 	        if( ! existeElPlaceholder(misPlaceholders, key)){
 	        	Variable miVariable = VariablesDeContexto.getInstance().obtenerUnaVariableDeMiContexto(key);

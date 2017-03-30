@@ -12,9 +12,11 @@ public class BloquesDelTema {
 	}
 	
 	private boolean existeElBloque(FrasesDelBloque miBloque){
-		for(FrasesDelBloque bloque: misBloques){
-			if(bloque.getIdDelBloque().equals(miBloque.getIdDelBloque()))
-				return true;
+		if(miBloque != null){
+			for(FrasesDelBloque bloque: misBloques){
+				if(bloque.getIdDelBloque().equals(miBloque.getIdDelBloque()))
+					return true;
+			}
 		}
 		return false;
 	}
