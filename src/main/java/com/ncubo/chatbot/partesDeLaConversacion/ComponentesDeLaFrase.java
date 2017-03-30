@@ -131,7 +131,7 @@ public class ComponentesDeLaFrase{
 		return Pattern.compile("\\$\\{(\\w+)}").matcher(texto);
 	}
 	
-	private boolean hayExpresionRegularEnElTexto(String texto, Placeholder placeholder){
+	public boolean hayExpresionRegularEnElTexto(String texto, Placeholder placeholder){
 		Matcher matcher = buscarExpresionRegular(texto);
 		boolean resultado = false;
 	    while (matcher.find()){
