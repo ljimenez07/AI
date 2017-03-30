@@ -164,4 +164,13 @@ public class Tema
 		return variablesDeContextoQueElTemaOcupa;
 	}
 	
+	public boolean existeLaIntencionEnElTema(String nombreDeLaIntencion){
+		
+		for(Intencion intencion: intencionesDelTema){
+			if(intencion.getNombre().equals(nombreDeLaIntencion))
+				return true;
+		}
+		return false;
+	}
+	
 }

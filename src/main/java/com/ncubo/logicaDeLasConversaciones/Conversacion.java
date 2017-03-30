@@ -12,6 +12,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
+import com.ncubo.chatbot.bloquesDeLasFrases.BloquePendiente;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
@@ -60,6 +61,7 @@ public class Conversacion {
 	private final InformacionDelCliente informacionDelCliente;
 	private static HttpSolrClient solrClient;
 	private static RetrieveAndRank service = new RetrieveAndRank(); 
+	private BloquePendiente bloquePendiente = null;
 	
 	private String userRetrieveAndRank;
 	private String passwordRetrieveAndRank;
@@ -245,28 +247,72 @@ public class Conversacion {
 						frasesDelBloqueActual = null;
 						agente.cambiarANivelSuperior();
 					}
-				}else if(respuesta.seTerminoElBloque() & frasesDelBloqueActual != null){
-					hilo.agregarBloqueConcluido(frasesDelBloqueActual);
-					respuesta = cambiarDeBloque(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
-					if(respuesta.seTerminoElTema()){
-						temaActual = null;
-						frasesDelBloqueActual = null;
+				}else if(respuesta.seTerminoElBloque()){
+					
+					// Preguntar si hay bloques en cola
+					if (bloquePendiente != null){
+						this.temaActual = bloquePendiente.getTemaActual();
+						this.frasesDelBloqueActual = bloquePendiente.getBloqueActual();
+						this.fraseActual = bloquePendiente.getFraseActual();
+						agente.cambiarElContexto(bloquePendiente.getContextoCognitivo());
+						
+						volverlARetomarUnBloque(misSalidas, respuesta);
+						bloquePendiente = null;
+					}else{
+						hilo.agregarBloqueConcluido(frasesDelBloqueActual);
+						respuesta = cambiarDeBloque(idFraseActivada, respuestaDelCliente, misSalidas, respuesta, true);
+						if(respuesta.seTerminoElTema()){
+							temaActual = null;
+							frasesDelBloqueActual = null;
+						}
 					}
+					
 				}
 			}else{ 
 				if (agente.hayQueCambiarDeTemaForzosamente()){ // TODO Analizar si hay mas de un tema en cola
-					if(temaActual != null)
-						if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
-							this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
 					
-					agente.cambiarANivelSuperior();
-					respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+					boolean esParteDelMismoTema = false;
+					// Verificar si en el tema que esta tiene bloques
+					if(temaActual != null){
+						if(temaActual.elTemaTieneBloques() & frasesDelBloqueActual != null){
+							// Verificar si es una DUDA de ese tema (buscar si la intencion forma parte del tema)
+							String laIntencion = agente.obtenerNombreDeLaIntencionGeneralActiva();
+							if(temaActual.existeLaIntencionEnElTema(laIntencion)){
+								bloquePendiente = new BloquePendiente(temaActual, frasesDelBloqueActual, fraseActual, agente.getMiUltimoTopico().obtenerElContexto());
+								esParteDelMismoTema = true;
+								// Activar el bloque de duda
+								respuesta = cambiarDeBloque(idFraseActivada, respuestaDelCliente, misSalidas, respuesta, false);
+								if(respuesta.seTerminoElTema()){
+									temaActual = null;
+									frasesDelBloqueActual = null;
+								}
+							}
+						}
+					}
 					
-					respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta); 
+					if( ! esParteDelMismoTema){
+						if(temaActual != null)
+							if(! temaActual.getNombre().equals("preguntarPorOtraConsulta"))
+								this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico()));
+						
+						agente.cambiarANivelSuperior();
+						respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+						
+						respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta); 
+					}
+					
 				}
 				else{
 					// Verificar que fue lo que paso	
 					System.out.println("No entendi la ultima pregunta");
+					
+					// Verificar si en el tema que esta tiene bloques
+					if(temaActual != null){
+						if(temaActual.elTemaTieneBloques() & frasesDelBloqueActual != null){
+							// Verificar si es una DUDA de ese tema
+						}
+					}
+					
 					if(fraseActual != null){
 						if(fraseActual.esMandatorio()){
 							//analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
@@ -321,11 +367,37 @@ public class Conversacion {
 		return false;
 	}
 	
-	private Respuesta cambiarDeBloque(String idFraseActivada, String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta){
-		FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
-		if(bloqueADecir != null){
-			frasesDelBloqueActual = bloqueADecir;
-			agente.activarValiableEnElContextoDeWatson(Constantes.ID_BLOQUE, frasesDelBloqueActual.getIdDelBloque());
+	private Respuesta cambiarDeBloque(String idFraseActivada, String respuestaDelCliente, ArrayList<Salida> misSalidas, Respuesta respuesta, boolean hayQueBuscarBloque){
+		FrasesDelBloque bloqueADecir = null;
+		
+		if(hayQueBuscarBloque){
+			bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
+			
+			if(bloqueADecir != null){
+				frasesDelBloqueActual = bloqueADecir;
+				agente.activarValiableEnElContextoDeWatson(Constantes.ID_BLOQUE, frasesDelBloqueActual.getIdDelBloque());
+				
+				agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
+				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
+				
+				// llamar a watson y ver que bloque se activo
+				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+				
+				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
+					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
+					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
+				}else{
+					idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
+					System.out.println("Id de la frase a decir: "+idFraseActivada);
+					extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
+				}
+			}else{
+				frasesDelBloqueActual = null;
+			}
+		}else{
+			agente.borrarUnaVariableDelContexto(Constantes.ID_BLOQUE);;
 			
 			agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 			agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
@@ -474,6 +546,11 @@ public class Conversacion {
 	
 	private void volverlARetomarUnTema(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		decirFraseRecordatoria(misSalidas, respuesta);
+		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		agente.yaNoCambiarANivelSuperior();
+	}
+	
+	private void volverlARetomarUnBloque(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
 		agente.yaNoCambiarANivelSuperior();
 	}

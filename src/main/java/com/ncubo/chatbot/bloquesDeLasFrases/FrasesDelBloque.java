@@ -9,8 +9,8 @@ public class FrasesDelBloque extends Bloque{
 	private final ArrayList<Frase> misFrases;
 	private final ArrayList<Bloque> misDependencias;
 	
-	public FrasesDelBloque(String idDelBloque){
-		super(idDelBloque);
+	public FrasesDelBloque(String idDelBloque, String condicion){
+		super(idDelBloque, condicion);
 		misFrases = new ArrayList<>();
 		misDependencias = new ArrayList<>();
 	}

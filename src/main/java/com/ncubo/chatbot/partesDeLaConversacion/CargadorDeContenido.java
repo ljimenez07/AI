@@ -419,10 +419,16 @@ public abstract class CargadorDeContenido {
 							for (int index = 0; index < bloque.getLength(); index++) {
 								Node nNodeBloque = bloque.item(index);
 								Element eElementBloque = (Element) nNodeBloque;
+		
+								String condicion = "";
+								try{
+									NodeList condicionElement = eElementBloque.getElementsByTagName("soloSi");
+									condicion = condicionElement.item(0).getTextContent();
+								}catch(Exception e){}
 								
 								String idDelBloque = eElementBloque.getAttribute("id");
 								String idsDeBloquesDependientes = eElementBloque.getAttribute("dependencias");
-								FrasesDelBloque miBloque = new FrasesDelBloque(idDelBloque);
+								FrasesDelBloque miBloque = new FrasesDelBloque(idDelBloque, condicion);
 		
 								NodeList frase = eElementBloque.getElementsByTagName("frase");
 								for (int indexFrase = 0; indexFrase < frase.getLength(); indexFrase++) {
