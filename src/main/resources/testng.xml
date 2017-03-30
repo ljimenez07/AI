@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?><suite allow-return-values="false" configfailurepolicy="skip" data-provider-thread-count="10" group-by-instances="false" guice-stage="DEVELOPMENT" junit="false" name="casos DMuni viernes" parallel="false" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5" verbose="1">
+<?xml version="1.0" encoding="UTF-8" standalone="no"?><suite allow-return-values="false" configfailurepolicy="skip" data-provider-thread-count="10" group-by-instances="false" guice-stage="DEVELOPMENT" junit="false" name="casos DMuni" parallel="false" preserve-order="true" skipfailedinvocationcounts="false" thread-count="5" verbose="1">
   <parameter name="userRetrieveAndRank" value="54a9c7bf-35b4-4fce-883c-a3fcec76766c"/>
   <parameter name="passwordRetrieveAndRank" value="TEd3SxPfJIhg"/>
   <parameter name="clusterId" value="sc8c9e54f8_07a5_4944_887d_612ab2b50749"/>

@@ -236,6 +236,7 @@ public class Conversacion {
 				
 				if(agente.hayQueCambiarDeTema()){
 					hilo.limpiarLosBloquesConcluidosDelTemaActual();
+					bloquePendiente = null;
 					if(misSalidas.isEmpty()){// Hay que buscar un nuevo tema y no he dicho nada aun
 						respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta);
 						if(respuesta.seTerminoElTema()){
@@ -249,7 +250,7 @@ public class Conversacion {
 					}
 				}else if(respuesta.seTerminoElBloque()){
 					
-					// Preguntar si hay bloques en cola
+					// Preguntar si hay bloque en cola
 					if (bloquePendiente != null){
 						this.temaActual = bloquePendiente.getTemaActual();
 						this.frasesDelBloqueActual = bloquePendiente.getBloqueActual();
