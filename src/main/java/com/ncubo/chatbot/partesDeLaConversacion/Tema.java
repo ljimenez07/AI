@@ -20,7 +20,6 @@ public class Tema
 	private final String nombreDelWorkspaceAlQuePertenece;
 	private final Intencion intencionGeneralAlQuePertenece;
 	private final boolean sePuedeRepetir;
-	private final List<String> variablesDeContextoQueElTemaOcupa;
 	private final List<Intencion> intencionesDelTema;
 	private final BloquesDelTema bloquesDelTema;
 	
@@ -33,21 +32,6 @@ public class Tema
 		this.intencionGeneralAlQuePertenece = idDeLaIntencionGeneral;
 		this.frases = frases;
 		this.dependencias = new Temas();
-		this.variablesDeContextoQueElTemaOcupa = new ArrayList<>();
-		this.intencionesDelTema = intencionesDelTema;
-		this.bloquesDelTema = bloquesDelTema;
-	}
-	
-	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, Intencion idDeLaIntencionGeneral, List<String> variables, List<Intencion> intencionesDelTema, BloquesDelTema bloquesDelTema, Frase... frases){
-		this.idDelTema = idDelTema;
-		this.nombre = nombre;
-		this.descripcion = descripcion;
-		this.nombreDelWorkspaceAlQuePertenece = nombreWorkspace;
-		this.sePuedeRepetir = sePuedeRepetir;
-		this.intencionGeneralAlQuePertenece = idDeLaIntencionGeneral;
-		this.frases = frases;
-		this.dependencias = new Temas();
-		this.variablesDeContextoQueElTemaOcupa = variables;
 		this.intencionesDelTema = intencionesDelTema;
 		this.bloquesDelTema = bloquesDelTema;
 	}
@@ -159,10 +143,6 @@ public class Tema
 			resultado += frases[index].obtenerLaInformacionDeLaFrase()+"\n";
 		}
 		return resultado;
-	}
-	
-	public List<String> getVariablesDeContextoQueElTemaOcupa(){
-		return variablesDeContextoQueElTemaOcupa;
 	}
 	
 	public boolean existeLaIntencionEnElTema(String nombreDeLaIntencion){

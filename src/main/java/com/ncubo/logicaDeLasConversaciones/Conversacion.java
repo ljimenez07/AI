@@ -4,6 +4,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -16,6 +18,7 @@ import com.ncubo.chatbot.bloquesDeLasFrases.BloquePendiente;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.contexto.Variable;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
 import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Despedida;
@@ -141,6 +144,8 @@ public class Conversacion {
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
+			agregarVariablesDeContextoDelClienteAWatson(fraseActual);
+			
 			respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
 			this.hilo.agregarUnaRespuesta(respuesta);
 	
@@ -438,7 +443,6 @@ public class Conversacion {
 				temasPendientes.borrarUnTemaPendiente(temaPrimitivo);
 			
 			agente.yaNoCambiarDeTema();
-			agregarVariablesDeContextoDelClienteAWatson(temaActual);
 			
 			if (idFraseActivada.equals("")){ // Quiere decir que no hay ninguna pregunta en la salida
 				System.out.println("El proximo tema a tratar es: "+this.temaActual.getIdTema());
@@ -674,15 +678,32 @@ public class Conversacion {
 		}
 	}
 	
-	private void agregarVariablesDeContextoDelClienteAWatson(Tema tema){
-		if(tema == null){
+	private void agregarVariablesDeContextoDelClienteAWatson(Frase frase){
+		if(frase == null){
 			return;
 		}
-		List<String> misValiables = tema.getVariablesDeContextoQueElTemaOcupa();
-		if(! misValiables.isEmpty()){
+		
+		Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(frase);
+		Enumeration<String> keys = variables.keys();
+		
+		while(keys.hasMoreElements()){
+			String key = keys.nextElement();
+			Variable variable = variables.get(key);
+			
+			String comando = String.format("show %s;", variable.getNombre());
+			try {
+				String valor = participante.evaluarCondicion(comando);
+				agente.activarValiableEnElContextoDeWatson(variable.getNombre(), valor);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+		
+		/*if(! misValiables.isEmpty()){
 			for (String variable: misValiables){
 				if(variable.equals("estaLogueado")){
-					/*if (participante != null){
+					if (participante != null){
 						try {
 							boolean estaLogueado = this.participante.obtenerEstadoDeLogeo();
 							agente.activarValiableEnElContextoDeWatson("estaLogueado", String.valueOf(estaLogueado));
@@ -692,10 +713,10 @@ public class Conversacion {
 						}
 					}else{
 						agente.activarValiableEnElContextoDeWatson("estaLogueado", "false");
-					}*/
+					}
 				}
 			}
-		}
+		}*/
 	}
 	
 	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada){
