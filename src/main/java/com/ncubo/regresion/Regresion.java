@@ -7,7 +7,7 @@ public class Regresion {
 	
 	public void run() throws Exception{
 		EjecucionCasosDePrueba casos = new EjecucionCasosDePrueba();
-		casos.correrCasosDesdeXML("src/main/resources/conversacionesMuni1.xml", "src/main/resources/casosDMuni.xml","src/main/resources/testng.xml", "casos DMuni");
+		casos.correrCasosDesdeXML("src/main/resources/conversacionesMuni1.xml", "src/main/resources/casosDMuni.xml","src/main/resources/testng.xml", "casos DMuni", "muni1");
 	}
 	
 	public static void main(String[] args) throws Exception{

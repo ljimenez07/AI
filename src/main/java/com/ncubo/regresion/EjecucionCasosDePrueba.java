@@ -29,6 +29,9 @@ import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.participantes.Cliente;
+import com.ncubo.chatbot.watson.SpeechToTextWatson;
+import com.ncubo.chatbot.watson.TextToSpeechWatson;
+import com.ncubo.conectores.Conectores;
 import com.ncubo.controller.FiltroDeConversaciones;
 import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
@@ -41,22 +44,22 @@ public class EjecucionCasosDePrueba {
 
 	private static TemariosDeUnCliente temario;
 
-	private static ConversacionesDeLaRegresion misConversaciones = new ConversacionesDeLaRegresion();
+	private static Conversacion miconversacion;
 	
 	private static ArrayList<Resultado> resultados = new ArrayList<Resultado>();
 	
-	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite) throws Exception{
+	public ArrayList<Resultado> correrCasosDesdeXML(String xmlFrases, String xmlCasos, String xmlTestNG, String nombreSuite, String idCliente) throws Exception{
 		
 		resultados.clear();
-		temario = new TemariosDeUnCliente(xmlFrases); //xml de conversaciones
-		
-		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME , Constantes.DB_USER,Constantes.DB_PASSWORD);
-		
-		misConversaciones.inicializarConversaciones(xmlFrases);
-		
-		
+		temario = new TemariosDeUnCliente(xmlFrases);
 		File file = new File(xmlCasos);
 
+		TextToSpeechWatson.getInstance(Constantes.USER_TEXT_TO_SPEECH, Constantes.PASSWORD_TEXT_TO_SPEECH, Constantes.VOICE_SPEECH_TO_TEXT, Constantes.USER_FTP, Constantes.PASSWORD_FTP,
+				Constantes.HOST_FTP, Constantes.PORT_FTP, Constantes.CARPETA_FTP, Constantes.PATH_FTP, Constantes.PATH_PUBLICA_FTP);
+		
+		SpeechToTextWatson.getInstance(Constantes.USER_SPEECH_TO_TEXT, Constantes.PASSWORD_SPEECH_TO_TEXT, Constantes.VOICE_SPEECH_TO_TEXT, Constantes.USER_FTP, Constantes.PASSWORD_FTP,
+					Constantes.HOST_FTP, Constantes.PORT_FTP, Constantes.CARPETA_FTP, Constantes.PATH_FTP, Constantes.PATH_PUBLICA_FTP);
+		
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(file);
@@ -71,7 +74,7 @@ public class EjecucionCasosDePrueba {
 			int idConversacion = Integer.parseInt(casoDePrueba.getAttribute("idConversacion"));
 			String descripcion = casoDePrueba.getAttribute("descripcion");
 			
-			correrUnCaso(idConversacion, descripcion);
+			correrUnCaso(idConversacion, descripcion, idCliente);
 		}
 		
 		correrTestNG(xmlTestNG, nombreSuite);
@@ -124,21 +127,18 @@ public class EjecucionCasosDePrueba {
 		runner.run();
 	}
 
-	public boolean correrUnCaso(int idConversacion, String descripcion){
+	public boolean correrUnCaso(int idConversacion, String descripcion, String idCliente) throws Exception{
 		
 		ConsultaDao consultaDao = new ConsultaDao();
 		FiltroDeConversaciones filtro = new FiltroDeConversaciones();
-
-		Cliente cliente = null;
-		try {
-			cliente = new Cliente("Regresion", "123456789");
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-		}
+		Conectores conectores = new Conectores();
 		
-		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		Conversacion miconversacion = new Conversacion(cliente, consultaDao,new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones());
-
+		
+		Cliente cliente = new Cliente("Ricky", "123456", conectores);
+		
+		InformacionDelCliente informacionDelCliente = new InformacionDelCliente(idCliente, idCliente, "");
+		miconversacion = new Conversacion(cliente, consultaDao, new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones());
+			
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);
 		
@@ -158,7 +158,8 @@ public class EjecucionCasosDePrueba {
 				try {
 					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
 				} catch (Exception e) {
-					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(), 3, miconversacion);
+					System.out.println(e.getMessage());
+					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(), 1, miconversacion);
 				}
 				if(salidasParaElCliente.equals(null)){
 					status = false;
@@ -237,7 +238,7 @@ public class EjecucionCasosDePrueba {
 					status = false;
 				}
 				else if(salidasParaElCliente.get(contadorSalidas).getFraseActual().obtenerIdDeLaFrase().equals(dialogo.getIdFraseQueUso()))
-					observaciones.add("FRASE ID IGUALES: " +  dialogo.getIdFraseQueUso());
+					observaciones.add("FRASE ID IGUALES: " +  dialogo.getIdFraseQueUso()+"\n\t Texto: "+ dialogo.getElTextoQueDijoElFramework()+"\n\t Texto: "+salidasParaElCliente.get(contadorSalidas).getMiTexto());
 				else {
 					observaciones.add("FRASE ID DIFERENTES \n Se esperaba \n\t ID: " + dialogo.getIdFraseQueUso() +"\n\t Texto: "+ dialogo.getElTextoQueDijoElFramework()+ "\n Se obtuvo: \n\t ID: "+ salidasParaElCliente.get(contadorSalidas).getFraseActual().obtenerIdDeLaFrase() +"\n\t Texto: "+salidasParaElCliente.get(contadorSalidas).getMiTexto());
 					status = false;

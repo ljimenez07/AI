@@ -21,8 +21,10 @@ import org.xml.sax.SAXException;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.chatbot.participantes.Cliente;
+import com.ncubo.conectores.Conectores;
 import com.ncubo.db.ConexionALaDB;
 import com.ncubo.db.ConsultaDao;
+import com.ncubo.logicaDeLasConversaciones.AgenteDelCliente;
 import com.ncubo.logicaDeLasConversaciones.Conversacion;
 import com.ncubo.logicaDeLasConversaciones.InformacionDelCliente;
 import com.ncubo.logicaDeLasConversaciones.TemariosDeUnCliente;
@@ -36,18 +38,18 @@ public class GrabacionCasoDePrueba {
 	public ArrayList<Salida> iniciarGrabacion(String xmlFrases, String xmlTestNG){
 		temario = new TemariosDeUnCliente(xmlFrases);
 		ConsultaDao consultaDao = new ConsultaDao();
-		
+		Conectores conectores = new Conectores();
 		Cliente cliente = null ;
 		
 		try {
-			cliente = new Cliente("regresion", "123456");
+			cliente = new Cliente("regresion", "123456",conectores);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Problemas al iniciar el cliente");
 		}
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente("test", "test", "");
-		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDeLaRegresion(temario), informacionDelCliente, temario.obtenerIntenciones());
+		miConversacion = new Conversacion(cliente, consultaDao, new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones());
 		
 		return salidasParaElCliente = miConversacion.inicializarLaConversacion();
 	}

@@ -111,7 +111,13 @@ public class TextToSpeechWatson{
 			System.out.println("Generando audio al texto con Watson: " + text);
 			in = generarAudioConWatson(text, audioFormat);
 			if(in != null){
-				InputStream mp3InputStream = transformarAMp3(in, audioFormat.name().toLowerCase(), temp);
+				InputStream mp3InputStream = null;
+				try {
+					mp3InputStream = transformarAMp3(in, audioFormat.name().toLowerCase(), temp);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					System.out.println(e.getMessage());
+				}
 				if(mp3InputStream != null){
 					transferirAudiosAlFTP(esAudioDinamico, pathFinal, mp3InputStream);
 				}else{

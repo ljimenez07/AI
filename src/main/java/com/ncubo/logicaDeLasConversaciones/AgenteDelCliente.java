@@ -1,5 +1,6 @@
 package com.ncubo.logicaDeLasConversaciones;
 
+import java.awt.Dialog.ModalExclusionType;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -115,8 +116,10 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 			}
 			if(frase.soloTieneEnum(miFraseADecir) && miFraseADecir.getAudio(idAudio) !=  null)
 				salida.escribir(miFraseADecir, respuesta, tema, frase, idAudio,texto, vineta);
-			else{ 
-				Sonido sonido = miFraseADecir.generarAudio(audio, idCliente);
+			else{
+				Sonido sonido = new Sonido("", "");
+				if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.REAL))
+					sonido = miFraseADecir.generarAudio(audio, idCliente);
 				salida.escribir(texto, sonido, respuesta, tema, frase,vineta);
 			}
 			salida.setMiTextoConPlaceholder(fraseConPlaceholder);

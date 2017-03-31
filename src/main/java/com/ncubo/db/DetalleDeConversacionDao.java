@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.Iterator;
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
+import com.ncubo.chatbot.configuracion.Constantes;
 
 
 public class DetalleDeConversacionDao {
@@ -220,6 +221,8 @@ public class DetalleDeConversacionDao {
 		Dialogo dialogo;
 		
 		try{
+			ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME, Constantes.DB_USER, Constantes.DB_PASSWORD);
+			
 			Connection con = ConexionALaDB.getInstance().openConBD();
 			PreparedStatement stmt = con.prepareStatement(queryParaObtenerEldetalleDeLaConversacion);
 

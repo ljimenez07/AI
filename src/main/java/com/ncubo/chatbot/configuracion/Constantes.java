@@ -475,4 +475,21 @@ public class Constantes {
 
 	public static String API_WATSON = "watson";
 	public static String API_GOOGLE = "google";
+	
+	
+	public static String USER_SPEECH_TO_TEXT = "ccb556df-6132-4b9d-a05c-8d83f2527e26";
+	public static String PASSWORD_SPEECH_TO_TEXT = "BC4TrqdBckdp";
+	public static String VOICE_SPEECH_TO_TEXT = "es-LA_SofiaVoice";
+	public static String USER_FTP = "ftp";
+	public static String PASSWORD_FTP = "123456";
+	public static String HOST_FTP = "10.1.0.227";
+	public static int PORT_FTP = 21;
+	public static String PATH_FTP = "${user.home}/xmlsDelAgenteCognitivo/audiosEstaticosDe";
+	public static String CARPETA_FTP = "audiosDelAgenteCognitivo";
+	public static String PATH_PUBLICA_FTP = "/archivossubidos/audios";
+	
+	public static String USER_TEXT_TO_SPEECH = "8f1ec844-f8ad-4303-9293-3da7192c5b59";
+	public static String PASSWORD_TEXT_TO_SPEECH = "LHVIAi4Kfweb";
+	
+	
 }
