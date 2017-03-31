@@ -2,10 +2,7 @@ package com.ncubo.chatbot.bloquesDeLasFrases;
 
 import java.util.ArrayList;
 
-import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
-import com.ncubo.chatbot.exceptiones.ChatException;
-import com.ncubo.chatbot.partesDeLaConversacion.Placeholder;
 import com.ncubo.evaluador.main.Evaluador;
 
 public class Bloque {
@@ -51,5 +48,9 @@ public class Bloque {
 			}
 		}
 	}
-		
+	
+	public boolean tieneCondicion(){
+		return ! condicion.isEmpty();
+	}
+	
 }

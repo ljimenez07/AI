@@ -34,6 +34,11 @@ public class AgenteDeLaConversacion extends Agente{
 		return null;
 	}
 
+	@Override
+	public void actualizarTodasLasVariablesDeContexto(Respuesta respuesta, Cliente cliente) {
+		// TODO Auto-generated method stub	
+	}
+	
 	protected void ejecutarParametroEnElParser(Cliente cliente, String nombreKey, String parametro){
 		if(parametro != null && nombreKey != null && !parametro.isEmpty()){
 			String comando = "x = "+Constantes.INSTANCEA_PARAMETROS+".agregarParametro('"+nombreKey+"',"+parametro+");";
@@ -52,4 +57,5 @@ public class AgenteDeLaConversacion extends Agente{
 			e.printStackTrace();
 		}
 	}
+
 }

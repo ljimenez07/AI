@@ -67,7 +67,7 @@ public class TextToSpeechWatson{
 	{
 		if(textToSpeechWatson == null)
 		{
-			throw new ChatException("No se a inicializado esta clase. Debe instanciar esta clase primero.");
+			throw new ChatException("No se a inicializado esta clase (TextToSpeechWatson). Debe instanciar esta clase primero.");
 		}
 		return textToSpeechWatson;
 	}

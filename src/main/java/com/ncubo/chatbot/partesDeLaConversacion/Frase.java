@@ -2,10 +2,12 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Hashtable;
 import java.util.List;
 import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
+import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.TextToSpeechWatson;
@@ -22,15 +24,17 @@ public abstract class Frase
     private String ipPublicaAMostrarLosAudioTTS;
     private int intentosFallidos = 0;
     private int version;
+    private ArrayList<Variable> misVariablesDeContexto = new ArrayList<Variable>();
     
-    protected Frase (int version, String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase, int intentosFallidos,
-            CaracteristicaDeLaFrase... caracteristicas)
+    protected Frase (int version, String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, 
+    		String[] vinetasDeLaFrase, int intentosFallidos, ArrayList<Variable> misVariables, CaracteristicaDeLaFrase... caracteristicas)
     {
         this.idFrase = idFrase;
         this.caracteristicas = caracteristicas;
         this.nombreDeLaFrase = nombreDeLaFrase;
         this.misSinonimosDeLaFrase = misSinonimosDeLaFrase;
         this.intentosFallidos = intentosFallidos;
+        this.misVariablesDeContexto = misVariables;
         this.version = version;
         //cargarLaFrase();
         cargarVinetas(vinetasDeLaFrase);
@@ -40,6 +44,7 @@ public abstract class Frase
         if(esDinamica()){
             System.out.println("Es dinamicaaaaa");
         }*/
+        verificarVariablesDeContexto();
     }
     
     private void cargarVinetas(String[] vinetasDeLaFrase){
@@ -50,6 +55,21 @@ public abstract class Frase
                 vinetasDeLosTextosDeLaFrase.add(new Vineta(vineta, Constantes.TIPO_VINETA_SELECTIVA));
             }
         }
+    }
+    
+    public void verificarVariablesDeContexto(){
+    	for(Variable variable: misVariablesDeContexto){
+			if( ! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(variable.getNombre()))
+				throw new ChatException(String.format("La variable %s no existe en el sistema.", variable.getNombre()));
+		}
+    }
+    
+    public boolean tieneVariablesDeContexto(){
+    	return ! this.misVariablesDeContexto.isEmpty();
+    }
+    
+    public ArrayList<Variable> obtenerLasVariablesDeContextoDeLaFrase(){
+    	return this.misVariablesDeContexto;
     }
     
     public boolean hayFrasesConCondicion(){

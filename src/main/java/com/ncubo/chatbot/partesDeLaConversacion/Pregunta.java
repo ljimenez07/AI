@@ -3,6 +3,7 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.parser.Operador.TipoDeOperador;
 import com.ncubo.chatbot.watson.Entidades;
 import com.ncubo.chatbot.watson.Intenciones;
@@ -13,9 +14,9 @@ public class Pregunta extends Frase
 	private Intenciones misIntenciones;
 	
 	protected Pregunta(int version, String idFrase, String nombreDeLaFrase, ArrayList<ComponentesDeLaFrase> misSinonimosDeLaFrase, String[] vinetasDeLaFrase,
-			CaracteristicaDeLaFrase[] caracteristicas, Entidades entidades, Intenciones intenciones, int intentosFallidos)
+			CaracteristicaDeLaFrase[] caracteristicas, Entidades entidades, Intenciones intenciones, int intentosFallidos, ArrayList<Variable> misVariables)
 	{
-		super (version, idFrase, nombreDeLaFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, intentosFallidos, caracteristicas);
+		super (version, idFrase, nombreDeLaFrase, misSinonimosDeLaFrase, vinetasDeLaFrase, intentosFallidos, misVariables, caracteristicas);
 		this.misEntidades = entidades;
 		this.misIntenciones = intenciones;
 	}

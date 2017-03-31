@@ -7,6 +7,7 @@ import java.util.List;
 import com.ncubo.chatbot.bloquesDeLasFrases.BloquesDelTema;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.exceptiones.ChatException;
+import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.chatbot.watson.Intencion;
 
 public class Tema
@@ -55,8 +56,8 @@ public class Tema
 		return bloquesDelTema.elTemaTieneBloques();
 	}
 	
-	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual){
-		return bloquesDelTema.buscarSiguienteBloqueADecir(bloquesYaConcluidos, bloqueActual);
+	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual, Cliente cliente){
+		return bloquesDelTema.buscarSiguienteBloqueADecir(bloquesYaConcluidos, bloqueActual, cliente);
 	}
 	
 	public Tema dependeDe(Tema otroTema){

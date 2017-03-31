@@ -15,6 +15,7 @@ import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
 import com.ncubo.chatbot.bloquesDeLasFrases.BloquePendiente;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
+import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.partesDeLaConversacion.Afirmacion;
 import com.ncubo.chatbot.partesDeLaConversacion.CaracteristicaDeLaFrase;
 import com.ncubo.chatbot.partesDeLaConversacion.Despedida;
@@ -234,6 +235,8 @@ public class Conversacion {
 				idFraseActivada = respuesta.obtenerFraseActivada();
 				extraerOracionesAfirmarivasYPreguntas(misSalidas, respuesta, idFraseActivada);
 				
+				agente.actualizarTodasLasVariablesDeContexto(respuesta, participante);
+				
 				if(agente.hayQueCambiarDeTema()){
 					hilo.limpiarLosBloquesConcluidosDelTemaActual();
 					bloquePendiente = null;
@@ -372,7 +375,7 @@ public class Conversacion {
 		FrasesDelBloque bloqueADecir = null;
 		
 		if(hayQueBuscarBloque){
-			bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
+			bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual, participante);
 			
 			if(bloqueADecir != null){
 				frasesDelBloqueActual = bloqueADecir;
@@ -442,7 +445,7 @@ public class Conversacion {
 				
 				// Activar en el contexto el tema
 				if(temaActual.elTemaTieneBloques()){
-					FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual);
+					FrasesDelBloque bloqueADecir = temaActual.buscarSiguienteBloqueADecir(hilo.obtenerBloquesConcluidos(), frasesDelBloqueActual, participante);
 					if(bloqueADecir != null){
 						frasesDelBloqueActual = bloqueADecir;
 						agente.activarValiableEnElContextoDeWatson(Constantes.ID_BLOQUE, frasesDelBloqueActual.getIdDelBloque());
@@ -879,7 +882,7 @@ public class Conversacion {
 		     if(queryResponse.getRankedResults().get(0).getScore()>confianza) {
 		    	 Salida salida = new Salida();
 		    	 String[] titulo = queryResponse.getRankedResults().get(0).getTitle().split("-");
-		    	 Frase frase = new Afirmacion(1, titulo[0], "retrieveAndRank", null , null, 1, null);	
+		    	 Frase frase = new Afirmacion(1, titulo[0], "retrieveAndRank", null , null, 1, new ArrayList<Variable>(), null);	
 		    	 salida.escribir(queryResponse.getRankedResults().get(0).getBody(), respuesta, temaActual, frase);
 		    	 try{
 		    		 salida.setMiSonido(queryResponse.getRankedResults().get(0).getBody(), informacionDelCliente.getIdDelCliente());

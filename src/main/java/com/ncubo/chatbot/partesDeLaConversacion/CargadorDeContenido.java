@@ -266,6 +266,7 @@ public abstract class CargadorDeContenido {
 
 					Node nNode = conversaciones.item(temp);
 					System.out.println("\nCurrent Element :" + nNode.getNodeName());
+					ArrayList<Variable> misVariables = new ArrayList<>();
 					
 					if (nNode.getNodeType() == Node.ELEMENT_NODE) {
 
@@ -296,6 +297,16 @@ public abstract class CargadorDeContenido {
 							caracteristicasDeLaFrase[1] = CaracteristicaDeLaFrase.noPuedeDecirEnVozAlta;
 						}else{
 							caracteristicasDeLaFrase[1] = CaracteristicaDeLaFrase.sePuedeDecirEnVozAlta;
+						}
+						
+						String[] variablesDeContexto = null;
+						try {
+							variablesDeContexto = eElement.getElementsByTagName("variablesDeContextoDeLaFrase").item(0).getTextContent().split(",");
+							for(int contador = 0; contador < variablesDeContexto.length; contador ++){
+								misVariables.add(new Variable(variablesDeContexto[contador], null, TiposDeVariables.CONTEXTO));
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
 						}
 						
 						int intentosFallidos = Constantes.MAXIMO_DE_INTENTOS_OPCIONALES;
@@ -350,18 +361,18 @@ public abstract class CargadorDeContenido {
 						
 						if(elTipoEs.equals("saludo")){
 							caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnSaludo;
-							miFrase = new Saludo(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+							miFrase = new Saludo(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, misVariables, caracteristicasDeLaFrase);
 						}else if(elTipoEs.equals("pregunta")){
 							caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaPregunta;
 							miFrase = new Pregunta(version ,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, caracteristicasDeLaFrase, 
 									obtenerEntidades((Element) eElement.getElementsByTagName("condiciones").item(0)), 
-									obtenerIntenciones((Element) eElement.getElementsByTagName("condiciones").item(0)),intentosFallidos);
+									obtenerIntenciones((Element) eElement.getElementsByTagName("condiciones").item(0)),intentosFallidos, misVariables);
 						}else if(elTipoEs.equals("afirmativa")){
 							caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaOracionAfirmativa;
-							miFrase = new Afirmacion(version, idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+							miFrase = new Afirmacion(version, idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, misVariables, caracteristicasDeLaFrase);
 						}else if(elTipoEs.equals("despedida")){
 							caracteristicasDeLaFrase[2] = CaracteristicaDeLaFrase.esUnaDespedida;
-							miFrase = new Despedida(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, caracteristicasDeLaFrase);
+							miFrase = new Despedida(version,idDeLaFrase, nombreDeLaFrase, misSinonimosDeLasConjunciones, vinetasDeLaFrase, intentosFallidos, misVariables, caracteristicasDeLaFrase);
 						}
 
 						System.out.println("Agregando frase: " +miFrase.obtenerNombreDeLaFrase());
@@ -584,6 +595,8 @@ public abstract class CargadorDeContenido {
 			return TiposDeVariables.SISTEMA;
 		}else if(tipo.equals(Constantes.VARIABLE_TIPO_ENUM)){
 			return TiposDeVariables.ENUM;
+		}else if(tipo.equals(Constantes.VARIABLE_TIPO_ESTATICA)){
+			return TiposDeVariables.ESTATICA;
 		}
 		
 		throw new ChatException(String.format("El tipo de variable '%s' no se encuentra definida en el sistema.", tipo));

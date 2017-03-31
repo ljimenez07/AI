@@ -197,6 +197,10 @@ public class Respuesta {
 		}
 	}
 	
+	public Frase obtenerLaFrase(){
+		return this.miFrase;
+	}
+	
 	public boolean hayOracionesAfirmativasActivas(){
 		return this.hayOracionesAfirmativas || (nombresDeOracionesAfirmativas != null);
 	}

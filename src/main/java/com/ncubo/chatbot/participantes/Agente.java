@@ -598,6 +598,8 @@ public abstract class Agente extends Participante{
 	
 	public abstract Salida volverAPreguntarUnaFraseConMeRindo(Frase pregunta, Respuesta respuesta, Tema tema, boolean meRindo, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);
 	
+	public abstract void actualizarTodasLasVariablesDeContexto(Respuesta respuesta, Cliente cliente);
+	
 	public static void main(String argv[]) throws Exception {
 		Agente agente = new Agente() {
 			
@@ -620,6 +622,12 @@ public abstract class Agente extends Participante{
 					ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
 				// TODO Auto-generated method stub
 				return null;
+			}
+
+			@Override
+			public void actualizarTodasLasVariablesDeContexto(Respuesta respuesta, Cliente cliente) {
+				// TODO Auto-generated method stub
+				
 			}
 		};
 		

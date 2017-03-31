@@ -3,6 +3,8 @@ package com.ncubo.chatbot.bloquesDeLasFrases;
 import java.util.ArrayList;
 import java.util.Collections;
 
+import com.ncubo.chatbot.participantes.Cliente;
+
 public class BloquesDelTema {
 
 	private final ArrayList<FrasesDelBloque> misBloques;
@@ -45,30 +47,56 @@ public class BloquesDelTema {
 		return ! misBloques.isEmpty();
 	}
 	
-	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual){
+	public boolean sePuedeDecirElBloque(FrasesDelBloque bloque, Cliente cliente){
+		if(bloque.tieneCondicion()){
+			String comando = "show "+bloque.getCondicion()+";";
+			try {
+				if(cliente.evaluarCondicion(comando).contains("true")){
+					return true;
+				}else{
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual, Cliente cliente){
 		Collections.shuffle(misBloques); // Desordenar el array
 		for(FrasesDelBloque bloque: misBloques){
 			if( bloqueActual != null){
 				if( ! bloque.getIdDelBloque().equals(bloqueActual.getIdDelBloque())){
 					if(bloque.tieneDependencias()){
-						if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos))
-							return bloque;
+						if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
+							if(sePuedeDecirElBloque(bloque, cliente))
+								return bloque;
+						}
 					}else{
 						FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
 						boolean elBloqueYaFueDicho = miBloque != null;
-						if(! elBloqueYaFueDicho)
-							return bloque;
+						if(! elBloqueYaFueDicho){
+							if(sePuedeDecirElBloque(bloque, cliente))
+								return bloque;
+						}
 					}
 				}
 			}else{
 				if(bloque.tieneDependencias()){
-					if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos))
-						return bloque;
+					if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
+						if(sePuedeDecirElBloque(bloque, cliente))
+							return bloque;
+					}
 				}else{
 					FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
 					boolean elBloqueYaFueDicho = miBloque != null;
-					if(! elBloqueYaFueDicho)
-						return bloque;
+					if(! elBloqueYaFueDicho){
+						if(sePuedeDecirElBloque(bloque, cliente))
+							return bloque;
+					}
 				}
 			}
 			
