@@ -341,7 +341,7 @@ public class Conversacion {
 							}
 						}else{
 							temaActual = null;
-							fraseActual = null;	
+							//fraseActual = null;	
 							frasesDelBloqueActual = null;
 						}
 					}
