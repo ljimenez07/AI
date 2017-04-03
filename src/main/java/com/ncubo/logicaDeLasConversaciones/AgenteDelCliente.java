@@ -238,7 +238,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 				try{
 					String valorDeLaVariableAGuardar = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
 					
-					if(valorDeLaVariableAGuardar.startsWith("sys-") && variable.getValorDeLaVariable()[0].equals("") || valorDeLaVariableAGuardar.equals("actualizarSysNumber")){
+					if(valorDeLaVariableAGuardar.startsWith("sys-")){
 						valorDeLaVariableAGuardar = procesarEntidadSys(respuesta.messageResponse().getEntities(), valorDeLaVariableAGuardar);
 					}
 					
