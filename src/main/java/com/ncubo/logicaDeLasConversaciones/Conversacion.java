@@ -324,13 +324,6 @@ public class Conversacion {
 					// Verificar que fue lo que paso	
 					System.out.println("No entendi la ultima pregunta");
 					
-					// Verificar si en el tema que esta tiene bloques
-					if(temaActual != null){
-						if(temaActual.elTemaTieneBloques() & frasesDelBloqueActual != null){
-							// Verificar si es una DUDA de ese tema
-						}
-					}
-					
 					if(fraseActual != null){
 						if(fraseActual.esMandatorio()){
 							//analizarRespuestaRetrieveAndRank(respuestaDelCliente, misSalidas, respuesta);
@@ -509,24 +502,27 @@ public class Conversacion {
 							String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
 							
 							if( ! idFraseActivada.isEmpty()){
-								System.out.println("Id de la frase a recordar: "+idFraseActivada);
-								Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
+								try{
+									System.out.println("Id de la frase a recordar: "+idFraseActivada);
+									Frase miPregunta = (Pregunta) temaNuevo.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
+									
+									String context = respuesta.messageResponse().getContext().toString();
+									JSONObject obj = null;
+									try {
+										obj = new JSONObject(context);
+										obj.remove(Constantes.NODO_ACTIVADO);
+									} catch (JSONException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+									context = obj.toString();
+									if( ! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
+										TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente);
+										this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
+									}
+									agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
+								}catch(Exception e){}
 								
-								String context = respuesta.messageResponse().getContext().toString();
-								JSONObject obj = null;
-								try {
-									obj = new JSONObject(context);
-									obj.remove(Constantes.NODO_ACTIVADO);
-								} catch (JSONException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}
-								context = obj.toString();
-								if(! temaNuevo.getNombre().equals("preguntarPorOtraConsulta")){
-									TemaPendiente nuevoTemaPriminivo = new TemaPendiente(temaNuevo, miPregunta, context, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente);
-									this.temasPendientes.agregarUnTema(nuevoTemaPriminivo);
-								}
-								agente.seTieneQueGenerarUnNuevoContextoParaWatsonEnElWorkspaceActualConRespaldo();
 							}
 						}
 					}
@@ -606,9 +602,11 @@ public class Conversacion {
 				String saludo = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_SALUDAR());
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 
-				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
-				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-				ponerComoYaTratado(miTema, saludar);
+				try{
+					Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
+					misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					ponerComoYaTratado(miTema, saludar);
+				}catch(Exception e){}
 				
 				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
 				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
@@ -621,9 +619,11 @@ public class Conversacion {
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_DESPEDIDA());
 				String nombreFrase = obtenerUnaFraseDespedida(intencionesNoReferenciadas.getFRASES_INTENCION_DESPEDIDA());
 				
-				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
-				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-				ponerComoYaTratado(miTema, saludar);
+				try{
+					Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
+					misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					ponerComoYaTratado(miTema, saludar);
+				}catch(Exception e){}
 				
 				temasPendientes.borrarLosTemasPendientes();
 				
@@ -632,9 +632,11 @@ public class Conversacion {
 					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO());
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
 					
-					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
-					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-					ponerComoYaTratado(miTema, fueraDeContexto);
+					try{
+						Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
+						misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+						ponerComoYaTratado(miTema, fueraDeContexto);
+					}catch(Exception e){}
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO())){
 				decirTemaNoEntendi(misSalidas, respuesta);
@@ -741,10 +743,12 @@ public class Conversacion {
 		agregarOracionesAfirmativasDeWorkspaceEspecifico(misSalidas, respuesta.obtenerLosNombresDeLasOracionesAfirmativasActivas(), respuesta);
 		if( ! idFraseActivada.equals("")){
 			
-			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
-			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-			fraseActual = miPregunta;
-			ponerComoYaTratado(tema, miPregunta);
+			try{
+				miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
+				misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+				fraseActual = miPregunta;
+				ponerComoYaTratado(tema, miPregunta);
+			}catch(Exception e){}
 		}
 	}
 	
@@ -752,31 +756,35 @@ public class Conversacion {
 		Afirmacion miAfirmacion = null;
 		if(afirmativas != null && respuesta != null){
 			for(int index = 0; index < afirmativas.size(); index++){
-				if(afirmativas.get(index).equals("envioExitosoDeCorreo")){
-					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
-					if(this.enviarCorreo(email)){
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
-					}else{
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
+				try{
+					if(afirmativas.get(index).equals("envioExitosoDeCorreo")){
+						String email = respuesta.obtenerElementoDelContextoDeWatson("email");
+						if(this.enviarCorreo(email)){
+							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
+						}else{
+							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
+						}
 					}
-				}
-				if(respuesta.obtenerElementoDelContextoDeWatson("enviarInfoAlCorreo").equals("true"))
-				{
-					String email = respuesta.obtenerElementoDelContextoDeWatson("email");
-					if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
+					if(respuesta.obtenerElementoDelContextoDeWatson("enviarInfoAlCorreo").equals("true"))
+					{
+						String email = respuesta.obtenerElementoDelContextoDeWatson("email");
+						if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
+							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
+						}else{
+							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
+						}
 					}else{
-						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
+						miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index), frasesDelBloqueActual);
 					}
-				}else{
-					miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(afirmativas.get(index), frasesDelBloqueActual);
-				}
-				
-				if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
-					misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-					fraseActual = miAfirmacion;
-				}
-				ponerComoYaTratado(this.temaActual, miAfirmacion);
+					
+					if(miAfirmacion != null){
+						if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
+							misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+							fraseActual = miAfirmacion;
+						}
+						ponerComoYaTratado(this.temaActual, miAfirmacion);
+					}
+				}catch(Exception e){}
 			}
 		}
 	}
@@ -858,10 +866,14 @@ public class Conversacion {
 	}
 	
 	public boolean enviarRequisitosCorreo(String correo, String requisitos){
-		Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos, frasesDelBloqueActual);
-		String body = miAfirmacion.texto().getTextoDeLaFrase();
-		String tittle = temaActual.getDescripcion()+"-"+Calendar.getInstance().getTime();;
-		return email.sendEmail(tittle, correo, body);
+		try{
+			Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos, frasesDelBloqueActual);
+			String body = miAfirmacion.texto().getTextoDeLaFrase();
+			String tittle = temaActual.getDescripcion()+"-"+Calendar.getInstance().getTime();;
+			return email.sendEmail(tittle, correo, body);
+		}catch(Exception e){
+			return false;
+		}
 	}
 	
 	private ArrayList<Salida> agregarSalidasAlHistorico(ArrayList<Salida> misSalidas, Date fecha){

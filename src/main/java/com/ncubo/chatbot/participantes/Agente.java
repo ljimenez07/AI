@@ -218,10 +218,10 @@ public abstract class Agente extends Participante{
 					hayIntencionNoAsociadaANingunWorkspace = false;
 					if (! intencionDelCliente.equals("") && workspace != null){
 						nombreDeLaIntencionGeneralActiva = intencionDelCliente;	
-					}else{
+					}/*else{
 						nombreDeLaIntencionGeneralActiva = intencionNoEntiendo;
 						hayIntencionNoAsociadaANingunWorkspace = true;
-					}
+					}*/
 					
 					noEntendiLaUltimaRespuesta = true;
 					hayQueEvaluarEnNivelSuperior = false;

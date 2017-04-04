@@ -82,10 +82,11 @@ public class Tema
 			resultado = bloque.buscarUnaFrase(nombreDeLaFrase);
 		}
 		
-		if(resultado != null){
-			return resultado;
-		}
-		throw new ChatException(String.format("No existe una frase con id %s en el tema %s", nombreDeLaFrase, this.nombre));
+		//if(resultado != null){
+		//	return resultado;
+		//}
+		return resultado;
+		//throw new ChatException(String.format("No existe una frase con id %s en el tema %s", nombreDeLaFrase, this.nombre));
 	}
 
 	public Frase buscarUnaFraseCon(CaracteristicaDeLaFrase caracteristica){
