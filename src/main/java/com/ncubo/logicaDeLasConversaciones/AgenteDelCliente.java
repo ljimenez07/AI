@@ -35,7 +35,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	}
 	
 	@Override
-	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente){
+	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente, boolean generarAudio){
 		misUltimosResultados.clear();
 		ComponentesDeLaFrase miFraseADecir = null;
 		Salida salida = null;
@@ -231,54 +231,55 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	@Override
 	public void actualizarTodasLasVariablesDeContexto(Respuesta respuesta, Cliente cliente){
 		
-		Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(respuesta.obtenerLaFrase());
-		Enumeration<String> keys = variables.keys();
-		
-		while(keys.hasMoreElements()){
-			String key = keys.nextElement();
-			Variable variable = variables.get(key);
-			if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.CONTEXTO)){
-				try{
-					String valorDeLaVariableAGuardar = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
-					
-					if(valorDeLaVariableAGuardar.startsWith("sys-")){
-						valorDeLaVariableAGuardar = procesarEntidadSys(respuesta.messageResponse().getEntities(), valorDeLaVariableAGuardar);
-					}
-					
-					if( ! valorDeLaVariableAGuardar.equals("") && ! valorDeLaVariableAGuardar.startsWith("sys-")){
-						String comando = String.format("%s = Lista();", "lista");
-						ejecutarParametroEnElParser(cliente, comando);
-						comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", valorDeLaVariableAGuardar);
-						ejecutarParametroEnElParser(cliente, comando);
-						
-						ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
-						variable.setValorDeLaVariable(new String[]{valorDeLaVariableAGuardar}); 
-					}
-					
-					if( ! valorDeLaVariableAGuardar.equals("")){
-						String comando = String.format("%s = '%s';", variable.getNombre(), valorDeLaVariableAGuardar);
-						ejecutarParametroEnElParser(cliente, comando);
-					}
-					
-				}catch(Exception e){}
-			}
-		}
-		
-		variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesEstaticas();
-		keys = variables.keys();
-		while(keys.hasMoreElements()){
-			String key = keys.nextElement();
-			Variable variable = variables.get(key);
+		if(respuesta != null){
+			Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(respuesta.obtenerLaFrase());
+			Enumeration<String> keys = variables.keys();
 			
-			if( ! variable.getValorDeLaVariable()[0].equals("")){
-				String comando = String.format("%s = Lista();", "lista");
-				ejecutarParametroEnElParser(cliente, comando);
-				comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", variable.getValorDeLaVariable()[0]);
-				ejecutarParametroEnElParser(cliente, comando);
+			while(keys.hasMoreElements()){
+				String key = keys.nextElement();
+				Variable variable = variables.get(key);
+				if(variable.getTipoVariable().equals(Constantes.TiposDeVariables.CONTEXTO)){
+					try{
+						String valorDeLaVariableAGuardar = respuesta.obtenerElementoDelContextoDeWatson(variable.getNombre());
+						
+						if(valorDeLaVariableAGuardar.startsWith("sys-")){
+							valorDeLaVariableAGuardar = procesarEntidadSys(respuesta.messageResponse().getEntities(), valorDeLaVariableAGuardar);
+						}
+						
+						if( ! valorDeLaVariableAGuardar.equals("") && ! valorDeLaVariableAGuardar.startsWith("sys-")){
+							String comando = String.format("%s = Lista();", "lista");
+							ejecutarParametroEnElParser(cliente, comando);
+							comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", valorDeLaVariableAGuardar);
+							ejecutarParametroEnElParser(cliente, comando);
+							
+							ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+							variable.setValorDeLaVariable(new String[]{valorDeLaVariableAGuardar}); 
+						}
+						
+						if( ! valorDeLaVariableAGuardar.equals("")){
+							String comando = String.format("%s = '%s';", variable.getNombre(), valorDeLaVariableAGuardar);
+							ejecutarParametroEnElParser(cliente, comando);
+						}
+						
+					}catch(Exception e){}
+				}
+			}
+			
+			variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesEstaticas();
+			keys = variables.keys();
+			while(keys.hasMoreElements()){
+				String key = keys.nextElement();
+				Variable variable = variables.get(key);
 				
-				ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+				if( ! variable.getValorDeLaVariable()[0].equals("")){
+					String comando = String.format("%s = Lista();", "lista");
+					ejecutarParametroEnElParser(cliente, comando);
+					comando = String.format("xx = %s.guardarObjeto(Hilera('%s'));", "lista", variable.getValorDeLaVariable()[0]);
+					ejecutarParametroEnElParser(cliente, comando);
+					
+					ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
+				}
 			}
 		}
-		
 	}
 }

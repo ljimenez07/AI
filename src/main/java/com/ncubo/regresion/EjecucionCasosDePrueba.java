@@ -137,13 +137,14 @@ public class EjecucionCasosDePrueba {
 		Cliente cliente = new Cliente("Ricky", "123456", conectores);
 		
 		InformacionDelCliente informacionDelCliente = new InformacionDelCliente(idCliente, idCliente, "");
-		miconversacion = new Conversacion(cliente, consultaDao, new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones());
+		miconversacion = new Conversacion(cliente, consultaDao, new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones(), false);
 			
 		Vector <String> observaciones = new Vector <String>();
 		observaciones.add("\nEjecución del caso: " + descripcion);
 		
 		int contadorSalidas = 0;
 		boolean status = true;
+		ConexionALaDB.getInstance(Constantes.DB_HOST, Constantes.DB_NAME, Constantes.DB_USER, Constantes.DB_PASSWORD);
 		
 		ArrayList<Salida> salidasParaElCliente = miconversacion.inicializarLaConversacion();
 		LogDeLaConversacion conversacion = new LogDeLaConversacion();

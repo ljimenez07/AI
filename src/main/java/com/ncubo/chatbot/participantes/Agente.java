@@ -592,7 +592,7 @@ public abstract class Agente extends Participante{
 		}
 	}
 	
-	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);
+	public abstract Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente, boolean generarAudio);
 	
 	public abstract Salida volverAPreguntarUnaFrase(Frase pregunta, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente);
 	
@@ -619,7 +619,7 @@ public abstract class Agente extends Participante{
 			
 			@Override
 			public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente,
-					ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+					ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente, boolean generarAudio) {
 				// TODO Auto-generated method stub
 				return null;
 			}

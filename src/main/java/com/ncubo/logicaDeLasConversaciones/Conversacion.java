@@ -66,7 +66,7 @@ public class Conversacion {
 	private static HttpSolrClient solrClient;
 	private static RetrieveAndRank service = new RetrieveAndRank(); 
 	private BloquePendiente bloquePendiente = null;
-	
+	private boolean generarAudio = true;
 	private String userRetrieveAndRank;
 	private String passwordRetrieveAndRank;
 	private String collectionName;
@@ -75,7 +75,7 @@ public class Conversacion {
 	
 	private IntencionesNoReferenciadas intencionesNoReferenciadas;
 	
-	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, IntencionesNoReferenciadas intenciones){
+	public Conversacion(Cliente participante, ConsultaDao consultaDao, Agente miAgente, InformacionDelCliente cliente, IntencionesNoReferenciadas intenciones, boolean generarAudio){
 		// Hacer lamdaba para agregar los participantes
 		//this.participantes = new Participantes();
 		this.informacionDelCliente = cliente;
@@ -95,6 +95,7 @@ public class Conversacion {
 		email = new Email();
 		//temario = temarios.get(0);
 		intencionesNoReferenciadas = intenciones;
+		this.generarAudio = generarAudio;
 	}
 	
 	public void cambiarParticipante(Cliente participante){
@@ -119,11 +120,11 @@ public class Conversacion {
 		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 		
 		Saludo saludoGeneral = (Saludo) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnSaludo,intencionesNoReferenciadas.getINTENCION_SALUDAR());
-		misSalidas.add(agente.decirUnaFrase(saludoGeneral, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(saludoGeneral, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(),generarAudio));
 		ponerComoYaTratado(this.temaActual, saludoGeneral);
 		
 		Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
-		misSalidas.add(agente.decirUnaFrase(queQuiere, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(queQuiere, null, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(),generarAudio));
 		
 		ponerComoYaTratado(this.temaActual, queQuiere);
 		fechaDelUltimoRegistroDeLaConversacion = Calendar.getInstance().getTime();
@@ -152,7 +153,7 @@ public class Conversacion {
 			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 				Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(),generarAudio));
 				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 			}else{
 				String idFraseActivada = respuesta.obtenerFraseActivada();
@@ -395,7 +396,7 @@ public class Conversacion {
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 				}else{
 					idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -417,7 +418,7 @@ public class Conversacion {
 			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 				Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 			}else{
 				idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -465,7 +466,7 @@ public class Conversacion {
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 					Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 					ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 				}else{
 					idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -541,7 +542,7 @@ public class Conversacion {
 		if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 			String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
 			Afirmacion errorDeComunicacionConWatson = (Afirmacion) this.agente.obtenerTemario().contenido().frase(nombreFrase);
-			misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+			misSalidas.add(agente.decirUnaFrase(errorDeComunicacionConWatson, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 			ponerComoYaTratado(this.temaActual, errorDeComunicacionConWatson);
 		}else{
 			String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -554,12 +555,12 @@ public class Conversacion {
 	
 	private void volverlARetomarUnTema(ArrayList<Salida> misSalidas, Respuesta respuesta){
 		decirFraseRecordatoria(misSalidas, respuesta);
-		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 		agente.yaNoCambiarANivelSuperior();
 	}
 	
 	private void volverlARetomarUnBloque(ArrayList<Salida> misSalidas, Respuesta respuesta){
-		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(fraseActual, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 		agente.yaNoCambiarANivelSuperior();
 	}
 	
@@ -568,7 +569,7 @@ public class Conversacion {
 		String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_RECORDAR_TEMAS());
 		
 		Afirmacion fraseRecordatoria = (Afirmacion) this.agente.obtenerTemario().frase(nombreFrase);
-		misSalidas.add(agente.decirUnaFrase(fraseRecordatoria, respuesta, null, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(fraseRecordatoria, respuesta, null, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 
 	}
 	
@@ -578,7 +579,7 @@ public class Conversacion {
 		String nombreFrase = obtenerUnaFraseTipoPregunta(intencionesNoReferenciadas.getFRASES_INTENCION_NO_ENTIENDO());
 		
 		Pregunta fueraDeContexto = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
-		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+		misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 		ponerComoYaTratado(miTema, fueraDeContexto);
 	}
 	
@@ -598,11 +599,11 @@ public class Conversacion {
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
 
 				Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
-				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(miTema, saludar);
 				
 				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
-				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				//ponerComoYaTratado(temaActual, queQuiere);
 				
 				temasPendientes.borrarLosTemasPendientes();
@@ -613,7 +614,7 @@ public class Conversacion {
 				String nombreFrase = obtenerUnaFraseDespedida(intencionesNoReferenciadas.getFRASES_INTENCION_DESPEDIDA());
 				
 				Despedida saludar = (Despedida) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
-				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(miTema, saludar);
 				
 				temasPendientes.borrarLosTemasPendientes();
@@ -624,7 +625,7 @@ public class Conversacion {
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
 					
 					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
-					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 					ponerComoYaTratado(miTema, fueraDeContexto);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO())){
@@ -636,7 +637,7 @@ public class Conversacion {
 				
 				Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
 				
-				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(miTema, despistar);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_REPETIR_ULTIMA_FRASE())){
@@ -646,9 +647,9 @@ public class Conversacion {
 				Afirmacion conjuncion = (Afirmacion) this.agente.obtenerTemario().frase(idFrase);
 
 				if(!miUltimaSalida.get(0).getFraseActual().obtenerNombreDeLaFrase().equals(idFrase))
-					miUltimaSalida.add(0, agente.decirUnaFrase(conjuncion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					miUltimaSalida.add(0, agente.decirUnaFrase(conjuncion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				for(Salida salida: miUltimaSalida){
-					misSalidas.add(agente.decirUnaFrase(salida.getFraseActual(), respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					misSalidas.add(agente.decirUnaFrase(salida.getFraseActual(), respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				}
 	
 				//temasPendientes.borrarLosTemasPendientes();
@@ -659,7 +660,7 @@ public class Conversacion {
 
 				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_AGRADECIMIENTO());
 				Afirmacion queQuiere = (Afirmacion) this.agente.obtenerTemario().frase(frase);
-				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(miTema, queQuiere);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_QUE_PUEDEN_PREGUNTAR())){
@@ -668,7 +669,7 @@ public class Conversacion {
 
 				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_QUE_PUEDEN_PREGUNTAR());
 				Afirmacion queQuiere = (Afirmacion) this.agente.obtenerTemario().frase(frase);
-				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 				ponerComoYaTratado(miTema, queQuiere);
 			}
 			
@@ -733,7 +734,7 @@ public class Conversacion {
 		if( ! idFraseActivada.equals("")){
 			
 			miPregunta = (Pregunta) tema.buscarUnaFrase(idFraseActivada, frasesDelBloqueActual);
-			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+			misSalidas.add(agente.decirUnaFrase(miPregunta, respuesta, tema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 			fraseActual = miPregunta;
 			ponerComoYaTratado(tema, miPregunta);
 		}
@@ -764,7 +765,7 @@ public class Conversacion {
 				}
 				
 				if( ! yaExisteEstaSalida(misSalidas, miAfirmacion.obtenerNombreDeLaFrase()) ){
-					misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente()));
+					misSalidas.add(agente.decirUnaFrase(miAfirmacion, respuesta, temaActual, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
 					fraseActual = miAfirmacion;
 				}
 				ponerComoYaTratado(this.temaActual, miAfirmacion);

@@ -17,7 +17,7 @@ public class AgenteDeLaConversacion extends Agente{
 	}
 	
 	@Override
-	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente) {
+	public Salida decirUnaFrase(Frase frase, Respuesta respuesta, Tema tema, Cliente cliente, ModoDeLaVariable modoDeResolucionDeResultadosFinales, String idCliente, boolean generarAudio) {
 		// TODO Auto-generated method stub
 		return null;
 	}

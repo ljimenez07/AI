@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?><casosDePrueba>
-<caso descripcion="agua bienes inmuebles" idConversacion="33"/>
-<caso descripcion="agua ubicacion muni" idConversacion="34"/>
-<caso descripcion="patentes exoneracion agua" idConversacion="46"/>
-<caso descripcion="agua" idConversacion="50"/>
-<caso descripcion="pedir agua, interrumpir, terminar agua y pedir requisitos construccion" idConversacion="58"/><caso descripcion="guion demo BN" idConversacion="59"/><caso descripcion="que es bien patente, pedir basura, requisitos alcalde y horarios" idConversacion="60"/><caso descripcion="donde vive Sofi, nombre, edad, ya abrieron, cree en Dios" idConversacion="61"/></casosDePrueba>
+<caso descripcion="que es patente, basura requisitos alcalde y horarios" idConversacion="60"/>
+<caso descripcion="donde vive Sofi, nombre, edad, ya abrieron, cree en Dios" idConversacion="61"/>
+<caso descripcion="agua" idConversacion="66"/>
+</casosDePrueba>
