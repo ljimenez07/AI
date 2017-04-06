@@ -861,7 +861,7 @@ public class Conversacion {
 		//String correos = "sgonzales@cecropiasolutions.com";
 		GeneradorDeEmails generador = new GeneradorDeEmails();
 		String body = generador.generarNuevoCorreo(agente.verMiHistorico().verHistorialDeLaConversacion());
-		String tittle = "Conversacion con el agente de la Muni - "+Calendar.getInstance().getTime();
+		String tittle = "Conversacion con el agente de la "+informacionDelCliente.getNombreDelCliente()+" - "+Calendar.getInstance().getTime();
 		return email.sendEmail(tittle, correos, body);
 	}
 	

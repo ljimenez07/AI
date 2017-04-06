@@ -111,8 +111,8 @@ public class Constantes {
 	public static String DB_PASSWORD = "123456";
 	
 	// Email
-	public static String EMAIL_USER = "server.arts@gmail.com";
-	public static String EMAIL_PASS = "sruxxdbpfzwhkxrn";
+	public static String EMAIL_USER = "no-reply-nimbus@ncubo.com";
+	public static String EMAIL_PASS = "WeUs2kB61";
 	public static String EMAIL_PROJECT_NAME = "Ncubo";
 	public static String EMAIL_IMAGE_LOGO = "http://devs.ncubo.com:7870/logo.png";
 	public static String EMAIL_IMAGE_FOOTER = "http://devs.ncubo.com:7870/footerimg.png";
