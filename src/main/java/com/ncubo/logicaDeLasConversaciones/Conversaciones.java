@@ -8,6 +8,7 @@ import java.util.Enumeration;
 import java.util.Hashtable;
 
 import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
+import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.exceptiones.ChatException;
@@ -450,4 +451,12 @@ public class Conversaciones{
 	public String cambiarDeEstadoAVerificadoDeLaConversacion(String idCliente, String idSesion, String fecha) throws ClassNotFoundException, SQLException{
 		return this.cambiarDeEstadoAVerificadoDeLaConversacion(idCliente, idSesion, fecha);
 	}
+	
+	public ArrayList<Dialogo> verHistorialDeLaConversacion(UsuarioDeLaConversacion cliente){
+		if(existeLaConversacion(cliente.getIdSesion())){
+			return misConversaciones.get(cliente.getIdSesion()).verHistorialDeLaConversacion();
+		}
+		return  null;
+	}
+	
 }

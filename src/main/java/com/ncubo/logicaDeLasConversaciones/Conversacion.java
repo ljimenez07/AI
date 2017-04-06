@@ -14,6 +14,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ibm.watson.developer_cloud.retrieve_and_rank.v1.RetrieveAndRank;
+import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bloquesDeLasFrases.BloquePendiente;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
 import com.ncubo.chatbot.configuracion.Constantes;
@@ -768,7 +769,7 @@ public class Conversacion {
 					if(respuesta.obtenerElementoDelContextoDeWatson("enviarInfoAlCorreo").equals("true"))
 					{
 						String email = respuesta.obtenerElementoDelContextoDeWatson("email");
-						if(this.enviarRequisitosCorreo(email,afirmativas.get(index))){
+						if(this.enviarRequisitosCorreo(email, afirmativas.get(index))){
 							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioExitosoDeCorreo", frasesDelBloqueActual);
 						}else{
 							miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase("envioFallidoDeCorreo", frasesDelBloqueActual);
@@ -869,7 +870,7 @@ public class Conversacion {
 		try{
 			Afirmacion miAfirmacion = (Afirmacion) this.temaActual.buscarUnaFrase(requisitos, frasesDelBloqueActual);
 			String body = miAfirmacion.texto().getTextoDeLaFrase();
-			String tittle = temaActual.getDescripcion()+"-"+Calendar.getInstance().getTime();;
+			String tittle = temaActual.getDescripcion()+" - "+Calendar.getInstance().getTime();;
 			return email.sendEmail(tittle, correo, body);
 		}catch(Exception e){
 			return false;
@@ -943,4 +944,9 @@ public class Conversacion {
 	private HttpSolrClient getSolrClient(String uri, String username, String password) {
 	    return new HttpSolrClient(service.getSolrUrl(clusterId), HttpSolrClientUtils.createHttpClient(uri, username, password));
 	}
+	
+	public ArrayList<Dialogo> verHistorialDeLaConversacion(){
+		return agente.verMiHistorico().verHistorialDeLaConversacion();
+	}
+	
 }
