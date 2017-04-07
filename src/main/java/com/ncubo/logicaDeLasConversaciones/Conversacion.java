@@ -599,14 +599,35 @@ public class Conversacion {
 			Tema miTema = null;
 			if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_SALUDAR())){
 				System.out.println("Quiere saludar ...");
+				boolean esResaludar = false;
 				
 				String saludo = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_SALUDAR());
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_SALUDAR());
-
+				
+				ArrayList<Dialogo> conversacionCompleta = verHistorialDeLaConversacion();
+				if(conversacionCompleta != null){
+					if(conversacionCompleta.size() > 0){
+						esResaludar = true;
+					}
+				}
+				
 				try{
-					Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
-					misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-					ponerComoYaTratado(miTema, saludar);
+					if(esResaludar){
+						try{
+							Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase("reSaludar", frasesDelBloqueActual);
+							misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+							ponerComoYaTratado(miTema, saludar);
+						}catch(Exception e){
+							Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
+							misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+							ponerComoYaTratado(miTema, saludar);
+						}
+					}else{
+						Afirmacion saludar = (Afirmacion) miTema.buscarUnaFrase(saludo, frasesDelBloqueActual);
+						misSalidas.add(agente.decirUnaFrase(saludar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+						ponerComoYaTratado(miTema, saludar);
+					}
+					
 				}catch(Exception e){}
 				
 				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
