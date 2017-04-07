@@ -248,7 +248,7 @@ public class Constantes {
             "\t\tmargin: 0 auto;\n" +
             "\t}\n" +
             "\t.logo-header {\n" +
-            "\t\tmax-width: 400px;\n" +
+            "\t\tmax-width: 200px;\n" +
             "\t\twidth: 100%;\n" +
             "\t\t\n" +
             "\t}\n" +

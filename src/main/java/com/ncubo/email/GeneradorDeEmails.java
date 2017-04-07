@@ -15,6 +15,12 @@ public class GeneradorDeEmails {
 				replace("#FOOTER#", Constantes.EMAIL_IMAGE_FOOTER);
 	}
 	
+	public GeneradorDeEmails(String baseDelCorreo, String colorBase, String imagenLogo){
+		email = baseDelCorreo.replace("#COLOR#", colorBase).
+				replace("#LOGO#", imagenLogo).
+				replace("#FOOTER#", Constantes.EMAIL_IMAGE_FOOTER);
+	}
+	
 	public String generarNuevoCorreo(ArrayList<Dialogo> logDeLaConversacion){
 		String resultado = email;
 		String conversacion = "";
