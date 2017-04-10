@@ -459,4 +459,10 @@ public class Conversaciones{
 		return  null;
 	}
 	
+	public String obtenerValorDeLaVariable(UsuarioDeLaConversacion cliente, String nombreDeLaVariable){
+		if(existeLaConversacion(cliente.getIdSesion())){
+			return misConversaciones.get(cliente.getIdSesion()).obtenerValorDeLaVariable(nombreDeLaVariable);
+		}
+		return  "";
+	}
 }

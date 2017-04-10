@@ -928,4 +928,16 @@ public class Conversacion {
 		return agente.verMiHistorico().verHistorialDeLaConversacion();
 	}
 	
+	public String obtenerValorDeLaVariable(String nombreDeLaVariable){
+		String comando = String.format("show %s;", nombreDeLaVariable);
+		String valor = "";
+		try {
+			valor = participante.evaluarCondicion(comando);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			// e.printStackTrace();
+		}
+		return valor;
+	}
+	
 }

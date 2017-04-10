@@ -1,6 +1,5 @@
 package com.ncubo.logicaDeLasConversaciones;
 
-import java.awt.Dialog.ModalExclusionType;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Hashtable;
