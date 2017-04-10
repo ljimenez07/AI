@@ -1,11 +1,12 @@
 package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import com.ncubo.chatbot.bloquesDeLasFrases.BloquesDelTema;
 import com.ncubo.chatbot.bloquesDeLasFrases.FrasesDelBloque;
+import com.ncubo.chatbot.contexto.Variable;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.chatbot.watson.Intencion;
@@ -22,8 +23,11 @@ public class Tema
 	private final boolean sePuedeRepetir;
 	private final List<Intencion> intencionesDelTema;
 	private final BloquesDelTema bloquesDelTema;
+	private ArrayList<Variable> misVariablesDeContexto = new ArrayList<Variable>();
 	
-	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, boolean sePuedeRepetir, Intencion idDeLaIntencionGeneral, List<Intencion> intencionesDelTema, BloquesDelTema bloquesDelTema, Frase... frases){
+	public Tema (String idDelTema, String nombre, String descripcion, String nombreWorkspace, 
+			boolean sePuedeRepetir, Intencion idDeLaIntencionGeneral, List<Intencion> intencionesDelTema, 
+			BloquesDelTema bloquesDelTema, ArrayList<Variable> misVariables, Frase... frases){
 		this.idDelTema = idDelTema;
 		this.nombre = nombre;
 		this.descripcion = descripcion;
@@ -34,8 +38,25 @@ public class Tema
 		this.dependencias = new Temas();
 		this.intencionesDelTema = intencionesDelTema;
 		this.bloquesDelTema = bloquesDelTema;
+		this.misVariablesDeContexto = misVariables;
+		verificarVariablesDeContexto();
 	}
 	
+	public void verificarVariablesDeContexto(){
+    	for(Variable variable: misVariablesDeContexto){
+			if( ! VariablesDeContexto.getInstance().verificarSiUnaVariableDeContextoExiste(variable.getNombre()))
+				throw new ChatException(String.format("La variable %s no existe en el sistema.", variable.getNombre()));
+		}
+    }
+    
+    public boolean tieneVariablesDeContexto(){
+    	return ! this.misVariablesDeContexto.isEmpty();
+    }
+    
+    public ArrayList<Variable> obtenerLasVariablesDeContextoDeLaFrase(){
+    	return this.misVariablesDeContexto;
+    }
+    
 	public boolean elTemaTieneBloques(){
 		return bloquesDelTema.elTemaTieneBloques();
 	}

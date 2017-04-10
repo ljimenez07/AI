@@ -18,6 +18,8 @@ import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
 import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.configuracion.Constantes.ModoDeLaVariable;
+import com.ncubo.chatbot.contexto.Variable;
+import com.ncubo.chatbot.contexto.VariablesDeContexto;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
@@ -99,7 +101,7 @@ public abstract class Agente extends Participante{
 	}
 	
 	public MessageResponse llamarAWatson(String mensaje){
-		return miTopico.hablarConWatsonEnElNivelSuperior(null, mensaje).messageResponse();
+		return miTopico.hablarConWatsonEnElNivelSuperior(null, null, mensaje).messageResponse();
 	}
 	
 	public LogDeLaConversacion verMiHistorico(){
@@ -131,18 +133,38 @@ public abstract class Agente extends Participante{
 		}
 	}
 	
-	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
+	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase, Tema tema, String intencionNoEntiendo, Cliente participante){
 		Respuesta respuesta = null;
 		if(hayQueEvaluarEnNivelSuperior){
-			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase, intencionNoEntiendo);
+			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase, tema, intencionNoEntiendo);
 		}else{
-			respuesta = analizarRespuesta(respuestaDelCliente, frase, intencionNoEntiendo);
+			respuesta = analizarRespuesta(respuestaDelCliente, frase, tema, intencionNoEntiendo, participante);
 		}
 		return respuesta;
 	}
 	
-	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
-		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
+	private void agregarVariablesDeContextoDelClienteAWatson(Cliente participante, Frase frase, Tema tema){
+		
+		Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(frase, tema);
+		Enumeration<String> keys = variables.keys();
+		
+		while(keys.hasMoreElements()){
+			String key = keys.nextElement();
+			Variable variable = variables.get(key);
+			
+			String comando = String.format("show %s;", variable.getNombre());
+			try {
+				String valor = participante.evaluarCondicion(comando);
+				activarValiableEnElContextoDeWatson(variable.getNombre(), valor);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+			}
+		}
+	}
+
+	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase, Tema tema, String intencionNoEntiendo){
+		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, tema, respuestaDelCliente);
 		
 		cambiarDeTemaForzosamente = false;
 		
@@ -158,7 +180,7 @@ public abstract class Agente extends Participante{
 			Topico topico = null;
 			
 			if(workspace == null){ // && intencionDelCliente.equals("")
-				topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, respuestaDelCliente);
+				topico = misTopicos.buscarElTopicoDeMayorConfienza(frase, tema, respuestaDelCliente);
 				
 				if(topico != null){
 					System.out.println("Cambiando al WORKSPACE: "+topico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre());
@@ -171,7 +193,7 @@ public abstract class Agente extends Participante{
 					miTopico = topico;
 					nombreDeWorkspaceActual = miTopico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre();
 					
-					respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, respuestaDelCliente);
+					respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, tema, respuestaDelCliente);
 					lasDosUltimasIntencionesDeConfianza = determinarLasDosIntencionDeConfianzaEnUnWorkspace(respuesta.messageResponse().getIntents());
 					
 					intencionDelCliente = respuesta.obtenerLaIntencionDeConfianzaDeLaRespuesta().getNombre();
@@ -240,8 +262,11 @@ public abstract class Agente extends Participante{
 		return respuesta;
 	}
 	
-	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase, String intencionNoEntiendo){
-		Respuesta respuesta = miTopico.hablarConWatson(frase, respuestaDelCliente);
+	public Respuesta analizarRespuesta(String respuestaDelCliente, Frase frase, Tema tema, String intencionNoEntiendo, Cliente participante){
+		
+		agregarVariablesDeContextoDelClienteAWatson(participante, frase, tema);
+		
+		Respuesta respuesta = miTopico.hablarConWatson(frase, tema, respuestaDelCliente);
 		cambiarDeTemaForzosamente = false;
 		hayIntencionNoAsociadaANingunWorkspace = false;
 		int maximoIntentos = 4;
@@ -263,7 +288,7 @@ public abstract class Agente extends Participante{
 					pareceQueQuiereCambiarDeTemaForzosamente = true;
 				}
 				
-				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase, intencionNoEntiendo); // General
+				respuesta = enviarRespuestaAWatson(respuestaDelCliente, frase, tema, intencionNoEntiendo, participante); // General
 				cambiarDeTema = true;
 			}else{
 				if(frase.esMandatorio()){	
@@ -462,7 +487,7 @@ public abstract class Agente extends Participante{
 
 		Respuesta miRespuesta = respuesta;
 		if(reiniciarElWorkspace){
-			miRespuesta = miTopico.hablarConWatson(null, respuestaDelCliente);
+			miRespuesta = miTopico.hablarConWatson(null, null, respuestaDelCliente);
 			
 			try{
 				String contexto = new JSONObject(miRespuesta.messageResponse().getContext()).toString();

@@ -16,6 +16,7 @@ import com.ncubo.chatbot.watson.Intenciones;
 public class Respuesta {
 
 	private Frase miFrase;
+	private Tema miTema;
 	private Entidades misEntidades;
 	private Intenciones misIntenciones;
 	private ConversacionConWatson miConversacion;
@@ -32,12 +33,13 @@ public class Respuesta {
 	private boolean hayProblemasEnLaComunicacionConWatson;
 	private boolean teminoDeProcesarLaRespuestaDelAgente = false;
 	
-	public Respuesta(Frase frase, ConversacionConWatson conversacion, String context){
+	public Respuesta(Frase frase, Tema tema, ConversacionConWatson conversacion, String context){
 		this.terminoElTema = false;
 		this.fraseActivada = "";
 		this.hayUnAnythingElse = false;
 		this.seTerminoElBloque = false;
 		this.miFrase = frase;
+		this.miTema = tema;
 		this.miConversacion = conversacion;
 		this.miContexto = context;
 		this.misEntidades = new Entidades();
@@ -199,6 +201,10 @@ public class Respuesta {
 	
 	public Frase obtenerLaFrase(){
 		return this.miFrase;
+	}
+	
+	public Tema obtenerElTema(){
+		return this.miTema;
 	}
 	
 	public boolean hayOracionesAfirmativasActivas(){

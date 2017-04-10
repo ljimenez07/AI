@@ -9,6 +9,7 @@ import java.util.List;
 import com.ibm.watson.developer_cloud.conversation.v1.model.Intent;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.WorkSpace;
 
 public class Topicos {
@@ -103,7 +104,7 @@ public class Topicos {
 		return null;
 	}
 	
-	public Topico buscarElTopicoDeMayorConfienza(Frase frase, String textoDelUsuario){ // TODO Se hace mas complicado cuando quiero realizar mas de una intencion que estan en diferentes workspaces (quiero pagar el agua y hacer una declaracion)
+	public Topico buscarElTopicoDeMayorConfienza(Frase frase, Tema tema, String textoDelUsuario){ // TODO Se hace mas complicado cuando quiero realizar mas de una intencion que estan en diferentes workspaces (quiero pagar el agua y hacer una declaracion)
 		int cantidadTeTopicos = misTopicos.size();
 		Topico resultado = null;
 		Double laConfianzaMasAlta = 0.0;
@@ -114,18 +115,18 @@ public class Topicos {
 			List<Intent> intenciones = null;
 			
 			try{
-				respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, textoDelUsuario);
+				respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, tema, textoDelUsuario);
 				intenciones = respuesta.messageResponse().getIntents();
 			}catch(Exception e){
 				try {
 					Thread.sleep(1000);
 				} catch (InterruptedException e1) {}
 				try{
-					respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, textoDelUsuario);
+					respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, tema, textoDelUsuario);
 					intenciones = respuesta.messageResponse().getIntents();
 				}catch(Exception e2){
 					try{
-						respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, textoDelUsuario);
+						respuesta = topico.hablarConWatsonEnElNivelSuperior(frase, tema, textoDelUsuario);
 						intenciones = respuesta.messageResponse().getIntents();
 					}catch(Exception e3){}
 				}

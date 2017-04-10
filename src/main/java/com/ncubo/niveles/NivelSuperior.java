@@ -2,6 +2,7 @@ package com.ncubo.niveles;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
 
@@ -39,8 +40,8 @@ public class NivelSuperior extends Nivel{
 	}
 
 	@Override
-	public Respuesta hablarConWatson(Frase frase, String texto) {
-		return this.hablarConElAgenteCognitivo(frase, texto);
+	public Respuesta hablarConWatson(Frase frase, Tema tema, String texto) {
+		return this.hablarConElAgenteCognitivo(frase, tema, texto);
 	}
 
 	@Override

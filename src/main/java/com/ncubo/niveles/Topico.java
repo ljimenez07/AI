@@ -2,6 +2,7 @@ package com.ncubo.niveles;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.WorkSpace;
 import com.ncubo.logicaDeLasConversaciones.TemarioDelCliente;
 
@@ -31,12 +32,12 @@ public class Topico implements Cloneable{
 		hiloDelNivelDetallado.stop();
 	}
 	
-	public Respuesta hablarConWatsonEnElNivelSuperior(Frase frase, String texto){
-		return hiloDelNivelSuperior.hablarConWatson(frase, texto);
+	public Respuesta hablarConWatsonEnElNivelSuperior(Frase frase, Tema tema, String texto){
+		return hiloDelNivelSuperior.hablarConWatson(frase, tema, texto);
 	}
 	
-	public Respuesta hablarConWatson(Frase frase, String texto){
-		return hiloDelNivelDetallado.hablarConWatson(frase, texto);
+	public Respuesta hablarConWatson(Frase frase, Tema tema, String texto){
+		return hiloDelNivelDetallado.hablarConWatson(frase, tema, texto);
 	}
 	
 	public void actualizarContexto(String contexto) {

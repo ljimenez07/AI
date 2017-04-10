@@ -146,9 +146,8 @@ public class Conversacion {
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
-			agregarVariablesDeContextoDelClienteAWatson(fraseActual);
 			
-			respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+			respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, temaActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO(), participante);
 			this.hilo.agregarUnaRespuesta(respuesta);
 	
 			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
@@ -186,7 +185,7 @@ public class Conversacion {
 				volverlARetomarUnTema(misSalidas, respuesta);
 			}else{
 				agente.cambiarANivelSuperior();
-				respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+				respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, temaActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO(), participante);
 				if(esModoConsulta){
 					if(! verificarIntencionNoAsociadaANingunWorkspace(misSalidas, respuesta, respuestaDelCliente)){
 						String idFraseActivada = respuesta.obtenerFraseActivada();
@@ -315,7 +314,7 @@ public class Conversacion {
 								this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
 						
 						agente.cambiarANivelSuperior();
-						respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual,intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO());
+						respuesta = agente.enviarRespuestaAWatson(respuestaDelCliente, fraseActual, temaActual, intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO(), participante);
 						
 						respuesta = cambiarDeTema(idFraseActivada, respuestaDelCliente, misSalidas, respuesta); 
 					}
@@ -709,47 +708,6 @@ public class Conversacion {
 		}else{
 			return false;
 		}
-	}
-	
-	private void agregarVariablesDeContextoDelClienteAWatson(Frase frase){
-		if(frase == null){
-			return;
-		}
-		
-		Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(frase);
-		Enumeration<String> keys = variables.keys();
-		
-		while(keys.hasMoreElements()){
-			String key = keys.nextElement();
-			Variable variable = variables.get(key);
-			
-			String comando = String.format("show %s;", variable.getNombre());
-			try {
-				String valor = participante.evaluarCondicion(comando);
-				agente.activarValiableEnElContextoDeWatson(variable.getNombre(), valor);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
-			}
-		}
-		
-		/*if(! misValiables.isEmpty()){
-			for (String variable: misValiables){
-				if(variable.equals("estaLogueado")){
-					if (participante != null){
-						try {
-							boolean estaLogueado = this.participante.obtenerEstadoDeLogeo();
-							agente.activarValiableEnElContextoDeWatson("estaLogueado", String.valueOf(estaLogueado));
-						} catch (Exception e) {
-							// TODO Auto-generated catch block
-							System.out.println("Error al activar contexto en Watson: "+e.getMessage());
-						}
-					}else{
-						agente.activarValiableEnElContextoDeWatson("estaLogueado", "false");
-					}
-				}
-			}
-		}*/
 	}
 	
 	private void extraerOracionesAfirmarivasYPreguntas(ArrayList<Salida> misSalidas, Respuesta respuesta, String idFraseActivada){

@@ -232,7 +232,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 	public void actualizarTodasLasVariablesDeContexto(Respuesta respuesta, Cliente cliente){
 		
 		if(respuesta != null){
-			Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(respuesta.obtenerLaFrase());
+			Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto(respuesta.obtenerLaFrase(), respuesta.obtenerElTema());
 			Enumeration<String> keys = variables.keys();
 			
 			while(keys.hasMoreElements()){

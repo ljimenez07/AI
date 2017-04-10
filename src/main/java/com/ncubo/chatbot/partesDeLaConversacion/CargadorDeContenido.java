@@ -393,6 +393,8 @@ public abstract class CargadorDeContenido {
 						BloquesDelTema bloquesDelTema = new BloquesDelTema();
 						List<Intencion> intencionesDelTema = new ArrayList<>();
 						
+						ArrayList<Variable> misVariables = new ArrayList<>();
+						
 						Node nNode = tema.item(temp);
 						Element eElement = (Element) nNode;
 						
@@ -413,6 +415,16 @@ public abstract class CargadorDeContenido {
 						
 						String idDeLaIntencionGeneral = eElement.getElementsByTagName("idDeLaIntencionGeneral").item(0).getTextContent();
 						System.out.println("idDeLaIntencionGeneral : " + idDeLaIntencionGeneral);
+						
+						String[] variablesDeContexto = null;
+						try {
+							variablesDeContexto = eElement.getElementsByTagName("variablesDeContextoDeLaFrase").item(0).getTextContent().split(",");
+							for(int contador = 0; contador < variablesDeContexto.length; contador ++){
+								misVariables.add(new Variable(variablesDeContexto[contador], null, TiposDeVariables.CONTEXTO));
+							}
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+						}
 						
 						try{
 							String intenciones = eElement.getElementsByTagName("intencionesDelTema").item(0).getTextContent();
@@ -482,7 +494,8 @@ public abstract class CargadorDeContenido {
 						}
 						
 						Tema temaACargar = new Tema(idDelTema, nombreDelTema, descripcionDelTema, nombreWorkspace, 
-								Boolean.parseBoolean(sePuedeRepetir), new Intencion(idDeLaIntencionGeneral), intencionesDelTema, bloquesDelTema, frasesACargar);
+								Boolean.parseBoolean(sePuedeRepetir), new Intencion(idDeLaIntencionGeneral), 
+								intencionesDelTema, bloquesDelTema, misVariables, frasesACargar);
 						temasDelDiscurso.add(temaACargar);
 						
 						// Dependencias

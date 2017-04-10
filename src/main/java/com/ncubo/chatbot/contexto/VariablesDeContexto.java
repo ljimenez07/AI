@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import com.ncubo.chatbot.configuracion.Constantes.TiposDeVariables;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 
 public class VariablesDeContexto {
 
@@ -41,7 +42,7 @@ public class VariablesDeContexto {
 		return misVariables;
 	}
 	
-	public Hashtable<String, Variable> obtenerTodasLasVariablesDeMiContexto(Frase miFrase){
+	public Hashtable<String, Variable> obtenerTodasLasVariablesDeMiContexto(Frase miFrase, Tema miTema){
 		Hashtable<String, Variable> respuesta = new Hashtable<>();
 		if(miFrase != null){
 			ArrayList<Variable> variables = miFrase.obtenerLasVariablesDeContextoDeLaFrase();
@@ -53,6 +54,18 @@ public class VariablesDeContexto {
 				}
 			}
 		}
+		
+		if(miTema != null){
+			ArrayList<Variable> variables = miTema.obtenerLasVariablesDeContextoDeLaFrase();
+			if( variables != null){
+				for(Variable miVariable: variables){
+					if(verificarSiUnaVariableDeContextoExiste(miVariable.getNombre())){
+						respuesta.put(miVariable.getNombre(), obtenerUnaVariableDeMiContexto(miVariable.getNombre()));
+					}
+				}
+			}
+		}
+		
 		return respuesta;
 	}
 	

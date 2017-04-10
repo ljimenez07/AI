@@ -3,7 +3,6 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.watson.Entidades;
 import com.ncubo.chatbot.watson.Intenciones;

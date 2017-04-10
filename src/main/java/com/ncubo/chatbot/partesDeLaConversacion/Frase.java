@@ -2,7 +2,6 @@ package com.ncubo.chatbot.partesDeLaConversacion;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Hashtable;
 import java.util.List;
 import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.configuracion.Constantes;
@@ -21,7 +20,6 @@ public abstract class Frase
     private final CaracteristicaDeLaFrase[] caracteristicas;
     //private Intencion intencion;
     private String pathAGuardarLosAudiosTTS;
-    private String ipPublicaAMostrarLosAudioTTS;
     private int intentosFallidos = 0;
     private int version;
     private ArrayList<Variable> misVariablesDeContexto = new ArrayList<Variable>();

@@ -2,6 +2,7 @@ package com.ncubo.niveles;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
 import com.ncubo.chatbot.partesDeLaConversacion.Respuesta;
+import com.ncubo.chatbot.partesDeLaConversacion.Tema;
 import com.ncubo.chatbot.watson.ConversacionConWatson;
 import com.ncubo.chatbot.watson.WorkSpace;
 
@@ -44,11 +45,11 @@ public abstract class Nivel extends Thread{
 		}
 	}
 	
-	protected Respuesta hablarConElAgenteCognitivo(Frase frase, String texto){
+	protected Respuesta hablarConElAgenteCognitivo(Frase frase, Tema tema, String texto){
 		
 		int contador = 0;
 		mensajeAEnviar = texto;
-		respuestaDelAgenteCognitivo = new Respuesta(frase, miConversacionConElAgenteCognitivo, miConversacionConElAgenteCognitivo.getElContextoConWatson());
+		respuestaDelAgenteCognitivo = new Respuesta(frase, tema, miConversacionConElAgenteCognitivo, miConversacionConElAgenteCognitivo.getElContextoConWatson());
 		hayMesajeNuevo = true;
 		depertarNivel();
 		
@@ -84,7 +85,7 @@ public abstract class Nivel extends Thread{
 	
 	protected abstract void cargarWorkSpace();
 	public abstract void reiniciarContexto();
-	public abstract Respuesta hablarConWatson(Frase frase, String texto);
+	public abstract Respuesta hablarConWatson(Frase frase, Tema tema, String texto);
 	public abstract void actualizarContexto(String contexto);
 	public abstract String obtenerElContexto();
 }
