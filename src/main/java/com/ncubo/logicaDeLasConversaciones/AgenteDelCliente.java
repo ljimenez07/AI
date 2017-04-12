@@ -252,7 +252,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 							ejecutarParametroEnElParser(cliente, comando);
 							
 							ejecutarParametroEnElParser(cliente, variable.getNombre(), "lista");
-							variable.setValorDeLaVariable(new String[]{valorDeLaVariableAGuardar}); 
+							//variable.setValorDeLaVariable(new String[]{valorDeLaVariableAGuardar}); 
 						}
 						
 						if( ! valorDeLaVariableAGuardar.equals("")){
