@@ -57,7 +57,7 @@ public class GrabacionCasoDePrueba {
 	
 	public ArrayList<Salida> enviarTexto(String texto){
 		try {
-			 salidasParaElCliente = miConversacion.analizarLaRespuestaConWatson(texto, true);
+			 salidasParaElCliente = miConversacion.analizarLaRespuestaConWatson(texto, true, null);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			System.out.println("Problemas al enviar texto a Watson");

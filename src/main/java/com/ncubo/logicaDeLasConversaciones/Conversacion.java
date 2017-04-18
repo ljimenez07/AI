@@ -140,9 +140,11 @@ public class Conversacion {
 		return misSalidas;
 	}
 	
-	public ArrayList<Salida> analizarLaRespuestaConWatson(String respuestaDelCliente, boolean esModoConsulta) throws Exception{
+	public ArrayList<Salida> analizarLaRespuestaConWatson(String respuestaDelCliente, boolean esModoConsulta, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
 		ArrayList<Salida> misSalidas = new ArrayList<Salida>();
 		Respuesta respuesta = null;
+		
+		actualizarCookiesEnMemoriaDeLaConversacion(cookiesEnVariables);
 		
 		boolean hayTemaActualDiciendose = this.temaActual != null;
 		if(hayTemaActualDiciendose){
@@ -392,7 +394,7 @@ public class Conversacion {
 				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 				
 				// llamar a watson y ver que bloque se activo
-				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true, participante, fraseActual, temaActual);
 				
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
@@ -414,7 +416,7 @@ public class Conversacion {
 			agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 			
 			// llamar a watson y ver que bloque se activo
-			respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+			respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true, participante, fraseActual, temaActual);
 			
 			if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
@@ -462,7 +464,7 @@ public class Conversacion {
 				agente.activarValiableEnElContextoDeWatson("dialog_node", "root");
 				
 				// llamar a watson y ver que bloque se activo
-				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+				respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true, participante, fraseActual, temaActual);
 				
 				if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
@@ -496,7 +498,7 @@ public class Conversacion {
 						agente.activarTemaEnElContextoDeWatson(temaNuevo.getNombre());
 						
 						// llamar a watson y ver que bloque se activo
-						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, null, true);
+						Respuesta respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, null, true, participante, fraseActual, temaActual);
 						
 						if ( ! respuesta.hayProblemasEnLaComunicacionConWatson()){
 							String idFraseActivada = agente.obtenerNodoActivado(respuesta.messageResponse());
@@ -535,13 +537,13 @@ public class Conversacion {
 		System.out.println("Se va a preguntar por otra cosa ...");							
 		this.temaActual = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_PREGUNTAR_POR_OTRA_CONSULTA());
 
-		agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
+		agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, false, participante, fraseActual, temaActual);
 		
 		// Activar en el contexto el tema
 		agente.activarTemaEnElContextoDeWatson(this.temaActual.getNombre());
 		
 		// llamar a watson y ver que bloque se activo
-		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true);
+		respuesta = agente.inicializarTemaEnWatson(respuestaDelCliente, respuesta, true, participante, fraseActual, temaActual);
 		
 		if (respuesta.hayProblemasEnLaComunicacionConWatson()){
 			String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_ERROR_CON_WATSON());
@@ -938,6 +940,36 @@ public class Conversacion {
 			// e.printStackTrace();
 		}
 		return valor;
+	}
+	
+	private void actualizarCookiesEnMemoriaDeLaConversacion(Hashtable<String, Variable> cookiesEnVariables){
+		if(cookiesEnVariables != null){
+			Hashtable<String, Variable> variables = VariablesDeContexto.getInstance().obtenerTodasLasVariablesDeMiContexto();
+			Enumeration<String> keys = cookiesEnVariables.keys();
+			
+			while(keys.hasMoreElements()){
+				String key = keys.nextElement();
+				Variable variable = cookiesEnVariables.get(key);
+				
+				if(variables.containsKey(variable.getNombre())){
+					establecerValorDeLaVariable(variable.getNombre(), variable.getValorDeLaVariable()[0]);
+				}
+			}
+		}
+	}
+	
+	private boolean establecerValorDeLaVariable(String nombreDeLaVariable, String valorDeLaVariable){
+		String comando = String.format("%s = '%s'; show %s;", nombreDeLaVariable, valorDeLaVariable, nombreDeLaVariable);
+		boolean resultado = false;
+		try {
+			String valor = participante.evaluarCondicion(comando);
+			if(valor.contains(valorDeLaVariable))
+				resultado = true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return resultado;
 	}
 	
 }

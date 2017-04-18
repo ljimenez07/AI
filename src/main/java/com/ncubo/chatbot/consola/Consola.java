@@ -68,7 +68,7 @@ public class Consola {
 		while(true){
 			respuesta = main.leerTexto();
 			
-			salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(respuesta, true);
+			salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(respuesta, true, null);
 			main.imprimirSalidas(salidasParaElCliente);
 		}
 	}

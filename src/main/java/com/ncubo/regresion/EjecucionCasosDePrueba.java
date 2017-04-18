@@ -140,7 +140,7 @@ public class EjecucionCasosDePrueba {
 		miconversacion = new Conversacion(cliente, consultaDao, new AgenteDelCliente(temario), informacionDelCliente, temario.obtenerIntenciones(), false);
 			
 		Vector <String> observaciones = new Vector <String>();
-		observaciones.add("\nEjecución del caso: " + descripcion);
+		observaciones.add("\nEjecuciï¿½n del caso: " + descripcion);
 		
 		int contadorSalidas = 0;
 		boolean status = true;
@@ -157,14 +157,14 @@ public class EjecucionCasosDePrueba {
 			if(!dialogo.getLoQueDijoElParticipante().equals(""))
 			{
 				try {
-					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true);
+					salidasParaElCliente = miconversacion.analizarLaRespuestaConWatson(dialogo.getLoQueDijoElParticipante(), true, null);
 				} catch (Exception e) {
 					System.out.println(e.getMessage());
 					reintentarRespuestaAWatson(dialogo.getLoQueDijoElParticipante(), 1, miconversacion);
 				}
 				if(salidasParaElCliente.equals(null)){
 					status = false;
-					observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+					observaciones.add("Problemas de comunicaciï¿½n con Watson. El caso es interrumpido");
 					break;
 				}
 				else{
@@ -174,7 +174,7 @@ public class EjecucionCasosDePrueba {
 					try{
 						response = salidasParaElCliente.get(contadorSalidas).obtenerLaRespuestaDeIBM().messageResponse();
 					}catch(Exception e){
-						observaciones.add("Problemas de comunicación con Watson. El caso es interrumpido");
+						observaciones.add("Problemas de comunicaciï¿½n con Watson. El caso es interrumpido");
 						break;
 					}
 					List<Entity> listaDeEntidadesDeWatson = response.getEntities();
@@ -277,7 +277,7 @@ public class EjecucionCasosDePrueba {
 			return salida;
 		else{
 			try {
-				salida = miConversacion.analizarLaRespuestaConWatson(texto, true);
+				salida = miConversacion.analizarLaRespuestaConWatson(texto, true, null);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block	
 				reintentarRespuestaAWatson(texto, maximo--, miConversacion);

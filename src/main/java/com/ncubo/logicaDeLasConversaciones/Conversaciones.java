@@ -11,6 +11,7 @@ import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
+import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.IntencionesNoReferenciadas;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
@@ -94,7 +95,7 @@ public class Conversaciones{
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, AgenteDeLaConversacion agente, boolean generarAudio) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, AgenteDeLaConversacion agente, boolean generarAudio, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -108,7 +109,7 @@ public class Conversaciones{
 				// TODO Verificar si cambio el id de sesion, si es asi agregarla al cliente y hacerlo saber a conversacion
 				misClientes.get(cliente.getUsuarioId()).agregarIdsDeSesiones(cliente.getIdSesion());
 				misConversaciones.get(cliente.getIdSesion()).cambiarParticipante(misClientes.get(cliente.getUsuarioId())); // Actualizar cliente en la conversacion
-				resultado = hablarConElAjente(cliente, textoDelCliente);
+				resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				
 				synchronized (misClientes) {
 					misClientes.put(cliente.getUsuarioId(), misConversaciones.get(cliente.getIdSesion()).obtenerElParticipante());
@@ -119,7 +120,7 @@ public class Conversaciones{
 				crearUnaNuevoConversacion(cliente, agente, generarAudio);
 				semaphore.release();
 				
-				resultado = hablarConElAjente(cliente, textoDelCliente);
+				resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				/*if(existeLaConversacion(cliente.getIdSesion())){ // Es porque ya se cliente esta conversando y no se habia logueado, eso quiere decir que se tiene que mantener el contexto y NO saludar de nuevo
 					resultado = hablarConElAjente(cliente, textoDelCliente, esConocerte);
 				}else{
@@ -129,10 +130,10 @@ public class Conversaciones{
 		}else{
 			if(! cliente.getIdSesion().equals("")){
 				if(existeLaConversacion(cliente.getIdSesion())){
-					resultado = hablarConElAjente(cliente, textoDelCliente);
+					resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				}else{ // Crear una nueva conversacion
 					crearUnaNuevoConversacion(cliente, agente, generarAudio);
-					resultado = inicializarConversacionConElAgente(cliente, textoDelCliente);
+					resultado = inicializarConversacionConElAgente(cliente, textoDelCliente, cookiesEnVariables);
 				}
 			}else{
 				throw new ChatException("No se puede chatear porque no existe id de sesion");
@@ -142,7 +143,7 @@ public class Conversaciones{
 		return resultado;
 	}
 	
-	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> conversarConElAgenteCognitivo(UsuarioDeLaConversacion cliente, String textoDelCliente, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
 		ArrayList<Salida> resultado = null;
 		System.out.println("Coversar con "+cliente.getIdSesion());
 		
@@ -156,7 +157,7 @@ public class Conversaciones{
 				// TODO Verificar si cambio el id de sesion, si es asi agregarla al cliente y hacerlo saber a conversacion
 				misClientes.get(cliente.getUsuarioId()).agregarIdsDeSesiones(cliente.getIdSesion());
 				misConversaciones.get(cliente.getIdSesion()).cambiarParticipante(misClientes.get(cliente.getUsuarioId())); // Actualizar cliente en la conversacion
-				resultado = hablarConElAjente(cliente, textoDelCliente);
+				resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				
 				synchronized (misClientes) {
 					misClientes.put(cliente.getUsuarioId(), misConversaciones.get(cliente.getIdSesion()).obtenerElParticipante());
@@ -165,7 +166,7 @@ public class Conversaciones{
 		}else{
 			if(! cliente.getIdSesion().equals("")){
 				if(existeLaConversacion(cliente.getIdSesion())){
-					resultado = hablarConElAjente(cliente, textoDelCliente);
+					resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				}
 			}else{
 				throw new ChatException("No se puede chatear porque no existe id de sesion");
@@ -183,16 +184,16 @@ public class Conversaciones{
 		return misConversaciones.containsKey(idSesion);
 	}
 	
-	public ArrayList<Salida> inicializarConversacionConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> inicializarConversacionConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
 		if(textoDelCliente.isEmpty())
 			return misConversaciones.get(cliente.getIdSesion()).inicializarLaConversacion();
 		else
-			return hablarConElAjente(cliente, textoDelCliente);
+			return hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 	}
 	
-	public ArrayList<Salida> hablarConElAjente(UsuarioDeLaConversacion cliente, String textoDelCliente) throws Exception{
+	public ArrayList<Salida> hablarConElAjente(UsuarioDeLaConversacion cliente, String textoDelCliente, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
 		ArrayList<Salida> resultado = null;
-		resultado = misConversaciones.get(cliente.getIdSesion()).analizarLaRespuestaConWatson(textoDelCliente, true);
+		resultado = misConversaciones.get(cliente.getIdSesion()).analizarLaRespuestaConWatson(textoDelCliente, true, cookiesEnVariables);
 		return resultado;
 	}
 	

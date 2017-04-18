@@ -136,7 +136,7 @@ public abstract class Agente extends Participante{
 	public Respuesta enviarRespuestaAWatson(String respuestaDelCliente, Frase frase, Tema tema, String intencionNoEntiendo, Cliente participante){
 		Respuesta respuesta = null;
 		if(hayQueEvaluarEnNivelSuperior){
-			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase, tema, intencionNoEntiendo);
+			respuesta = analizarRespuestaInicial(respuestaDelCliente, frase, tema, intencionNoEntiendo, participante);
 		}else{
 			respuesta = analizarRespuesta(respuestaDelCliente, frase, tema, intencionNoEntiendo, participante);
 		}
@@ -163,7 +163,8 @@ public abstract class Agente extends Participante{
 		}
 	}
 
-	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase, Tema tema, String intencionNoEntiendo){
+	public Respuesta analizarRespuestaInicial(String respuestaDelCliente, Frase frase, Tema tema, 
+			String intencionNoEntiendo, Cliente participante){
 		Respuesta respuesta = miTopico.hablarConWatsonEnElNivelSuperior(frase, tema, respuestaDelCliente);
 		
 		cambiarDeTemaForzosamente = false;
@@ -186,7 +187,7 @@ public abstract class Agente extends Participante{
 					System.out.println("Cambiando al WORKSPACE: "+topico.getMiTemario().contenido().getMiWorkSpaces().get(0).getNombre());
 					if(frase != null)
 						if(frase.obtenerNombreDeLaFrase().contains("preguntarPorOtraConsulta"))
-							inicializarTemaEnWatson(respuestaDelCliente, respuesta, false);
+							inicializarTemaEnWatson(respuestaDelCliente, respuesta, false, participante, frase, tema);
 					
 					miUltimoTopico = miTopico.clone();
 					misTopicos.agregarUnTopicoEnElTop(miTopico);
@@ -483,8 +484,11 @@ public abstract class Agente extends Participante{
 		miTopico.actualizarContexto(obj.toString());
 	}
 	
-	public Respuesta inicializarTemaEnWatson(String respuestaDelCliente, Respuesta respuesta, boolean reiniciarElWorkspace){
+	public Respuesta inicializarTemaEnWatson(String respuestaDelCliente, Respuesta respuesta, boolean reiniciarElWorkspace, 
+			Cliente participante, Frase frase, Tema tema){
 
+		agregarVariablesDeContextoDelClienteAWatson(participante, frase, tema);
+		
 		Respuesta miRespuesta = respuesta;
 		if(reiniciarElWorkspace){
 			miRespuesta = miTopico.hablarConWatson(null, null, respuestaDelCliente);
