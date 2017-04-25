@@ -224,8 +224,13 @@ public class Conversacion {
 			volverlARetomarUnTema(misSalidas, respuesta);
 		}else{
 			if(! hayAlgunaPreguntaEnLasSalidas(misSalidas) && esModoConsulta && respuesta.seTerminoElTema() && 
-					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta") && ! hayAlgunaDespedidaEnLasSalidas(misSalidas)) // && ! existeLaFraseEnLasSalidas(misSalidas, obtenerUnaFraseDespedida(Constantes.FRASES_INTENCION_DESPEDIDA))
-				decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
+					! temasPendientes.hayTemasPendientes() && ! existeLaFraseEnLasSalidas(misSalidas, "noQuiereHacerOtraConsulta") && ! hayAlgunaDespedidaEnLasSalidas(misSalidas)){ // // && ! existeLaFraseEnLasSalidas(misSalidas, obtenerUnaFraseDespedida(Constantes.FRASES_INTENCION_DESPEDIDA))
+				if(misSalidas.isEmpty()){
+					decirTemaNoEntendi(misSalidas, respuesta);
+				}else{
+					decirTemaPreguntarPorOtraCosa(misSalidas, respuesta, respuestaDelCliente);
+				}
+			}
 		}
 		
 		if(misSalidas.isEmpty()){
