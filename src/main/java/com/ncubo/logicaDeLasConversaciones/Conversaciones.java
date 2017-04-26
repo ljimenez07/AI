@@ -11,6 +11,7 @@ import com.ncubo.chatbot.audiosXML.AudiosXMLDeLosClientes;
 import com.ncubo.chatbot.bitacora.Dialogo;
 import com.ncubo.chatbot.bitacora.HistoricosDeConversaciones;
 import com.ncubo.chatbot.bitacora.LogDeLaConversacion;
+import com.ncubo.chatbot.configuracion.Constantes;
 import com.ncubo.chatbot.contexto.Variable;
 import com.ncubo.chatbot.exceptiones.ChatException;
 import com.ncubo.chatbot.partesDeLaConversacion.IntencionesNoReferenciadas;
@@ -129,7 +130,7 @@ public class Conversaciones{
 			}
 		}else{
 			if(! cliente.getIdSesion().equals("")){
-				if(existeLaConversacion(cliente.getIdSesion())){
+				if(existeLaConversacion(cliente.getIdSesion()) && ! textoDelCliente.equals(Constantes.nuevoChat)){
 					resultado = hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);
 				}else{ // Crear una nueva conversacion
 					crearUnaNuevoConversacion(cliente, agente, generarAudio);
@@ -185,7 +186,7 @@ public class Conversaciones{
 	}
 	
 	public ArrayList<Salida> inicializarConversacionConElAgente(UsuarioDeLaConversacion cliente, String textoDelCliente, Hashtable<String, Variable> cookiesEnVariables) throws Exception{
-		if(textoDelCliente.isEmpty())
+		if(textoDelCliente.equals(Constantes.nuevoChat))
 			return misConversaciones.get(cliente.getIdSesion()).inicializarLaConversacion();
 		else
 			return hablarConElAjente(cliente, textoDelCliente, cookiesEnVariables);

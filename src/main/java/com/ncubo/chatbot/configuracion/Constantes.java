@@ -491,5 +491,5 @@ public class Constantes {
 	public static String USER_TEXT_TO_SPEECH = "8f1ec844-f8ad-4303-9293-3da7192c5b59";
 	public static String PASSWORD_TEXT_TO_SPEECH = "LHVIAi4Kfweb";
 	
-	
+	public static String nuevoChat = "bazinga127";
 }
