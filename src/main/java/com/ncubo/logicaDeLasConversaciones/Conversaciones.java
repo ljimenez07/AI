@@ -75,18 +75,17 @@ public class Conversaciones{
 			}
 			
 			resultado = "La nueva conversacion se creo exitosamente.";
-			System.out.println(resultado);
+			System.out.println(resultado+" Del cliente: "+usuario.getUsuarioId());
 		}else{
 			if (! usuario.getIdSesion().equals("")){
-				if( ! existeLaConversacion(usuario.getIdSesion())){
-					cliente = new Cliente(misConectores);
-					Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, intencionesNoReferenciadas, generarAudio);
-					synchronized(misConversaciones){
-						misConversaciones.put(usuario.getIdSesion(), coversacion);
-					}
-					resultado = "La nueva conversacion se creo exitosamente.";
-					System.out.println(resultado);
+				// if( ! existeLaConversacion(usuario.getIdSesion())){}
+				cliente = new Cliente(misConectores);
+				Conversacion coversacion = new Conversacion(cliente, consultaDao, agente, informacionDelCliente, intencionesNoReferenciadas, generarAudio);
+				synchronized(misConversaciones){
+					misConversaciones.put(usuario.getIdSesion(), coversacion);
 				}
+				resultado = "La nueva conversacion se creo exitosamente.";
+				System.out.println(resultado+" Del cliente: "+usuario.getIdSesion());
 			}else{
 				resultado = "La conversacion NO pudo ser creada";
 				throw new ChatException(resultado);
