@@ -155,7 +155,7 @@ public abstract class Agente extends Participante{
 			String comando = String.format("show %s;", variable.getNombre());
 			try {
 				String valor = participante.evaluarCondicion(comando);
-				activarValiableEnElContextoDeWatson(variable.getNombre(), valor);
+				activarValiableEnElContextoDeWatson(variable.getNombre(), valor.trim());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				// e.printStackTrace();
