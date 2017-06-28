@@ -617,6 +617,12 @@ public class Conversacion {
 					}
 				}
 				
+				if (temaActual != null && fraseActual != null){
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta")){
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
+					}
+				}
+				
 				try{
 					if(esResaludar){
 						try{
@@ -636,11 +642,22 @@ public class Conversacion {
 					
 				}catch(Exception e){}
 				
-				Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
-				misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-				//ponerComoYaTratado(temaActual, queQuiere);
+				if(temasPendientes.hayTemasPendientes()){ // TODO Sacar un tema top de la Pila
+					TemaPendiente temaPendiente = temasPendientes.extraerElSiquienteTema();
+					this.temaActual = temaPendiente.getTemaActual();
+					this.fraseActual = temaPendiente.getFraseActual();
+					this.frasesDelBloqueActual = temaPendiente.getFraseDelBloqueActual();
+					this.bloquePendiente = temaPendiente.getBloqueActual();
+					agente.setMiTopico(temaPendiente.getMiTopico());
+					agente.cambiarElContexto(temaPendiente.getContextoCognitivo());
+					volverlARetomarUnTema(misSalidas, respuesta);
+				}else{
+					Pregunta queQuiere = (Pregunta) this.agente.obtenerTemario().extraerFraseDeSaludoInicial(CaracteristicaDeLaFrase.esUnaPregunta,intencionesNoReferenciadas.getINTENCION_SALUDAR());
+					misSalidas.add(agente.decirUnaFrase(queQuiere, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					//ponerComoYaTratado(temaActual, queQuiere);
+				}
 				
-				temasPendientes.borrarLosTemasPendientes();
+				//temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_DESPEDIDA())){
 				System.out.println("Quiere despedirse ...");
@@ -657,26 +674,45 @@ public class Conversacion {
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO())){
 				System.out.println("Esta fuera de contexto ...");
-					miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO());
-					String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
-					
-					try{
-						Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
-						misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-						ponerComoYaTratado(miTema, fueraDeContexto);
-					}catch(Exception e){}
+				
+				if (temaActual != null && fraseActual != null){
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta")){
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
+					}
+				}
+				
+				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_FUERA_DE_CONTEXTO());
+				String nombreFrase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_FUERA_DE_CONTEXTO());
+				
+				try{
+					Afirmacion fueraDeContexto = (Afirmacion) miTema.buscarUnaFrase(nombreFrase, frasesDelBloqueActual);
+					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					ponerComoYaTratado(miTema, fueraDeContexto);
+				}catch(Exception e){}
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_NO_ENTIENDO())){
 				decirTemaNoEntendi(misSalidas, respuesta);
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_DESPISTADOR())){
 				System.out.println("Quiere despistar  ...");
+				
+				if (temaActual != null && fraseActual != null){
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta")){
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
+					}
+				}
+				
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_DESPISTADOR());
 				String nombreFrase = obtenerUnaFraseTipoPregunta(intencionesNoReferenciadas.getFRASES_INTENCION_DESPISTADOR());
 				
-				Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
-				
-				misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
-				ponerComoYaTratado(miTema, despistar);
+				try{
+					Afirmacion fueraDeContexto = (Afirmacion) this.agente.obtenerTemario().frase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(fueraDeContexto, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					ponerComoYaTratado(miTema, fueraDeContexto);
+				}catch(Exception e){
+					Pregunta despistar = (Pregunta) this.agente.obtenerTemario().frase(nombreFrase);
+					misSalidas.add(agente.decirUnaFrase(despistar, respuesta, miTema, participante, modoDeResolucionDeResultadosFinales, informacionDelCliente.getIdDelCliente(), generarAudio));
+					ponerComoYaTratado(miTema, despistar);
+				}
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_REPETIR_ULTIMA_FRASE())){
 				System.out.println("Quiere repetir  ...");
@@ -693,7 +729,14 @@ public class Conversacion {
 				//temasPendientes.borrarLosTemasPendientes();
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_AGRADECIMIENTO())){
-				System.out.println("Esta agradeciendo ...");							
+				System.out.println("Esta agradeciendo ...");	
+				
+				if (temaActual != null && fraseActual != null){
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta")){
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
+					}
+				}
+				
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_AGRADECIMIENTO());
 
 				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_AGRADECIMIENTO());
@@ -702,7 +745,14 @@ public class Conversacion {
 				ponerComoYaTratado(miTema, queQuiere);
 				
 			}else if(agente.obtenerNombreDeLaIntencionGeneralActiva().equals(intencionesNoReferenciadas.getINTENCION_QUE_PUEDEN_PREGUNTAR())){
-				System.out.println("Quiere saber que hago ...");							
+				System.out.println("Quiere saber que hago ...");
+				
+				if (temaActual != null && fraseActual != null){
+					if(! temaActual.getNombre().equals("preguntarPorOtraConsulta")){
+						this.temasPendientes.agregarUnTema(new TemaPendiente(temaActual, fraseActual, agente.getMiUltimoTopico(), frasesDelBloqueActual, bloquePendiente));
+					}
+				}
+				
 				miTema = this.agente.obtenerTemario().buscarTemaPorLaIntencion(intencionesNoReferenciadas.getINTENCION_QUE_PUEDEN_PREGUNTAR());
 
 				String frase = obtenerUnaFraseAfirmativa(intencionesNoReferenciadas.getFRASES_INTENCION_QUE_PUEDEN_PREGUNTAR());
