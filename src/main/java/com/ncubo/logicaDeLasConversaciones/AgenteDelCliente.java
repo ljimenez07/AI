@@ -38,7 +38,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		misUltimosResultados.clear();
 		ComponentesDeLaFrase miFraseADecir = null;
 		Salida salida = null;
-		if(!frase.hayFrasesConCondicion()&&!frase.hayFrasesConPlaceholders())
+		if( ! frase.hayFrasesConCondicion() && ! frase.hayFrasesConPlaceholders())
 			actualizarTodasLasVariablesDeContexto(respuesta,cliente);
 		if(frase.hayFrasesConCondicion()){
 			ArrayList<ComponentesDeLaFrase> misFrases = frase.extraerFrasesConCondicion();
@@ -87,7 +87,7 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 				miFraseADecir = frase.extraerFraseSinonimoConPlaceholders();
 			String texto = miFraseADecir.getTextoDeLaFrase();
 			String audio = miFraseADecir.getTextoAUsarParaGenerarElAudio();
-			Vineta vineta = null;
+			Vineta vineta = miFraseADecir.getVineta();
 			String fraseConPlaceholder = miFraseADecir.getTextoDeLaFrase();
 			for(Placeholder placeholder: miFraseADecir.obtenerLosPlaceholders()){
 				String valorARetornar = evaluarUnPlaceholder(respuesta, cliente, placeholder, miFraseADecir.obtenerLosPlaceholders(), modoDeResolucionDeResultadosFinales);
@@ -117,9 +117,9 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 				salida.escribir(miFraseADecir, respuesta, tema, frase, idAudio,texto, vineta);
 			else{
 				Sonido sonido = new Sonido("", "");
-				if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.REAL))
-					sonido = miFraseADecir.generarAudio(audio, idCliente);
-				salida.escribir(texto, sonido, respuesta, tema, frase,vineta);
+				//if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.REAL))
+				sonido = miFraseADecir.generarAudio(audio, idCliente);
+				salida.escribir(texto, sonido, respuesta, tema, frase, vineta);
 			}
 			salida.setMiTextoConPlaceholder(fraseConPlaceholder);
 		}
@@ -164,13 +164,17 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 		
 		// Ejecutar el valor usando el parser
 		String comando = "";
-		if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.PRUEBA)){
-			comando = String.format("x = %s%s.cambiarModoPrueba(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
+		if( ! plaseholder.getTipoDePlaceholder().equals(TiposDeVariables.CONTEXTO)){
+			if(modoDeResolucionDeResultadosFinales.equals(ModoDeLaVariable.PRUEBA)){
+				comando = String.format("x = %s%s.cambiarModoPrueba(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
+			}else{
+				comando = String.format("x = %s%s.cambiarModoReal(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
+			}
+			comando += String.format("%s = %s%s.evaluar(); show %s;", plaseholder.getNombreDelPlaceholder(),plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE ,plaseholder.getNombreDelPlaceholder());
 		}else{
-			comando = String.format("x = %s%s.cambiarModoReal(); ", plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE);
+			comando = String.format("show %s; ", plaseholder.getNombreDelPlaceholder());
 		}
-		comando += String.format("%s = %s%s.evaluar(); show %s;", plaseholder.getNombreDelPlaceholder(),plaseholder.getNombreDelPlaceholder(), Constantes.VARIABLE ,plaseholder.getNombreDelPlaceholder());
-
+		
 		try {
 			valorARetornar = cliente.evaluarCondicion(comando).trim().replace("\"", "");
 		} catch (Exception e) {
@@ -218,12 +222,15 @@ public class AgenteDelCliente extends AgenteDeLaConversacion{
 				ejecutarParametroEnElParser(cliente, placeholder.getNombreDelPlaceholder(), "lista");
 			}
 			
-			String comando = "x = "+placeholder.getNombreDelPlaceholder()+Constantes.VARIABLE+".agregarParametros("+Constantes.INSTANCEA_PARAMETROS+");";
-			try {
-				cliente.evaluarCondicion(comando);
-			} catch (Exception e) {
-				e.printStackTrace();
+			if( ! placeholder.getTipoDePlaceholder().equals(TiposDeVariables.CONTEXTO)){
+				String comando = "x = "+placeholder.getNombreDelPlaceholder()+Constantes.VARIABLE+".agregarParametros("+Constantes.INSTANCEA_PARAMETROS+");";
+				try {
+					cliente.evaluarCondicion(comando);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
+			
 		}
 	}
 	

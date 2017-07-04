@@ -3,6 +3,7 @@ package com.ncubo.chatbot.bloquesDeLasFrases;
 import java.util.ArrayList;
 
 import com.ncubo.chatbot.contexto.VariablesDeContexto;
+import com.ncubo.chatbot.participantes.Cliente;
 import com.ncubo.evaluador.main.Evaluador;
 
 public class Bloque {
@@ -48,6 +49,25 @@ public class Bloque {
 			}
 		}
 	}
+	
+	public boolean sePuedeDecirElBloque(Cliente cliente){
+		if(this.tieneCondicion()){
+			String comando = "show "+this.getCondicion()+";";
+			try {
+				if(cliente.evaluarCondicion(comando).contains("true")){
+					return true;
+				}else{
+					return false;
+				}
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				// e.printStackTrace();
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	
 	public boolean tieneCondicion(){
 		return ! condicion.isEmpty();

@@ -47,39 +47,23 @@ public class BloquesDelTema {
 		return ! misBloques.isEmpty();
 	}
 	
-	public boolean sePuedeDecirElBloque(FrasesDelBloque bloque, Cliente cliente){
-		if(bloque.tieneCondicion()){
-			String comando = "show "+bloque.getCondicion()+";";
-			try {
-				if(cliente.evaluarCondicion(comando).contains("true")){
-					return true;
-				}else{
-					return false;
-				}
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				// e.printStackTrace();
-				return false;
-			}
-		}
-		return true;
-	}
-	
 	public FrasesDelBloque buscarSiguienteBloqueADecir(BloquesDelTema bloquesYaConcluidos, FrasesDelBloque bloqueActual, Cliente cliente){
 		Collections.shuffle(misBloques); // Desordenar el array
 		for(FrasesDelBloque bloque: misBloques){
+			
+			FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
+			boolean elBloqueYaFueDicho = miBloque != null;
+			
 			if( bloqueActual != null){
 				if( ! bloque.getIdDelBloque().equals(bloqueActual.getIdDelBloque())){
 					if(bloque.tieneDependencias()){
 						if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
-							if(sePuedeDecirElBloque(bloque, cliente))
+							if(bloque.sePuedeDecirElBloque(cliente) && ! elBloqueYaFueDicho)
 								return bloque;
 						}
 					}else{
-						FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
-						boolean elBloqueYaFueDicho = miBloque != null;
 						if(! elBloqueYaFueDicho){
-							if(sePuedeDecirElBloque(bloque, cliente))
+							if(bloque.sePuedeDecirElBloque(cliente))
 								return bloque;
 						}
 					}
@@ -87,20 +71,39 @@ public class BloquesDelTema {
 			}else{
 				if(bloque.tieneDependencias()){
 					if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
-						if(sePuedeDecirElBloque(bloque, cliente))
+						if(bloque.sePuedeDecirElBloque(cliente) && ! elBloqueYaFueDicho)
 							return bloque;
 					}
 				}else{
-					FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
-					boolean elBloqueYaFueDicho = miBloque != null;
+					
 					if(! elBloqueYaFueDicho){
-						if(sePuedeDecirElBloque(bloque, cliente))
+						if(bloque.sePuedeDecirElBloque(cliente))
 							return bloque;
 					}
 				}
 			}
 			
 		}
+		
+		// TODO Verificar si alguno de los bloques que quedan por decir tiene dependencias de bloques que no se pueden decir porque no cumplen la condicion
+		for(FrasesDelBloque bloque: misBloques){
+			
+			FrasesDelBloque miBloque = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
+			boolean elBloqueYaFueDicho = miBloque != null;
+			
+			if( bloqueActual != null){
+				if( ! bloque.getIdDelBloque().equals(bloqueActual.getIdDelBloque())){
+					if(bloque.tieneDependencias() && ! elBloqueYaFueDicho && bloque.sePuedeDecirElBloque(cliente)){
+						if( ! bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
+							if(bloque.puedoDecirElBloquePorqueLasDependenciasNoDichasNoSePuedenDecirPorqueNoCumplenLaCondicion(bloquesYaConcluidos, cliente)){
+								return bloque;
+							}
+						}
+					}
+				}
+			}
+		}
+								
 		return null;
 	}
 	

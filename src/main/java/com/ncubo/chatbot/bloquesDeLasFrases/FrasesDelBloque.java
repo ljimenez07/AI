@@ -3,11 +3,12 @@ package com.ncubo.chatbot.bloquesDeLasFrases;
 import java.util.ArrayList;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Frase;
+import com.ncubo.chatbot.participantes.Cliente;
 
 public class FrasesDelBloque extends Bloque{
 
 	private final ArrayList<Frase> misFrases;
-	private final ArrayList<Bloque> misDependencias;
+	private final ArrayList<FrasesDelBloque> misDependencias;
 	
 	public FrasesDelBloque(String idDelBloque, String condicion){
 		super(idDelBloque, condicion);
@@ -46,6 +47,21 @@ public class FrasesDelBloque extends Bloque{
 				return false;
 			}
 		}
+		return true;
+	}
+	
+	public boolean puedoDecirElBloquePorqueLasDependenciasNoDichasNoSePuedenDecirPorqueNoCumplenLaCondicion(BloquesDelTema bloquesYaConcluidos, Cliente cliente){
+		
+		for(FrasesDelBloque bloque: misDependencias){
+			FrasesDelBloque bloqueDependiente = bloquesYaConcluidos.buscarUnBloque(bloque.getIdDelBloque());
+			boolean elBloqueYaFueConcluido = bloqueDependiente != null;
+			if( ! elBloqueYaFueConcluido && bloque.sePuedeDecirElBloque(cliente)){
+				if(bloque.todasLasDependenciasFueronConcluidas(bloquesYaConcluidos)){
+					return false;
+				}
+			}
+		}
+		
 		return true;
 	}
 	
