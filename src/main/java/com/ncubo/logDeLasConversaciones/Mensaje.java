@@ -9,14 +9,11 @@ import java.util.UUID;
 public class Mensaje {
 
 	private final String idDeMensaje;
-	private final String idUsuarioQuienLoCreo;
-	private final String nombreDelUsuarioQuienLoCreo;
 	private final Salida detalleDelMensaje;
 	private final Date fechaDelCreacionDelMensaje;
-	
-	private static final String USUARIO_ANONIMO = "Anónimo";
-	
-	public Mensaje(String idUsuario, String idDeMensaje, Salida mensaje, Date fecha, String nombreUsuario){
+	private final UsuarioDelChat informacionDelUsuario;
+
+	public Mensaje(String idDeMensaje, Salida mensaje, Date fecha, UsuarioDelChat usuario){
 		SimpleDateFormat formato = new SimpleDateFormat("yyMMddhhmmssMs");
 		
 		if( fecha == null){
@@ -31,18 +28,10 @@ public class Mensaje {
 			this.idDeMensaje = idDeMensaje;
 		}
 		
-		if(idUsuario.isEmpty() && nombreUsuario.isEmpty()){
-			this.nombreDelUsuarioQuienLoCreo = USUARIO_ANONIMO;
-		}else{
-			this.nombreDelUsuarioQuienLoCreo = nombreUsuario;
-		}
-		this.idUsuarioQuienLoCreo = idUsuario;
+		this.informacionDelUsuario = usuario;
 		this.detalleDelMensaje = mensaje;
 	}
 	
-	public String getIdUsuarioQuienLoCreo() {
-		return idUsuarioQuienLoCreo;
-	}
 
 	public Salida getDetalleDelMensaje() {
 		return detalleDelMensaje;
@@ -56,8 +45,8 @@ public class Mensaje {
 		return fechaDelCreacionDelMensaje;
 	}
 	
-	public String getNombreDelUsuarioQuienLoCreo() {
-		return nombreDelUsuarioQuienLoCreo;
+	public UsuarioDelChat getInformacionDelUsuario() {
+		return informacionDelUsuario;
 	}
 	
 }
