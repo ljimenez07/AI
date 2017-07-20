@@ -6,12 +6,12 @@ import java.util.Date;
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import java.util.UUID;
 
-public class Mensaje {
+public class Mensaje{
 
-	private final String idDeMensaje;
-	private final Salida detalleDelMensaje;
-	private final Date fechaDelCreacionDelMensaje;
-	private final UsuarioDelChat informacionDelUsuario;
+	private String idDeMensaje;
+	private Salida detalleDelMensaje;
+	private Date fechaDelCreacionDelMensaje;
+	private UsuarioDelChat informacionDelUsuario;
 
 	public Mensaje(String idDeMensaje, Salida mensaje, Date fecha, UsuarioDelChat usuario){
 		SimpleDateFormat formato = new SimpleDateFormat("yyMMddhhmmssMs");
@@ -32,21 +32,36 @@ public class Mensaje {
 		this.detalleDelMensaje = mensaje;
 	}
 	
+	public String getIdDeMensaje() {
+		return idDeMensaje;
+	}
+
+	public void setIdDeMensaje(String idDeMensaje) {
+		this.idDeMensaje = idDeMensaje;
+	}
 
 	public Salida getDetalleDelMensaje() {
 		return detalleDelMensaje;
 	}
 
-	public String getIdDeMensaje() {
-		return idDeMensaje;
+	public void setDetalleDelMensaje(Salida detalleDelMensaje) {
+		this.detalleDelMensaje = detalleDelMensaje;
 	}
 
 	public Date getFechaDelCreacionDelMensaje() {
 		return fechaDelCreacionDelMensaje;
 	}
-	
+
+	public void setFechaDelCreacionDelMensaje(Date fechaDelCreacionDelMensaje) {
+		this.fechaDelCreacionDelMensaje = fechaDelCreacionDelMensaje;
+	}
+
 	public UsuarioDelChat getInformacionDelUsuario() {
 		return informacionDelUsuario;
+	}
+
+	public void setInformacionDelUsuario(UsuarioDelChat informacionDelUsuario) {
+		this.informacionDelUsuario = informacionDelUsuario;
 	}
 	
 }

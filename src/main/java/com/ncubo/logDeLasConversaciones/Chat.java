@@ -5,21 +5,26 @@ import java.util.Date;
 import java.util.Hashtable;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
+import com.ncubo.db.ChatDao;
 
 public class Chat {
 
 	private final String idDeLaConversacion;
 	private ArrayList<Mensaje> misMensajes;
-	private final Date fechaDeCreacion;
+	private Date fechaDeCreacion;
 	private final String idUsuarioQuienLoCreo;
 	private Hashtable<String, UsuarioDelChat> usuariosDelChat;
+	private final String idDelClienteCompania;
+	private ChatDao chatDao;
 	
-	public Chat(String idConversacion, String idUsuario){
+	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania){
 		this.fechaDeCreacion = new Date();
 		this.idDeLaConversacion = idConversacion;
 		this.misMensajes = new ArrayList<>();
 		this.idUsuarioQuienLoCreo = idUsuario;
 		this.usuariosDelChat = new Hashtable<>();
+		this.idDelClienteCompania = idDelClienteCompania;
+		this.chatDao = new ChatDao();
 	}
 	
 	public boolean existeElUsuarioEnElChat(String idDelUsuario){
@@ -48,7 +53,10 @@ public class Chat {
 	
 	public boolean agregarUnMensaje(String idUsuario, String idDeMensaje, Salida mensaje, Date fecha){
 		if (existeElUsuarioEnElChat(idUsuario)){
-			misMensajes.add(new Mensaje(idDeMensaje, mensaje, fecha, usuariosDelChat.get(idUsuario)));
+			Mensaje mensajeAEnviar = new Mensaje(idDeMensaje, mensaje, fecha, usuariosDelChat.get(idUsuario));
+			
+			this.chatDao.insertarUnMesajeALaConversacion(this.idDeLaConversacion, mensajeAEnviar);
+			misMensajes.add(mensajeAEnviar);
 			return true;
 		}
 		return false;
@@ -96,8 +104,20 @@ public class Chat {
 		return fechaDeCreacion;
 	}
 
+	public void setFechaDeCreacion(Date fecha) {
+		fechaDeCreacion = fecha;
+	}
+	
 	public String getIdUsuarioQuienLoCreo() {
 		return idUsuarioQuienLoCreo;
+	}
+	
+	public String getIdDelClienteCompania() {
+		return idDelClienteCompania;
+	}
+	
+	public void actualizarUsuarios(Hashtable<String, UsuarioDelChat> usuarios){
+		this.usuariosDelChat = usuarios;
 	}
 	
 }

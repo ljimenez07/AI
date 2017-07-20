@@ -27,6 +27,8 @@ public class Salida implements Serializable{
 	private boolean seTerminoElChat;
 	private Date miFecha;
 	private String miTextoConPlaceholder;
+	private Imagen miImagen;
+	private ArchivoAdjunto archivoAdjunto;
 	
 	public Salida(){
 		miTexto = "";
@@ -37,6 +39,8 @@ public class Salida implements Serializable{
 		seTerminoElChat = false;
 		miFecha = new Date();
 		miTextoConPlaceholder = "";
+		miImagen = null;
+		archivoAdjunto = null;
 	}
 	
 	public void escribir(String texto, Respuesta respuesta, Tema tema, Frase frase){
@@ -102,6 +106,36 @@ public class Salida implements Serializable{
 		this.miRespuesta = respuesta;
 		this.temaActual = tema;
 		this.fraseActual = frase;
+	}
+	
+	public void escibirUnaImagen(Imagen imagen){
+		miImagen = imagen;
+	}
+	
+	public boolean hayImagen(){
+		return miImagen != null;
+	}
+	
+	public Imagen obtenerImagen(){
+		if(miImagen == null){
+			return new Imagen("");
+		}
+		return miImagen;
+	}
+	
+	public void escibirUnArchivo(ArchivoAdjunto archivo){
+		archivoAdjunto = archivo;
+	}
+	
+	public boolean hayArchivo(){
+		return archivoAdjunto != null;
+	}
+	
+	public ArchivoAdjunto obtenerArchivo(){
+		if(archivoAdjunto == null){
+			return new ArchivoAdjunto("");
+		}
+		return archivoAdjunto;
 	}
 	
 	private boolean existeLaVineta(Vineta vineta){

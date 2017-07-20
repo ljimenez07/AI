@@ -227,7 +227,7 @@ public class TextToSpeechWatson{
 		return nombreDelArchivo;
 	}
 	
-	private InputStream transformarAMp3(InputStream in, String extensionOriginal, File parentDirectory)
+	public InputStream transformarAMp3(InputStream in, String extensionOriginal, File parentDirectory)
 	{
 		File archivoMp3 = new File(parentDirectory, "Watson.mp3");
 		try {
@@ -319,7 +319,7 @@ public class TextToSpeechWatson{
 		return inputStream;
 	}
 	
-	private void transferirAudiosAlFTP(boolean esAudioDinamico, String pathFinal, InputStream in) throws IOException
+	public void transferirAudiosAlFTP(boolean esAudioDinamico, String pathFinal, InputStream in) throws IOException
 	{
 		if(in != null){
 			if(esAudioDinamico){

@@ -57,6 +57,9 @@ public class DetalleDeConversacionDao {
 			stmt.setString(8, idCliente);
 			
 			stmt.executeUpdate();
+			
+			ConexionALaDB.getInstance().closeConBD();
+			
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally{
