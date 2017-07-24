@@ -22,7 +22,8 @@ public class ChatDao {
 
 	private final String NOMBRE_TABLA_CHAT = "chat";
 	private final String NOMBRE_TABLA_MENSAJE = "mensaje";
-
+	private final String NOMBRE_TABLA_MENSAJES_CHAT = "mensajes_por_chat";
+	
 	public enum atributosDelChatDao{
 		
 		ID("idchat"), ID_CONVERSACION("idDeLaConversacion"), ID_USUARIO("idUsuarioQueLoCreo"), 
@@ -48,6 +49,22 @@ public class ChatDao {
 		private String nombre;
 		
 		atributosDelMensajeDao(String nombre){
+			this.nombre = nombre;
+		}
+		
+		public String toString(){
+			return this.nombre;
+		}
+		
+	}
+
+	public enum atributosDeLosMensajesPorChatDao{
+		
+		ID("idMensajePorChat"), ID_CONVERSACION("idConversacion"), ID_MENSAJE("idMensaje");
+		
+		private String nombre;
+		
+		atributosDeLosMensajesPorChatDao(String nombre){
 			this.nombre = nombre;
 		}
 		
@@ -145,12 +162,14 @@ public class ChatDao {
 		}
 	}
 	
-	public void insertarUnMesajeALaConversacion(String idDeLaConversacion, Mensaje mensaje){
+	public boolean insertarUnMesajeALaConversacion(String idDeLaConversacion, Mensaje mensaje){
+		
+		boolean resultado = true;
 		
 		String query = "INSERT INTO " + NOMBRE_TABLA_MENSAJE + "(" + atributosDelMensajeDao.ID_MENSAJE+", "+
 				atributosDelMensajeDao.ID_USUARIO+", "+ atributosDelMensajeDao.ID_CONVERSACION+", "+ atributosDelMensajeDao.FECHA+", "+
 				atributosDelMensajeDao.TEXTO+", "+atributosDelMensajeDao.AUDIO+", "+atributosDelMensajeDao.IMAGEN+", "+
-				atributosDelMensajeDao.ARCHIVO+ ", "+atributosDelMensajeDao.VINETA+") VALUES (?,?,?,?,?,?,?,?,?);";
+				atributosDelMensajeDao.ARCHIVO+ ", "+atributosDelMensajeDao.VINETA + ") VALUES (?,?,?,?,?,?,?,?,?);";
 		
 		Connection con = null;
 		try {
@@ -172,35 +191,76 @@ public class ChatDao {
 			}
 			
 			stmt.setString(9, vinetas);
+			stmt.executeUpdate();			
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultado = false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultado = false;
+		}
+	
+		ConexionALaDB.getInstance().closeConBD();
+		
+		if(resultado){
+			return insertarMensajePorConversacion(idDeLaConversacion, mensaje);
+		}else{
+			return resultado;
+		}
+		
+	}
+	
+	public boolean insertarMensajePorConversacion(String idDeLaConversacion, Mensaje mensaje){
+		
+		boolean resultado = true;
+		String queryMensajePorChat = "INSERT INTO " + NOMBRE_TABLA_MENSAJES_CHAT + "(" + 
+				atributosDeLosMensajesPorChatDao.ID_CONVERSACION+", "+ atributosDeLosMensajesPorChatDao.ID_MENSAJE+") VALUES (?,?);";
+		
+		Connection con = null;
+		try {
+			con = ConexionALaDB.getInstance().openConBD();
+			PreparedStatement stmt = con.prepareStatement(queryMensajePorChat, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, idDeLaConversacion);
+			stmt.setString(2, mensaje.getIdDeMensaje());
 			
 			stmt.executeUpdate();
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			resultado = false;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			resultado = false;
 		}
 		
 		ConexionALaDB.getInstance().closeConBD();
+		return resultado;
 	}
 	
 	public ArrayList<Mensaje> buscarMensajes(String idUsuario, String idDeLaConversacion){
 		
 		ArrayList<Mensaje> respuesta = new ArrayList<>();
 		
-		String query = "select * from "+NOMBRE_TABLA_MENSAJE;
+		String query = "select mensajes_por_chat.idMensaje, mensaje.idDelUsuario, mensaje.urlDelAudio, mensaje.urlDeLaImagen, mensaje.urlDelArchivo, mensaje.textoDelMensaje, mensaje.vineta, mensaje.fechaDeCreacion FROM "
+				+ NOMBRE_TABLA_MENSAJE+" inner join "+NOMBRE_TABLA_MENSAJES_CHAT+
+				" on "+NOMBRE_TABLA_MENSAJE+"."+atributosDelMensajeDao.ID_MENSAJE+" = "+ NOMBRE_TABLA_MENSAJES_CHAT+"."+ 
+				atributosDeLosMensajesPorChatDao.ID_MENSAJE;
 		
 		if( ! idUsuario.isEmpty() || ! idDeLaConversacion.isEmpty()){
 		
-			query += " where ";
+			query += " and ";
 			if(! idUsuario.isEmpty() && idDeLaConversacion.isEmpty()){
-				query += atributosDelMensajeDao.ID_USUARIO +" = '"+idUsuario+"'";
+				query +=  NOMBRE_TABLA_MENSAJE +"."+atributosDelMensajeDao.ID_USUARIO +" = '"+idUsuario+"'";
 			}else if(idUsuario.isEmpty() && ! idDeLaConversacion.isEmpty()){
-				query += atributosDelMensajeDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"'";
+				query += NOMBRE_TABLA_MENSAJES_CHAT+"."+atributosDeLosMensajesPorChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"'";
 			}else{
-				query += atributosDelMensajeDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+atributosDelMensajeDao.ID_USUARIO +" = '"+idUsuario+"'";
+				query += NOMBRE_TABLA_MENSAJES_CHAT+"."+atributosDeLosMensajesPorChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+
+						"' and "+NOMBRE_TABLA_MENSAJE +"."+atributosDelMensajeDao.ID_USUARIO +" = '"+idUsuario+"'";
 			}
 		}
 		
@@ -212,7 +272,8 @@ public class ChatDao {
 			ResultSet rs = stmt.executeQuery();
 
 			while(rs.next()){		
-				String idDeMensaje = rs.getString(atributosDelMensajeDao.ID_MENSAJE.toString());
+				String idDeMensaje = rs.getString(atributosDeLosMensajesPorChatDao.ID_MENSAJE.toString());
+				String usuario = rs.getString(atributosDelMensajeDao.ID_USUARIO.toString());
 				
 				String audio = rs.getString(atributosDelMensajeDao.AUDIO.toString());
 				String imagen = rs.getString(atributosDelMensajeDao.IMAGEN.toString());
@@ -226,7 +287,7 @@ public class ChatDao {
 				salida.escribir(texto, new Sonido(audio, ""), null, null, null, new Vineta(vineta));
 				
 				Timestamp date = rs.getTimestamp(atributosDelMensajeDao.FECHA.toString());
-				String usuario = rs.getString(atributosDelMensajeDao.ID_USUARIO.toString());
+				
 				Mensaje mensaje = new Mensaje(idDeMensaje, salida, new Date(date.getTime()), new UsuarioDelChat(usuario, ""));
 
 				respuesta.add(mensaje);

@@ -16,7 +16,8 @@ public class Chat {
 	private Hashtable<String, UsuarioDelChat> usuariosDelChat;
 	private final String idDelClienteCompania;
 	private ChatDao chatDao;
-	
+	private Date fechaDelUltimoMensajeIngresado;
+
 	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania){
 		this.fechaDeCreacion = new Date();
 		this.idDeLaConversacion = idConversacion;
@@ -25,6 +26,7 @@ public class Chat {
 		this.usuariosDelChat = new Hashtable<>();
 		this.idDelClienteCompania = idDelClienteCompania;
 		this.chatDao = new ChatDao();
+		this.fechaDelUltimoMensajeIngresado = new Date();
 	}
 	
 	public boolean existeElUsuarioEnElChat(String idDelUsuario){
@@ -57,6 +59,7 @@ public class Chat {
 			
 			this.chatDao.insertarUnMesajeALaConversacion(this.idDeLaConversacion, mensajeAEnviar);
 			misMensajes.add(mensajeAEnviar);
+			this.fechaDelUltimoMensajeIngresado = new Date();
 			return true;
 		}
 		return false;
@@ -118,6 +121,18 @@ public class Chat {
 	
 	public void actualizarUsuarios(Hashtable<String, UsuarioDelChat> usuarios){
 		this.usuariosDelChat = usuarios;
+	}
+	
+	public Hashtable<String, UsuarioDelChat> obtenerUsuarios(){
+		return usuariosDelChat;
+	}
+	
+	public Date getFechaDelUltimoMensajeIngresado() {
+		return fechaDelUltimoMensajeIngresado;
+	}
+
+	public void setFechaDelUltimoMensajeIngresado(Date fechaDelUltimoMensajeIngresado) {
+		this.fechaDelUltimoMensajeIngresado = fechaDelUltimoMensajeIngresado;
 	}
 	
 }
