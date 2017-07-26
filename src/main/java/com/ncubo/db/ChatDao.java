@@ -27,7 +27,8 @@ public class ChatDao {
 	public enum atributosDelChatDao{
 		
 		ID("idchat"), ID_CONVERSACION("idDeLaConversacion"), ID_USUARIO("idUsuarioQueLoCreo"), 
-		FECHA("fechaDeCreacion"), ID_CLIENTE("idClienteCompania"), ACTIVO("activo"), ID_DESTINO("idUsuarioDestino"), ESTADO("estadoDeConexion");
+		FECHA("fechaDeCreacion"), ID_CLIENTE("idClienteCompania"), ACTIVO("activo"), ID_DESTINO("idUsuarioDestino"), 
+		ESTADO("estadoDeConexion"), MEMORIA_COGNITIVA("memoriaDelChatCognitivo");
 		
 		private String nombre;
 		
@@ -112,11 +113,12 @@ public class ChatDao {
 		
 			query += " where ";
 			if(! idUsuario.isEmpty() && idDeLaConversacion.isEmpty()){
-				query += atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"'";
+				query += atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = 1";
 			}else if(idUsuario.isEmpty() && ! idDeLaConversacion.isEmpty()){
-				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"'";
+				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+atributosDelChatDao.ACTIVO +" = 1";
 			}else{
-				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"'";
+				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+
+						atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = 1";
 			}
 		}
 		
@@ -130,7 +132,8 @@ public class ChatDao {
 			while(rs.next()){
 				//System.out.println(rs.getString(atributosDelChatDao.ID_CONVERSACION.toString()) + " "+rs.getTimestamp(atributosDelChatDao.FECHA.toString()));
 				Chat chat = new Chat(rs.getString(atributosDelChatDao.ID_CONVERSACION.toString()), 
-						rs.getString(atributosDelChatDao.ID_USUARIO.toString()), rs.getString(atributosDelChatDao.ID_CLIENTE.toString()));
+						rs.getString(atributosDelChatDao.ID_USUARIO.toString()), rs.getString(atributosDelChatDao.ID_CLIENTE.toString()),
+						rs.getInt(atributosDelChatDao.ID.toString()));
 				
 				Timestamp date = rs.getTimestamp(atributosDelChatDao.FECHA.toString());
 				chat.setFechaDeCreacion(new Date(date.getTime()));
@@ -160,6 +163,43 @@ public class ChatDao {
 		}else{
 			return true;
 		}
+	}
+	
+	public boolean deshabilitarChat(String idDeLaConversacion){
+		
+		boolean resultado = false;
+		
+		ArrayList<Chat> chats = buscarChats("", idDeLaConversacion);
+		
+		if(chats.size() > 0){
+			
+			Chat chat = chats.get(chats.size() - 1);
+			
+			String query = "UPDATE " + NOMBRE_TABLA_CHAT 
+					+ " SET " + atributosDelChatDao.ACTIVO +" = 0"
+					+ " WHERE " + atributosDelChatDao.ID_CONVERSACION + " = '" +idDeLaConversacion + "' and "+
+					atributosDelChatDao.ID + " = "+chat.getIdDeLaDB()+ ";";
+			
+			Connection con = null;
+			try {
+				con = ConexionALaDB.getInstance().openConBD();
+				PreparedStatement stmt = con.prepareStatement(query);
+				stmt.executeUpdate();
+				
+				resultado = true;
+				
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			ConexionALaDB.getInstance().closeConBD();
+		}
+		
+		return resultado;
 	}
 	
 	public boolean insertarUnMesajeALaConversacion(String idDeLaConversacion, Mensaje mensaje){

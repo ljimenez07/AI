@@ -17,6 +17,7 @@ public class Chat {
 	private final String idDelClienteCompania;
 	private ChatDao chatDao;
 	private Date fechaDelUltimoMensajeIngresado;
+	private int idDeLaDB;
 
 	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania){
 		this.fechaDeCreacion = new Date();
@@ -27,6 +28,19 @@ public class Chat {
 		this.idDelClienteCompania = idDelClienteCompania;
 		this.chatDao = new ChatDao();
 		this.fechaDelUltimoMensajeIngresado = new Date();
+		this.idDeLaDB = 0;
+	}
+	
+	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania, int idDB){
+		this.fechaDeCreacion = new Date();
+		this.idDeLaConversacion = idConversacion;
+		this.misMensajes = new ArrayList<>();
+		this.idUsuarioQuienLoCreo = idUsuario;
+		this.usuariosDelChat = new Hashtable<>();
+		this.idDelClienteCompania = idDelClienteCompania;
+		this.chatDao = new ChatDao();
+		this.fechaDelUltimoMensajeIngresado = new Date();
+		this.idDeLaDB = idDB;
 	}
 	
 	public boolean existeElUsuarioEnElChat(String idDelUsuario){
@@ -133,6 +147,14 @@ public class Chat {
 
 	public void setFechaDelUltimoMensajeIngresado(Date fechaDelUltimoMensajeIngresado) {
 		this.fechaDelUltimoMensajeIngresado = fechaDelUltimoMensajeIngresado;
+	}
+	
+	public int getIdDeLaDB() {
+		return idDeLaDB;
+	}
+
+	public void setIdDeLaDB(int idDeLaDB) {
+		this.idDeLaDB = idDeLaDB;
 	}
 	
 }
