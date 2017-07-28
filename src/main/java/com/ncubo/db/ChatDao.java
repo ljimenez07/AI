@@ -16,6 +16,7 @@ import com.ncubo.chatbot.partesDeLaConversacion.Sonido;
 import com.ncubo.chatbot.partesDeLaConversacion.Vineta;
 import com.ncubo.logDeLasConversaciones.Chat;
 import com.ncubo.logDeLasConversaciones.Mensaje;
+import com.ncubo.logDeLasConversaciones.MensajeVisto;
 import com.ncubo.logDeLasConversaciones.UsuarioDelChat;
 
 public class ChatDao {
@@ -23,6 +24,7 @@ public class ChatDao {
 	private final String NOMBRE_TABLA_CHAT = "chat";
 	private final String NOMBRE_TABLA_MENSAJE = "mensaje";
 	private final String NOMBRE_TABLA_MENSAJES_CHAT = "mensajes_por_chat";
+	private final String NOMBRE_TABLA_MENSAJES_USUARIO = "mensajes_por_usuario";
 	
 	public enum atributosDelChatDao{
 		
@@ -66,6 +68,23 @@ public class ChatDao {
 		private String nombre;
 		
 		atributosDeLosMensajesPorChatDao(String nombre){
+			this.nombre = nombre;
+		}
+		
+		public String toString(){
+			return this.nombre;
+		}
+		
+	}
+
+	public enum atributosDeLosMensajesPorUsuario{
+		
+		ID("idmensajes_por_usuario"), ID_MENSAJE("idMensaje"), ID_CONVERSACION("idDeLaConversacion"), 
+			ID_USUARIO("idDelUsuario"), HORA_VISTO("horaVistaPorElUsuario");
+		
+		private String nombre;
+		
+		atributosDeLosMensajesPorUsuario(String nombre){
 			this.nombre = nombre;
 		}
 		
@@ -190,10 +209,10 @@ public class ChatDao {
 				
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			} catch (SQLException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 			
 			ConexionALaDB.getInstance().closeConBD();
@@ -235,11 +254,11 @@ public class ChatDao {
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			resultado = false;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			resultado = false;
 		}
 	
@@ -270,11 +289,11 @@ public class ChatDao {
 			
 		} catch (ClassNotFoundException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			resultado = false;
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 			resultado = false;
 		}
 		
@@ -328,7 +347,7 @@ public class ChatDao {
 				
 				Timestamp date = rs.getTimestamp(atributosDelMensajeDao.FECHA.toString());
 				
-				Mensaje mensaje = new Mensaje(idDeMensaje, salida, new Date(date.getTime()), new UsuarioDelChat(usuario, ""));
+				Mensaje mensaje = new Mensaje(idDeMensaje, salida, new Date(date.getTime()), new UsuarioDelChat(usuario, ""), idDeLaConversacion);
 
 				respuesta.add(mensaje);
 			}
@@ -345,6 +364,81 @@ public class ChatDao {
 		return respuesta;
 	}
 	
+	public boolean marcarUnMensajeComoVisto(MensajeVisto mensaje, String idDelUsuario){
+		
+		boolean resultado = true;
+		String queryMensajePorChat = "INSERT INTO " + NOMBRE_TABLA_MENSAJES_USUARIO + " (" + 
+				atributosDeLosMensajesPorUsuario.ID_MENSAJE+", "+ atributosDeLosMensajesPorUsuario.ID_USUARIO+
+				", "+ atributosDeLosMensajesPorUsuario.ID_CONVERSACION+", "+ atributosDeLosMensajesPorUsuario.HORA_VISTO+") VALUES (?,?,?,?);";
+		
+		Connection con = null;
+		try {
+			con = ConexionALaDB.getInstance().openConBD();
+			PreparedStatement stmt = con.prepareStatement(queryMensajePorChat, Statement.RETURN_GENERATED_KEYS);
+			stmt.setString(1, mensaje.getMensaje().getIdDeMensaje());
+			stmt.setString(2, idDelUsuario);
+			stmt.setString(3, mensaje.getMensaje().getIdDeLaConversacionQuePertenese());
+			stmt.setTimestamp(4, new Timestamp(mensaje.getHoraVista().getTime()));
+			
+			stmt.executeUpdate();
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultado = false;
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			resultado = false;
+		}
+		
+		ConexionALaDB.getInstance().closeConBD();
+		return resultado;
+		
+	}
+	
+	public ArrayList<MensajeVisto> obtenerLosMensajesVistosPorUnUsuario(String idConversacion, String idUsuario){
+		
+		ArrayList<MensajeVisto> respuesta = new ArrayList<>();
+		
+		if( ! idUsuario.isEmpty() && ! idConversacion.isEmpty()){
+			
+			String query = "select * from "+NOMBRE_TABLA_MENSAJES_USUARIO + " where "+ atributosDeLosMensajesPorUsuario.ID_CONVERSACION +" = '"+idConversacion+"' and "+
+					atributosDeLosMensajesPorUsuario.ID_USUARIO +" = '"+idUsuario+"';";
+			
+			Connection con = null;
+			try {
+				con = ConexionALaDB.getInstance().openConBD();
+				PreparedStatement stmt = con.prepareStatement(query);
+				ResultSet rs = stmt.executeQuery();
+				
+				while(rs.next()){
+					
+					Mensaje mensaje = new Mensaje(rs.getString(atributosDeLosMensajesPorUsuario.ID_MENSAJE.toString()), 
+							null, null, new UsuarioDelChat(idUsuario, ""), idConversacion);
+					
+					Timestamp date = rs.getTimestamp(atributosDeLosMensajesPorUsuario.HORA_VISTO.toString());
+					
+					MensajeVisto mensajeVisto = new MensajeVisto(mensaje, new Date(date.getTime()));
+					
+					respuesta.add(mensajeVisto);
+				}
+				
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			
+			ConexionALaDB.getInstance().closeConBD();
+			
+		}
+		
+		return respuesta;
+	}
+		
 	public static void main(String[] args) {
 		
 		ConexionALaDB.getInstance("172.16.60.2", "agentecognitivo", "root", "123456");

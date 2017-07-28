@@ -14,6 +14,10 @@ public class Sonido {
 		return this.miURLPublica;
 	}
 
+	public void cambiarURL(String nuevaURL){
+		this.miURLPublica = nuevaURL;
+	}
+	
 	public String getTextoUsadoParaGenerarElSonido() {
 		return textoUsadoParaGenerarElSonido;
 	}

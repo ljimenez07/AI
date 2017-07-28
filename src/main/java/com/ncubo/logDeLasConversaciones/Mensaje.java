@@ -12,8 +12,9 @@ public class Mensaje{
 	private Salida detalleDelMensaje;
 	private Date fechaDelCreacionDelMensaje;
 	private UsuarioDelChat informacionDelUsuario;
+	private String idDeLaConversacionQuePertenese;
 
-	public Mensaje(String idDeMensaje, Salida mensaje, Date fecha, UsuarioDelChat usuario){
+	public Mensaje(String idDeMensaje, Salida mensaje, Date fecha, UsuarioDelChat usuario, String idDeLaConversacion){
 		SimpleDateFormat formato = new SimpleDateFormat("yyMMddhhmmssMs");
 		
 		if( fecha == null){
@@ -30,6 +31,7 @@ public class Mensaje{
 		
 		this.informacionDelUsuario = usuario;
 		this.detalleDelMensaje = mensaje;
+		this.idDeLaConversacionQuePertenese = idDeLaConversacion;
 	}
 	
 	public String getIdDeMensaje() {
@@ -62,6 +64,14 @@ public class Mensaje{
 
 	public void setInformacionDelUsuario(UsuarioDelChat informacionDelUsuario) {
 		this.informacionDelUsuario = informacionDelUsuario;
+	}
+	
+	public String getIdDeLaConversacionQuePertenese() {
+		return idDeLaConversacionQuePertenese;
+	}
+
+	public void setIdDeLaConversacionQuePertenese(String idDeLaConversacionQuePertenese) {
+		this.idDeLaConversacionQuePertenese = idDeLaConversacionQuePertenese;
 	}
 	
 }

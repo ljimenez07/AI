@@ -67,19 +67,47 @@ public class Chat {
 		usuariosDelChat.put(idUsuario, new UsuarioDelChat(idUsuario, nombre));
 	}
 	
-	public boolean agregarUnMensaje(String idUsuario, String idDeMensaje, Salida mensaje, Date fecha){
+	private void agregarMensajeComoVistoAUsuario(String idUsuario, Mensaje mensaje){
+		
 		if (existeElUsuarioEnElChat(idUsuario)){
-			Mensaje mensajeAEnviar = new Mensaje(idDeMensaje, mensaje, fecha, usuariosDelChat.get(idUsuario));
-			
-			this.chatDao.insertarUnMesajeALaConversacion(this.idDeLaConversacion, mensajeAEnviar);
-			misMensajes.add(mensajeAEnviar);
-			this.fechaDelUltimoMensajeIngresado = new Date();
-			return true;
+			usuariosDelChat.get(idUsuario).agregarUnNuevoMensajeComoVisto(mensaje);
 		}
+	}
+	
+	private boolean elMensajeExiste(Mensaje miMensaje){
+		
+		for(Mensaje mensaje: misMensajes){
+			if(mensaje.getIdDeMensaje().equals(miMensaje.getIdDeMensaje())){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public boolean agregarUnMensaje(String idUsuario, String idDeMensaje, Salida mensaje, Date fecha){
+		
+		if (existeElUsuarioEnElChat(idUsuario)){
+			Mensaje mensajeAEnviar = new Mensaje(idDeMensaje, mensaje, fecha, usuariosDelChat.get(idUsuario), idDeLaConversacion);
+			
+			if( ! elMensajeExiste(mensajeAEnviar)){
+				
+				this.chatDao.insertarUnMesajeALaConversacion(this.idDeLaConversacion, mensajeAEnviar);
+				misMensajes.add(mensajeAEnviar);
+				agregarMensajeComoVistoAUsuario(idUsuario, mensajeAEnviar);
+				
+				this.fechaDelUltimoMensajeIngresado = new Date();
+				
+				return true;
+			}
+			
+		}
+		
 		return false;
 	}
 	
 	public String obtenerElIdDelUltimoMensaje(){
+		
 		if(hayMensajes()){
 			return misMensajes.get(misMensajes.size() - 1).getIdDeMensaje();
 		}else{
@@ -87,7 +115,7 @@ public class Chat {
 		}
 	}
 	
-	public ArrayList<Mensaje> obtenerLosUltimosMensaajesApartirDeUnIndex(String mensajeId){
+	public ArrayList<Mensaje> obtenerLosUltimosMensaajesApartirDeUnIndex(String idUltimoMensajeVisto, String idDelUsuario){
 		
 		ArrayList<Mensaje> respuesta = new ArrayList<>();
 		boolean loEncontro = false;
@@ -95,8 +123,9 @@ public class Chat {
 		for(Mensaje mensaje: misMensajes){
 			if(loEncontro){
 				respuesta.add(mensaje);
+				agregarMensajeComoVistoAUsuario(idDelUsuario, mensaje);
 			}else{
-				if(mensaje.getIdDeMensaje().equals(mensajeId)){
+				if(mensaje.getIdDeMensaje().equals(idUltimoMensajeVisto)){
 					loEncontro = true;
 				}
 			}
@@ -105,7 +134,43 @@ public class Chat {
 		return respuesta;
 	}
 	
-	public ArrayList<Mensaje> getMisMensajes() {
+	private boolean tieneMensajesNuevos(String idDelUsuario){
+		
+		if (existeElUsuarioEnElChat(idDelUsuario)){
+			if(usuariosDelChat.get(idDelUsuario).obtenerLaCantidadDeMensajesVistos() == misMensajes.size()){
+				return false;
+			}else{
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	public String obtenerLaCantidadDeMensajeNoVistosPorElUsuario(String idDelUltimoMensajeVisto, String idDelUsuario){
+		
+		String respuesta = "0";
+		int cantidadDeMensajes = 0;
+		
+		if(tieneMensajesNuevos(idDelUsuario)){
+			cantidadDeMensajes = Math.abs(misMensajes.size() - usuariosDelChat.get(idDelUsuario).obtenerLaCantidadDeMensajesVistos());
+		}
+		
+		if(cantidadDeMensajes > 99){
+			respuesta = "99+";
+		}else{
+			respuesta = cantidadDeMensajes + "";
+		}
+		
+		return respuesta;
+	}
+	
+	public ArrayList<Mensaje> getMisMensajes(String idUsuario) {
+		
+		for(Mensaje mensaje: misMensajes){
+			agregarMensajeComoVistoAUsuario(idUsuario, mensaje);
+		}
+		
 		return misMensajes;
 	}
 
