@@ -6,6 +6,7 @@ import java.util.Hashtable;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.db.ChatDao;
+import com.ncubo.logDeLasConversaciones.Chat.TiposDeProcesoConBambu;
 
 public class Chat {
 
@@ -18,8 +19,9 @@ public class Chat {
 	private ChatDao chatDao;
 	private Date fechaDelUltimoMensajeIngresado;
 	private int idDeLaDB;
-
-	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania){
+	private final TiposDeProcesoConBambu tipoDeProcesoConBambu;
+	
+	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania, String tipoProceso){
 		this.fechaDeCreacion = new Date();
 		this.idDeLaConversacion = idConversacion;
 		this.misMensajes = new ArrayList<>();
@@ -29,9 +31,10 @@ public class Chat {
 		this.chatDao = new ChatDao();
 		this.fechaDelUltimoMensajeIngresado = new Date();
 		this.idDeLaDB = 0;
+		this.tipoDeProcesoConBambu = convertirATipoDeProcesoConBambu(tipoProceso);
 	}
 	
-	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania, int idDB){
+	public Chat(String idConversacion, String idUsuario, String idDelClienteCompania, int idDB, String tipoProceso){
 		this.fechaDeCreacion = new Date();
 		this.idDeLaConversacion = idConversacion;
 		this.misMensajes = new ArrayList<>();
@@ -41,6 +44,51 @@ public class Chat {
 		this.chatDao = new ChatDao();
 		this.fechaDelUltimoMensajeIngresado = new Date();
 		this.idDeLaDB = idDB;
+		this.tipoDeProcesoConBambu = convertirATipoDeProcesoConBambu(tipoProceso);
+	}
+	
+	public enum TiposDeProcesoConBambu {
+	    BANDEJA_ENTRADA, COTIZACION, CASO, OPORTUNIDAD, TAREA
+	}
+	
+	public TiposDeProcesoConBambu convertirATipoDeProcesoConBambu(String tipoProceso){
+		
+		if(tipoProceso != null){
+			if( ! tipoProceso.isEmpty()){
+				if(tipoProceso.toUpperCase().equals("BANDEJADEMENSAJES")){
+					return TiposDeProcesoConBambu.BANDEJA_ENTRADA;
+				}else if(tipoProceso.toUpperCase().equals("COTIZACION")){
+					return TiposDeProcesoConBambu.COTIZACION;
+				}else if(tipoProceso.toUpperCase().equals("OPORTUNIDAD")){
+					return TiposDeProcesoConBambu.OPORTUNIDAD;
+				}else if(tipoProceso.toUpperCase().equals("CASO")){
+					return TiposDeProcesoConBambu.CASO;
+				}else if(tipoProceso.toUpperCase().equals("TAREA")){
+					return TiposDeProcesoConBambu.TAREA;
+				}
+			}
+		}
+		
+		return TiposDeProcesoConBambu.BANDEJA_ENTRADA;
+	}
+
+	public String convertirDeTipoDeProcesoConBambu(TiposDeProcesoConBambu tipoProceso){
+		
+		if (tipoProceso != null){
+			if(tipoProceso.equals(TiposDeProcesoConBambu.BANDEJA_ENTRADA)){
+				return "BANDEJADEMENSAJES";
+			}else if(tipoProceso.equals(TiposDeProcesoConBambu.COTIZACION)){
+				return "COTIZACION";
+			}else if(tipoProceso.equals(TiposDeProcesoConBambu.OPORTUNIDAD)){
+				return "OPORTUNIDAD";
+			}else if(tipoProceso.equals(TiposDeProcesoConBambu.CASO)){
+				return "CASO";
+			}else if(tipoProceso.equals(TiposDeProcesoConBambu.TAREA)){
+				return "TAREA";
+			}
+		}
+		
+		return "BANDEJADEMENSAJES";
 	}
 	
 	public boolean existeElUsuarioEnElChat(String idDelUsuario){
@@ -220,6 +268,14 @@ public class Chat {
 
 	public void setIdDeLaDB(int idDeLaDB) {
 		this.idDeLaDB = idDeLaDB;
+	}
+
+	public TiposDeProcesoConBambu getTipoDeProcesoConBambu() {
+		return tipoDeProcesoConBambu;
+	}
+	
+	public String getTipoDeProceso() {
+		return convertirDeTipoDeProcesoConBambu(tipoDeProcesoConBambu);
 	}
 	
 }

@@ -30,7 +30,7 @@ public class ChatDao {
 		
 		ID("idchat"), ID_CONVERSACION("idDeLaConversacion"), ID_USUARIO("idUsuarioQueLoCreo"), 
 		FECHA("fechaDeCreacion"), ID_CLIENTE("idClienteCompania"), ACTIVO("activo"), ID_DESTINO("idUsuarioDestino"), 
-		ESTADO("estadoDeConexion"), MEMORIA_COGNITIVA("memoriaDelChatCognitivo");
+		ESTADO("estadoDeConexion"), MEMORIA_COGNITIVA("memoriaDelChatCognitivo"), TIPO_PROCESO_BAMBU("tipoDeProcesoConBambu");
 		
 		private String nombre;
 		
@@ -99,7 +99,7 @@ public class ChatDao {
 	public void ingresarUnChat(String idCliente, Chat chat){
 		
 		String query = "INSERT INTO " + NOMBRE_TABLA_CHAT + "(" + atributosDelChatDao.ID_CONVERSACION+", "+
-				atributosDelChatDao.ID_USUARIO+", "+ atributosDelChatDao.FECHA+", "+ atributosDelChatDao.ID_CLIENTE+ ") VALUES (?,?,?,?);";
+				atributosDelChatDao.ID_USUARIO+", "+ atributosDelChatDao.FECHA+", "+ atributosDelChatDao.ID_CLIENTE +", "+ atributosDelChatDao.TIPO_PROCESO_BAMBU+ ") VALUES (?,?,?,?,?);";
 		
 		try {
 			Connection con = ConexionALaDB.getInstance().openConBD();
@@ -109,6 +109,7 @@ public class ChatDao {
 			stmt.setString(2, chat.getIdUsuarioQuienLoCreo());
 			stmt.setTimestamp(3, new Timestamp(chat.getFechaDeCreacion().getTime()));
 			stmt.setString(4, idCliente);
+			stmt.setString(5, chat.getTipoDeProceso());
 			
 			stmt.executeUpdate();
 				
@@ -124,6 +125,10 @@ public class ChatDao {
 	}
 	
 	public ArrayList<Chat> buscarChats(String idUsuario, String idDeLaConversacion){
+		return buscarChats(idUsuario, idDeLaConversacion, "1");
+	}
+	
+	public ArrayList<Chat> buscarChats(String idUsuario, String idDeLaConversacion, String estadoDelChat){
 		
 		ArrayList<Chat> resultados = new ArrayList<>();
 		String query = "select * from "+NOMBRE_TABLA_CHAT;
@@ -132,12 +137,12 @@ public class ChatDao {
 		
 			query += " where ";
 			if(! idUsuario.isEmpty() && idDeLaConversacion.isEmpty()){
-				query += atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = 1";
+				query += atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = "+estadoDelChat;
 			}else if(idUsuario.isEmpty() && ! idDeLaConversacion.isEmpty()){
-				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+atributosDelChatDao.ACTIVO +" = 1";
+				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+atributosDelChatDao.ACTIVO +" = "+estadoDelChat;
 			}else{
 				query += atributosDelChatDao.ID_CONVERSACION +" = '"+idDeLaConversacion+"' and "+
-						atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = 1";
+						atributosDelChatDao.ID_USUARIO +" = '"+idUsuario+"' and "+atributosDelChatDao.ACTIVO +" = "+estadoDelChat;
 			}
 		}
 		
@@ -152,7 +157,7 @@ public class ChatDao {
 				//System.out.println(rs.getString(atributosDelChatDao.ID_CONVERSACION.toString()) + " "+rs.getTimestamp(atributosDelChatDao.FECHA.toString()));
 				Chat chat = new Chat(rs.getString(atributosDelChatDao.ID_CONVERSACION.toString()), 
 						rs.getString(atributosDelChatDao.ID_USUARIO.toString()), rs.getString(atributosDelChatDao.ID_CLIENTE.toString()),
-						rs.getInt(atributosDelChatDao.ID.toString()));
+						rs.getInt(atributosDelChatDao.ID.toString()), rs.getString(atributosDelChatDao.TIPO_PROCESO_BAMBU.toString()));
 				
 				Timestamp date = rs.getTimestamp(atributosDelChatDao.FECHA.toString());
 				chat.setFechaDeCreacion(new Date(date.getTime()));
@@ -176,7 +181,11 @@ public class ChatDao {
 	}
 	
 	public boolean existeElChat(String idDeLaConversacion, String idUsuario){
-		ArrayList<Chat> respuesta = buscarChats(idUsuario, idDeLaConversacion);
+		return existeElChat(idDeLaConversacion, idUsuario, "1");
+	}
+	
+	public boolean existeElChat(String idDeLaConversacion, String idUsuario, String estadoDelChat){
+		ArrayList<Chat> respuesta = buscarChats(idUsuario, idDeLaConversacion, estadoDelChat);
 		if(respuesta.isEmpty()){
 			return false;
 		}else{
