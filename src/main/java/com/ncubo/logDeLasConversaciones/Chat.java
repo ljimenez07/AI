@@ -6,7 +6,6 @@ import java.util.Hashtable;
 
 import com.ncubo.chatbot.partesDeLaConversacion.Salida;
 import com.ncubo.db.ChatDao;
-import com.ncubo.logDeLasConversaciones.Chat.TiposDeProcesoConBambu;
 
 public class Chat {
 
