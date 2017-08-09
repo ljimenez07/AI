@@ -1,14 +1,23 @@
 package com.ncubo.email;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Properties;
+
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.mail.BodyPart;
 import javax.mail.Message;
 import javax.mail.MessagingException;
+import javax.mail.Multipart;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 import com.ncubo.chatbot.configuracion.Constantes;
 
@@ -25,7 +34,7 @@ public class Email {
 	public Email(){}
 	
 	/**
-	 * The method send a report by email
+	 * The method send a email
 	 * @param tittle This is the subject of the email
 	 * @param emailTo The string with the email to send the report (separated by ",")
 	 * @param body The html body of the email
@@ -46,14 +55,11 @@ public class Email {
 		  });
 
 		try {
-			String[] emails = emailTo.split(",");
 			
 			Message message = new MimeMessage(session);
 			message.setFrom(new InternetAddress(Constantes.EMAIL_PROJECT_NAME+" <"+Constantes.EMAIL_USER+">"));
 			
-			for (String email: emails){
-				message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
-			}
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
 			
 			message.setSubject(tittle);
 			message.setContent(body, "text/html");
@@ -72,6 +78,76 @@ public class Email {
 			System.out.println(Constantes.EMAIL_PROJECT_NAME+" had a problem trying to send the email.");
 			//throw new RuntimeException(e);
 			return false;
+		}
+	}
+	
+	/**
+	 * The method send a email with some file
+	 * @param tittle This is the subject of the email
+	 * @param emailTo The string with the email to send the report (separated by ",")
+	 * @param body The html body of the email
+	 */
+	public boolean sendEmailWithAttachmentFile(String tittle, String emailTo, String body, String filePath, String nombreDelOrigen){
+		
+		Properties props = new Properties();
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.starttls.enable", "true");
+		props.put("mail.smtp.host", "smtp.gmail.com");
+		props.put("mail.smtp.port", "587");
+
+		Session session = Session.getInstance(props,
+		  new javax.mail.Authenticator() {
+			protected PasswordAuthentication getPasswordAuthentication() {
+				return new PasswordAuthentication(Constantes.EMAIL_USER, Constantes.EMAIL_PASS);
+			}
+		  });
+
+		try {
+			
+			Message message = new MimeMessage(session);
+			if(nombreDelOrigen.isEmpty()){
+				message.setFrom(new InternetAddress(Constantes.EMAIL_PROJECT_NAME+" <"+Constantes.EMAIL_USER+">"));
+			}else{
+				message.setFrom(new InternetAddress(nombreDelOrigen.toUpperCase()+" <"+Constantes.EMAIL_USER+">"));
+			}
+			
+			message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(emailTo));
+			message.setSubject(tittle);
+			
+			// Create MimeBodyPart object and set your message text        
+            BodyPart messageBodyPart1 = new MimeBodyPart();     
+            messageBodyPart1.setContent(body, "text/html");          
+
+            // create new MimeBodyPart object and set DataHandler object to this object        
+            MimeBodyPart messageBodyPart2 = new MimeBodyPart();      
+            DataSource source = new FileDataSource(filePath);    
+            messageBodyPart2.setDataHandler(new DataHandler(source));    
+            messageBodyPart2.setFileName(source.getName());             
+
+            // Create Multipart object and add MimeBodyPart objects to this object        
+            Multipart multipart = new MimeMultipart();    
+            multipart.addBodyPart(messageBodyPart1);     
+            multipart.addBodyPart(messageBodyPart2);      
+
+            // Set the multiplart object to the message object    
+            message.setContent(multipart);  
+            
+			//message.setContent(body, "text/html");
+			//message.setText(emailBody);
+
+			Transport transport = session.getTransport("smtp");			
+			//Transport.send(message);
+
+			transport.connect("smtp.gmail.com", Constantes.EMAIL_USER, Constantes.EMAIL_PASS);
+			transport.sendMessage(message, message.getAllRecipients());
+			transport.close();
+			
+			System.out.println(Constantes.EMAIL_PROJECT_NAME+" has just sent an Email successfully.");
+			return true;
+		} catch (MessagingException e) {
+			System.out.println(Constantes.EMAIL_PROJECT_NAME+" had a problem trying to send the email.");
+			throw new RuntimeException(e);
+			//return false;
 		}
 	}
 	
@@ -454,6 +530,8 @@ public class Email {
 	            "</body>\n" +
 	            "</html>";
 		
-		email.sendEmail("Test", "sgonzales@cecropiasolutions.com", test);
+		//email.sendEmail("Test", "sgonzales@cecropiasolutions.com,sergioalbertogq@gmail.com", test);
+		String pathEstadoCuentaPDF = System.getProperty("user.home")+File.separator+"FilesReports"+File.separator + "EstadoCuenta1a9e4fbab2aa4ff6875ec7562d24c9e4.pdf";
+		email.sendEmailWithAttachmentFile("Test", "sgonzales@cecropiasolutions.com,sergioalbertogq@gmail.com", test, pathEstadoCuentaPDF, "");
 	}
 }
