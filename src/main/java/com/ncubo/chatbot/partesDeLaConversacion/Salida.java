@@ -171,7 +171,7 @@ public class Salida implements Serializable{
 	
 	public void setMiSonido(String textoParaReproducir, String idCliente){
 		String nombreDelArchivo = TextToSpeechWatson.getInstance().getAudioToURL(textoParaReproducir, true, idCliente);
-		String miIp = TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
+		String miIp = "/"+idCliente+"/"+TextToSpeechWatson.getInstance().obtenerUrlPublicaDeAudios()+idCliente+"-"+nombreDelArchivo;
 		miSonido = new Sonido(miIp, textoParaReproducir);
 	}
 
